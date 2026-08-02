@@ -1,0 +1,36 @@
+# ── Node / npm ──
+node_modules/
+npm-debug.log*
+yarn-error.log
+pnpm-debug.log
+
+# ── Astro build output ──
+dist/
+.astro/
+
+# ── Cloudflare Wrangler ──
+.wrangler/
+node_modules/
+
+# ── Environment & secrets ──
+.env
+.env.*
+!.env.example
+
+# ── OS / editor ──
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ── Logs & caches ──
+*.log
+.cache/
+.turbo/
+
+# ── Tool state (agent configs, installed skills) ──
+.codex/
+.qodo/
+.impeccable/
+.opencode/
+.agents/

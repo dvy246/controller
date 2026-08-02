@@ -1,0 +1,49 @@
+---
+/**
+ * /ja — Japanese Homepage
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+
+const breadcrumbs = [{ name: 'ホーム', url: '/ja' }];
+---
+
+<BaseLayout
+  title="無料コントローラー診断テスト — オンライン動作確認 | ControllerTesting.com"
+  description="PS5、Xbox、Nintendo Switchコントローラーをブラウザで無料診断。スティックドリフト、ボタン応答、ポーリングレートを即座に測定。"
+  breadcrumbs={breadcrumbs}
+  localized
+>
+  <Header />
+
+  <main id="main-content" class="ja-page-wrapper">
+    <section class="hero-ja">
+      <div class="hero-inner">
+        <span class="hero-badge">日本語対応 コントローラー診断</span>
+        <h1 class="hero-title text-gradient">コントローラーの不具合を正確に無料で診断</h1>
+        <p class="hero-subtext">
+          54種類の無料診断ツール。ダウンロード不要・登録不要。ブラウザ内ローカル処理により、プライバシーを完全に保護します。
+        </p>
+
+        <div class="hero-ctas">
+          <a href="/test/controller/full-diagnostic" class="btn-primary">フル診断を開始</a>
+          <a href="/test/controller/drift" class="btn-secondary">ドリフト動作テスト</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .ja-page-wrapper { min-height: 100dvh; padding-top: 80px; }
+  .hero-ja { max-width: 1000px; margin: 3rem auto; padding: 0 1.5rem; text-align: center; }
+  .hero-inner { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
+  .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
+  .hero-title { font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.15; }
+  .hero-subtext { font-size: 1.125rem; color: var(--color-text-secondary); max-width: 680px; line-height: 1.6; }
+  .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem; }
+</style>

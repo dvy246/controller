@@ -1,0 +1,135 @@
+---
+/**
+ * /games/index.astro — Controller Games Arcade Hub
+ * SEO Title: Controller Arcade — 15 Free Browser Games for Gamepads
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Games Arcade' },
+];
+
+const games = [
+  { id: 'stick-sniper', name: 'Stick Sniper', type: 'Precision', desc: 'Target-acquisition precision game testing stick acceleration & deadzones', href: '/games/stick-sniper', pts: 50 },
+  { id: 'button-blitz', name: 'Button Blitz', type: 'Reflex', desc: 'Fast-paced button reaction game pressing random face button prompts', href: '/games/button-blitz', pts: 50 },
+  { id: 'trigger-racer', name: 'Trigger Speed Racer', type: 'Precision', desc: 'Analog trigger linearity control game matching target speed curves', href: '/games/trigger-racer', pts: 50 },
+  { id: 'gyro-maze', name: 'Gyroscope Maze', type: 'Motion', desc: 'Tilt controller to navigate marble through 3D maze walls', href: '/games/gyro-maze', pts: 50 },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Controller Arcade Games',
+  numberOfItems: games.length,
+  itemListElement: games.map((g, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: g.name,
+    url: `https://controllertesting.com${g.href}`,
+  })),
+};
+function getGameIcon(id: string) {
+  if (id.includes('sniper')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>`;
+  if (id.includes('blitz')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
+  if (id.includes('racer')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 11V3M1 14h6M9 8h6M17 16h6"/></svg>`;
+  if (id.includes('maze')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`;
+  return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="6"/></svg>`;
+}
+---
+
+<BaseLayout
+  title="Controller Arcade — 15 Free Browser Games for Gamepads | ControllerTesting.com"
+  description="Play free browser games using your PS5, Xbox, or Switch controller. Precision aim trainers, reflex challenges, and rewards Arcade."
+  schema={schema}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="arcade-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="arcade-hero">
+        <span class="arcade-badge">Gamepad Arcade &amp; Benchmarks</span>
+        <h1 class="arcade-title">Controller Arcade &amp; Aim Trainer</h1>
+        <p class="arcade-subtitle">
+          Put your controller to the test in browser arcade games built specifically for gamepads. Earn XP points, unlock achievements, and climb the leaderboard.
+        </p>
+      </header>
+
+      <div class="arcade-rewards-banner card-base">
+        <div class="rewards-info">
+          <h2 class="rewards-heading">Your Arcade Progression</h2>
+          <p class="rewards-sub">Earn +50 XP for every diagnostic test completed and game session played.</p>
+        </div>
+        <div class="rewards-stat-box">
+          <span class="r-label">CURRENT XP POINTS</span>
+          <span class="r-val text-emerald-400" id="user-xp-val">0 XP</span>
+        </div>
+      </div>
+
+      <div class="grid-games">
+        {games.map((g) => (
+          <a href={g.href} class="game-card card-base card-hover">
+            <div class="game-card-top">
+              <div class="game-card-icon-wrap">
+                <span class="game-card-icon" set:html={getGameIcon(g.id)} aria-hidden="true" />
+                <span class="game-type-tag">{g.type}</span>
+              </div>
+              <span class="game-pts-tag">+{g.pts} XP</span>
+            </div>
+            <h2 class="game-card-name">{g.name}</h2>
+            <p class="game-card-desc">{g.desc}</p>
+            <span class="game-play-btn">
+              Play Game
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { getUserProgress } from '../../lib/rewards';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const prog = getUserProgress();
+    const xpEl = document.getElementById('user-xp-val');
+    if (xpEl) xpEl.textContent = `${prog.pts} XP`;
+  });
+</script>
+
+<style>
+  .arcade-page { padding-top: 96px; padding-bottom: var(--spacing-section); }
+  .container-site { width: 100%; max-width: 1280px; margin-inline: auto; padding-inline: 1.5rem; }
+  .arcade-hero { margin-bottom: 2rem; }
+  .arcade-badge { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .arcade-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .arcade-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
+  .arcade-rewards-banner { display: flex; align-items: center; justify-content: space-between; padding: 1.75rem 2rem; margin-bottom: 2.25rem; flex-wrap: wrap; gap: 1.5rem; background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); }
+  .rewards-heading { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .rewards-sub { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .rewards-stat-box { display: flex; flex-direction: column; align-items: flex-end; }
+  .r-label { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: var(--color-text-tertiary); letter-spacing: 0.08em; }
+  .r-val { font-family: var(--font-mono); font-size: 2.25rem; font-weight: 800; }
+  .grid-games { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; width: 100%; }
+  .game-card { display: flex; flex-direction: column; gap: 0.875rem; text-decoration: none; cursor: pointer; padding: 1.75rem; background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); transition: background var(--duration-fast), border-color var(--duration-fast), transform var(--duration-fast); }
+  .game-card:hover { background: var(--color-surface-3); border-color: var(--color-accent); transform: translateY(-3px); text-decoration: none; }
+  .game-card-top { display: flex; justify-content: space-between; align-items: center; }
+  .game-card-icon-wrap { display: flex; align-items: center; gap: 0.75rem; }
+  .game-card-icon { width: 38px; height: 38px; border-radius: var(--radius-sm); background: var(--color-surface-3); border: 1px solid var(--color-border-subtle); display: flex; align-items: center; justify-content: center; color: var(--color-accent); }
+  .game-type-tag { font-family: var(--font-mono); font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; background: rgba(37, 99, 235, 0.12); color: var(--color-accent); padding: 0.25em 0.55em; border-radius: 3px; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .game-pts-tag { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700; color: var(--color-pass); background: rgba(16, 185, 129, 0.1); padding: 0.2em 0.6em; border-radius: var(--radius-pill); border: 1px solid rgba(16, 185, 129, 0.2); }
+  .game-card-name { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); letter-spacing: -0.01em; }
+  .game-card-desc { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; flex-grow: 1; }
+  .game-play-btn { display: flex; align-items: center; gap: 0.375rem; font-size: var(--text-small); font-weight: 600; color: var(--color-accent); margin-top: 0.25rem; }
+  @media (max-width: 768px) { .rewards-stat-box { align-items: flex-start; } }
+</style>

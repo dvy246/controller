@@ -1,0 +1,120 @@
+---
+/**
+ * /test/controller/health-score — Controller Health Score™ Generator
+ * SEO Title: Controller Health Score — Free Gamepad Longevity & Quality Grade
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import HealthScore from '../../../components/tools/controller/HealthScore.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Health Score™' },
+];
+
+const faqs = [
+  {
+    question: 'How is the Controller Health Score™ calculated?',
+    answer: 'The score is calculated using a weighted formula: Stick Drift (30%), Circularity Error (20%), Button Matrix Response (15%), Trigger Linearity (15%), Polling Rate (10%), and Haptic Vibration (10%).',
+  },
+  {
+    question: 'Can I print or save my controller health certificate?',
+    answer: 'Yes! Click "Print / Export PDF Certificate" to generate an official verified test report card for warranty claims or proof when selling your controller.',
+  },
+  {
+    question: 'What is a passing Controller Health Score?',
+    answer: 'A score of 85+ (Grade A) indicates excellent competition-grade performance. Scores below 70 (Grade C) indicate noticeable drift or switch wear requiring repair or replacement.',
+  },
+];
+---
+
+<ToolLayout
+  title="Controller Health Score — Free Gamepad Longevity & Quality Grade | ControllerTesting.com"
+  description="Calculate your controller's overall hardware score from 0-100. Diagnostic grade based on stick drift, circularity, button matrix, triggers, and polling rate."
+  toolName="Controller Health Score™"
+  category="Flagship Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <HealthScore />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Grade Threshold Scale</h2>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">95 – 100 (Grade A+)</strong>
+          <p class="legend-text">Tournament Grade. Zero drift, flawless circularity, 1000Hz response capability.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">75 – 94 (Grade B)</strong>
+          <p class="legend-text">Standard Play Condition. Minor drift or trigger wear manageable with 5% deadzone.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">&lt; 75 (Grade C / F)</strong>
+          <p class="legend-text">Hardware Repair Recommended. Potentiometer replacement or deadzone tuning needed.</p>
+        </div>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Need to fix or upgrade your controller?</h3>
+        <p class="export-desc">Weigh repair costs against replacement options with our Fix vs Replace calculator.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/fix-or-replace" class="btn-primary">Fix vs Replace Calculator</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/full-diagnostic" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Full Diagnostic Wizard</h3>
+      <p class="tool-desc">Run 5-step hardware checkup.</p>
+    </a>
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Isolated 0.1% stick drift test.</p>
+    </a>
+    <a href="/test/controller/circularity" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Circularity Test</h3>
+      <p class="tool-desc">Check 360-degree range of motion.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Why Every Gamer Should Know Their Controller Health Score</h2>
+    <p>
+      Hardware wear occurs gradually over hundreds of hours of gameplay. By tracking your controller's Health Score over time,
+      you can catch potentiometer drift and button degradation before it affects tournament matches or ranked competitive play.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 1rem; }
+  .results-legend-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .legend-card { padding: 1rem; border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 0.375rem; }
+  .legend-pass { background: var(--color-pass-bg); border: 1px solid var(--color-pass); }
+  .legend-pass .legend-title { color: var(--color-pass); }
+  .legend-warning { background: var(--color-warning-bg); border: 1px solid var(--color-warning); }
+  .legend-warning .legend-title { color: var(--color-warning); }
+  .legend-fail { background: var(--color-fail-bg); border: 1px solid var(--color-fail); }
+  .legend-fail .legend-title { color: var(--color-fail); }
+  .legend-title { font-family: var(--font-mono); font-size: var(--text-small); }
+  .legend-text { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.5; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+  @media (max-width: 768px) { .results-legend-grid { grid-template-columns: 1fr; } }
+</style>

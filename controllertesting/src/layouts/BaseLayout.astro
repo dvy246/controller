@@ -1,0 +1,217 @@
+---
+/**
+ * BaseLayout.astro — ControllerTesting.com
+ * Every page uses this. SEO head, theme, fonts, structured data.
+ * Skills applied: design-taste-frontend, DESIGN.md
+ */
+
+import '../styles/global.css';
+import GlobalSearch from '../components/global/GlobalSearch.astro';
+
+export interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  schema?: object | object[];
+  noindex?: boolean;
+  ogImageAlt?: string;
+  ogImageWidth?: number;
+  ogImageHeight?: number;
+  breadcrumbs?: Array<{ name: string; url?: string }>;
+  faqs?: Array<{ question: string; answer: string }>;
+  /**
+   * Mark pages that actually ship translated variants (currently the 5 locale
+   * homepages: /, /es/, /de/, /fr/, /ja/). Only then are hreflang alternates
+   * emitted — previously every page linked to locale URLs that 404'd.
+   */
+  localized?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage = 'https://controllertesting.com/og-default.png',
+  ogImageAlt = 'ControllerTesting.com online hardware diagnostic tools',
+  ogImageWidth = 1200,
+  ogImageHeight = 630,
+  ogType = 'website',
+  schema,
+  noindex = false,
+  breadcrumbs,
+  faqs = [],
+  localized = false,
+} = Astro.props;
+
+// Astro's build.pathname includes '.html' when build.format === 'file'.
+// Normalize to the clean served route so canonicals, hreflang, and sitemap
+// URLs stay consistent (no '.html', no trailing slash except root).
+const rawPath = Astro.url.pathname;
+const cleanPath = rawPath === '/' ? '/' : rawPath.replace(/\.html$/, '').replace(/\/$/, '');
+
+const canonicalUrl = canonical ?? new URL(cleanPath, Astro.site).href;
+
+// hreflang alternate links — emitted ONLY on pages with real localized
+// variants (localized=true). basePath is the English route; locale pages
+// rewrite their own prefix so alternates point at the same content in each
+// of the 5 supported locales instead of 404ing.
+const localeMatch = cleanPath.match(/^\/(es|de|fr|ja)(\/|$)/);
+const activeLocale = localeMatch ? localeMatch[1] : 'en';
+const basePath = activeLocale === 'en' ? cleanPath : cleanPath.replace(/^\/[a-z]{2}\/?/, '/');
+const languageSet = localized
+  ? [
+      { code: 'en', path: basePath },
+      { code: 'es', path: `/es${basePath}` },
+      { code: 'de', path: `/de${basePath}` },
+      { code: 'fr', path: `/fr${basePath}` },
+      { code: 'ja', path: `/ja${basePath}` },
+    ]
+  : [];
+
+// Auto-generate BreadcrumbList schema
+const breadcrumbSchema = breadcrumbs
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbs.map((crumb, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: crumb.name,
+        ...(crumb.url ? { item: crumb.url } : {}),
+      })),
+    }
+  : null;
+
+const faqSchema = faqs.length > 0
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqs.map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: faq.answer,
+        },
+      })),
+    }
+  : null;
+
+// Collect all schemas
+const schemas = [
+  ...(Array.isArray(schema) ? schema : schema ? [schema] : []),
+  ...(breadcrumbSchema ? [breadcrumbSchema] : []),
+  ...(faqSchema ? [faqSchema] : []),
+];
+---
+
+<!doctype html>
+<html lang={activeLocale} data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {/* ── Theme flash prevention — must run BEFORE any CSS renders ── */}
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('ct-theme');
+          var d = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.setAttribute('data-theme', t || (d ? 'dark' : 'light'));
+        } catch (e) {}
+      })();
+    </script>
+
+    {/* ── Core SEO ── */}
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {!noindex && localized && (
+      <>
+        <link rel="alternate" hreflang="x-default" href={`https://controllertesting.com${basePath}`} />
+        {languageSet.map((lang) => (
+          <link rel="alternate" hreflang={lang.code} href={`https://controllertesting.com${lang.path}`} />
+        ))}
+      </>
+    )}
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {!noindex && <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />}
+
+    {/* ── Open Graph ── */}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="og:image:width" content={ogImageWidth.toString()} />
+    <meta property="og:image:height" content={ogImageHeight.toString()} />
+    <meta property="og:site_name" content="ControllerTesting.com" />
+    <meta property="og:locale" content="en_US" />
+
+    {/* ── Twitter Card ── */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
+
+    {/* ── Favicon ── */}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#06060B" />
+
+    {/* ── Fonts: Geist (per DESIGN.md — Inter/Roboto BANNED) ── */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
+    {/* ── Structured Data ── */}
+    {schemas.length > 0 && (
+      <script type="application/ld+json" set:html={JSON.stringify(schemas.length === 1 ? schemas[0] : schemas)} />
+    )}
+
+    {/* ── Performance hints ── */}
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+
+    <slot name="head" />
+  </head>
+  <body>
+    <!--
+      THESIS: A controller test should feel like a precision instrument, not a generic gaming landing page.
+      OWN-WORLD: Matte void surfaces, cobalt signal accents, fine telemetry marks, and one tactile hardware image.
+      STORY: See the controller in a live-ready state, understand the proof, and start a diagnostic immediately.
+      FIRST VIEWPORT: Left-aligned promise and diagnostic CTA; supplied controller photograph on the right with a compact readout.
+      FORM: Existing asymmetric split hero, refined with an image-led hardware stage and transform-only motion.
+      FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+    -->
+    <slot />
+
+    <GlobalSearch />
+
+    {/* ── Theme toggle script — event delegation, no DOMContentLoaded ── */}
+    <script is:inline>
+      document.body.addEventListener('click', function(e) {
+        var btn = e.target.closest('#theme-toggle');
+        if (!btn) return;
+        var current = document.documentElement.getAttribute('data-theme') || 'dark';
+        var next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('ct-theme', next); } catch(e) {}
+      });
+    </script>
+  </body>
+</html>

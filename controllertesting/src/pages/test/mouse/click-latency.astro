@@ -1,0 +1,94 @@
+---
+/**
+ * /test/mouse/click-latency — Mouse Click Latency Tester
+ * SEO Title: Mouse Click Latency Test — Test Click Response Delay Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import ClickLatencyTester from '../../../components/tools/mouse/ClickLatencyTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/mouse' },
+  { name: 'Mouse Tests', url: '/test/mouse' },
+  { name: 'Click Latency' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test my mouse click latency?',
+    answer: 'Click "Start Reaction Test" above, wait for the box to turn green, and click as fast as possible. The tool measures your total reaction time in milliseconds.',
+  },
+  {
+    question: 'Do optical mouse switches have lower latency than mechanical switches?',
+    answer: 'Yes! Optical mouse switches use infrared light beams to trigger clicks, eliminating mechanical debounce delay and cutting click latency to sub-0.2ms.',
+  },
+  {
+    question: 'What is mouse debounce delay?',
+    answer: 'Debounce delay is a software filter built into mechanical mouse firmware to prevent accidental double-clicks. Optical switches do not require debounce delay.',
+  },
+];
+---
+
+<ToolLayout
+  title="Mouse Click Latency Test — Measure Click Response Delay Online | ControllerTesting.com"
+  description="Test mouse click latency and reaction speed in milliseconds. Compare optical vs mechanical mouse switch click response times online."
+  toolName="Mouse Click Latency"
+  category="Mouse Diagnostic"
+  categoryUrl="/test/mouse"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <ClickLatencyTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Click Latency Benchmarks</h2>
+      <p class="results-text">
+        Top esports mice with optical switches yield total system reaction times under 170ms.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Test mouse double-clicking faults</h3>
+        <p class="export-desc">Detect unintentional double-click switch bounce faults.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/mouse/double-click" class="btn-primary">Double-Click Test</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/mouse/cps" class="tool-card card-base card-hover">
+      <h3 class="tool-name">CPS Test</h3>
+      <p class="tool-desc">Test clicks per second speed.</p>
+    </a>
+    <a href="/test/mouse/double-click" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Double-Click Test</h3>
+      <p class="tool-desc">Detect switch double-click faults.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Why Mouse Click Latency Matters for Tactical Shooters</h2>
+    <p>
+      In games like <em>Valorant</em> and <em>CS:GO</em>, winning a one-tap duel depends on click latency.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>

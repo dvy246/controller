@@ -1,0 +1,110 @@
+---
+/**
+ * /test/controller/vibration — Controller Vibration & Rumble Tester
+ * SEO Title: Controller Vibration Test — Test Gamepad Haptic Rumble Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import VibrationTester from '../../../components/tools/controller/VibrationTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Vibration & Rumble Test' },
+];
+
+const faqs = [
+  {
+    question: 'Why does my controller not vibrate during the web test?',
+    answer: 'Web Gamepad API vibration is supported in Google Chrome, Microsoft Edge, and Opera on Windows and macOS. Ensure rumble is enabled in your system Bluetooth or OS device settings.',
+  },
+  {
+    question: 'What is the difference between heavy and light rumble motors?',
+    answer: 'Most gamepads contain two distinct eccentric rotating mass (ERM) motors. The left grip houses a heavy weight motor for low-frequency impacts (explosions), while the right grip houses a light weight motor for high-frequency haptic cues (gunshots).',
+  },
+  {
+    question: 'Can vibration testing damage my controller battery or motors?',
+    answer: 'No. The test triggers standard motor pulses identical to normal gameplay feedback.',
+  },
+];
+---
+
+<ToolLayout
+  title="Controller Vibration Test — Test Gamepad Haptic Rumble Online | ControllerTesting.com"
+  description="Test heavy and light vibration motors on PS5 DualSense, Xbox, and Switch controllers. Free browser tool to pulse haptic rumble actuators."
+  toolName="Vibration & Rumble Tester"
+  category="Controller Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <VibrationTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Haptic Motor Diagnostics</h2>
+      <p class="results-text">
+        Both left and right grips should produce distinct vibration feedback. If one motor fails to pulse or produces a rattling sound, the internal eccentric weight offset may be loose or disconnected from the main PCB.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Run full diagnostic checkup</h3>
+        <p class="export-desc">Combine rumble testing with stick drift and button matrix diagnostics.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    </a>
+    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Button Tester</h3>
+      <p class="tool-desc">Test button ghosting and response speed.</p>
+    </a>
+    <a href="/test/controller/triggers" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Trigger Tester</h3>
+      <p class="tool-desc">Analog L2/R2 pressure curve analyzer.</p>
+    </a>
+    <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Measure input rate in Hz.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Understanding Controller Haptic Vibration Technology</h2>
+    <p>
+      Vibration feedback is essential for modern gaming immersion, providing tactile cues for weapon recoil, vehicle engine revs, and environmental feedback.
+    </p>
+
+    <h3>Types of Controller Haptic Actuators</h3>
+    <ul>
+      <li><strong>ERM Motors (Eccentric Rotating Mass):</strong> Asymmetrical weights attached to small DC motors in the grips (found in Xbox Controllers and DualShock 4).</li>
+      <li><strong>Linear Resonant Actuators (LRA):</strong> Voice-coil based haptic actuators providing wide-frequency haptics (found in Nintendo Switch HD Rumble & DualSense).</li>
+    </ul>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+  .prose ul { margin-left: 1.25rem; margin-bottom: 1rem; }
+  .prose li { margin-bottom: 0.5rem; }
+</style>

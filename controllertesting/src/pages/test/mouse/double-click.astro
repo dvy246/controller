@@ -1,0 +1,94 @@
+---
+/**
+ * /test/mouse/double-click — Double-Click Tester
+ * SEO Title: Mouse Double-Click Test — Detect Faulty Mouse Switches Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import DoubleClickTester from '../../../components/tools/mouse/DoubleClickTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/mouse' },
+  { name: 'Mouse Tests', url: '/test/mouse' },
+  { name: 'Double-Click Test' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test if my mouse has a double-clicking fault?',
+    answer: 'Single-click the test target box 50 to 100 times slowly. If the counter registers a double-click fault (interval < 80ms), your mouse switch has mechanical contact bounce failure.',
+  },
+  {
+    question: 'What causes mouse double-clicking issues?',
+    answer: 'Traditional mechanical microswitches (Omron 20M/50M) use metallic leaf springs that oxidize or lose tension over time, causing electrical contact bouncing that registers as two rapid clicks.',
+  },
+  {
+    question: 'Do optical mouse switches prevent double-clicking?',
+    answer: 'Yes! Optical mouse switches (Razer Optical, Light Strike) use light beam actuation instead of physical metallic contacts, permanently eliminating double-click faults.',
+  },
+];
+---
+
+<ToolLayout
+  title="Mouse Double-Click Test — Detect Faulty Mouse Switches Online | ControllerTesting.com"
+  description="Test your gaming mouse for double-click switch faults. Detect Omron mechanical switch chatter and debounce issues free online."
+  toolName="Double-Click Test"
+  category="Mouse Diagnostic"
+  categoryUrl="/test/mouse"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <DoubleClickTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Double-Click Health Guidelines</h2>
+      <p class="results-text">
+        0 double-click faults over 50 clicks indicates a healthy switch. Any single-click registering under 80ms confirms switch bounce failure.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Test mouse click speed (CPS)</h3>
+        <p class="export-desc">Measure how fast you can click in 5s, 10s, or 30s modes.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/mouse/cps" class="btn-primary">CPS Speed Test</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/mouse/cps" class="tool-card card-base card-hover">
+      <h3 class="tool-name">CPS Test</h3>
+      <p class="tool-desc">Test clicks per second speed.</p>
+    </a>
+    <a href="/test/mouse/click-latency" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Click Latency</h3>
+      <p class="tool-desc">Measure click response delay.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Why Mechanical Mouse Switches Suffer from Double-Click Faults</h2>
+    <p>
+      Mechanical microswitches rely on copper alloy leaf springs. Low-voltage signals in modern wireless mice accelerate contact oxidation.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>

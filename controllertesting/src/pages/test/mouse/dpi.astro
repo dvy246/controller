@@ -1,0 +1,94 @@
+---
+/**
+ * /test/mouse/dpi — DPI Analyzer & Calculator
+ * SEO Title: Mouse DPI Analyzer — Calculate True Mouse DPI Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import DPIAnalyzer from '../../../components/tools/mouse/DPIAnalyzer.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/mouse' },
+  { name: 'Mouse Tests', url: '/test/mouse' },
+  { name: 'DPI Analyzer' },
+];
+
+const faqs = [
+  {
+    question: 'How do I calculate my true mouse DPI?',
+    answer: 'Select your ruler distance (e.g. 2 inches) above, place your mouse at the 0-mark on a physical ruler, and drag horizontally across the ruler distance while holding left click.',
+  },
+  {
+    question: 'What is mouse DPI (Dots Per Inch)?',
+    answer: 'DPI measures how many pixels your cursor moves on screen per physical inch of mouse movement. 800 DPI moves 800 pixels per inch; 1600 DPI moves 1600 pixels per inch.',
+  },
+  {
+    question: 'What is eDPI in tactical shooters like Valorant and CS:GO?',
+    answer: 'eDPI (Effective DPI) is calculated by multiplying your mouse DPI by your in-game sensitivity (eDPI = Mouse DPI × In-Game Sensitivity).',
+  },
+];
+---
+
+<ToolLayout
+  title="Mouse DPI Analyzer — Calculate True Mouse DPI Online | ControllerTesting.com"
+  description="Calculate true mouse DPI and sensitivity accuracy online. Measure physical mouse movement against pixel travel free."
+  toolName="DPI Analyzer & Calculator"
+  category="Mouse Diagnostic"
+  categoryUrl="/test/mouse"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <DPIAnalyzer />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">DPI Presets & Benchmarks</h2>
+      <p class="results-text">
+        Most competitive esports players use 400, 800, or 1600 DPI combined with low in-game sensitivity for optimal pixel precision.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Test mouse polling rate</h3>
+        <p class="export-desc">Measure USB report frequency in Hz up to 8000Hz.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/mouse/polling-rate" class="btn-primary">Polling Rate Test</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/mouse/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Measure mouse Hz frequency.</p>
+    </a>
+    <a href="/test/mouse/click-latency" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Click Latency</h3>
+      <p class="tool-desc">Measure click response delay.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Understanding Mouse DPI vs eDPI</h2>
+    <p>
+      DPI (Dots Per Inch) is a hardware specification of optical mouse sensors (PixArt, Hero, Focus+).
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>

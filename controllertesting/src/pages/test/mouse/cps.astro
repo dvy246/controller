@@ -1,0 +1,124 @@
+---
+/**
+ * /test/mouse/cps — CPS Test (Clicks Per Second)
+ * SEO Title: CPS Test — Free Online Click Speed Tester
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import CPSTester from '../../../components/tools/mouse/CPSTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/mouse' },
+  { name: 'Mouse Tests', url: '/test/mouse' },
+  { name: 'CPS Test' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test my CPS (Clicks Per Second)?',
+    answer: 'Select your preferred test duration (5s, 10s, or 30s) above and click inside the target box as fast as possible. The tool calculates your real-time CPS score.',
+  },
+  {
+    question: 'What is a good CPS score for Minecraft and gaming?',
+    answer: 'An average mouse user scores 6.0 to 7.5 CPS. Butterfly clicking and jitter clicking techniques yield 12.0 to 16.0+ CPS for Minecraft PvP (PVP combat).',
+  },
+  {
+    question: 'Does this test drag clicking and butterfly clicking?',
+    answer: 'Yes! Our high-frequency event listener accurately captures normal clicking, butterfly clicking, jitter clicking, and drag clicking techniques.',
+  },
+];
+---
+
+<ToolLayout
+  title="CPS Test — Free Online Click Speed Tester (CPS Check) | ControllerTesting.com"
+  description="Test your clicks per second (CPS) in 1s, 5s, 10s, or 30s mode. Measure butterfly, jitter, and drag clicking speed free online."
+  toolName="CPS Test (Click Speed)"
+  category="Mouse Diagnostic"
+  categoryUrl="/test/mouse"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <CPSTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">CPS Score Ratings</h2>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">&gt; 12.0 CPS (Godlike)</strong>
+          <p class="legend-text">Pro Minecraft PvP speed. Butterfly or drag clicking mastery.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">7.0 – 11.9 CPS (Fast)</strong>
+          <p class="legend-text">Above average gamer speed using standard or jitter clicking.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">&lt; 6.9 CPS (Average)</strong>
+          <p class="legend-text">Standard casual clicking speed.</p>
+        </div>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Test mouse double-clicking faults</h3>
+        <p class="export-desc">Check if your mouse switch suffers from unintentional double-clicking.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/mouse/double-click" class="btn-primary">Double-Click Test</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/mouse/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Mouse Polling Rate</h3>
+      <p class="tool-desc">Measure mouse Hz frequency.</p>
+    </a>
+    <a href="/test/mouse/dpi" class="tool-card card-base card-hover">
+      <h3 class="tool-name">DPI Analyzer</h3>
+      <p class="tool-desc">Calculate mouse DPI sensitivity.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Understanding Clicks Per Second (CPS) Techniques</h2>
+    <p>
+      CPS measures how many times you can actuate a mouse switch in one second. Different clicking techniques offer varying speeds for gaming.
+    </p>
+
+    <h3>Popular Click Speed Techniques</h3>
+    <ul>
+      <li><strong>Standard Clicking:</strong> Single index finger clicking yielding 5-8 CPS.</li>
+      <li><strong>Jitter Clicking:</strong> Tensing arm muscles to vibrate the finger on the switch yielding 10-14 CPS.</li>
+      <li><strong>Butterfly Clicking:</strong> Alternating two fingers (index & middle) on a single button yielding 14-20 CPS.</li>
+      <li><strong>Drag Clicking:</strong> Friction-dragging a finger across the mouse button shell triggering multiple switch bounces yielding 20-30+ CPS.</li>
+    </ul>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 1rem; }
+  .results-legend-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .legend-card { padding: 1rem; border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 0.375rem; }
+  .legend-pass { background: var(--color-pass-bg); border: 1px solid var(--color-pass); }
+  .legend-pass .legend-title { color: var(--color-pass); }
+  .legend-warning { background: var(--color-warning-bg); border: 1px solid var(--color-warning); }
+  .legend-warning .legend-title { color: var(--color-warning); }
+  .legend-fail { background: var(--color-fail-bg); border: 1px solid var(--color-fail); }
+  .legend-fail .legend-title { color: var(--color-fail); }
+  .legend-title { font-family: var(--font-mono); font-size: var(--text-small); }
+  .legend-text { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.5; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+  .prose ul { margin-left: 1.25rem; margin-bottom: 1rem; }
+  @media (max-width: 768px) { .results-legend-grid { grid-template-columns: 1fr; } }
+</style>

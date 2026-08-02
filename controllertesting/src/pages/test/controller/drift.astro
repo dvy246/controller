@@ -1,0 +1,244 @@
+---
+/**
+ * /test/controller/drift — Stick Drift Test Page
+ * SEO Title: Controller Stick Drift Test — Free Online Analog Stick Tester
+ * Target keyword: controller stick drift test, ps5 stick drift test, xbox stick drift test
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import DriftTester from '../../../components/tools/controller/DriftTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Stick Drift Test' },
+];
+
+const faqs = [
+  {
+    question: 'How do I know if my controller has stick drift?',
+    answer: 'Connect your controller above and leave both analog sticks untouched. If the drift percentage is above 2.0% or the cursor moves away from the absolute center, your controller has stick drift.',
+  },
+  {
+    question: 'What causes controller stick drift?',
+    answer: 'Stick drift is caused by worn potentiometer wipers, accumulated dust inside the thumbstick module, or degraded spring tension. Hall-effect thumbsticks prevent drift by using magnetic sensors instead of physical contacts.',
+  },
+  {
+    question: 'Can I fix stick drift without opening my controller?',
+    answer: 'Minor drift caused by dust can often be fixed by spraying 99% isopropyl alcohol around the stick base or increasing your in-game deadzone setting to 5-10%. Severe drift requires module replacement.',
+  },
+  {
+    question: 'Does this test work with PS5 DualSense and Xbox controllers?',
+    answer: 'Yes! This test supports PS5 DualSense, PS4 DualShock, Xbox Series X/S, Xbox One, Nintendo Switch Pro Controller, Joy-Cons, and any standard USB or Bluetooth gamepad.',
+  },
+];
+---
+
+<ToolLayout
+  title="Controller Stick Drift Test — Free Online Analog Stick Tester | ControllerTesting.com"
+  description="Test your PS5, Xbox, or Switch controller for stick drift instantly in your browser. Measure analog stick precision to 0.1% accuracy. Free, no download required."
+  toolName="Stick Drift Tester"
+  category="Controller Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  {/* ── Tool Interactive Island ── */}
+  <Fragment slot="tool">
+    <DriftTester />
+  </Fragment>
+
+  {/* ── Results Slot ── */}
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Understanding Your Test Results</h2>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">0.0% – 2.0% (Healthy)</strong>
+          <p class="legend-text">Normal variance. No in-game drift will occur even with 0% deadzone.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">2.1% – 10.0% (Minor Drift)</strong>
+          <p class="legend-text">Slight wear. Increase in-game deadzone to 5-10% to eliminate phantom movement.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">> 10.0% (Severe Drift)</strong>
+          <p class="legend-text">Significant wear or faulty potentiometer. Repair or stick replacement recommended.</p>
+        </div>
+      </div>
+    </div>
+  </Fragment>
+
+  {/* ── Export Slot ── */}
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Save your drift test snapshot</h3>
+        <p class="export-desc">Export your results as a verified PDF diagnostic report or track drift over time.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/health-score" class="btn-primary">Generate Health Report</a>
+        <a href="/test/controller/timeline" class="btn-secondary">Save to Timeline</a>
+      </div>
+    </div>
+  </Fragment>
+
+  {/* ── Related Tools Slot ── */}
+  <Fragment slot="related-tools">
+    <a href="/test/controller/full-diagnostic" class="tool-card card-base card-hover">
+      <span class="tool-badge">Flagship</span>
+      <h3 class="tool-name">Full Diagnostic Wizard</h3>
+      <p class="tool-desc">Test drift, buttons, triggers, and rumble in 2 minutes.</p>
+    </a>
+    <a href="/test/controller/circularity" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Circularity Test</h3>
+      <p class="tool-desc">Measure stick range of motion and outer error boundary.</p>
+    </a>
+    <a href="/test/controller/deadzone" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Deadzone Visualizer</h3>
+      <p class="tool-desc">Find the ideal deadzone setting for competitive FPS games.</p>
+    </a>
+    <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Test controller response latency and polling rate in Hz.</p>
+    </a>
+  </Fragment>
+
+  {/* ── SEO Content Slot ── */}
+  <Fragment slot="content">
+    <h2>What Is Controller Stick Drift and How to Test It</h2>
+    <p>
+      Controller stick drift occurs when an analog thumbstick registers movement input even when your fingers are completely off the stick.
+      In games like <em>Apex Legends</em>, <em>Call of Duty: Warzone</em>, or <em>Fortnite</em>, stick drift causes your camera to slowly drift upward,
+      your character to walk automatically, or your crosshairs to misalign during precision aim.
+    </p>
+
+    <h3>Why Potentiometers Suffer from Drift</h3>
+    <p>
+      Most standard gamepads — including the PlayStation 5 DualSense, Xbox Wireless Controller, and Nintendo Switch Joy-Cons — use resistive potentiometer thumbsticks.
+      Inside each potentiometer, a metallic wiper glides over a resistive graphite track to measure movement. Over time, friction wears down the graphite layer,
+      creating microscopic debris that disrupts electrical resistance readings.
+    </p>
+
+    <h3>How to Fix Stick Drift: 3 Proven Steps</h3>
+    <ol>
+      <li>
+        <strong>Clean with Isopropyl Alcohol:</strong> Turn off your controller, apply 2-3 drops of 99% isopropyl alcohol around the thumbstick ball joint,
+        rotate the stick 30 times, and let it dry for 15 minutes.
+      </li>
+      <li>
+        <strong>Adjust In-Game Deadzone:</strong> Open your game settings (e.g., Controller Settings → Deadzone) and increase the inner deadzone slider
+        until camera movement stops.
+      </li>
+      <li>
+        <strong>Upgrade to Hall-Effect Sticks:</strong> Replace your traditional potentiometers with Hall-effect magnetic stick modules, which eliminate friction
+        and never suffer from drift.
+      </li>
+    </ol>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .results-legend-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .legend-card {
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .legend-pass {
+    background: var(--color-pass-bg);
+    border: 1px solid var(--color-pass);
+  }
+  .legend-pass .legend-title { color: var(--color-pass); }
+
+  .legend-warning {
+    background: var(--color-warning-bg);
+    border: 1px solid var(--color-warning);
+  }
+  .legend-warning .legend-title { color: var(--color-warning); }
+
+  .legend-fail {
+    background: var(--color-fail-bg);
+    border: 1px solid var(--color-fail);
+  }
+  .legend-fail .legend-title { color: var(--color-fail); }
+
+  .legend-title {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+  }
+
+  .legend-text {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .export-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .export-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .export-desc {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .export-buttons {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .prose {
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+
+  .prose h2, .prose h3 {
+    color: var(--color-text-primary);
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .prose p {
+    margin-bottom: 1rem;
+  }
+
+  .prose ol {
+    margin-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose li {
+    margin-bottom: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .results-legend-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

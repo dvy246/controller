@@ -1,0 +1,83 @@
+---
+/**
+ * EmbedLayout.astro — Clean, minimal layout for embeddable widgets
+ * Includes no header/footer, transparent/dark background options, postMessage API, and contextual SEO anchor backlink.
+ */
+
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  toolSlug: string;
+}
+
+const { title, toolSlug } = Astro.props;
+const canonicalUrl = `https://controllertesting.com/embed/${toolSlug}`;
+---
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="robots" content="noindex, follow" />
+    <!-- Geist Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body class="embed-body">
+    <div class="embed-wrapper">
+      <slot />
+      <div class="embed-footer">
+        <a href={`https://controllertesting.com/test/controller/${toolSlug}`} target="_blank" rel="noopener noreferrer" class="embed-attribution">
+          Powered by <span class="brand-highlight">ControllerTesting.com</span>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>
+
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-surface-1);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    overflow: hidden;
+  }
+  .embed-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0.75rem;
+    box-sizing: border-box;
+    justify-content: space-between;
+  }
+  .embed-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+  .embed-attribution {
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    color: var(--color-text-tertiary);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .embed-attribution:hover {
+    color: var(--color-accent);
+  }
+  .brand-highlight {
+    color: var(--color-text-secondary);
+    font-weight: 600;
+  }
+</style>

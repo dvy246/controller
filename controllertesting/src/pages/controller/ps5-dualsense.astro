@@ -1,0 +1,83 @@
+---
+/**
+ * /controller/ps5-dualsense — PS5 DualSense Controller Profile
+ * SEO Title: PS5 DualSense Controller Specifications, Stick Drift & Diagnostic Guide
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Controller Profiles' },
+  { name: 'PS5 DualSense' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: 'PlayStation 5 DualSense Wireless Controller',
+  brand: { '@type': 'Brand', name: 'Sony Interactive Entertainment' },
+  description: 'PS5 DualSense hardware specs, potentiometer module details, and diagnostic tests.',
+};
+---
+
+<BaseLayout
+  title="PS5 DualSense Controller Specifications & Stick Drift Test | ControllerTesting.com"
+  description="Complete PS5 DualSense controller specs, ALPS potentiometer stick drift rate, polling rate capabilities, and free online diagnostic tools."
+  schema={schema}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="profile-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="profile-hero">
+        <span class="badge-tag">Hardware Profile</span>
+        <h1 class="profile-title">PS5 DualSense Wireless Controller</h1>
+        <p class="profile-subtitle">
+          Comprehensive hardware breakdown, ALPS potentiometer specs, haptic actuator analysis, and diagnostic testing tools.
+        </p>
+      </header>
+
+      <div class="profile-specs-grid">
+        <div class="spec-card card-base">
+          <h2 class="spec-heading">Hardware Specifications</h2>
+          <div class="spec-row"><span>Thumbstick Sensors:</span> <span class="mono">ALPS RKJXV Potentiometers (2.3kΩ)</span></div>
+          <div class="spec-row"><span>USB Polling Rate:</span> <span class="mono">250Hz (Bluetooth) / 1000Hz (Overclocked USB)</span></div>
+          <div class="spec-row"><span>Haptic Feedback:</span> <span class="mono">Dual Linear Resonant Actuators (LRA)</span></div>
+          <div class="spec-row"><span>Adaptive Triggers:</span> <span class="mono">Geared Servo Motor Tension Control</span></div>
+        </div>
+
+        <div class="spec-card card-base">
+          <h2 class="spec-heading">Recommended Diagnostic Tests</h2>
+          <div class="test-links">
+            <a href="/test/controller/drift" class="btn-primary">Test DualSense Stick Drift &rarr;</a>
+            <a href="/test/controller/vibration" class="btn-secondary">Test DualSense Haptics &rarr;</a>
+            <a href="/test/controller/touchpad" class="btn-secondary">Test DualSense Touchpad &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .profile-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .profile-hero { margin-bottom: 2.5rem; }
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .profile-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .profile-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 60ch; }
+  .profile-specs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  .spec-card { display: flex; flex-direction: column; gap: 1rem; }
+  .spec-heading { font-size: 1.25rem; font-weight: 700; }
+  .spec-row { display: flex; justify-content: space-between; padding: 0.625rem 0; border-bottom: 1px solid var(--color-border-subtle); font-size: var(--text-small); }
+  .spec-row span.mono { font-weight: 600; color: var(--color-text-primary); }
+  .test-links { display: flex; flex-direction: column; gap: 0.75rem; }
+  @media (max-width: 768px) { .profile-specs-grid { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,132 @@
+---
+/**
+ * /games/trigger-racer — Trigger Racer Precision Throttle Game
+ * Precision analog trigger control arcade game.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Games Arcade', url: '/games' },
+  { name: 'Trigger Racer' },
+];
+---
+
+<BaseLayout
+  title="Trigger Racer — Precision Throttle Game | ControllerTesting.com"
+  description="Test your analog trigger control linearity in Trigger Racer. Modulate R2/L2 pressure to stay inside target speed zones."
+  breadcrumbs={breadcrumbs}
+>
+  <div class="game-container">
+    <div class="hero-card card-base">
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="hero-badge">THROTTLE CONTROL GAME</span>
+      <h1 class="hero-title text-gradient">Trigger Racer</h1>
+      <p class="hero-desc">
+        Squeeze your R2 / RT analog trigger to match target throttle percentage zones without overshooting into red RPM limits.
+      </p>
+    </div>
+
+    <div class="canvas-card card-base">
+      <div class="game-score-bar">
+        <span>RPM ZONE: <strong class="mono text-gradient" id="trig-zone">50%</strong></span>
+        <span>SCORE: <strong class="mono" id="trig-score">0</strong></span>
+        <span>STATUS: <strong class="mono pass" id="trig-status">READY</strong></span>
+      </div>
+
+      <canvas id="trig-canvas" width="700" height="300"></canvas>
+
+      <div class="game-controls">
+        <button type="button" class="btn-primary" id="btn-start-trig">Start Race</button>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import { addXP } from '../../lib/rewards';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('trig-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let isPlaying = false;
+    let score = 0;
+    let targetPct = 50;
+
+    function loop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Track
+      ctx.fillStyle = '#0c0c14';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Target Zone (Green box)
+      const zoneY = canvas.height - (targetPct / 100) * canvas.height;
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.2)';
+      ctx.fillRect(0, zoneY - 20, canvas.width, 40);
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(0, zoneY - 20, canvas.width, 40);
+
+      // Read trigger input
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      const gp = gamepads[0];
+      let currentVal = 0;
+      if (gp && gp.buttons[7]) {
+        currentVal = gp.buttons[7].value * 100;
+      }
+
+      // Player Tachometer bar
+      const playerY = canvas.height - (currentVal / 100) * canvas.height;
+      ctx.fillStyle = '#2563eb';
+      ctx.fillRect(100, playerY - 10, canvas.width - 200, 20);
+
+      if (isPlaying) {
+        if (Math.abs(currentVal - targetPct) < 8) {
+          score += 10;
+          const scEl = document.getElementById('trig-score');
+          if (scEl) scEl.textContent = String(score);
+        }
+
+        if (score >= 1000) {
+          isPlaying = false;
+          addXP(150);
+          const st = document.getElementById('trig-status');
+          if (st) st.textContent = 'RACE COMPLETED! (+150 XP)';
+        } else {
+          requestAnimationFrame(loop);
+        }
+      }
+    }
+
+    document.getElementById('btn-start-trig')?.addEventListener('click', () => {
+      score = 0;
+      isPlaying = true;
+      targetPct = Math.floor(Math.random() * 60) + 20;
+      const zEl = document.getElementById('trig-zone');
+      if (zEl) zEl.textContent = `${targetPct}%`;
+      const st = document.getElementById('trig-status');
+      if (st) st.textContent = 'RACING';
+      loop();
+    });
+
+    loop();
+  });
+</script>
+
+<style>
+  .game-container { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
+  .hero-card { padding: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
+  .hero-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.15; }
+  .hero-desc { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .canvas-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+  .game-score-bar { width: 100%; display: flex; justify-content: space-between; font-size: 1rem; font-weight: 600; }
+  #trig-canvas { border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); max-width: 100%; }
+  .game-controls { display: flex; justify-content: center; width: 100%; margin-top: 0.5rem; }
+</style>

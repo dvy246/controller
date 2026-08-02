@@ -1,0 +1,131 @@
+---
+/**
+ * /games/quick-draw — Quick Draw Reaction Challenge Game
+ * Reflex reaction speed game.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Games Arcade', url: '/games' },
+  { name: 'Quick Draw' },
+];
+---
+
+<BaseLayout
+  title="Quick Draw Reaction Challenge — Controller Arcade Game | ControllerTesting.com"
+  description="Test your reaction speed in Quick Draw. Press R2 / Primary Button the millisecond the signal turns green."
+  breadcrumbs={breadcrumbs}
+>
+  <div class="game-container">
+    <div class="hero-card card-base">
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="hero-badge">REFLEX REACTION GAME</span>
+      <h1 class="hero-title text-gradient">Quick Draw Challenge</h1>
+      <p class="hero-desc">
+        Wait for the signal to turn green, then press any button on your controller as fast as possible to measure your reaction delay in milliseconds.
+      </p>
+    </div>
+
+    <div class="canvas-card card-base">
+      <div class="signal-box" id="signal-box">
+        <span class="signal-text" id="signal-text">WAIT FOR GREEN SIGNAL...</span>
+      </div>
+
+      <div class="reaction-result" id="reaction-result">
+        Reaction Time: <span class="mono text-gradient" id="reaction-time">-- ms</span>
+      </div>
+
+      <div class="game-controls">
+        <button type="button" class="btn-primary" id="btn-start-draw">Start Quick Draw</button>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import { addXP } from '../../lib/rewards';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    let startTime = 0;
+    let timerId: any = null;
+    let isWaitingSignal = false;
+    let isReadyToShoot = false;
+
+    const box = document.getElementById('signal-box');
+    const text = document.getElementById('signal-text');
+    const resultTime = document.getElementById('reaction-time');
+
+    function checkGamepad() {
+      if (!isReadyToShoot && !isWaitingSignal) return;
+
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let pressed = false;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+          if (gamepads[i]?.buttons.some((b) => b.pressed)) {
+            pressed = true;
+            break;
+          }
+        }
+      }
+
+      if (pressed) {
+        if (isWaitingSignal) { // Too early false start
+          clearTimeout(timerId);
+          isWaitingSignal = false;
+          if (box) box.className = 'signal-box false-start';
+          if (text) text.textContent = 'TOO EARLY! FALSE START ❌';
+        } else if (isReadyToShoot) { // Valid hit
+          const ms = Math.round(performance.now() - startTime);
+          isReadyToShoot = false;
+          if (box) box.className = 'signal-box hit';
+          if (text) text.textContent = `FIRE! (${ms}ms)`;
+          if (resultTime) resultTime.textContent = `${ms} ms`;
+          addXP(75);
+        }
+      }
+
+      requestAnimationFrame(checkGamepad);
+    }
+
+    document.getElementById('btn-start-draw')?.addEventListener('click', () => {
+      if (box) box.className = 'signal-box waiting';
+      if (text) text.textContent = 'STANDBY... WAIT FOR GREEN!';
+      if (resultTime) resultTime.textContent = '-- ms';
+
+      isWaitingSignal = true;
+      isReadyToShoot = false;
+
+      const delay = Math.random() * 3000 + 2000;
+      timerId = setTimeout(() => {
+        isWaitingSignal = false;
+        isReadyToShoot = true;
+        startTime = performance.now();
+        if (box) box.className = 'signal-box ready';
+        if (text) text.textContent = 'FIRE! PRESS BUTTON NOW!';
+      }, delay);
+
+      checkGamepad();
+    });
+  });
+</script>
+
+<style>
+  .game-container { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
+  .hero-card { padding: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
+  .hero-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.15; }
+  .hero-desc { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .canvas-card { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; align-items: center; }
+  .signal-box { width: 100%; height: 220px; border-radius: var(--radius-card); border: 2px solid var(--color-border-default); background: var(--color-surface-1); display: flex; align-items: center; justify-content: center; transition: background 0.15s, border-color 0.15s; }
+  .signal-box.waiting { background: rgba(245, 158, 11, 0.1); border-color: var(--color-warning); }
+  .signal-box.ready { background: rgba(16, 185, 129, 0.2); border-color: var(--color-pass); }
+  .signal-box.false-start { background: rgba(239, 68, 68, 0.2); border-color: var(--color-fail); }
+  .signal-box.hit { background: rgba(37, 99, 235, 0.2); border-color: var(--color-accent); }
+  .signal-text { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 800; }
+  .reaction-result { font-size: 1.25rem; font-weight: 700; color: var(--color-text-secondary); }
+  .game-controls { display: flex; justify-content: center; width: 100%; }
+</style>

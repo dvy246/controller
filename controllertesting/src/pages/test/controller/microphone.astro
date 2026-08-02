@@ -1,0 +1,94 @@
+---
+/**
+ * /test/controller/microphone — Controller Microphone Tester
+ * SEO Title: Controller Microphone Test — Test Built-In Mic & Headset Audio Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import MicrophoneTester from '../../../components/tools/controller/MicrophoneTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Microphone Tester' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test the built-in microphone on a PS5 DualSense controller?',
+    answer: 'Connect your DualSense controller via USB, click "Test Microphone Input" above, grant browser microphone permissions, and speak into the controller array microphone to test live volume levels.',
+  },
+  {
+    question: 'Can I test a 3.5mm headset plugged into my controller?',
+    answer: 'Yes! Connect your headset into the controller\'s 3.5mm audio jack, select the controller input device in your OS settings, and test audio volume levels in real time.',
+  },
+  {
+    question: 'Does Xbox Wireless Controller have a built-in microphone?',
+    answer: 'Standard Xbox controllers do not feature an internal microphone, but they support 3.5mm headset audio input when a gaming headset is plugged in.',
+  },
+];
+---
+
+<ToolLayout
+  title="Controller Microphone Test — Test Built-In Mic & Headset Audio Online | ControllerTesting.com"
+  description="Test built-in controller microphones and 3.5mm headset audio input on PS5 DualSense and Xbox controllers online. Real-time audio level visualizer."
+  toolName="Microphone Tester"
+  category="Controller Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <MicrophoneTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Audio Input Guidelines</h2>
+      <p class="results-text">
+        Normal voice speech should register volume levels between 40 dB and 85 dB without audio clipping or persistent background hum.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Run full diagnostic checkup</h3>
+        <p class="export-desc">Combine microphone testing with stick drift and button matrix diagnostics.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/vibration" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Vibration Tester</h3>
+      <p class="tool-desc">Test haptic rumble motors.</p>
+    </a>
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Controller Audio & Microphone Hardware</h2>
+    <p>
+      Modern controllers like the PS5 DualSense incorporate built-in noise-canceling dual microphone arrays and 3.5mm TRRS audio pass-through jacks.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>

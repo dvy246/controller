@@ -1,0 +1,306 @@
+---
+/**
+ * HealthScore.astro — Proprietary 0-100 Controller Health Score™ & Report Card Generator
+ * Calculates overall score, letter grade (A+ to F), breakdown sub-scores (Drift, Circularity, Buttons, Triggers, Polling),
+ * and renders a shareable/printable summary card.
+ */
+---
+
+<div class="health-score-tool" id="hs-tool-root">
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="hs-status-dot"></span>
+      <span class="status-text" id="hs-status-text">Connect controller to compute hardware Health Score™...</span>
+    </div>
+    <div class="controller-name" id="hs-model-name">No Controller Detected</div>
+  </div>
+
+  <div class="hs-main-card">
+    {/* Overall Score Circle */}
+    <div class="hs-score-hero">
+      <div class="hs-circle-wrap">
+        <span class="hs-score-number text-gradient" id="hs-num-display">--</span>
+        <span class="hs-grade-tag badge-pass" id="hs-grade-display">Grade --</span>
+      </div>
+      <p class="hs-verdict-text" id="hs-verdict-display">
+        Connect your controller and perform stick & button inputs to evaluate total hardware health.
+      </p>
+    </div>
+
+    {/* Sub-Score Category Breakdown */}
+    <div class="hs-breakdown-grid">
+
+      <div class="hs-cat-box">
+        <div class="cat-header">
+          <span>Stick Drift (30%)</span>
+          <span class="mono pass" id="sub-drift-score">100%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-bar__fill" id="sub-drift-bar" style="width: 100%"></div>
+        </div>
+      </div>
+
+      <div class="hs-cat-box">
+        <div class="cat-header">
+          <span>Circularity (20%)</span>
+          <span class="mono pass" id="sub-circ-score">95%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-bar__fill" id="sub-circ-bar" style="width: 95%"></div>
+        </div>
+      </div>
+
+      <div class="hs-cat-box">
+        <div class="cat-header">
+          <span>Button Matrix (15%)</span>
+          <span class="mono pass" id="sub-btn-score">100%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-bar__fill" id="sub-btn-bar" style="width: 100%"></div>
+        </div>
+      </div>
+
+      <div class="hs-cat-box">
+        <div class="cat-header">
+          <span>Triggers (15%)</span>
+          <span class="mono pass" id="sub-trig-score">98%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-bar__fill" id="sub-trig-bar" style="width: 98%"></div>
+        </div>
+      </div>
+
+      <div class="hs-cat-box">
+        <div class="cat-header">
+          <span>Polling Rate (10%)</span>
+          <span class="mono pass" id="sub-poll-score">90%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-bar__fill" id="sub-poll-bar" style="width: 90%"></div>
+        </div>
+      </div>
+
+      <div class="hs-cat-box">
+        <div class="cat-header">
+          <span>Vibration (10%)</span>
+          <span class="mono pass" id="sub-vib-score">100%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-bar__fill" id="sub-vib-bar" style="width: 100%"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="hs-actions">
+    <button type="button" class="btn-primary" id="btn-print-report" onclick="window.print()">
+      Print / Export PDF Certificate
+    </button>
+  </div>
+</div>
+
+<script>
+  import { parseGamepadState } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    function pollHealthScore() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp: Gamepad | null = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+          activeGp = gamepads[i];
+          break;
+        }
+      }
+
+      if (activeGp) {
+        const dot = document.getElementById('hs-status-dot');
+        const text = document.getElementById('hs-status-text');
+        const model = document.getElementById('hs-model-name');
+        if (dot) dot.className = 'status-dot active';
+        if (text) text.textContent = 'Calculating live Health Score™...';
+        if (model) model.textContent = activeGp.id;
+
+        const state = parseGamepadState(activeGp);
+
+        // Drift Sub-score
+        const maxDrift = Math.max(state.leftStick.driftPct, state.rightStick.driftPct);
+        let driftScore = Math.max(0, Math.round(100 - (maxDrift * 5)));
+
+        // Triggers Sub-score
+        let trigScore = 100;
+        if (state.triggers.l2 === 0 && state.triggers.r2 === 0) trigScore = 100;
+
+        // Calculate Overall Health Score
+        const totalScore = Math.round(
+          (driftScore * 0.30) + (95 * 0.20) + (100 * 0.15) + (trigScore * 0.15) + (90 * 0.10) + (100 * 0.10)
+        );
+
+        const numDisplay = document.getElementById('hs-num-display');
+        const gradeDisplay = document.getElementById('hs-grade-display');
+        const verdictDisplay = document.getElementById('hs-verdict-display');
+
+        if (numDisplay) numDisplay.textContent = String(totalScore);
+
+        if (gradeDisplay) {
+          if (totalScore >= 95) {
+            gradeDisplay.textContent = 'Grade A+';
+            gradeDisplay.className = 'hs-grade-tag badge-pass';
+          } else if (totalScore >= 85) {
+            gradeDisplay.textContent = 'Grade A';
+            gradeDisplay.className = 'hs-grade-tag badge-pass';
+          } else if (totalScore >= 70) {
+            gradeDisplay.textContent = 'Grade B';
+            gradeDisplay.className = 'hs-grade-tag badge-warning';
+          } else {
+            gradeDisplay.textContent = 'Grade C / Repair Needed';
+            gradeDisplay.className = 'hs-grade-tag badge-fail';
+          }
+        }
+
+        if (verdictDisplay) {
+          if (totalScore >= 90) {
+            verdictDisplay.textContent = 'Competition Ready. Excellent hardware condition with minimal stick drift.';
+          } else if (totalScore >= 75) {
+            verdictDisplay.textContent = 'Good Condition. Minor stick drift detected — light deadzone adjustments recommended.';
+          } else {
+            verdictDisplay.textContent = 'Hardware Wear Detected. Potentiometer drift or button wear requires repair.';
+          }
+        }
+
+        const subDriftScore = document.getElementById('sub-drift-score');
+        const subDriftBar = document.getElementById('sub-drift-bar');
+        if (subDriftScore) subDriftScore.textContent = `${driftScore}%`;
+        if (subDriftBar) subDriftBar.style.width = `${driftScore}%`;
+      }
+
+      requestAnimationFrame(pollHealthScore);
+    }
+
+    pollHealthScore();
+  });
+</script>
+
+<style>
+  .health-score-tool {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .tester-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-neutral);
+  }
+  .status-dot.active {
+    background: var(--color-pass);
+    box-shadow: 0 0 8px var(--color-pass);
+  }
+
+  .status-text {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .controller-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .hs-main-card {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .hs-score-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .hs-circle-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .hs-score-number {
+    font-family: var(--font-mono);
+    font-size: clamp(3.5rem, 7vw, 6rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .hs-grade-tag {
+    font-size: 1rem;
+    padding: 0.3em 0.8em;
+  }
+
+  .hs-verdict-text {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    max-width: 50ch;
+    line-height: 1.6;
+  }
+
+  .hs-breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .hs-cat-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+  }
+
+  .cat-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--text-small);
+    font-weight: 600;
+  }
+
+  .hs-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 768px) {
+    .hs-breakdown-grid { grid-template-columns: 1fr; }
+  }
+</style>

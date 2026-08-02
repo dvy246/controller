@@ -1,0 +1,353 @@
+---
+/**
+ * CircularityTester.astro — Interactive Thumbstick Circularity & Outer Error Calculator
+ * Real-time 360-degree boundary plotting, circularity error percentage, and diagonal reach analysis.
+ */
+---
+
+<div class="circularity-tester" id="circ-tester-root">
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="circ-status-dot"></span>
+      <span class="status-text" id="circ-status-text">Rotate both thumbsticks 360 degrees to measure circularity...</span>
+    </div>
+    <div class="controller-name" id="circ-model-name">No Controller Detected</div>
+  </div>
+
+  <div class="circ-grid">
+
+    {/* Left Stick Canvas */}
+    <div class="circ-card">
+      <div class="circ-header">
+        <h3 class="circ-title">Left Stick Circularity</h3>
+        <span class="circ-err-val" id="left-circ-err">0.0% Error</span>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="left-circ-canvas" width="280" height="280"></canvas>
+      </div>
+      <div class="circ-metrics">
+        <div class="metric">
+          <span class="m-label">Points Samples</span>
+          <span class="m-val mono" id="left-pts-count">0</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Avg Radius</span>
+          <span class="m-val mono" id="left-avg-rad">0.000</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Outer Error</span>
+          <span class="m-val badge-pass" id="left-circ-badge">Perfect</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Right Stick Canvas */}
+    <div class="circ-card">
+      <div class="circ-header">
+        <h3 class="circ-title">Right Stick Circularity</h3>
+        <span class="circ-err-val" id="right-circ-err">0.0% Error</span>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="right-circ-canvas" width="280" height="280"></canvas>
+      </div>
+      <div class="circ-metrics">
+        <div class="metric">
+          <span class="m-label">Points Samples</span>
+          <span class="m-val mono" id="right-pts-count">0</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Avg Radius</span>
+          <span class="m-val mono" id="right-avg-rad">0.000</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Outer Error</span>
+          <span class="m-val badge-pass" id="right-circ-badge">Perfect</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tester-controls">
+    <button type="button" class="btn-secondary" id="btn-reset-circ">Reset Circularity Data</button>
+  </div>
+</div>
+
+<script>
+  import { parseGamepadState, calculateCircularityError } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const leftCanvas = document.getElementById('left-circ-canvas') as HTMLCanvasElement;
+    const rightCanvas = document.getElementById('right-circ-canvas') as HTMLCanvasElement;
+    if (!leftCanvas || !rightCanvas) return;
+
+    const leftCtx = leftCanvas.getContext('2d');
+    const rightCtx = rightCanvas.getContext('2d');
+
+    const leftPoints: { x: number; y: number }[] = [];
+    const rightPoints: { x: number; y: number }[] = [];
+
+    function renderCircularity(
+      ctx: CanvasRenderingContext2D | null,
+      points: { x: number; y: number }[],
+      currentX: number,
+      currentY: number
+    ) {
+      if (!ctx) return;
+      const w = ctx.canvas.width;
+      const h = ctx.canvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = (w / 2) - 24;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Ideal outer circle boundary
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#0C0C14';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Plot outer points boundary hull
+      if (points.length > 5) {
+        ctx.beginPath();
+        for (let i = 0; i < points.length; i++) {
+          const pt = points[i];
+          const px = cx + pt.x * radius;
+          const py = cy + pt.y * radius;
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.fillStyle = 'rgba(37, 99, 235, 0.15)';
+        ctx.fill();
+        ctx.strokeStyle = '#2563EB';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      // Draw active stick position
+      const px = cx + currentX * radius;
+      const py = cy + currentY * radius;
+      ctx.beginPath();
+      ctx.arc(px, py, 5, 0, Math.PI * 2);
+      ctx.fillStyle = '#10B981';
+      ctx.fill();
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    function pollCircularity() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp: Gamepad | null = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+          activeGp = gamepads[i];
+          break;
+        }
+      }
+
+      if (activeGp) {
+        const dot = document.getElementById('circ-status-dot');
+        const text = document.getElementById('circ-status-text');
+        const model = document.getElementById('circ-model-name');
+        if (dot) dot.className = 'status-dot active';
+        if (text) text.textContent = 'Rotate sticks 360° to measure circularity';
+        if (model) model.textContent = activeGp.id;
+
+        const state = parseGamepadState(activeGp);
+
+        // Left stick
+        const lDist = Math.hypot(state.leftStick.x, state.leftStick.y);
+        if (lDist > 0.3) {
+          leftPoints.push({ x: state.leftStick.x, y: state.leftStick.y });
+          if (leftPoints.length > 300) leftPoints.shift();
+        }
+        renderCircularity(leftCtx, leftPoints, state.leftStick.x, state.leftStick.y);
+
+        const lErr = calculateCircularityError(leftPoints);
+        const lErrEl = document.getElementById('left-circ-err');
+        const lPtsEl = document.getElementById('left-pts-count');
+        const lBadge = document.getElementById('left-circ-badge');
+
+        if (lErrEl) lErrEl.textContent = `${lErr}% Error`;
+        if (lPtsEl) lPtsEl.textContent = String(leftPoints.length);
+        if (lBadge) {
+          if (lErr > 12) {
+            lBadge.textContent = 'High Error';
+            lBadge.className = 'm-val badge-fail';
+          } else if (lErr > 5) {
+            lBadge.textContent = 'Average';
+            lBadge.className = 'm-val badge-warning';
+          } else {
+            lBadge.textContent = 'Excellent';
+            lBadge.className = 'm-val badge-pass';
+          }
+        }
+
+        // Right stick
+        const rDist = Math.hypot(state.rightStick.x, state.rightStick.y);
+        if (rDist > 0.3) {
+          rightPoints.push({ x: state.rightStick.x, y: state.rightStick.y });
+          if (rightPoints.length > 300) rightPoints.shift();
+        }
+        renderCircularity(rightCtx, rightPoints, state.rightStick.x, state.rightStick.y);
+
+        const rErr = calculateCircularityError(rightPoints);
+        const rErrEl = document.getElementById('right-circ-err');
+        const rPtsEl = document.getElementById('right-pts-count');
+        const rBadge = document.getElementById('right-circ-badge');
+
+        if (rErrEl) rErrEl.textContent = `${rErr}% Error`;
+        if (rPtsEl) rPtsEl.textContent = String(rightPoints.length);
+        if (rBadge) {
+          if (rErr > 12) {
+            rBadge.textContent = 'High Error';
+            rBadge.className = 'm-val badge-fail';
+          } else if (rErr > 5) {
+            rBadge.textContent = 'Average';
+            rBadge.className = 'm-val badge-warning';
+          } else {
+            rBadge.textContent = 'Excellent';
+            rBadge.className = 'm-val badge-pass';
+          }
+        }
+      }
+
+      requestAnimationFrame(pollCircularity);
+    }
+
+    pollCircularity();
+
+    document.getElementById('btn-reset-circ')?.addEventListener('click', () => {
+      leftPoints.length = 0;
+      rightPoints.length = 0;
+    });
+  });
+</script>
+
+<style>
+  .circularity-tester {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .tester-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-neutral);
+  }
+  .status-dot.active {
+    background: var(--color-pass);
+    box-shadow: 0 0 8px var(--color-pass);
+  }
+
+  .status-text {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .controller-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .circ-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .circ-card {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .circ-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .circ-title {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .circ-err-val {
+    font-family: var(--font-mono);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-accent);
+  }
+
+  .canvas-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .circ-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .m-label {
+    font-size: var(--text-micro);
+    color: var(--color-text-tertiary);
+    font-family: var(--font-mono);
+  }
+
+  .m-val {
+    font-size: var(--text-small);
+    font-weight: 600;
+  }
+
+  .tester-controls {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 768px) {
+    .circ-grid { grid-template-columns: 1fr; }
+  }
+</style>

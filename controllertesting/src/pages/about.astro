@@ -1,0 +1,59 @@
+---
+/**
+ * /about — About Us & Testing Methodology
+ * SEO Title: About ControllerTesting.com — Free Gamepad & Mouse Diagnostic Platform
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'About Us' },
+];
+---
+
+<BaseLayout
+  title="About ControllerTesting.com — Web Gamepad API Testing Platform"
+  description="Learn about ControllerTesting.com: 100% free, private, client-side controller and mouse diagnostic platform built for gamers, esports players, and hardware reviewers."
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="about-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="page-hero">
+        <h1 class="page-title">About ControllerTesting.com</h1>
+        <p class="page-subtitle">
+          Building the world's most accurate, private, and accessible hardware diagnostic platform for gaming controllers and peripherals.
+        </p>
+      </header>
+
+      <div class="about-content card-base">
+        <h2>Our Core Mission</h2>
+        <p>
+          ControllerTesting.com was created to eliminate the friction of diagnosing gamepads and mice. We believe gamers deserve instant, high-precision diagnostics without installing software, creating accounts, or behind paywalls.
+        </p>
+
+        <h2>100% Client-Side Privacy Guarantee</h2>
+        <p>
+          All diagnostic processing occurs entirely inside your web browser via the standard Web Gamepad API and high-resolution HTML5 event listeners. No hardware input data, serial numbers, or button presses are ever transmitted to external servers.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .about-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .page-hero { margin-bottom: 2.5rem; }
+  .page-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .page-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 60ch; }
+  .about-content { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; line-height: 1.7; color: var(--color-text-secondary); }
+  .about-content h2 { color: var(--color-text-primary); font-size: 1.25rem; font-weight: 700; margin-top: 0.5rem; }
+</style>

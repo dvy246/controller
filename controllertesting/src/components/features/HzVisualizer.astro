@@ -1,0 +1,118 @@
+---
+export interface Props {
+  targetHz: number;
+}
+
+const { targetHz } = Astro.props;
+---
+
+<div class="w-full max-w-5xl mx-auto p-4 sm:p-6 bg-surface-1/90 backdrop-blur-md rounded-2xl border border-surface-3 shadow-2xl">
+  <!-- Controls & Specs Header -->
+  <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-surface-2">
+    <div>
+      <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
+        <svg class="w-6 h-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        Phantom Hz Motion Persistence & Ghosting Suite
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-400 mt-1">Benchmark Target: <span class="text-blue-400 font-bold font-mono">{targetHz} Hz</span> • Target Frame Time: <span class="text-emerald-400 font-bold font-mono">{(1000 / targetHz).toFixed(2)} ms</span></p>
+    </div>
+
+    <!-- Live Telemetry Badge -->
+    <div class="flex items-center gap-3 font-mono text-sm">
+      <div class="bg-surface-2 px-3 py-1.5 rounded-lg border border-surface-3">
+        <span class="text-slate-400 text-xs block">DETECTED HZ</span>
+        <span id="detected-hz" class="text-emerald-400 font-bold text-lg">--</span>
+      </div>
+      <div class="bg-surface-2 px-3 py-1.5 rounded-lg border border-surface-3">
+        <span class="text-slate-400 text-xs block">FRAME JITTER</span>
+        <span id="jitter-val" class="text-blue-400 font-bold text-lg">0.0 ms</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- High Motion Animation Canvas -->
+  <div class="relative w-full h-64 bg-slate-950 rounded-xl overflow-hidden border border-surface-3 flex flex-col justify-around py-4">
+    <!-- Row 1: Fast Motion -->
+    <div class="relative w-full h-12 bg-surface-2/40 border-y border-surface-3 flex items-center overflow-hidden">
+      <div id="ufo-fast" class="absolute top-1/2 -translate-y-1/2 w-16 h-8 bg-blue-600 rounded-lg shadow-lg shadow-blue-500/50 flex items-center justify-center text-xs font-bold text-white">
+        {targetHz} FPS
+      </div>
+    </div>
+
+    <!-- Row 2: Half Speed Motion -->
+    <div class="relative w-full h-12 bg-surface-2/40 border-y border-surface-3 flex items-center overflow-hidden">
+      <div id="ufo-slow" class="absolute top-1/2 -translate-y-1/2 w-16 h-8 bg-amber-600 rounded-lg shadow-lg shadow-amber-500/50 flex items-center justify-center text-xs font-bold text-white">
+        {Math.round(targetHz / 2)} FPS
+      </div>
+    </div>
+  </div>
+
+  <!-- Real-Time Frame Pacing Graph -->
+  <div class="mt-6 bg-slate-950 p-4 rounded-xl border border-surface-3">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Frame Pacing & Stutter Graph</span>
+      <span id="stutter-status" class="text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Pacing Smooth</span>
+    </div>
+    <div class="w-full h-20 flex items-end gap-1 bg-surface-2/30 p-2 rounded-lg" id="graph-container">
+      <!-- Dynamic Frame Bars inserted by JS -->
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ targetHz }}>
+  let lastTime = performance.now();
+  let frameTimes = [];
+  let detectedHzVal = 0;
+
+  const detectedHzEl = document.getElementById('detected-hz');
+  const jitterValEl = document.getElementById('jitter-val');
+  const ufoFast = document.getElementById('ufo-fast');
+  const ufoSlow = document.getElementById('ufo-slow');
+  const graphContainer = document.getElementById('graph-container');
+
+  let fastX = 0;
+  let slowX = 0;
+
+  function animate(now) {
+    const delta = now - lastTime;
+    lastTime = now;
+
+    if (delta > 0 && delta < 100) {
+      frameTimes.push(delta);
+      if (frameTimes.length > 60) frameTimes.shift();
+
+      const avgDelta = frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length;
+      detectedHzVal = Math.round(1000 / avgDelta);
+
+      if (detectedHzEl) detectedHzEl.textContent = `${detectedHzVal}`;
+
+      // Calculate Jitter (Variance in frame times)
+      const variance = frameTimes.reduce((sum, t) => sum + Math.abs(t - avgDelta), 0) / frameTimes.length;
+      if (jitterValEl) jitterValEl.textContent = `${variance.toFixed(2)} ms`;
+    }
+
+    // Move motion elements
+    const width = ufoFast?.parentElement?.clientWidth || 800;
+    fastX = (fastX + 12) % (width + 64);
+    slowX = (slowX + 6) % (width + 64);
+
+    if (ufoFast) ufoFast.style.transform = `translate(${fastX - 64}px, -50%)`;
+    if (ufoSlow) ufoSlow.style.transform = `translate(${slowX - 64}px, -50%)`;
+
+    requestAnimationFrame(animate);
+  }
+
+  // Populate graph bars
+  if (graphContainer) {
+    for (let i = 0; i < 40; i++) {
+      const bar = document.createElement('div');
+      bar.className = 'flex-1 bg-blue-500/60 rounded-t transition-all duration-150';
+      bar.style.height = '60%';
+      graphContainer.appendChild(bar);
+    }
+  }
+
+  requestAnimationFrame(animate);
+</script>

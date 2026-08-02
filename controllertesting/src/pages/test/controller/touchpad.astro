@@ -1,0 +1,94 @@
+---
+/**
+ * /test/controller/touchpad — Touchpad Tester
+ * SEO Title: Controller Touchpad Test — Test PS5 & PS4 Touchpad Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import TouchpadTester from '../../../components/tools/controller/TouchpadTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Touchpad Tester' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test the touchpad on a PS5 DualSense or PS4 controller?',
+    answer: 'Connect your PlayStation controller via USB or Bluetooth and swipe your finger across the capacitive touchpad. The visualizer above will track your X/Y touch coordinates live.',
+  },
+  {
+    question: 'Why is touchpad testing useful for PC gaming?',
+    answer: 'Using Steam Input or DS4Windows, gamers map touchpad gestures to mouse movement, radial weapon wheels, or hotkeys. Testing ensures touch tracking has zero dead zones.',
+  },
+  {
+    question: 'Does the Xbox controller have a touchpad?',
+    answer: 'No. Xbox controllers do not feature a capacitive touchpad. Touchpad testing is designed for PS5 DualSense, PS4 DualShock, and Steam Controllers.',
+  },
+];
+---
+
+<ToolLayout
+  title="Controller Touchpad Test — Test PS5 DualSense & PS4 Touchpad Online | ControllerTesting.com"
+  description="Test multi-touch gestures and trackpad click actuation on PS5 DualSense and PS4 DualShock controllers online. Free, browser-based diagnostic tool."
+  toolName="Touchpad Tester"
+  category="Controller Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <TouchpadTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Touchpad Performance Guidelines</h2>
+      <p class="results-text">
+        Capacitive touch tracking should be smooth and continuous across the entire touchpad surface, with click actuation registering when pressed.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Run full diagnostic checkup</h3>
+        <p class="export-desc">Combine touchpad testing with stick drift and button matrix diagnostics.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Button Tester</h3>
+      <p class="tool-desc">Test face buttons and shoulder bumpers.</p>
+    </a>
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>PlayStation DualSense Touchpad Architecture</h2>
+    <p>
+      The PS5 DualSense touchpad combines a capacitive multi-touch sensor surface with a tactile mechanical click switch underneath.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>

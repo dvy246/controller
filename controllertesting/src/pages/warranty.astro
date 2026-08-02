@@ -1,0 +1,111 @@
+---
+/**
+ * /warranty — Warranty Assistant & Policy Checker
+ * SEO Title: Controller Warranty Checker — Check DualSense, Xbox & Switch Warranty Policies
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Warranty Assistant' },
+];
+
+const warrantyPolicies = [
+  { brand: 'PlayStation (Sony)', controller: 'DualSense & DualSense Edge', period: '1 Year (US / Global) / 2 Years (EU)', stickDriftCovered: 'Yes (within 1-year window)', claimsUrl: 'https://direct.playstation.com' },
+  { brand: 'Xbox (Microsoft)', controller: 'Xbox Wireless / Elite Series 2', period: '90 Days (Standard) / 1 Year (Elite)', stickDriftCovered: 'Yes (requires serial number registration)', claimsUrl: 'https://support.xbox.com' },
+  { brand: 'Nintendo', controller: 'Joy-Con & Switch Pro Controller', period: 'Lifetime Free Repair for Joy-Con Drift', stickDriftCovered: 'Yes (Free Joy-Con drift repair in US/EU)', claimsUrl: 'https://support.nintendo.com' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: 'How to File a Controller Warranty Claim for Stick Drift',
+  description: 'Step-by-step guide to check warranty coverage and file a claim with PlayStation, Xbox, or Nintendo.',
+  step: [
+    { '@type': 'HowToStep', name: 'Find Serial Number', text: 'Locate the 17-digit serial number on the back of your controller.' },
+    { '@type': 'HowToStep', name: 'Run Diagnostic Test', text: 'Run our Stick Drift Test to export a verified PDF proof of drift.' },
+    { '@type': 'HowToStep', name: 'Submit Online Claim', text: 'Submit the serial number and PDF test result on the official manufacturer portal.' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Controller Warranty Assistant — Check Sony, Xbox & Nintendo Warranty | ControllerTesting.com"
+  description="Check warranty coverage for PS5 DualSense, Xbox Elite 2, and Switch Joy-Cons. Learn how to file stick drift warranty claims and export test proof."
+  schema={schema}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="warranty-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="page-hero">
+        <span class="badge-tag">Warranty Assistant</span>
+        <h1 class="page-title">Controller Warranty &amp; Claim Assistant</h1>
+        <p class="page-subtitle">
+          Check if your controller is still covered under manufacturer warranty for stick drift or broken switches, and export official diagnostic proof.
+        </p>
+      </header>
+
+      <div class="warranty-grid">
+        {warrantyPolicies.map((pol) => (
+          <div class="warranty-card card-base">
+            <h2 class="brand-title">{pol.brand}</h2>
+            <h3 class="controller-name">{pol.controller}</h3>
+
+            <div class="policy-details">
+              <div class="p-row">
+                <span class="p-label">Warranty Period:</span>
+                <span class="p-val mono">{pol.period}</span>
+              </div>
+              <div class="p-row">
+                <span class="p-label">Stick Drift Covered:</span>
+                <span class="p-val badge-pass">{pol.stickDriftCovered}</span>
+              </div>
+            </div>
+
+            <a href={pol.claimsUrl} target="_blank" rel="noopener noreferrer" class="btn-primary claim-btn">
+              File Official Claim &rarr;
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <section class="proof-section card-base">
+        <h2 class="section-title">Need Proof for Your Claim?</h2>
+        <p class="section-text">
+          Manufacturer support centers require verified diagnostic evidence of stick drift before approving RMA replacements. Run our Stick Drift Test and export a PDF certificate.
+        </p>
+        <a href="/test/controller/drift" class="btn-primary">Run Stick Drift Test Free &rarr;</a>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .warranty-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .page-hero { margin-bottom: 2.5rem; }
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .page-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .page-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-w: 60ch; }
+  .warranty-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem; }
+  .warranty-card { display: flex; flex-direction: column; gap: 1rem; }
+  .brand-title { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
+  .controller-name { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .policy-details { display: flex; flex-direction: column; gap: 0.625rem; padding: 1rem 0; border-top: 1px solid var(--color-border-subtle); border-bottom: 1px solid var(--color-border-subtle); }
+  .p-row { display: flex; justify-content: space-between; align-items: center; font-size: var(--text-small); }
+  .p-label { color: var(--color-text-tertiary); }
+  .p-val { font-weight: 600; }
+  .claim-btn { margin-top: auto; justify-content: center; }
+  .proof-section { display: flex; flex-direction: column; gap: 1rem; align-items: flex-start; margin-top: 2rem; }
+  .section-title { font-size: 1.25rem; font-weight: 700; }
+  .section-text { font-size: 1rem; color: var(--color-text-secondary); max-width: 60ch; }
+  @media (max-width: 1024px) { .warranty-grid { grid-template-columns: 1fr; } }
+</style>

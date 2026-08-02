@@ -1,0 +1,94 @@
+---
+/**
+ * /test/controller/ps-calibration — PS Controller Calibration Tool
+ * SEO Title: PS5 & PS4 Controller Calibration Tool — WebHID Zero-Point Offset Fix
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import PSCalibration from '../../../components/tools/controller/PSCalibration.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'PS Controller Calibration' },
+];
+
+const faqs = [
+  {
+    question: 'How do I calibrate stick zero-point offsets on PS5 DualSense or PS4 controllers?',
+    answer: 'Connect your PlayStation controller to your computer via USB cable, click "Connect DualSense via WebHID", rest the sticks in center position, and click "Sample Center Offset".',
+  },
+  {
+    question: 'What is WebHID hardware controller calibration?',
+    answer: 'WebHID is a modern browser API that communicates directly with Human Interface Devices (HID). It enables low-level memory sampling for DualSense and DualShock controllers without installing third-party software.',
+  },
+  {
+    question: 'Does WebHID calibration fix PS5 stick drift permanently?',
+    answer: 'Yes! Re-centering software zero-point offsets recalibrates resting center values, resolving minor stick drift caused by spring wear without requiring soldering.',
+  },
+];
+---
+
+<ToolLayout
+  title="PS5 & PS4 Controller Calibration Tool — WebHID Zero-Point Fix | ControllerTesting.com"
+  description="Calibrate PS5 DualSense and PS4 DualShock 4 analog sticks using WebHID hardware access. Recalibrate resting center zero-points online free."
+  toolName="PS Controller Calibration"
+  category="Flagship Calibration"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <PSCalibration />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">WebHID Calibration Guidelines</h2>
+      <p class="results-text">
+        WebHID calibration requires Chrome or Edge on Windows or macOS over a direct USB-C connection.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Test 0.1% stick drift precision</h3>
+        <p class="export-desc">Run our isolated stick drift canvas visualizer after calibration.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/drift" class="btn-primary">Run Stick Drift Test</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    </a>
+    <a href="/test/controller/health-score" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Health Score Generator</h3>
+      <p class="tool-desc">Compute 0-100 quality grade.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>WebHID Firmware-Level PlayStation Controller Calibration</h2>
+    <p>
+      Traditional deadzone adjustments only mask stick drift in software. WebHID zero-point sampling reads raw 16-bit analog stick values directly from the DualSense hardware microcontroller.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>

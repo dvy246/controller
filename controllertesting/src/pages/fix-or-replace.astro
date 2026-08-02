@@ -1,0 +1,135 @@
+---
+/**
+ * /fix-or-replace — Fix vs Replace Calculator
+ * SEO Title: Controller Fix vs Replace Calculator — Should You Repair or Buy New?
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Fix vs Replace Calculator' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Fix vs Replace Calculator',
+  url: 'https://controllertesting.com/fix-or-replace',
+  applicationCategory: 'BrowserApplication',
+  operatingSystem: 'Any',
+};
+---
+
+<BaseLayout
+  title="Controller Fix vs Replace Calculator — Repair or Buy New? | ControllerTesting.com"
+  description="Calculate whether to repair your PS5, Xbox, or Switch controller or buy a new replacement. Compare repair part costs against new controller prices."
+  schema={schema}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="calc-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="page-hero">
+        <span class="badge-tag">Decision Calculator</span>
+        <h1 class="page-title">Fix vs Replace Calculator</h1>
+        <p class="page-subtitle">
+          Weigh the cost of replacement thumbsticks, buttons, or DIY repair kits against buying a new controller.
+        </p>
+      </header>
+
+      <div class="calc-layout card-base">
+        <div class="calc-form">
+          <div class="form-group">
+            <label for="ctrl-type">Select Your Controller Model</label>
+            <select id="ctrl-type" class="calc-select">
+              <option value="ps5">PS5 DualSense ($70 new)</option>
+              <option value="xbox">Xbox Wireless Controller ($60 new)</option>
+              <option value="switch-pro">Nintendo Switch Pro ($70 new)</option>
+              <option value="joycon">Nintendo Joy-Con Pair ($80 new)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="issue-type">Primary Hardware Issue</label>
+            <select id="issue-type" class="calc-select">
+              <option value="drift">Stick Drift (Potentiometer wear)</option>
+              <option value="button">Sticking / Unresponsive Face Button</option>
+              <option value="trigger">Broken Trigger Spring / Membrane</option>
+              <option value="battery">Degraded Battery</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="calc-result-box" id="calc-verdict-box">
+          <span class="verdict-label">RECOMMENDED ACTION</span>
+          <h2 class="verdict-title text-gradient" id="verdict-title">DIY Repair ($12)</h2>
+          <p class="verdict-desc" id="verdict-desc">
+            Replacing stick potentiometers or installing Hall-effect modules costs ~$12 for parts and saves you $58 compared to buying a new DualSense controller.
+          </p>
+          <div class="verdict-actions">
+            <a href="/fix/stick-drift/ps5-dualsense" class="btn-primary" id="verdict-guide-btn">View Step-by-Step Fix Guide &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const ctrlSelect = document.getElementById('ctrl-type') as HTMLSelectElement;
+    const issueSelect = document.getElementById('issue-type') as HTMLSelectElement;
+    const titleEl = document.getElementById('verdict-title');
+    const descEl = document.getElementById('verdict-desc');
+
+    function updateCalc() {
+      const ctrl = ctrlSelect?.value || 'ps5';
+      const issue = issueSelect?.value || 'drift';
+
+      if (issue === 'drift') {
+        if (ctrl === 'joycon') {
+          if (titleEl) titleEl.textContent = 'Free Nintendo Repair ($0)';
+          if (descEl) descEl.textContent = 'Nintendo offers 100% free Joy-Con drift repairs in the US and EU without requiring purchase proof.';
+        } else {
+          if (titleEl) titleEl.textContent = 'DIY Hall-Effect Upgrade ($12 - $15)';
+          if (descEl) descEl.textContent = 'Upgrading to Hall-effect magnetic sticks costs ~$15 and permanently eliminates stick drift.';
+        }
+      } else if (issue === 'button') {
+        if (titleEl) titleEl.textContent = 'Clean Conductive Rubber ($4)';
+        if (descEl) descEl.textContent = 'Replacing silicone conductive rubber pads costs ~$4 and takes 10 minutes.';
+      } else {
+        if (titleEl) titleEl.textContent = 'Replace Parts ($8 - $12)';
+        if (descEl) descEl.textContent = 'Replacement springs and batteries are inexpensive and easy to swap with standard tools.';
+      }
+    }
+
+    ctrlSelect?.addEventListener('change', updateCalc);
+    issueSelect?.addEventListener('change', updateCalc);
+  });
+</script>
+
+<style>
+  .calc-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .page-hero { margin-bottom: 2.5rem; }
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .page-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .page-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 60ch; }
+  .calc-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; padding: 2rem; }
+  .calc-form { display: flex; flex-direction: column; gap: 1.5rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+  .form-group label { font-size: 0.9375rem; font-weight: 600; color: var(--color-text-primary); }
+  .calc-select { padding: 0.75rem 1rem; background: var(--color-surface-1); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); color: var(--color-text-primary); font-size: 1rem; font-family: var(--font-sans); outline: none; }
+  .calc-result-box { background: var(--color-surface-1); border: 1px solid var(--color-border-default); border-radius: var(--radius-card); padding: 2rem; display: flex; flex-direction: column; gap: 1rem; justify-content: center; }
+  .verdict-label { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.1em; }
+  .verdict-title { font-size: 1.75rem; font-weight: 800; }
+  .verdict-desc { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  @media (max-width: 768px) { .calc-layout { grid-template-columns: 1fr; } }
+</style>

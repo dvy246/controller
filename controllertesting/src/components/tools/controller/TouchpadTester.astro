@@ -1,0 +1,93 @@
+---
+/**
+ * TouchpadTester.astro — PS5 DualSense & PS4 Touchpad Diagnostic Tool
+ * Multi-touch trackpad visualizer tracking touch X/Y coordinates and click actuation.
+ */
+---
+
+<div class="touchpad-tester" id="tp-tester-root">
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="tp-status-dot"></span>
+      <span class="status-text" id="tp-status-text">Swipe finger across DualSense touchpad to test touch tracking...</span>
+    </div>
+    <div class="controller-name" id="tp-model-name">No Controller Detected</div>
+  </div>
+
+  <div class="tp-visualizer-card">
+    <div class="tp-surface" id="tp-surface-box">
+      <div class="tp-cursor" id="tp-cursor-dot" style="display: none;"></div>
+      <span class="tp-placeholder-text">DualSense Touchpad Surface (Swipe Here)</span>
+    </div>
+
+    <div class="tp-metrics-row">
+      <div class="metric"><span class="m-label">Touch Active</span> <span class="m-val mono" id="tp-touch-active">NO</span></div>
+      <div class="metric"><span class="m-label">Touch X</span> <span class="m-val mono" id="tp-x-val">0.00</span></div>
+      <div class="metric"><span class="m-label">Touch Y</span> <span class="m-val mono" id="tp-y-val">0.00</span></div>
+      <div class="metric"><span class="m-label">Click Actuated</span> <span class="m-val mono" id="tp-click-val">NO</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { parseGamepadState } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    function pollTouchpad() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp: Gamepad | null = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+          activeGp = gamepads[i];
+          break;
+        }
+      }
+
+      if (activeGp) {
+        const dot = document.getElementById('tp-status-dot');
+        const text = document.getElementById('tp-status-text');
+        const model = document.getElementById('tp-model-name');
+        if (dot) dot.className = 'status-dot active';
+        if (text) text.textContent = 'Touchpad Polling Active';
+        if (model) model.textContent = activeGp.id;
+
+        const state = parseGamepadState(activeGp);
+        const touchBtn = state.buttons[17] || state.buttons[2];
+
+        const touchActive = document.getElementById('tp-touch-active');
+        const clickVal = document.getElementById('tp-click-val');
+
+        if (touchBtn?.pressed) {
+          if (touchActive) touchActive.textContent = 'YES';
+          if (clickVal) clickVal.textContent = 'YES';
+        } else {
+          if (touchActive) touchActive.textContent = 'NO';
+          if (clickVal) clickVal.textContent = 'NO';
+        }
+      }
+
+      requestAnimationFrame(pollTouchpad);
+    }
+
+    pollTouchpad();
+  });
+</script>
+
+<style>
+  .touchpad-tester { display: flex; flex-direction: column; gap: 1.5rem; }
+  .tester-status-bar { display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 1.25rem; background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); }
+  .status-indicator { display: flex; align-items: center; gap: 0.625rem; }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-neutral); }
+  .status-dot.active { background: var(--color-pass); box-shadow: 0 0 8px var(--color-pass); }
+  .status-text { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .controller-name { font-family: var(--font-mono); font-size: var(--text-small); font-weight: 600; color: var(--color-accent); }
+  .tp-visualizer-card { background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); padding: 1.5rem; display: flex; flex-direction: column; gap: 1.25rem; }
+  .tp-surface { height: 200px; background: var(--color-surface-1); border: 2px dashed var(--color-border-default); border-radius: var(--radius-card); position: relative; display: flex; align-items: center; justify-content: center; }
+  .tp-placeholder-text { font-size: var(--text-small); color: var(--color-text-tertiary); font-family: var(--font-mono); }
+  .tp-cursor { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: var(--color-accent); transform: translate(-50%, -50%); box-shadow: 0 0 12px var(--color-accent); }
+  .tp-metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; padding-top: 0.5rem; border-top: 1px solid var(--color-border-subtle); }
+  .metric { display: flex; flex-direction: column; gap: 0.2rem; }
+  .m-label { font-size: var(--text-micro); color: var(--color-text-tertiary); font-family: var(--font-mono); }
+  .m-val { font-size: var(--text-small); font-weight: 600; }
+  @media (max-width: 768px) { .tp-metrics-row { grid-template-columns: repeat(2, 1fr); } }
+</style>

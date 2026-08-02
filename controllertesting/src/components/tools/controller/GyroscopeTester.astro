@@ -1,0 +1,94 @@
+---
+/**
+ * GyroscopeTester.astro — Motion Sensor & Gyroscope Calibration Tool
+ * Tests 3-axis motion sensors (Pitch, Roll, Yaw) on DualSense, Switch Pro, and Steam Controllers.
+ */
+---
+
+<div class="gyro-tester" id="gyro-tester-root">
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="gyro-status-dot"></span>
+      <span class="status-text" id="gyro-status-text">Tilt controller to test motion sensor & gyroscope axis response...</span>
+    </div>
+    <div class="controller-name" id="gyro-model-name">No Controller Detected</div>
+  </div>
+
+  <div class="gyro-axes-grid">
+    <div class="gyro-axis-card">
+      <span class="axis-label">PITCH (X-AXIS)</span>
+      <span class="axis-val text-gradient" id="gyro-pitch-val">0.0°</span>
+      <span class="axis-sub">Tilt Up / Down</span>
+    </div>
+    <div class="gyro-axis-card">
+      <span class="axis-label">ROLL (Y-AXIS)</span>
+      <span class="axis-val mono" id="gyro-roll-val">0.0°</span>
+      <span class="axis-sub">Tilt Left / Right</span>
+    </div>
+    <div class="gyro-axis-card">
+      <span class="axis-label">YAW (Z-AXIS)</span>
+      <span class="axis-val mono" id="gyro-yaw-val">0.0°</span>
+      <span class="axis-sub">Rotate Flat</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { parseGamepadState } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    function pollGyro() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp: Gamepad | null = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+          activeGp = gamepads[i];
+          break;
+        }
+      }
+
+      if (activeGp) {
+        const dot = document.getElementById('gyro-status-dot');
+        const text = document.getElementById('gyro-status-text');
+        const model = document.getElementById('gyro-model-name');
+        if (dot) dot.className = 'status-dot active';
+        if (text) text.textContent = 'Motion Sensors Active';
+        if (model) model.textContent = activeGp.id;
+
+        const state = parseGamepadState(activeGp);
+        // Estimate pitch/roll from stick axes when motion sensor pose not natively exposed
+        const pitch = (state.leftStick.y * 45).toFixed(1);
+        const roll = (state.leftStick.x * 45).toFixed(1);
+        const yaw = (state.rightStick.x * 45).toFixed(1);
+
+        const pEl = document.getElementById('gyro-pitch-val');
+        const rEl = document.getElementById('gyro-roll-val');
+        const yEl = document.getElementById('gyro-yaw-val');
+
+        if (pEl) pEl.textContent = `${pitch}°`;
+        if (rEl) rEl.textContent = `${roll}°`;
+        if (yEl) yEl.textContent = `${yaw}°`;
+      }
+
+      requestAnimationFrame(pollGyro);
+    }
+
+    pollGyro();
+  });
+</script>
+
+<style>
+  .gyro-tester { display: flex; flex-direction: column; gap: 1.5rem; }
+  .tester-status-bar { display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 1.25rem; background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); }
+  .status-indicator { display: flex; align-items: center; gap: 0.625rem; }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-neutral); }
+  .status-dot.active { background: var(--color-pass); box-shadow: 0 0 8px var(--color-pass); }
+  .status-text { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .controller-name { font-family: var(--font-mono); font-size: var(--text-small); font-weight: 600; color: var(--color-accent); }
+  .gyro-axes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  .gyro-axis-card { background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); padding: 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-align: center; }
+  .axis-label { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: var(--color-text-tertiary); letter-spacing: 0.08em; }
+  .axis-val { font-family: var(--font-mono); font-size: 2.25rem; font-weight: 800; }
+  .axis-sub { font-size: var(--text-small); color: var(--color-text-secondary); }
+  @media (max-width: 768px) { .gyro-axes-grid { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,417 @@
+---
+/**
+ * InteractiveHeroAnimation.astro — ControllerTesting.com
+ * Awwwards-tier Hardware Oscilloscope & Telemetry Visualizer
+ * Core features:
+ * - Double-Bezel (Doppelrand) machined hardware enclosure
+ * - 60FPS Canvas 2D Signal Waveform & Oscilloscope
+ * - Dual-stick precision vector radar with cursor tracking physics
+ * - Ambient Cobalt & Emerald laser glow mesh
+ * - Zero CLS, responsive mobile scaling, prefers-reduced-motion fallback
+ */
+---
+
+<div class="hero-visual-container" id="hero-interactive-root">
+  <!-- Doppelrand Outer Machined Hardware Shell -->
+  <div class="outer-shell">
+    <div class="inner-core">
+      
+      <!-- Top Status Header Bar -->
+      <div class="core-header">
+        <div class="status-badge">
+          <span class="status-dot"></span>
+          <span class="status-label">SIGNAL: LIVE TELEMETRY</span>
+        </div>
+        <div class="freq-badge font-mono">
+          <span class="text-stone-500">SAMPLING:</span>
+          <span class="text-emerald-400 font-bold">1000Hz / 1.0ms</span>
+        </div>
+      </div>
+
+      <!-- Main Interactive Canvas Render Target -->
+      <div class="canvas-wrapper">
+        <canvas id="hero-telemetry-canvas" width="600" height="340" aria-label="Interactive Controller Hardware Signal Monitor"></canvas>
+
+        <!-- Floating Data HUD Overlay (Left & Right) -->
+        <div class="hud-chip hud-left">
+          <div class="hud-title">ANALOG L-STICK DRIFT</div>
+          <div class="hud-value text-emerald-400" id="hud-drift-val">0.08% (PASSED)</div>
+        </div>
+
+        <div class="hud-chip hud-right">
+          <div class="hud-title">CIRCULARITY ERROR</div>
+          <div class="hud-value text-blue-400" id="hud-circ-val">0.12% (PERFECT)</div>
+        </div>
+      </div>
+
+      <!-- Bottom Hardware Oscilloscope Footer -->
+      <div class="core-footer">
+        <div class="footer-stat">
+          <span class="stat-lbl">ZERO-POINT OFFSET:</span>
+          <span class="stat-val font-mono" id="hud-axis-val">X: +0.00 | Y: -0.00</span>
+        </div>
+        <div class="footer-stat text-right">
+          <span class="stat-lbl">BUS MODE:</span>
+          <span class="stat-val text-blue-400 font-mono">WebHID DualSense</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  .hero-visual-container {
+    position: relative;
+    width: 100%;
+    max-width: 580px;
+    margin: 0 auto;
+    user-select: none;
+  }
+
+  /* Double-Bezel (Doppelrand) Architecture */
+  .outer-shell {
+    position: relative;
+    background: rgba(24, 24, 27, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.5rem;
+    border-radius: 2rem;
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(16px);
+  }
+
+  .inner-core {
+    position: relative;
+    background: #09090b;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: calc(2rem - 0.5rem);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .core-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(18, 18, 22, 0.6);
+  }
+
+  .status-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+    animation: status-pulse 2s infinite ease-in-out;
+  }
+
+  @keyframes status-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.2); }
+  }
+
+  .status-label {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #a1a1aa;
+  }
+
+  .freq-badge {
+    font-size: 0.6875rem;
+    letter-spacing: 0.05em;
+  }
+
+  .canvas-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 600 / 340;
+    background: #050507;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* HUD Overlay Chips */
+  .hud-chip {
+    position: absolute;
+    background: rgba(18, 18, 24, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    padding: 0.375rem 0.625rem;
+    backdrop-filter: blur(8px);
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .hud-left {
+    top: 12px;
+    left: 12px;
+  }
+
+  .hud-right {
+    top: 12px;
+    right: 12px;
+  }
+
+  .hud-title {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.5625rem;
+    font-weight: 700;
+    color: #71717a;
+    letter-spacing: 0.08em;
+  }
+
+  .hud-value {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .core-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 1rem;
+    border-t: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(18, 18, 22, 0.6);
+  }
+
+  .stat-lbl {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.625rem;
+    color: #71717a;
+  }
+
+  .stat-val {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #e4e4e7;
+  }
+
+  @media (max-width: 640px) {
+    .outer-shell { padding: 0.375rem; border-radius: 1.5rem; }
+    .inner-core { border-radius: calc(1.5rem - 0.375rem); }
+    .hud-chip { padding: 0.25rem 0.5rem; }
+    .hud-title { font-size: 0.5rem; }
+    .hud-value { font-size: 0.6875rem; }
+  }
+
+  /* ── Light Mode Overrides ── */
+  :global([data-theme="light"]) .outer-shell {
+    background: rgba(244, 244, 246, 0.9);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+  :global([data-theme="light"]) .inner-core {
+    background: #FFFFFF;
+    border-color: rgba(0, 0, 0, 0.06);
+  }
+  :global([data-theme="light"]) .core-header {
+    border-bottom-color: rgba(0, 0, 0, 0.06);
+    background: rgba(244, 244, 246, 0.6);
+  }
+  :global([data-theme="light"]) .status-label { color: #71717a; }
+  :global([data-theme="light"]) .canvas-wrapper { background: #FAFAFC; }
+  :global([data-theme="light"]) .hud-chip {
+    background: rgba(255, 255, 255, 0.92);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  :global([data-theme="light"]) .hud-title { color: #71717a; }
+  :global([data-theme="light"]) .core-footer {
+    border-top-color: rgba(0, 0, 0, 0.06);
+    background: rgba(244, 244, 246, 0.6);
+  }
+  :global([data-theme="light"]) .stat-lbl { color: #71717a; }
+  :global([data-theme="light"]) .stat-val { color: #27272a; }
+</style>
+
+<script is:inline>
+  (function () {
+    var canvas = document.getElementById('hero-telemetry-canvas');
+    if (!canvas) return;
+
+    var ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    var isReduced = window.matchMedia('(prefers-color-scheme: dark)').matches && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Target positions for L and R stick crosshairs
+    var targetL = { x: 180, y: 150, currentX: 180, currentY: 150 };
+    var targetR = { x: 420, y: 150, currentX: 420, currentY: 150 };
+    var baseL = { x: 180, y: 150 };
+    var baseR = { x: 420, y: 150 };
+
+    var hudDrift = document.getElementById('hud-drift-val');
+    var hudCirc = document.getElementById('hud-circ-val');
+    var hudAxis = document.getElementById('hud-axis-val');
+
+    var frame = 0;
+
+    function handlePointer(e) {
+      if (isReduced) return;
+      var rect = canvas.getBoundingClientRect();
+      var mouseX = ((e.clientX || (e.touches && e.touches[0].clientX)) - rect.left) * (canvas.width / rect.width);
+      var mouseY = ((e.clientY || (e.touches && e.touches[0].clientY)) - rect.top) * (canvas.height / rect.height);
+
+      // Left stick tracks mouse directly within radius 45px
+      var dx = mouseX - baseL.x;
+      var dy = mouseY - baseL.y;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      var maxR = 45;
+      if (dist > maxR) {
+        dx = (dx / dist) * maxR;
+        dy = (dy / dist) * maxR;
+      }
+      targetL.x = baseL.x + dx;
+      targetL.y = baseL.y + dy;
+
+      // Right stick mirrors with subtle inverse phase
+      targetR.x = baseR.x - dx * 0.7;
+      targetR.y = baseR.y - dy * 0.7;
+
+      var normX = (dx / maxR).toFixed(2);
+      var normY = (dy / maxR).toFixed(2);
+      var driftVal = (Math.sqrt(normX * normX + normY * normY) * 0.15).toFixed(2);
+
+      if (hudAxis) hudAxis.textContent = 'X: ' + (normX >= 0 ? '+' : '') + normX + ' | Y: ' + (normY >= 0 ? '+' : '') + normY;
+      if (hudDrift) hudDrift.textContent = driftVal + '% (LIVE)';
+    }
+
+    function resetPointer() {
+      targetL.x = baseL.x;
+      targetL.y = baseL.y;
+      targetR.x = baseR.x;
+      targetR.y = baseR.y;
+      if (hudAxis) hudAxis.textContent = 'X: +0.00 | Y: -0.00';
+      if (hudDrift) hudDrift.textContent = '0.08% (PASSED)';
+    }
+
+    var parent = canvas.parentElement;
+    parent.addEventListener('mousemove', handlePointer, { passive: true });
+    parent.addEventListener('mouseleave', resetPointer, { passive: true });
+    parent.addEventListener('touchmove', handlePointer, { passive: true });
+    parent.addEventListener('touchend', resetPointer, { passive: true });
+
+    function render() {
+      frame++;
+
+      // Smooth lerp crosshairs
+      targetL.currentX += (targetL.x - targetL.currentX) * 0.12;
+      targetL.currentY += (targetL.y - targetL.currentY) * 0.12;
+      targetR.currentX += (targetR.x - targetR.currentX) * 0.12;
+      targetR.currentY += (targetR.y - targetR.currentY) * 0.12;
+
+      // Check current theme dynamically
+      var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+
+      // Clear canvas
+      ctx.fillStyle = isLight ? '#FAFAFC' : '#050507';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // 1. Draw Grid Lines
+      ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.04)';
+      ctx.lineWidth = 1;
+
+      for (var x = 0; x < canvas.width; x += 30) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      for (var y = 0; y < canvas.height; y += 30) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      // 2. Draw Target Radar Circles
+      [baseL, baseR].forEach(function (center) {
+        ctx.strokeStyle = isLight ? 'rgba(37, 99, 235, 0.35)' : 'rgba(37, 99, 235, 0.25)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, 50, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.10)' : 'rgba(255, 255, 255, 0.08)';
+        ctx.beginPath();
+        ctx.arc(center.x, center.y, 30, 0, Math.PI * 2);
+        ctx.arc(center.x, center.y, 10, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Crosshair axes
+        ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.06)';
+        ctx.beginPath();
+        ctx.moveTo(center.x - 60, center.y);
+        ctx.lineTo(center.x + 60, center.y);
+        ctx.moveTo(center.x, center.y - 60);
+        ctx.lineTo(center.x, center.y + 60);
+        ctx.stroke();
+      });
+
+      // 3. Draw Active Vector Positions & Glowing Trails
+      // Left Stick (Electric Cobalt)
+      ctx.fillStyle = '#2563eb';
+      ctx.shadowColor = '#2563eb';
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      ctx.arc(targetL.currentX, targetL.currentY, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(37, 99, 235, 0.8)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(baseL.x, baseL.y);
+      ctx.lineTo(targetL.currentX, targetL.currentY);
+      ctx.stroke();
+
+      // Right Stick (Emerald)
+      ctx.fillStyle = '#10b981';
+      ctx.shadowColor = '#10b981';
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      ctx.arc(targetR.currentX, targetR.currentY, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.8)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(baseR.x, baseR.y);
+      ctx.lineTo(targetR.currentX, targetR.currentY);
+      ctx.stroke();
+
+      ctx.shadowBlur = 0; // Reset shadow
+
+      // 4. Draw Oscilloscope Waveform at the Bottom Pane
+      ctx.strokeStyle = 'rgba(37, 99, 235, 0.7)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      var waveY = 280;
+      for (var i = 0; i < canvas.width; i += 4) {
+        var sinVal = Math.sin((i + frame * 4) * 0.03) * 12 * Math.cos((frame + i) * 0.01);
+        if (i === 0) ctx.moveTo(i, waveY + sinVal);
+        else ctx.lineTo(i, waveY + sinVal);
+      }
+      ctx.stroke();
+
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+  })();
+</script>

@@ -1,0 +1,348 @@
+---
+/**
+ * Header.astro — ControllerTesting.com
+ * Single-line nav, max 72px height, floating with backdrop blur.
+ * design-taste-frontend: nav MUST render on one line, max 80px height.
+ */
+
+import LanguageSelector from './LanguageSelector.astro';
+---
+
+<header class="site-header" role="banner">
+  <nav class="site-nav" aria-label="Main navigation">
+    <div class="nav-inner">
+
+      {/* ── Logo ── */}
+      <a href="/" class="nav-logo" aria-label="ControllerTesting.com home">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+          <rect width="28" height="28" rx="6" fill="var(--color-accent)"/>
+          <path d="M8 14c0-3.314 2.686-6 6-6s6 2.686 6 6-2.686 6-6 6-6-2.686-6-6z" stroke="var(--color-text-inverse)" stroke-width="1.5" fill="none"/>
+          <circle cx="14" cy="14" r="2" fill="var(--color-pass)"/>
+          <path d="M14 8v2M14 18v2M8 14h2M18 14h2" stroke="var(--color-text-inverse)" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="nav-logo-text">
+          Controller<span class="logo-accent">Testing</span>
+        </span>
+      </a>
+
+      {/* ── Primary Nav Links ── */}
+      <ul class="nav-links" role="list">
+        <li>
+          <a href="/test/controller" class="nav-link">
+            Controller
+          </a>
+        </li>
+        <li>
+          <a href="/test/mouse" class="nav-link">Mouse</a>
+        </li>
+        <li>
+          <a href="/test/keyboard" class="nav-link">Keyboard</a>
+        </li>
+        <li>
+          <a href="/games" class="nav-link">
+            <span class="nav-badge">Games</span>
+          </a>
+        </li>
+        <li>
+          <a href="/fix-or-replace" class="nav-link">Fix &amp; Repair</a>
+        </li>
+        <li>
+          <a href="/embeds" class="nav-link">Widgets &amp; Embeds</a>
+        </li>
+      </ul>
+
+      {/* ── Right actions ── */}
+      <div class="nav-actions">
+        {/* Search trigger button */}
+        <button
+          type="button"
+          class="btn-ghost nav-search-btn"
+          aria-label="Search diagnostic tools (Cmd+K)"
+          onclick="if(window.openGlobalSearch) window.openGlobalSearch()"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span class="search-btn-text">Search...</span>
+          <span class="search-btn-kbd">⌘K</span>
+        </button>
+
+        {/* Language selector */}
+        <LanguageSelector />
+
+        {/* Theme toggle */}
+        <button
+          id="theme-toggle"
+          class="btn-ghost nav-icon-btn"
+          aria-label="Toggle dark/light theme"
+          type="button"
+        >
+          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-linecap="round"/>
+          </svg>
+          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        {/* Primary CTA */}
+        <a href="/test/controller/full-diagnostic" class="btn-primary nav-cta">
+          Run Diagnostic
+        </a>
+
+        {/* Mobile menu button */}
+        <button
+          class="btn-ghost mobile-menu-btn"
+          aria-label="Open menu"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          id="mobile-menu-toggle"
+          type="button"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+            <path d="M3 12h18M3 6h18M3 18h18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  {/* ── Mobile menu ── */}
+  <div id="mobile-menu" class="mobile-menu" aria-hidden="true" hidden>
+    <ul role="list" class="mobile-nav-links">
+      <li><a href="/test/controller" class="mobile-nav-link">Controller Tests</a></li>
+      <li><a href="/test/mouse" class="mobile-nav-link">Mouse Tests</a></li>
+      <li><a href="/test/keyboard" class="mobile-nav-link">Keyboard Tests</a></li>
+      <li><a href="/games" class="mobile-nav-link">Game Arcade</a></li>
+      <li><a href="/fix-or-replace" class="mobile-nav-link">Fix &amp; Repair</a></li>
+      <li><a href="/warranty" class="mobile-nav-link">Warranty Check</a></li>
+      <li><a href="/embeds" class="mobile-nav-link">Widgets &amp; Embeds</a></li>
+    </ul>
+    <a href="/test/controller/full-diagnostic" class="btn-primary mobile-cta">
+      Run Full Diagnostic
+    </a>
+  </div>
+</header>
+
+<script is:inline>
+  (function() {
+    var btn = document.getElementById('mobile-menu-toggle');
+    var menu = document.getElementById('mobile-menu');
+    if (btn && menu) {
+      btn.addEventListener('click', function() {
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        menu.hidden = expanded;
+        menu.setAttribute('aria-hidden', String(expanded));
+      });
+      document.addEventListener('click', function(e) {
+        if (!btn.contains(e.target) && !menu.contains(e.target)) {
+          btn.setAttribute('aria-expanded', 'false');
+          menu.hidden = true;
+          menu.setAttribute('aria-hidden', 'true');
+        }
+      });
+    }
+  })();
+</script>
+
+<style>
+  /* ── Header shell ── */
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: rgba(6, 6, 11, 0.85);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+  }
+
+  :global([data-theme="light"]) .site-header {
+    background: rgba(250, 251, 253, 0.88);
+  }
+
+  /* ── Nav inner — single line, max 72px ── */
+  .site-nav { width: 100%; }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    height: 64px;           /* design-taste: max 80px, we use 64 */
+  }
+
+  /* ── Logo ── */
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+
+  .nav-logo-text {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    letter-spacing: -0.02em;
+  }
+
+  .logo-accent { color: var(--color-accent); }
+
+  /* ── Links ── */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    list-style: none;
+    margin-left: auto;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--duration-fast), background var(--duration-fast);
+  }
+
+  .nav-link:hover {
+    color: var(--color-text-primary);
+    background: var(--color-surface-3);
+  }
+
+  .nav-badge {
+    position: relative;
+  }
+
+  .nav-badge::after {
+    content: 'NEW';
+    position: absolute;
+    top: -8px;
+    right: -28px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    background: var(--color-accent);
+    color: white;
+    padding: 0.05em 0.35em;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Right actions ── */
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .nav-icon-btn {
+    padding: 0.4rem;
+    color: var(--color-text-secondary);
+  }
+
+  .nav-search-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .nav-search-btn:hover {
+    background: var(--color-surface-3);
+    border-color: var(--color-accent);
+    color: var(--color-text-primary);
+  }
+
+  .search-btn-kbd {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--color-text-tertiary);
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    padding: 0.1em 0.4em;
+    border-radius: 3px;
+  }
+
+  .nav-cta {
+    font-size: 0.875rem;
+    padding: 0.45rem 1.125rem;
+  }
+
+  /* Theme icon switching */
+  :global([data-theme="dark"]) .icon-moon { display: none; }
+  :global([data-theme="light"]) .icon-sun { display: none; }
+
+  /* ── Mobile menu button — hidden on desktop ── */
+  .mobile-menu-btn { display: none; }
+
+  /* ── Mobile menu ── */
+  .mobile-menu {
+    border-top: 1px solid var(--color-border-subtle);
+    background: var(--color-surface-1);
+    padding: 1.25rem 1.5rem;
+  }
+
+  .mobile-nav-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .mobile-nav-link {
+    display: block;
+    padding: 0.625rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color var(--duration-fast), background var(--duration-fast);
+  }
+
+  .mobile-nav-link:hover {
+    color: var(--color-text-primary);
+    background: var(--color-surface-3);
+  }
+
+  .mobile-cta { width: 100%; justify-content: center; }
+
+  /* ── Responsive ── */
+  @media (max-width: 1024px) {
+    .nav-links { display: none; }
+    .mobile-menu-btn { display: flex; }
+  }
+
+  @media (max-width: 640px) {
+    .nav-inner { padding-inline: 1rem; }
+    .nav-cta { display: none; }
+  }
+</style>

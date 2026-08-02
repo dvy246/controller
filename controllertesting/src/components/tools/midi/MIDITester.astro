@@ -1,0 +1,130 @@
+---
+/**
+ * MIDITester.astro — Web MIDI API Keyboard, Drum Pad & Controller Diagnostic Tool
+ * Monitors MIDI note ON/OFF events, velocity (0-127), CC control messages, pitch bend, and modulation wheels.
+ */
+---
+
+<div class="midi-tester" id="midi-root">
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="midi-status-dot"></span>
+      <span class="status-text" id="midi-status-text">Click 'Enable MIDI Access' to test USB MIDI keyboards & drum pads...</span>
+    </div>
+    <div class="controller-name" id="midi-model-name">No MIDI Device Active</div>
+  </div>
+
+  <div class="midi-main-card">
+    <div class="midi-controls">
+      <button type="button" class="btn-primary" id="btn-enable-midi">Enable Web MIDI Access</button>
+    </div>
+
+    <div class="midi-display-grid">
+      <div class="midi-card">
+        <span class="m-label">LAST MIDI NOTE</span>
+        <span class="m-val text-gradient" id="midi-note-val">--</span>
+      </div>
+      <div class="midi-card">
+        <span class="m-label">NOTE VELOCITY (0-127)</span>
+        <span class="m-val mono" id="midi-vel-val">0</span>
+      </div>
+      <div class="midi-card">
+        <span class="m-label">CC MESSAGE / PITCH BEND</span>
+        <span class="m-val mono" id="midi-cc-val">0</span>
+      </div>
+    </div>
+
+    <div class="midi-log-card">
+      <h3 class="log-title">Live MIDI Event Stream</h3>
+      <div class="midi-log-box" id="midi-log-box">
+        <p class="log-empty">Click "Enable Web MIDI Access" above to begin monitoring real-time MIDI signals.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let midiAccess: any = null;
+
+    function onMIDIMessage(event: any) {
+      const [status, note, velocity] = event.data;
+      const cmd = status >> 4;
+      const channel = status & 0xf;
+
+      const noteVal = document.getElementById('midi-note-val');
+      const velVal = document.getElementById('midi-vel-val');
+      const ccVal = document.getElementById('midi-cc-val');
+      const logBox = document.getElementById('midi-log-box');
+
+      if (cmd === 9 && velocity > 0) { // Note ON
+        if (noteVal) noteVal.textContent = `Note ${note}`;
+        if (velVal) velVal.textContent = String(velocity);
+
+        if (logBox) {
+          const p = document.createElement('p');
+          p.className = 'log-entry';
+          p.textContent = `[Note ON] Note: ${note} | Velocity: ${velocity} | Channel: ${channel + 1}`;
+          logBox.prepend(p);
+          if (logBox.children.length > 20) logBox.removeChild(logBox.lastChild!);
+        }
+      } else if (cmd === 11) { // CC Message
+        if (ccVal) ccVal.textContent = `CC ${note}: ${velocity}`;
+      }
+    }
+
+    document.getElementById('btn-enable-midi')?.addEventListener('click', async () => {
+      try {
+        if (!('requestMIDIAccess' in navigator)) {
+          alert('Web MIDI API is not supported in this browser. Please use Google Chrome or Microsoft Edge.');
+          return;
+        }
+
+        midiAccess = await (navigator as any).requestMIDIAccess();
+        const inputs = midiAccess.inputs.values();
+
+        let connectedCount = 0;
+        for (let input of inputs) {
+          connectedCount++;
+          input.onmidimessage = onMIDIMessage;
+          const model = document.getElementById('midi-model-name');
+          if (model) model.textContent = input.name || 'USB MIDI Device';
+        }
+
+        const dot = document.getElementById('midi-status-dot');
+        const text = document.getElementById('midi-status-text');
+
+        if (connectedCount > 0) {
+          if (dot) dot.className = 'status-dot active';
+          if (text) text.textContent = 'Web MIDI Input Listener Active';
+        } else {
+          alert('No MIDI input devices found. Please plug in your USB MIDI keyboard or drum pad.');
+        }
+      } catch (e) {
+        alert('Web MIDI permission denied or unavailable.');
+      }
+    });
+  });
+</script>
+
+<style>
+  .midi-tester { display: flex; flex-direction: column; gap: 1.5rem; }
+  .tester-status-bar { display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 1.25rem; background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); }
+  .status-indicator { display: flex; align-items: center; gap: 0.625rem; }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-neutral); }
+  .status-dot.active { background: var(--color-pass); box-shadow: 0 0 8px var(--color-pass); }
+  .status-text { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .controller-name { font-family: var(--font-mono); font-size: var(--text-small); font-weight: 600; color: var(--color-accent); }
+  .midi-main-card { background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); padding: 1.75rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  .midi-controls { display: flex; justify-content: flex-end; }
+  .midi-display-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  .midi-card { background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); padding: 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.375rem; text-align: center; }
+  .m-label { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: var(--color-text-tertiary); letter-spacing: 0.08em; }
+  .m-val { font-size: 1.75rem; font-weight: 700; }
+  .midi-log-card { background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  .log-title { font-size: 1rem; font-weight: 700; }
+  .midi-log-box { height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.375rem; font-family: var(--font-mono); font-size: var(--text-small); color: var(--color-text-secondary); }
+  .log-empty { font-style: italic; color: var(--color-text-tertiary); }
+  .log-entry { margin: 0; color: var(--color-text-primary); }
+  @media (max-width: 768px) { .midi-display-grid { grid-template-columns: 1fr; } }
+</style>

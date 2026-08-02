@@ -1,0 +1,112 @@
+---
+/**
+ * /test/controller/buttons — Controller Button Tester & Ghosting Tool
+ * SEO Title: Controller Button Tester — Test Gamepad Buttons Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import ButtonTester from '../../../components/tools/controller/ButtonTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Button Tester' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test if a controller button is sticking or broken?',
+    answer: 'Press each face button and shoulder bumper on your gamepad while watching the Button Tester chips above. If a button chip stays green after release or fails to highlight, the physical switch is sticking or worn.',
+  },
+  {
+    question: 'What is gamepad button ghosting?',
+    answer: 'Button ghosting occurs when pressing multiple buttons simultaneously causes unregistered inputs or false triggers. Our tool checks matrix isolation so every simultaneous press is recognized.',
+  },
+  {
+    question: 'Does this test face buttons, D-pad, and stick clicks?',
+    answer: 'Yes! It tests A/Cross, B/Circle, X/Square, Y/Triangle, L1/R1, L2/R2, L3/R3 stick clicks, D-Pad (Up, Down, Left, Right), Select/Share, and Start/Options.',
+  },
+];
+---
+
+<ToolLayout
+  title="Controller Button Tester — Test Gamepad Buttons & Ghosting Online | ControllerTesting.com"
+  description="Test every button on your PS5 DualSense, Xbox, or Switch controller. Real-time response visualizer, click counter, and multi-button ghosting detector."
+  toolName="Button Tester"
+  category="Controller Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <ButtonTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Button Health Guidelines</h2>
+      <p class="results-text">
+        All action buttons and D-pad inputs should illuminate immediately upon press and clear immediately upon release. If inputs flicker or stick, clean around the membrane or conductive rubber pad with 99% isopropyl alcohol.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Run full diagnostic checkup</h3>
+        <p class="export-desc">Combine button testing with stick drift and trigger response analysis.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    </a>
+    <a href="/test/controller/triggers" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Trigger Tester</h3>
+      <p class="tool-desc">Analog trigger linearity test.</p>
+    </a>
+    <a href="/test/controller/dpad" class="tool-card card-base card-hover">
+      <h3 class="tool-name">D-Pad Tester</h3>
+      <p class="tool-desc">8-way directional pad precision test.</p>
+    </a>
+    <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Measure input rate in Hz.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>How Controller Buttons Work and Why Switches Fail</h2>
+    <p>
+      Gamepads use conductive silicone rubber pads or mechanical microswitches beneath face buttons and shoulder bumpers.
+      When pressed, the conductive carbon pill completes a circuit on the PCB trace.
+    </p>
+
+    <h3>Common Button Issues</h3>
+    <ul>
+      <li><strong>Unresponsive Buttons:</strong> Carbon pill worn down or liquid spill residue blocking PCB contacts.</li>
+      <li><strong>Sticking Buttons:</strong> Dirt and sugar build-up inside the plastic button housing.</li>
+      <li><strong>Double Registering:</strong> Worn rubber dome spring tearing, causing false double-clicks.</li>
+    </ul>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+  .prose ul { margin-left: 1.25rem; margin-bottom: 1rem; }
+  .prose li { margin-bottom: 0.5rem; }
+</style>

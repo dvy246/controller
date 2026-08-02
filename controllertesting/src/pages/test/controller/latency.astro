@@ -1,0 +1,128 @@
+---
+/**
+ * /test/controller/latency — Controller Latency & Reaction Delay Tool
+ * SEO Title: Controller Input Latency Test — Test Gamepad Reaction Speed Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import LatencyEstimator from '../../../components/tools/controller/LatencyEstimator.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Latency Estimator' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test my controller input latency?',
+    answer: 'Connect your controller above, click Start Reaction Test, and press any button immediately when the screen turns emerald green. The tool measures your reaction delay in milliseconds.',
+  },
+  {
+    question: 'What is a good controller reaction latency time?',
+    answer: 'Average human visual reaction speed is between 190ms and 250ms. Competitive gamers using 1000Hz overclocked controllers regularly achieve response times under 170ms.',
+  },
+  {
+    question: 'Does wireless Bluetooth add input latency compared to USB cable?',
+    answer: 'Yes. Bluetooth adds 4ms to 8ms of input delay compared to a wired USB connection. Overclocking USB polling rates to 1000Hz minimizes hardware latency to sub-1ms levels.',
+  },
+];
+---
+
+<ToolLayout
+  title="Controller Input Latency Test — Test Gamepad Reaction Speed Online | ControllerTesting.com"
+  description="Test controller input latency and human visual reaction speed in milliseconds. Measure response delay on PS5, Xbox, and Switch controllers online."
+  toolName="Latency Estimator"
+  category="Controller Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <LatencyEstimator />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Reaction Speed Benchmarks</h2>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">&lt; 180 ms (Esports Tier)</strong>
+          <p class="legend-text">Top 5% human reaction speed. Ideal for competitive FPS and fighting games.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">180 – 240 ms (Average Gamer)</strong>
+          <p class="legend-text">Standard human reaction window. Great performance for casual and ranked play.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">&gt; 250 ms (Below Average)</strong>
+          <p class="legend-text">Slower response. Consider switching from Bluetooth to wired USB mode.</p>
+        </div>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Test your controller polling rate in Hz</h3>
+        <p class="export-desc">Check if your controller reports at 125Hz, 250Hz, 500Hz, or 1000Hz over USB.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/polling-rate" class="btn-primary">Check Polling Rate</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Measure input report frequency in Hz.</p>
+    </a>
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    </a>
+    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Button Tester</h3>
+      <p class="tool-desc">Test button ghosting and click speed.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>How Controller Input Latency Impacts Gaming Performance</h2>
+    <p>
+      Total latency equals the sum of human visual reaction time, controller polling delay, OS processing overhead, and display lag.
+      Reducing controller latency by 5ms gives players a distinct advantage in high-stakes firefights.
+    </p>
+
+    <h3>3 Ways to Reduce Controller Latency</h3>
+    <ul>
+      <li><strong>Switch to Wired Mode:</strong> Connect via high-speed USB-C cable rather than standard Bluetooth.</li>
+      <li><strong>Overclock Polling Rate:</strong> Use USB polling rate utility software to boost report frequency to 1000Hz (1ms).</li>
+      <li><strong>Enable Game Mode on Display:</strong> Turn on low-latency Game Mode on your monitor or TV to cut display lag.</li>
+    </ul>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 1rem; }
+  .results-legend-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .legend-card { padding: 1rem; border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 0.375rem; }
+  .legend-pass { background: var(--color-pass-bg); border: 1px solid var(--color-pass); }
+  .legend-pass .legend-title { color: var(--color-pass); }
+  .legend-warning { background: var(--color-warning-bg); border: 1px solid var(--color-warning); }
+  .legend-warning .legend-title { color: var(--color-warning); }
+  .legend-fail { background: var(--color-fail-bg); border: 1px solid var(--color-fail); }
+  .legend-fail .legend-title { color: var(--color-fail); }
+  .legend-title { font-family: var(--font-mono); font-size: var(--text-small); }
+  .legend-text { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.5; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+  .prose ul { margin-left: 1.25rem; margin-bottom: 1rem; }
+  @media (max-width: 768px) { .results-legend-grid { grid-template-columns: 1fr; } }
+</style>

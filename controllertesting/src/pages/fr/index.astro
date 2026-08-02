@@ -1,0 +1,49 @@
+---
+/**
+ * /fr — French Homepage
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+
+const breadcrumbs = [{ name: 'Accueil', url: '/fr' }];
+---
+
+<BaseLayout
+  title="Test de Manette Gratuit en Ligne — Diagnostic | ControllerTesting.com"
+  description="Testez votre manette PS5, Xbox ou Switch en ligne gratuitement. Détectez le drift des joysticks, les boutons et la latence sans téléchargement."
+  breadcrumbs={breadcrumbs}
+  localized
+>
+  <Header />
+
+  <main id="main-content" class="fr-page-wrapper">
+    <section class="hero-fr">
+      <div class="hero-inner">
+        <span class="hero-badge">DIAGNOSTIC EN FRANÇAIS</span>
+        <h1 class="hero-title text-gradient">Découvrez exactement ce qui ne va pas avec votre manette</h1>
+        <p class="hero-subtext">
+          54 outils de diagnostic gratuits. Sans téléchargement. Sans inscription. Tout est traité localement et en toute confidentialité dans votre navigateur.
+        </p>
+
+        <div class="hero-ctas">
+          <a href="/test/controller/full-diagnostic" class="btn-primary">Lancer le Diagnostic Complet</a>
+          <a href="/test/controller/drift" class="btn-secondary">Test de Drift Rapide</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .fr-page-wrapper { min-height: 100dvh; padding-top: 80px; }
+  .hero-fr { max-width: 1000px; margin: 3rem auto; padding: 0 1.5rem; text-align: center; }
+  .hero-inner { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
+  .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
+  .hero-title { font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.15; }
+  .hero-subtext { font-size: 1.125rem; color: var(--color-text-secondary); max-width: 680px; line-height: 1.6; }
+  .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem; }
+</style>

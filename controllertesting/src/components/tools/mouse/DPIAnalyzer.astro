@@ -1,0 +1,69 @@
+---
+/**
+ * DPIAnalyzer.astro — Mouse DPI Calculator & Sensitivity Analyzer
+ * Measures true hardware DPI (Dots Per Inch) by measuring pixel movement across physical inch distance.
+ */
+---
+
+<div class="dpi-analyzer" id="dpi-root">
+  <div class="dpi-config-card">
+    <div class="config-row">
+      <label for="dpi-target-dist">Target Physical Distance (Inches):</label>
+      <input type="number" id="dpi-target-dist" value="2" min="1" max="12" step="0.5" class="input-num" />
+    </div>
+    <p class="config-desc">Move mouse horizontally across a physical ruler by your selected target distance.</p>
+  </div>
+
+  <div class="dpi-track-area" id="dpi-track-box">
+    <span class="track-title">DRAG MOUSE HORIZONTALLY ACROSS RULER DISTANCE</span>
+    <span class="dpi-result text-gradient" id="dpi-calc-val">0 DPI</span>
+    <span class="dpi-px-count" id="dpi-px-val">0 pixels traversed</span>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let isTracking = false;
+    let startX = 0;
+    let totalPx = 0;
+
+    const trackBox = document.getElementById('dpi-track-box');
+    const targetDistInput = document.getElementById('dpi-target-dist') as HTMLInputElement;
+    const dpiVal = document.getElementById('dpi-calc-val');
+    const pxVal = document.getElementById('dpi-px-val');
+
+    trackBox?.addEventListener('mousedown', (e) => {
+      isTracking = true;
+      startX = e.clientX;
+      totalPx = 0;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isTracking) return;
+      const diff = Math.abs(e.clientX - startX);
+      totalPx = diff;
+
+      const targetInches = parseFloat(targetDistInput?.value || '2');
+      const calculatedDPI = Math.round(totalPx / targetInches);
+
+      if (dpiVal) dpiVal.textContent = `${calculatedDPI} DPI`;
+      if (pxVal) pxVal.textContent = `${totalPx} pixels traversed`;
+    });
+
+    window.addEventListener('mouseup', () => {
+      isTracking = false;
+    });
+  });
+</script>
+
+<style>
+  .dpi-analyzer { display: flex; flex-direction: column; gap: 1.5rem; }
+  .dpi-config-card { background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .config-row { display: flex; align-items: center; gap: 1rem; font-size: var(--text-small); font-weight: 600; }
+  .input-num { width: 80px; padding: 0.4rem 0.6rem; background: var(--color-surface-1); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); color: var(--color-text-primary); font-family: var(--font-mono); }
+  .config-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .dpi-track-area { height: 240px; background: var(--color-surface-2); border: 2px dashed var(--color-accent); border-radius: var(--radius-card); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; cursor: e-resize; user-select: none; }
+  .track-title { font-size: 1.125rem; font-weight: 700; color: var(--color-text-primary); text-align: center; }
+  .dpi-result { font-family: var(--font-mono); font-size: clamp(3rem, 6vw, 4.5rem); font-weight: 800; line-height: 1; }
+  .dpi-px-count { font-size: var(--text-small); color: var(--color-text-secondary); font-family: var(--font-mono); }
+</style>

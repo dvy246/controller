@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SensConverterUI from '../../components/features/SensConverterUI.astro';
+import gamesData from '../../data/gameEngineConstants.json';
+
+export function getStaticPaths() {
+  const keys = Object.keys(gamesData);
+  const paths = [];
+
+  for (let i = 0; i < keys.length; i++) {
+    for (let j = 0; j < keys.length; j++) {
+      if (i !== j) {
+        paths.push({
+          params: { from: keys[i], to: keys[j] }
+        });
+      }
+    }
+  }
+  return paths;
+}
+
+const { from, to } = Astro.params;
+const games = gamesData as Record<string, { name: string }>;
+
+const fromName = games[from]?.name || from;
+const toName = games[to]?.name || to;
+
+const title = `Convert ${fromName} to ${toName} Sensitivity (1:1 360° Match)`;
+const description = `Accurately convert your in-game sensitivity from ${fromName} to ${toName}. Includes 360-degree turn distance (cm/in) calculator and hardware DPI scaling.`;
+const canonical = `https://controllertesting.com/sensitivity-converter/${from}-to-${to}`;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": title,
+  "url": canonical,
+  "description": description,
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+};
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <main class="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <!-- Breadcrumb -->
+    <nav class="text-xs text-slate-400 mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-blue-400 transition-colors">Home</a>
+      <span>/</span>
+      <a href="/games" class="hover:text-blue-400 transition-colors">Tools</a>
+      <span>/</span>
+      <span class="text-slate-200">{fromName} to {toName}</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-8 text-center sm:text-left">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+        {fromName} to {toName} Sensitivity Converter
+      </h1>
+      <p class="mt-2 text-base text-slate-300 max-w-3xl">
+        Maintain your exact muscle memory when switching from <span class="text-blue-400 font-semibold">{fromName}</span> to <span class="text-emerald-400 font-semibold">{toName}</span>. Calculates exact sensitivity values, 360-degree rotation distance, and hardware eDPI.
+      </p>
+    </div>
+
+    <!-- Converter Component -->
+    <SensConverterUI fromGameKey={from} toGameKey={to} />
+
+    <!-- AEO/GEO FAQ -->
+    <section class="mt-16 bg-surface-1 p-6 sm:p-8 rounded-2xl border border-surface-3">
+      <h2 class="text-2xl font-bold text-white mb-6">Sensitivity Conversion & Motor Memory Guide</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-300">
+        <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
+          <h3 class="font-semibold text-white text-base mb-2">Why does sensitivity differ between {fromName} and {toName}?</h3>
+          <p>
+            Different game engines use different <strong>Yaw multipliers</strong> (the angular degree change per mouse counts or analog stick tick). For instance, Valorant uses a yaw of 0.07 while CS2 uses 0.022. Direct numerical sensitivity numbers are non-transferable without conversion.
+          </p>
+        </div>
+
+        <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
+          <h3 class="font-semibold text-white text-base mb-2">What is cm/360° distance?</h3>
+          <p>
+            It is the physical distance (in centimeters or inches) your hand must move across the mousepad to rotate your in-game camera 360 degrees. Matching cm/360° distance ensures 1:1 muscle memory transfer.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

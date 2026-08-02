@@ -1,0 +1,257 @@
+---
+/**
+ * DriftTimeline.astro — LocalStorage Stick Drift Degradation Tracker
+ * Stores historic stick drift snapshots over time and renders a degradation progress timeline.
+ */
+---
+
+<div class="timeline-tester" id="timeline-tester-root">
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="tl-status-dot"></span>
+      <span class="status-text" id="tl-status-text">Save drift snapshots over time to track controller wear...</span>
+    </div>
+    <div class="controller-name" id="tl-model-name">No Controller Detected</div>
+  </div>
+
+  <div class="tl-actions-card">
+    <button type="button" class="btn-primary" id="btn-save-snapshot">Save Current Drift Snapshot</button>
+    <button type="button" class="btn-secondary" id="btn-clear-history">Clear Saved History</button>
+  </div>
+
+  <div class="tl-history-card">
+    <h3 class="tl-history-title">Drift Degradation History</h3>
+    <div class="history-list" id="tl-history-list">
+      <p class="history-empty" id="tl-empty-text">No saved snapshots yet. Connect controller and click 'Save Current Drift Snapshot' above.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { parseGamepadState } from '../../../lib/gamepad';
+
+  interface DriftSnapshot {
+    date: string;
+    model: string;
+    leftDrift: number;
+    rightDrift: number;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const STORAGE_KEY = 'ct_drift_timeline';
+
+    function loadSnapshots(): DriftSnapshot[] {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveSnapshots(data: DriftSnapshot[]) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {}
+    }
+
+    function renderHistory() {
+      const historyList = document.getElementById('tl-history-list');
+      if (!historyList) return;
+
+      const snapshots = loadSnapshots();
+      if (snapshots.length === 0) {
+        historyList.innerHTML = '<p class="history-empty">No saved snapshots yet. Connect controller and click "Save Current Drift Snapshot" above.</p>';
+        return;
+      }
+
+      historyList.innerHTML = snapshots.map((s) => `
+        <div class="history-item">
+          <div class="h-item-main">
+            <strong class="h-item-date">${s.date}</strong>
+            <span class="h-item-model">${s.model}</span>
+          </div>
+          <div class="h-item-scores">
+            <span class="h-drift-tag">Left: ${s.leftDrift}%</span>
+            <span class="h-drift-tag">Right: ${s.rightDrift}%</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    renderHistory();
+
+    let currentGpState: any = null;
+
+    function pollTimeline() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp: Gamepad | null = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+          activeGp = gamepads[i];
+          break;
+        }
+      }
+
+      if (activeGp) {
+        const dot = document.getElementById('tl-status-dot');
+        const text = document.getElementById('tl-status-text');
+        const model = document.getElementById('tl-model-name');
+        if (dot) dot.className = 'status-dot active';
+        if (text) text.textContent = 'Controller Connected';
+        if (model) model.textContent = activeGp.id;
+
+        currentGpState = parseGamepadState(activeGp);
+      }
+
+      requestAnimationFrame(pollTimeline);
+    }
+
+    pollTimeline();
+
+    document.getElementById('btn-save-snapshot')?.addEventListener('click', () => {
+      if (!currentGpState) {
+        alert('Please connect a controller first.');
+        return;
+      }
+
+      const snapshots = loadSnapshots();
+      const newSnap: DriftSnapshot = {
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        model: currentGpState.detectedModel || currentGpState.id,
+        leftDrift: currentGpState.leftStick.driftPct,
+        rightDrift: currentGpState.rightStick.driftPct,
+      };
+
+      snapshots.unshift(newSnap);
+      saveSnapshots(snapshots);
+      renderHistory();
+    });
+
+    document.getElementById('btn-clear-history')?.addEventListener('click', () => {
+      localStorage.removeItem(STORAGE_KEY);
+      renderHistory();
+    });
+  });
+</script>
+
+<style>
+  .timeline-tester {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .tester-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-neutral);
+  }
+  .status-dot.active {
+    background: var(--color-pass);
+    box-shadow: 0 0 8px var(--color-pass);
+  }
+
+  .status-text {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .controller-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .tl-actions-card {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .tl-history-card {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .tl-history-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .history-empty {
+    font-size: var(--text-small);
+    color: var(--color-text-tertiary);
+    font-style: italic;
+  }
+
+  .history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1rem;
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .h-item-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .h-item-date {
+    font-size: var(--text-small);
+    color: var(--color-text-primary);
+  }
+
+  .h-item-model {
+    font-size: var(--text-micro);
+    color: var(--color-text-tertiary);
+    font-family: var(--font-mono);
+  }
+
+  .h-item-scores {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .h-drift-tag {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 700;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--color-accent);
+    padding: 0.2em 0.6em;
+    border-radius: 4px;
+  }
+</style>

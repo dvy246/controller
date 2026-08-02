@@ -1,0 +1,94 @@
+---
+/**
+ * /test/mouse/scroll — Mouse Scroll Wheel Tester
+ * SEO Title: Mouse Scroll Wheel Test — Test Scroll Direction & Jitter Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import ScrollTester from '../../../components/tools/mouse/ScrollTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/mouse' },
+  { name: 'Mouse Tests', url: '/test/mouse' },
+  { name: 'Scroll Wheel Test' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test my mouse scroll wheel for reverse scrolling faults?',
+    answer: 'Scroll your mouse wheel continuously in one direction (e.g. downward) over the test target box above. If the indicator briefly flickers "SCROLLING UP", your scroll encoder has a reverse scroll fault.',
+  },
+  {
+    question: 'What causes mouse scroll wheel reverse jumping?',
+    answer: 'Scroll wheel jumping occurs when dust, hair, or grease accumulates inside the mechanical rotary encoder wheel. Cleaning the encoder with 99% isopropyl alcohol or compressed air usually fixes it.',
+  },
+  {
+    question: 'Does this test free-spinning and notched scroll wheels?',
+    answer: 'Yes! It measures all optical and mechanical scroll encoders, including Logitech MagSpeed and free-spinning wheels.',
+  },
+];
+---
+
+<ToolLayout
+  title="Mouse Scroll Wheel Test — Test Scroll Direction & Jitter Online | ControllerTesting.com"
+  description="Test mouse scroll wheel direction, line steps, and encoder jumping faults online. Detect reverse scrolling issues on gaming mice free."
+  toolName="Scroll Wheel Tester"
+  category="Mouse Diagnostic"
+  categoryUrl="/test/mouse"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <ScrollTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Scroll Wheel Diagnostics</h2>
+      <p class="results-text">
+        Scroll steps should register consistently without random direction reversals or skipped lines.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Test mouse button clicks</h3>
+        <p class="export-desc">Test left, right, middle, and side thumb buttons.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/mouse/buttons" class="btn-primary">Button Tester</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/mouse/buttons" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Mouse Button Tester</h3>
+      <p class="tool-desc">Test side buttons and switches.</p>
+    </a>
+    <a href="/test/mouse/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Measure mouse Hz frequency.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Mechanical Rotary Encoders vs Optical Scroll Wheels</h2>
+    <p>
+      Most gaming mice feature TTC Gold, Kailh, or ALPS mechanical scroll encoders.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>

@@ -1,0 +1,90 @@
+---
+/**
+ * MicrophoneTester.astro — Built-In Controller Microphone & Audio Diagnostic Tool
+ * Tests audio input waveform, volume level (dB), and microphone clarity for PS5 DualSense and built-in headset jacks.
+ */
+---
+
+<div class="mic-tester" id="mic-tester-root">
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="mic-status-dot"></span>
+      <span class="status-text" id="mic-status-text">Click 'Test Microphone' to capture audio level visualizer...</span>
+    </div>
+    <div class="controller-name" id="mic-model-name">Microphone Disconnected</div>
+  </div>
+
+  <div class="mic-visual-card">
+    <div class="mic-level-header">
+      <span>AUDIO INPUT VOLUME</span>
+      <span class="mono" id="mic-db-val">0 dB</span>
+    </div>
+    <div class="progress-bar lg">
+      <div class="progress-bar__fill" id="mic-volume-bar" style="width: 0%"></div>
+    </div>
+  </div>
+
+  <div class="tester-controls">
+    <button type="button" class="btn-primary" id="btn-start-mic">Test Microphone Input</button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let audioCtx: AudioContext | null = null;
+    let stream: MediaStream | null = null;
+
+    document.getElementById('btn-start-mic')?.addEventListener('click', async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const source = audioCtx.createMediaStreamSource(stream);
+        const analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 256;
+        source.connect(analyser);
+
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+        const dot = document.getElementById('mic-status-dot');
+        const text = document.getElementById('mic-status-text');
+        if (dot) dot.className = 'status-dot active';
+        if (text) text.textContent = 'Microphone Active — Speak into controller microphone';
+
+        function updateMic() {
+          if (!analyser) return;
+          analyser.getByteFrequencyData(dataArray);
+          let sum = 0;
+          for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+          const avg = sum / dataArray.length;
+          const pct = Math.min(100, Math.round((avg / 128) * 100));
+
+          const bar = document.getElementById('mic-volume-bar');
+          const dbVal = document.getElementById('mic-db-val');
+          if (bar) bar.style.width = `${pct}%`;
+          if (dbVal) dbVal.textContent = `${pct} dB`;
+
+          requestAnimationFrame(updateMic);
+        }
+
+        updateMic();
+
+      } catch (e) {
+        alert('Microphone permission denied or no audio device found.');
+      }
+    });
+  });
+</script>
+
+<style>
+  .mic-tester { display: flex; flex-direction: column; gap: 1.5rem; }
+  .tester-status-bar { display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 1.25rem; background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); }
+  .status-indicator { display: flex; align-items: center; gap: 0.625rem; }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-neutral); }
+  .status-dot.active { background: var(--color-pass); box-shadow: 0 0 8px var(--color-pass); }
+  .status-text { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .controller-name { font-family: var(--font-mono); font-size: var(--text-small); font-weight: 600; color: var(--color-accent); }
+  .mic-visual-card { background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .mic-level-header { display: flex; justify-content: space-between; font-size: var(--text-small); font-weight: 600; }
+  .progress-bar.lg { height: 16px; background: var(--color-surface-1); border-radius: var(--radius-pill); overflow: hidden; padding: 2px; }
+  .tester-controls { display: flex; justify-content: flex-end; }
+</style>

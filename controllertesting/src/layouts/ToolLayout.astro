@@ -1,0 +1,357 @@
+---
+/**
+ * ToolLayout.astro — ControllerTesting.com
+ * Card-based tool page layout following prd_addendum.md specification:
+ * 1. Breadcrumbs
+ * 2. Hero Card
+ * 3. Tool Card (interactive slot)
+ * 4. Results Card
+ * 5. Action Cards (Fix/Optimize/Upgrade)
+ * 6. Export Card
+ * 7. Related Tools
+ * 8. SEO Content
+ * 9. FAQ Card
+ * 10. Trust Card
+ */
+
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+
+export interface Props {
+  title: string;
+  description: string;
+  toolName: string;
+  category: string;
+  categoryUrl: string;
+  breadcrumbs: Array<{ name: string; url?: string }>;
+  faqs?: Array<{ question: string; answer: string }>;
+  schema?: object | object[];
+}
+
+const {
+  title,
+  description,
+  toolName,
+  category,
+  categoryUrl,
+  breadcrumbs,
+  faqs = [],
+  schema = [],
+} = Astro.props;
+
+// Auto-generate WebApplication + FAQPage JSON-LD schemas
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: toolName,
+  url: Astro.url.href,
+  applicationCategory: 'BrowserApplication',
+  operatingSystem: 'Any',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+};
+
+const faqSchema = faqs.length > 0 ? {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  })),
+} : null;
+
+const allSchemas = [
+  webAppSchema,
+  ...(faqSchema ? [faqSchema] : []),
+  ...(Array.isArray(schema) ? schema : [schema]),
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  breadcrumbs={breadcrumbs}
+  schema={allSchemas}
+>
+  <Header />
+
+  <main id="main-content" class="tool-page">
+    <div class="container-site">
+
+      {/* ── 1. Breadcrumbs ── */}
+      <Breadcrumbs items={breadcrumbs} />
+
+      {/* ── 2. Hero Card ── */}
+      <header class="tool-hero-card card-base">
+        <div class="tool-hero-header">
+          <span class="tool-category-badge">{category}</span>
+          <h1 class="tool-title">{toolName}</h1>
+          <p class="tool-description">{description}</p>
+        </div>
+      </header>
+
+      {/* ── 3. Tool Card (Interactive Slot) ── */}
+      <section class="tool-interactive-card card-tool" aria-label={`Interactive ${toolName} interface`}>
+        <slot name="tool" />
+      </section>
+
+      {/* ── 4. Results Card (Slot) ── */}
+      <section class="tool-results-card card-base" aria-label="Test results summary">
+        <slot name="results" />
+      </section>
+
+      {/* ── 5. Action Cards (3-col: Fix / Optimize / Upgrade) ── */}
+      <section class="tool-actions-section" aria-label="Recommended next actions">
+        <h2 class="section-title">What would you like to do next?</h2>
+        <div class="grid-actions">
+          <div class="action-card card-base card-hover">
+            <span class="action-badge badge-warning">Fix Problem</span>
+            <h3 class="action-title">Repair Guide</h3>
+            <p class="action-desc">Step-by-step tutorial to calibrate or repair your controller.</p>
+            <a href="/fix-or-replace" class="btn-secondary">View Repair Guides</a>
+          </div>
+          <div class="action-card card-base card-hover">
+            <span class="action-badge badge-pass">Optimize</span>
+            <h3 class="action-title">Game Settings</h3>
+            <p class="action-desc">Get optimal deadzone & sensitivity settings for Apex, COD, Fortnite.</p>
+            <a href="/test/controller/competitive-readiness" class="btn-secondary">Optimize Settings</a>
+          </div>
+          <div class="action-card card-base card-hover">
+            <span class="action-badge badge-info">Upgrade</span>
+            <h3 class="action-title">Controller Recommendations</h3>
+            <p class="action-desc">Compare replacement controllers with hall-effect anti-drift sticks.</p>
+            <a href="/compare/dualsense-vs-xbox-series" class="btn-secondary">Compare Models</a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── 6. Export Card (Slot) ── */}
+      <section class="tool-export-card card-base">
+        <slot name="export" />
+      </section>
+
+      {/* ── 7. Related Tools ── */}
+      <section class="related-tools-section">
+        <h2 class="section-title">Related Diagnostic Tools</h2>
+        <div class="grid-related">
+          <slot name="related-tools" />
+        </div>
+      </section>
+
+      {/* ── 8. SEO Educational Content ── */}
+      <article class="tool-content-section card-base prose">
+        <slot name="content" />
+      </article>
+
+      {/* ── 9. FAQ Card ── */}
+      {faqs.length > 0 && (
+        <section class="tool-faq-section card-base" aria-label="Frequently Asked Questions">
+          <h2 class="section-title">Frequently Asked Questions</h2>
+          <div class="faq-accordion">
+            {faqs.map((faq) => (
+              <details class="faq-item">
+                <summary class="faq-question">{faq.question}</summary>
+                <p class="faq-answer">{faq.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── 10. Trust Card ── */}
+      <section class="tool-trust-card card-base">
+        <div class="trust-grid">
+          <div class="trust-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <div>
+              <strong class="trust-title">100% Client-Side</strong>
+              <p class="trust-desc">All Gamepad API data stays in your browser. Zero tracking or data collection.</p>
+            </div>
+          </div>
+          <div class="trust-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <div>
+              <strong class="trust-title">Instant Results</strong>
+              <p class="trust-desc">No downloads, plugins, or software installation needed. Works instantly.</p>
+            </div>
+          </div>
+          <div class="trust-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div>
+              <strong class="trust-title">Free Forever</strong>
+              <p class="trust-desc">No paywalls, subscription requirements, or hidden usage limits.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .tool-page {
+    padding-top: 80px;
+    padding-bottom: var(--spacing-section);
+  }
+
+  .tool-hero-card {
+    margin-bottom: 1.5rem;
+  }
+
+  .tool-category-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-accent);
+    background: rgba(37, 99, 235, 0.1);
+    padding: 0.25em 0.75em;
+    border-radius: var(--radius-pill);
+    margin-bottom: 0.75rem;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+  }
+
+  .tool-title {
+    font-size: var(--text-h1);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+  }
+
+  .tool-description {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    max-width: 60ch;
+  }
+
+  .tool-interactive-card {
+    margin-bottom: 1.5rem;
+    min-height: 350px;
+  }
+
+  .tool-results-card {
+    margin-bottom: 2rem;
+  }
+
+  .section-title {
+    font-size: var(--text-h2);
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.02em;
+  }
+
+  .tool-actions-section,
+  .related-tools-section,
+  .tool-content-section,
+  .tool-faq-section,
+  .tool-export-card {
+    margin-bottom: 2rem;
+  }
+
+  .action-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .action-badge {
+    width: fit-content;
+  }
+
+  .action-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+
+  .action-desc {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    flex-grow: 1;
+  }
+
+  /* FAQ Accordion */
+  .faq-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--color-border-subtle);
+    padding-bottom: 0.75rem;
+  }
+
+  .faq-question {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    padding: 0.5rem 0;
+  }
+
+  .faq-question:hover {
+    color: var(--color-accent);
+  }
+
+  .faq-answer {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    padding-top: 0.5rem;
+  }
+
+  /* Trust grid */
+  .trust-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .trust-item svg {
+    color: var(--color-accent);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .trust-title {
+    display: block;
+    font-size: 0.9375rem;
+    color: var(--color-text-primary);
+    margin-bottom: 0.25rem;
+  }
+
+  .trust-desc {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 768px) {
+    .trust-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+</style>

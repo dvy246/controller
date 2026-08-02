@@ -1,0 +1,163 @@
+---
+/**
+ * /test/controller/full-diagnostic — Full Controller Diagnostic Wizard
+ * Flagship tool page for comprehensive gamepad health checkup.
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import FullDiagnostic from '../../../components/tools/controller/FullDiagnostic.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Full Diagnostic Wizard' },
+];
+
+const faqs = [
+  {
+    question: 'How long does the Full Diagnostic take?',
+    answer: 'The complete diagnostic takes approximately 2 minutes and tests analog stick drift, circularity error, button response matrix, trigger linearity, and vibration rumble motors.',
+  },
+  {
+    question: 'What is the Controller Health Score™?',
+    answer: 'The Health Score is a 0–100 proprietary algorithm that combines drift percentage (30%), circularity (20%), button response (15%), trigger linearity (15%), vibration (10%), and polling rate (10%) into a letter grade from A+ to F.',
+  },
+  {
+    question: 'Does this test require any software or driver downloads?',
+    answer: 'No. The entire test runs locally inside your web browser using the standard Web Gamepad API. No software or extensions are required.',
+  },
+];
+---
+
+<ToolLayout
+  title="Full Controller Diagnostic Wizard — Complete Gamepad Health Test | ControllerTesting.com"
+  description="Run a 2-minute diagnostic checkup on your PS5, Xbox, or Switch controller. Test stick drift, buttons, triggers, and rumble in one place. Free and instant."
+  toolName="Full Diagnostic Wizard"
+  category="Flagship Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  {/* ── Tool Interactive Island ── */}
+  <Fragment slot="tool">
+    <FullDiagnostic />
+  </Fragment>
+
+  {/* ── Results Slot ── */}
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Diagnostic Scoring System</h2>
+      <p class="results-text">
+        Our diagnostic combines 6 hardware metrics into a single 0-100 score. Grade A+ (95-100) indicates competition-grade performance. Grade C or lower indicates wear requiring deadzone adjustments or thumbstick module replacement.
+      </p>
+    </div>
+  </Fragment>
+
+  {/* ── Export Slot ── */}
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Need a printable diagnostic certificate?</h3>
+        <p class="export-desc">Generate an official PDF test report to submit for warranty claims or resale proof.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/health-score" class="btn-primary">Generate PDF Report</a>
+      </div>
+    </div>
+  </Fragment>
+
+  {/* ── Related Tools Slot ── */}
+  <Fragment slot="related-tools">
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Isolated 0.1% precision stick drift test.</p>
+    </a>
+    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Button Tester</h3>
+      <p class="tool-desc">Test button ghosting and response speed.</p>
+    </a>
+    <a href="/test/controller/triggers" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Trigger Tester</h3>
+      <p class="tool-desc">Analog L2/R2 pressure curve analyzer.</p>
+    </a>
+    <a href="/test/controller/vibration" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Vibration Tester</h3>
+      <p class="tool-desc">Test haptic rumble motors independently.</p>
+    </a>
+  </Fragment>
+
+  {/* ── SEO Content Slot ── */}
+  <Fragment slot="content">
+    <h2>Complete Controller Hardware Diagnostic Guide</h2>
+    <p>
+      Whether you are experiencing phantom camera movement in competitive shooter games or suspect physical button wear,
+      running a full diagnostic is the fastest way to pin down hardware faults before buying a replacement controller.
+    </p>
+
+    <h3>What We Check in the 5-Step Wizard</h3>
+    <ul>
+      <li><strong>Analog Stick Center Offset:</strong> Detects microscopic voltage variance in resting thumbstick potentiometers.</li>
+      <li><strong>Circularity Range Error:</strong> Verifies whether your thumbsticks reach 100% full diagonal displacement.</li>
+      <li><strong>Button Matrix Ghosting:</strong> Ensures all face buttons, shoulder bumpers, and D-pad inputs trigger independently.</li>
+      <li><strong>Trigger Linearity Curve:</strong> Tests whether analog triggers increase smoothly from 0% to 100% without dead spots.</li>
+      <li><strong>Haptic Rumble Actuators:</strong> Triggers dual heavy and light vibration motors to test motor health.</li>
+    </ul>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .results-text {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .export-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .export-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .export-desc {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .prose {
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+  }
+
+  .prose h2, .prose h3 {
+    color: var(--color-text-primary);
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .prose p {
+    margin-bottom: 1rem;
+  }
+
+  .prose ul {
+    margin-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose li {
+    margin-bottom: 0.5rem;
+  }
+</style>

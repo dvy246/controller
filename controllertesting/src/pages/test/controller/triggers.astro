@@ -1,0 +1,112 @@
+---
+/**
+ * /test/controller/triggers — Trigger Linearity & Pressure Tester
+ * SEO Title: Controller Trigger Test — Test Analog L2/R2 Pressure Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import TriggerTester from '../../../components/tools/controller/TriggerTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Trigger Pressure Test' },
+];
+
+const faqs = [
+  {
+    question: 'Why does my controller trigger only reach 85% or 90% full pull?',
+    answer: 'Worn internal rubber trigger stops or misaligned potentiometer potentiometers prevent the trigger from depressing to 100% capacity. This causes issues in racing games where 100% trigger pull is required for max acceleration.',
+  },
+  {
+    question: 'How does analog trigger pressure testing work?',
+    answer: 'Using the Web Gamepad API, our tool reads raw float values from 0.0000 (fully released) to 1.0000 (fully depressed) for L2 and R2 triggers, plotting your linearity curve in real time.',
+  },
+  {
+    question: 'Does this test adaptive triggers on PS5 DualSense?',
+    answer: 'Yes! It measures standard analog travel distance. On PS5 DualSense controllers, disable adaptive trigger haptics in your PC settings for standard linear measurement.',
+  },
+];
+---
+
+<ToolLayout
+  title="Controller Trigger Test — Measure Analog L2/R2 Pressure Online | ControllerTesting.com"
+  description="Test L2 and R2 analog trigger pressure, linearity, and full pull range on PS5 DualSense, Xbox, or Switch controllers. Free, online, no download required."
+  toolName="Trigger Pressure Tester"
+  category="Controller Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <TriggerTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Trigger Performance Benchmarks</h2>
+      <p class="results-text">
+        Healthy triggers should rest at exactly 0.0% when untouched and reach 100.0% smoothly when fully pressed. If your trigger caps out below 95%, clean the trigger mechanical housing or adjust trigger deadzone in your game settings.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Test complete controller hardware</h3>
+        <p class="export-desc">Combine trigger linearity with stick drift and button matrix diagnostics.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    </a>
+    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Button Tester</h3>
+      <p class="tool-desc">Test button ghosting and response speed.</p>
+    </a>
+    <a href="/test/controller/vibration" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Vibration Tester</h3>
+      <p class="tool-desc">Test haptic rumble motors.</p>
+    </a>
+    <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Measure input rate in Hz.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Why Analog Trigger Linearity Matters for Gaming</h2>
+    <p>
+      Unlike digital buttons that are either ON or OFF, analog triggers (L2/LT and R2/RT) measure fine pressure levels.
+      In racing games like <em>Forza Horizon</em> or <em>iRacing</em>, feathering the throttle requires 10% to 90% precise trigger control.
+    </p>
+
+    <h3>Common Analog Trigger Defects</h3>
+    <ul>
+      <li><strong>Truncated Range:</strong> Physical rubber pad degradation stops the trigger at 80-90% max input.</li>
+      <li><strong>Spiking Values:</strong> Dirty potentiometer contacts cause jumpy or erratic pressure spikes.</li>
+      <li><strong>Deadzone Lag:</strong> Loose trigger springs cause a loose initial deadzone where input is not registered.</li>
+    </ul>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+  .prose ul { margin-left: 1.25rem; margin-bottom: 1rem; }
+  .prose li { margin-bottom: 0.5rem; }
+</style>

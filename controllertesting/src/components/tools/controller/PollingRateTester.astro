@@ -1,0 +1,203 @@
+---
+/**
+ * PollingRateTester.astro — Controller Polling Rate & Response Latency Checker
+ * Measures real-time input report frequency in Hz, average interval in ms, and peak polling rate.
+ */
+---
+
+<div class="polling-tester" id="poll-tester-root">
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="poll-status-dot"></span>
+      <span class="status-text" id="poll-status-text">Wiggle analog sticks rapidly to test polling rate frequency...</span>
+    </div>
+    <div class="controller-name" id="poll-model-name">No Controller Detected</div>
+  </div>
+
+  <div class="polling-stats-hero">
+    <div class="pstat-hero-card">
+      <span class="pstat-hero-label">CURRENT POLLING RATE</span>
+      <span class="pstat-hero-val text-gradient" id="poll-hz-val">0 Hz</span>
+      <span class="pstat-hero-sub" id="poll-ms-val">0.00 ms average interval</span>
+    </div>
+    <div class="pstat-hero-card">
+      <span class="pstat-hero-label">PEAK POLLING RATE</span>
+      <span class="pstat-hero-val mono" id="poll-peak-val">0 Hz</span>
+      <span class="pstat-hero-sub" id="poll-status-rating">Awaiting Input</span>
+    </div>
+  </div>
+
+  <div class="poll-controls">
+    <button type="button" class="btn-primary" id="btn-start-poll-test">Start 5-Second Test Sweep</button>
+    <button type="button" class="btn-secondary" id="btn-reset-poll">Reset Peak Hz</button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let lastTime = performance.now();
+    let samples: number[] = [];
+    let peakHz = 0;
+    let isTestRunning = false;
+
+    function measurePolling() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp: Gamepad | null = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+          activeGp = gamepads[i];
+          break;
+        }
+      }
+
+      if (activeGp) {
+        const dot = document.getElementById('poll-status-dot');
+        const text = document.getElementById('poll-status-text');
+        const model = document.getElementById('poll-model-name');
+        if (dot) dot.className = 'status-dot active';
+        if (text) text.textContent = 'Measuring input sample intervals...';
+        if (model) model.textContent = activeGp.id;
+
+        const now = performance.now();
+        const delta = now - lastTime;
+        lastTime = now;
+
+        if (delta > 0 && delta < 100) {
+          samples.push(delta);
+          if (samples.length > 60) samples.shift();
+
+          const avgDelta = samples.reduce((a, b) => a + b, 0) / samples.length;
+          const currentHz = Math.round(1000 / avgDelta);
+
+          if (currentHz > peakHz && currentHz < 2000) {
+            peakHz = currentHz;
+          }
+
+          const hzVal = document.getElementById('poll-hz-val');
+          const msVal = document.getElementById('poll-ms-val');
+          const peakVal = document.getElementById('poll-peak-val');
+          const ratingEl = document.getElementById('poll-status-rating');
+
+          if (hzVal) hzVal.textContent = `${currentHz} Hz`;
+          if (msVal) msVal.textContent = `${avgDelta.toFixed(2)} ms average interval`;
+          if (peakVal) peakVal.textContent = `${peakHz} Hz`;
+
+          if (ratingEl) {
+            if (peakHz >= 800) ratingEl.textContent = 'Esports Ultra (1000Hz)';
+            else if (peakHz >= 400) ratingEl.textContent = 'High Speed (500Hz)';
+            else if (peakHz >= 200) ratingEl.textContent = 'Standard (250Hz)';
+            else ratingEl.textContent = 'Basic (125Hz / Bluetooth)';
+          }
+        }
+      }
+
+      requestAnimationFrame(measurePolling);
+    }
+
+    measurePolling();
+
+    document.getElementById('btn-reset-poll')?.addEventListener('click', () => {
+      peakHz = 0;
+      samples = [];
+      const peakVal = document.getElementById('poll-peak-val');
+      if (peakVal) peakVal.textContent = '0 Hz';
+    });
+  });
+</script>
+
+<style>
+  .polling-tester {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .tester-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-neutral);
+  }
+  .status-dot.active {
+    background: var(--color-pass);
+    box-shadow: 0 0 8px var(--color-pass);
+  }
+
+  .status-text {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .controller-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .polling-stats-hero {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .pstat-hero-card {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .pstat-hero-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--color-text-tertiary);
+    letter-spacing: 0.1em;
+  }
+
+  .pstat-hero-val {
+    font-family: var(--font-mono);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .pstat-hero-sub {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .poll-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 768px) {
+    .polling-stats-hero { grid-template-columns: 1fr; }
+  }
+</style>

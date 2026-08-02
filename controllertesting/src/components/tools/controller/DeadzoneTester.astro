@@ -1,0 +1,385 @@
+---
+/**
+ * DeadzoneTester.astro — Interactive Stick Deadzone Visualizer Tool
+ * Allows gamers to test inner/outer deadzone settings (0% to 30%) with real-time target response visualizer.
+ */
+---
+
+<div class="deadzone-tester" id="dz-tester-root">
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="dz-status-dot"></span>
+      <span class="status-text" id="dz-status-text">Move thumbsticks to test deadzone responsiveness...</span>
+    </div>
+    <div class="controller-name" id="dz-model-name">No Controller Detected</div>
+  </div>
+
+  <div class="dz-config-bar">
+    <div class="config-item">
+      <label for="dz-inner-slider">Inner Deadzone Threshold: <strong class="mono" id="dz-inner-val">5%</strong></label>
+      <input type="range" id="dz-inner-slider" min="0" max="30" value="5" class="input-range" />
+    </div>
+    <div class="config-item">
+      <label for="dz-outer-slider">Outer Deadzone Threshold: <strong class="mono" id="dz-outer-val">95%</strong></label>
+      <input type="range" id="dz-outer-slider" min="70" max="100" value="95" class="input-range" />
+    </div>
+  </div>
+
+  <div class="dz-canvases-grid">
+
+    {/* Left Stick Deadzone Canvas */}
+    <div class="dz-card">
+      <div class="dz-card-header">
+        <h3 class="dz-title">Left Stick Response</h3>
+        <span class="dz-state-badge badge-pass" id="left-dz-state">In Deadzone</span>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="left-dz-canvas" width="280" height="280"></canvas>
+      </div>
+
+      <div class="dz-metrics">
+        <div class="metric">
+          <span class="m-label">Magnitude</span>
+          <span class="m-val mono" id="left-dz-mag">0.0%</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Active Input</span>
+          <span class="m-val mono" id="left-dz-active">NO</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Right Stick Deadzone Canvas */}
+    <div class="dz-card">
+      <div class="dz-card-header">
+        <h3 class="dz-title">Right Stick Response</h3>
+        <span class="dz-state-badge badge-pass" id="right-dz-state">In Deadzone</span>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="right-dz-canvas" width="280" height="280"></canvas>
+      </div>
+
+      <div class="dz-metrics">
+        <div class="metric">
+          <span class="m-label">Magnitude</span>
+          <span class="m-val mono" id="right-dz-mag">0.0%</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Active Input</span>
+          <span class="m-val mono" id="right-dz-active">NO</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  import { parseGamepadState } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const innerSlider = document.getElementById('dz-inner-slider') as HTMLInputElement;
+    const outerSlider = document.getElementById('dz-outer-slider') as HTMLInputElement;
+    const innerValText = document.getElementById('dz-inner-val');
+    const outerValText = document.getElementById('dz-outer-val');
+
+    let innerDzPct = 5;
+    let outerDzPct = 95;
+
+    if (innerSlider && innerValText) {
+      innerSlider.addEventListener('input', () => {
+        innerDzPct = parseInt(innerSlider.value, 10);
+        innerValText.textContent = `${innerDzPct}%`;
+      });
+    }
+
+    if (outerSlider && outerValText) {
+      outerSlider.addEventListener('input', () => {
+        outerDzPct = parseInt(outerSlider.value, 10);
+        outerValText.textContent = `${outerDzPct}%`;
+      });
+    }
+
+    const leftCanvas = document.getElementById('left-dz-canvas') as HTMLCanvasElement;
+    const rightCanvas = document.getElementById('right-dz-canvas') as HTMLCanvasElement;
+    if (!leftCanvas || !rightCanvas) return;
+
+    const leftCtx = leftCanvas.getContext('2d');
+    const rightCtx = rightCanvas.getContext('2d');
+
+    function renderDeadzone(
+      ctx: CanvasRenderingContext2D | null,
+      x: number,
+      y: number,
+      innerPct: number,
+      outerPct: number
+    ) {
+      if (!ctx) return;
+      const w = ctx.canvas.width;
+      const h = ctx.canvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = (w / 2) - 24;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Outer max stick boundary
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#0C0C14';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Outer deadzone threshold ring
+      const outerR = radius * (outerPct / 100);
+      ctx.beginPath();
+      ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Inner deadzone threshold circle (filtering area)
+      const innerR = radius * (innerPct / 100);
+      ctx.beginPath();
+      ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(245, 158, 11, 0.12)';
+      ctx.fill();
+      ctx.strokeStyle = '#F59E0B';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Stick position
+      const dist = Math.hypot(x, y);
+      const px = cx + x * radius;
+      const py = cy + y * radius;
+
+      const isActive = (dist * 100) > innerPct;
+
+      ctx.beginPath();
+      ctx.arc(px, py, 6, 0, Math.PI * 2);
+      ctx.fillStyle = isActive ? '#10B981' : '#6B7280';
+      ctx.fill();
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    function pollDeadzone() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp: Gamepad | null = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+          activeGp = gamepads[i];
+          break;
+        }
+      }
+
+      if (activeGp) {
+        const dot = document.getElementById('dz-status-dot');
+        const text = document.getElementById('dz-status-text');
+        const model = document.getElementById('dz-model-name');
+        if (dot) dot.className = 'status-dot active';
+        if (text) text.textContent = 'Adjust inner slider until stick stays in deadzone';
+        if (model) model.textContent = activeGp.id;
+
+        const state = parseGamepadState(activeGp);
+
+        // Left stick
+        const lMag = Math.hypot(state.leftStick.x, state.leftStick.y) * 100;
+        renderDeadzone(leftCtx, state.leftStick.x, state.leftStick.y, innerDzPct, outerDzPct);
+
+        const lMagEl = document.getElementById('left-dz-mag');
+        const lActEl = document.getElementById('left-dz-active');
+        const lStateEl = document.getElementById('left-dz-state');
+
+        if (lMagEl) lMagEl.textContent = `${lMag.toFixed(1)}%`;
+        if (lMag > innerDzPct) {
+          if (lActEl) lActEl.textContent = 'YES';
+          if (lStateEl) {
+            lStateEl.textContent = 'Registering Input';
+            lStateEl.className = 'dz-state-badge badge-pass';
+          }
+        } else {
+          if (lActEl) lActEl.textContent = 'NO';
+          if (lStateEl) {
+            lStateEl.textContent = 'Filtered (Deadzone)';
+            lStateEl.className = 'dz-state-badge badge-warning';
+          }
+        }
+
+        // Right stick
+        const rMag = Math.hypot(state.rightStick.x, state.rightStick.y) * 100;
+        renderDeadzone(rightCtx, state.rightStick.x, state.rightStick.y, innerDzPct, outerDzPct);
+
+        const rMagEl = document.getElementById('right-dz-mag');
+        const rActEl = document.getElementById('right-dz-active');
+        const rStateEl = document.getElementById('right-dz-state');
+
+        if (rMagEl) rMagEl.textContent = `${rMag.toFixed(1)}%`;
+        if (rMag > innerDzPct) {
+          if (rActEl) rActEl.textContent = 'YES';
+          if (rStateEl) {
+            rStateEl.textContent = 'Registering Input';
+            rStateEl.className = 'dz-state-badge badge-pass';
+          }
+        } else {
+          if (rActEl) rActEl.textContent = 'NO';
+          if (rStateEl) {
+            rStateEl.textContent = 'Filtered (Deadzone)';
+            rStateEl.className = 'dz-state-badge badge-warning';
+          }
+        }
+      }
+
+      requestAnimationFrame(pollDeadzone);
+    }
+
+    pollDeadzone();
+  });
+</script>
+
+<style>
+  .deadzone-tester {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .tester-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-neutral);
+  }
+  .status-dot.active {
+    background: var(--color-pass);
+    box-shadow: 0 0 8px var(--color-pass);
+  }
+
+  .status-text {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .controller-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .dz-config-bar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding: 1.25rem;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+  }
+
+  .config-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: var(--text-small);
+  }
+
+  .config-item label {
+    font-weight: 600;
+
+  }
+
+  .dz-canvases-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .dz-card {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .dz-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .dz-title {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .dz-state-badge {
+    font-size: var(--text-micro);
+    font-weight: 700;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    padding: 0.2em 0.6em;
+    border-radius: var(--radius-pill);
+  }
+
+  .canvas-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dz-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .m-label {
+    font-size: var(--text-micro);
+    color: var(--color-text-tertiary);
+    font-family: var(--font-mono);
+  }
+
+  .m-val {
+    font-size: var(--text-small);
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .dz-config-bar, .dz-canvases-grid { grid-template-columns: 1fr; }
+  }
+</style>

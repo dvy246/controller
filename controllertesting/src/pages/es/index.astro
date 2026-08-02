@@ -1,0 +1,49 @@
+---
+/**
+ * /es — Spanish Homepage
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+
+const breadcrumbs = [{ name: 'Inicio', url: '/es' }];
+---
+
+<BaseLayout
+  title="Prueba de Mando Gratis — Diagnóstico Online | ControllerTesting.com"
+  description="Prueba tu mando de PS5, Xbox o Nintendo Switch en línea gratis. Detecta drift de joysticks, respuesta de botones y latencia sin descargas."
+  breadcrumbs={breadcrumbs}
+  localized
+>
+  <Header />
+
+  <main id="main-content" class="es-page-wrapper">
+    <section class="hero-es">
+      <div class="hero-inner">
+        <span class="hero-badge">DIAGNÓSTICO EN ESPAÑOL</span>
+        <h1 class="hero-title text-gradient">Descubre exactamente qué le pasa a tu mando</h1>
+        <p class="hero-subtext">
+          54 herramientas de diagnóstico gratuitas. Sin descargas. Sin registros. Todo el procesamiento se realiza de forma 100% privada en tu navegador.
+        </p>
+
+        <div class="hero-ctas">
+          <a href="/test/controller/full-diagnostic" class="btn-primary">Iniciar Diagnóstico Completo</a>
+          <a href="/test/controller/drift" class="btn-secondary">Prueba de Drift Rápida</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .es-page-wrapper { min-height: 100dvh; padding-top: 80px; }
+  .hero-es { max-width: 1000px; margin: 3rem auto; padding: 0 1.5rem; text-align: center; }
+  .hero-inner { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
+  .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
+  .hero-title { font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.15; }
+  .hero-subtext { font-size: 1.125rem; color: var(--color-text-secondary); max-width: 680px; line-height: 1.6; }
+  .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem; }
+</style>

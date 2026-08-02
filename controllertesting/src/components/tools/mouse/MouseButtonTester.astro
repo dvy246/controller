@@ -1,0 +1,49 @@
+---
+/**
+ * MouseButtonTester.astro — Interactive Mouse Button & Side Keys Diagnostic Tool
+ * Tests Left, Right, Middle, Side Button 1 (Forward), Side Button 2 (Back), and DPI switches.
+ */
+---
+
+<div class="m-button-tester" id="mbtn-root">
+  <div class="mbtn-layout">
+    <div class="mbtn-card" id="mb-0"><span class="mbtn-name">Left Click (MB1)</span><span class="mono" id="mcount-0">0 clicks</span></div>
+    <div class="mbtn-card" id="mb-1"><span class="mbtn-name">Middle Click (MB3)</span><span class="mono" id="mcount-1">0 clicks</span></div>
+    <div class="mbtn-card" id="mb-2"><span class="mbtn-name">Right Click (MB2)</span><span class="mono" id="mcount-2">0 clicks</span></div>
+    <div class="mbtn-card" id="mb-3"><span class="mbtn-name">Side Button 1 (Back)</span><span class="mono" id="mcount-3">0 clicks</span></div>
+    <div class="mbtn-card" id="mb-4"><span class="mbtn-name">Side Button 2 (Forward)</span><span class="mono" id="mcount-4">0 clicks</span></div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const counts = [0, 0, 0, 0, 0];
+
+    window.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      const btn = e.button; // 0=Left, 1=Middle, 2=Right, 3=Back, 4=Forward
+      if (btn >= 0 && btn <= 4) {
+        counts[btn]++;
+        const card = document.getElementById(`mb-${btn}`);
+        const countEl = document.getElementById(`mcount-${btn}`);
+        if (card) {
+          card.classList.add('active');
+          setTimeout(() => card.classList.remove('active'), 150);
+        }
+        if (countEl) countEl.textContent = `${counts[btn]} clicks`;
+      }
+    });
+
+    // Disable context menu so right click can be tested cleanly
+    window.addEventListener('contextmenu', (e) => e.preventDefault());
+  });
+</script>
+
+<style>
+  .m-button-tester { display: flex; flex-direction: column; gap: 1.5rem; }
+  .mbtn-layout { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  .mbtn-card { background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); padding: 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; text-align: center; transition: background 0.15s, border-color 0.15s; }
+  .mbtn-card.active { background: var(--color-pass-bg); border-color: var(--color-pass); }
+  .mbtn-name { font-size: 1rem; font-weight: 700; color: var(--color-text-primary); }
+  @media (max-width: 768px) { .mbtn-layout { grid-template-columns: 1fr; } }
+</style>

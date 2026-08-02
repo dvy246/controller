@@ -1,0 +1,107 @@
+---
+/**
+ * ClickLatencyTester.astro — Mouse Click Latency & Reaction Delay Tool
+ * Measures click delay from visual prompt to left/right mouse button click.
+ */
+---
+
+<div class="m-latency-tester" id="mlat-root">
+  <div class="mlat-hero-box" id="mlat-box">
+    <span class="mlat-title" id="mlat-title">Click 'Start Reaction Test' Below</span>
+    <span class="mlat-sub" id="mlat-sub">Click anywhere when box turns emerald green</span>
+  </div>
+
+  <div class="mlat-stats-grid">
+    <div class="mlat-stat-card">
+      <span class="m-label">LAST REACTION TIME</span>
+      <span class="m-val text-gradient" id="mlat-last">0 ms</span>
+    </div>
+    <div class="mlat-stat-card">
+      <span class="m-label">BEST (FASTEST)</span>
+      <span class="m-val mono" id="mlat-best">0 ms</span>
+    </div>
+    <div class="mlat-stat-card">
+      <span class="m-label">AVERAGE</span>
+      <span class="m-val mono" id="mlat-avg">0 ms</span>
+    </div>
+  </div>
+
+  <div class="tester-controls">
+    <button type="button" class="btn-primary" id="btn-start-mlat">Start Reaction Test</button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let state: 'idle' | 'waiting' | 'ready' = 'idle';
+    let startTime = 0;
+    let timeoutId: number | null = null;
+    const trials: number[] = [];
+
+    const box = document.getElementById('mlat-box');
+    const title = document.getElementById('mlat-title');
+    const sub = document.getElementById('mlat-sub');
+
+    function setBoxState(newState: typeof state) {
+      state = newState;
+      if (!box || !title || !sub) return;
+      if (state === 'idle') {
+        box.className = 'mlat-hero-box';
+        title.textContent = 'Click Start Below';
+        sub.textContent = 'Click anywhere when box turns emerald green';
+      } else if (state === 'waiting') {
+        box.className = 'mlat-hero-box waiting';
+        title.textContent = 'Wait for GREEN...';
+        sub.textContent = 'Do not click yet';
+      } else if (state === 'ready') {
+        box.className = 'mlat-hero-box ready';
+        title.textContent = 'CLICK NOW!';
+        sub.textContent = 'Timer active...';
+        startTime = performance.now();
+      }
+    }
+
+    document.getElementById('btn-start-mlat')?.addEventListener('click', () => {
+      setBoxState('waiting');
+      const delay = 1500 + Math.random() * 3000;
+      timeoutId = window.setTimeout(() => setBoxState('ready'), delay);
+    });
+
+    box?.addEventListener('mousedown', () => {
+      if (state === 'ready') {
+        const elapsed = Math.round(performance.now() - startTime);
+        trials.push(elapsed);
+
+        const lastEl = document.getElementById('mlat-last');
+        const bestEl = document.getElementById('mlat-best');
+        const avgEl = document.getElementById('mlat-avg');
+
+        if (lastEl) lastEl.textContent = `${elapsed} ms`;
+        if (bestEl) bestEl.textContent = `${Math.min(...trials)} ms`;
+        const avg = Math.round(trials.reduce((a, b) => a + b, 0) / trials.length);
+        if (avgEl) avgEl.textContent = `${avg} ms`;
+
+        if (title && sub) {
+          title.textContent = `${elapsed} ms!`;
+          sub.textContent = 'Click Start Below to re-test';
+        }
+        state = 'idle';
+      }
+    });
+  });
+</script>
+
+<style>
+  .m-latency-tester { display: flex; flex-direction: column; gap: 1.5rem; }
+  .mlat-hero-box { height: 220px; background: var(--color-surface-2); border: 2px dashed var(--color-border-default); border-radius: var(--radius-card); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; cursor: pointer; user-select: none; }
+  .mlat-hero-box.waiting { background: var(--color-warning-bg); border-color: var(--color-warning); border-style: solid; }
+  .mlat-hero-box.ready { background: var(--color-pass-bg); border-color: var(--color-pass); border-style: solid; }
+  .mlat-title { font-size: 1.5rem; font-weight: 800; color: var(--color-text-primary); }
+  .mlat-sub { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .mlat-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  .mlat-stat-card { background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); padding: 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.375rem; text-align: center; }
+  .m-label { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: var(--color-text-tertiary); letter-spacing: 0.08em; }
+  .m-val { font-size: 1.75rem; font-weight: 700; }
+  .tester-controls { display: flex; justify-content: flex-end; }
+  @media (max-width: 768px) { .mlat-stats-grid { grid-template-columns: 1fr; } }
+</style>

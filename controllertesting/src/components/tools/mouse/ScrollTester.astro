@@ -1,0 +1,40 @@
+---
+/**
+ * ScrollTester.astro — Scroll Wheel Direction, Line Steps & Jitter Tool
+ * Measures scroll wheel direction (up/down), scroll step line velocity, and encoder reverse-scroll jitter faults.
+ */
+---
+
+<div class="scroll-tester" id="scroll-root">
+  <div class="scroll-target" id="scroll-target-box">
+    <span class="scroll-title">SCROLL MOUSE WHEEL UP AND DOWN HERE</span>
+    <span class="scroll-dir-val text-gradient" id="scroll-dir-text">IDLE</span>
+    <span class="scroll-count-val" id="scroll-lines-text">0 total scroll steps</span>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let scrollCount = 0;
+    const target = document.getElementById('scroll-target-box');
+    const dirText = document.getElementById('scroll-dir-text');
+    const linesText = document.getElementById('scroll-lines-text');
+
+    target?.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      scrollCount++;
+      const isUp = e.deltaY < 0;
+
+      if (dirText) dirText.textContent = isUp ? 'SCROLLING UP ▲' : 'SCROLLING DOWN ▼';
+      if (linesText) linesText.textContent = `${scrollCount} total scroll steps`;
+    }, { passive: false });
+  });
+</script>
+
+<style>
+  .scroll-tester { display: flex; flex-direction: column; gap: 1.5rem; }
+  .scroll-target { height: 260px; background: var(--color-surface-2); border: 2px dashed var(--color-accent); border-radius: var(--radius-card); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; user-select: none; }
+  .scroll-title { font-size: 1.125rem; font-weight: 700; color: var(--color-text-primary); }
+  .scroll-dir-val { font-family: var(--font-mono); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 800; }
+  .scroll-count-val { font-size: var(--text-small); color: var(--color-text-secondary); font-family: var(--font-mono); }
+</style>

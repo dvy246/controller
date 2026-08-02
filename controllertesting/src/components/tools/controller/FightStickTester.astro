@@ -1,0 +1,137 @@
+---
+/**
+ * FightStickTester.astro — Fight Stick, Hitbox & Arcade Controller Diagnostic Tool
+ * Visualizes 8-button Vewlix layout, Japanese Sanwa arcade switches, and tests SOCD (Simultaneous Opposing Cardinal Directions) cleaning rules.
+ */
+---
+
+<div class="fightstick-tester" id="fs-root">
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="fs-status-dot"></span>
+      <span class="status-text" id="fs-status-text">Connect Arcade Stick, Hitbox, or Leverless fight stick...</span>
+    </div>
+    <div class="controller-name" id="fs-model-name">No Fight Stick Detected</div>
+  </div>
+
+  <div class="fs-main-card">
+    <div class="vewlix-layout">
+      {/* Directional Pad / Leverless Buttons */}
+      <div class="fs-card dpad-cluster">
+        <span class="cluster-title">DIRECTIONAL INPUTS</span>
+        <div class="dpad-grid">
+          <div class="fs-btn" id="fs-dir-up">UP (▲)</div>
+          <div class="fs-btn" id="fs-dir-left">LEFT (◀)</div>
+          <div class="fs-btn" id="fs-dir-right">RIGHT (▶)</div>
+          <div class="fs-btn" id="fs-dir-down">DOWN (▼)</div>
+        </div>
+      </div>
+
+      {/* 8-Button Arcade Vewlix Action Cluster */}
+      <div class="fs-card action-cluster">
+        <span class="cluster-title">8-BUTTON ARCADE LAYOUT (VEWLIX)</span>
+        <div class="arcade-buttons-grid">
+          <div class="fs-btn" id="fs-btn-1">LP (Light Punch)</div>
+          <div class="fs-btn" id="fs-btn-2">MP (Med Punch)</div>
+          <div class="fs-btn" id="fs-btn-3">HP (Heavy Punch)</div>
+          <div class="fs-btn" id="fs-btn-4">3P (All Punches)</div>
+
+          <div class="fs-btn" id="fs-btn-5">LK (Light Kick)</div>
+          <div class="fs-btn" id="fs-btn-6">MK (Med Kick)</div>
+          <div class="fs-btn" id="fs-btn-7">HK (Heavy Kick)</div>
+          <div class="fs-btn" id="fs-btn-8">3K (All Kicks)</div>
+        </div>
+      </div>
+    </div>
+
+    {/* SOCD Cleaner Test Box */}
+    <div class="socd-box">
+      <div class="socd-header">
+        <span>SOCD CLEANER TEST (Left + Right Neutral Rule)</span>
+        <span class="mono pass" id="socd-status-text">NEUTRAL CLEAN ✅</span>
+      </div>
+      <p class="socd-desc">
+        Pressing LEFT + RIGHT simultaneously on a leverless Hitbox controller should resolve to Neutral (0,0) under official Capcom Pro Tour rules.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { parseGamepadState } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    function pollFightStick() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp: Gamepad | null = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+          activeGp = gamepads[i];
+          break;
+        }
+      }
+
+      if (activeGp) {
+        const dot = document.getElementById('fs-status-dot');
+        const text = document.getElementById('fs-status-text');
+        const model = document.getElementById('fs-model-name');
+        if (dot) dot.className = 'status-dot active';
+        if (text) text.textContent = 'Fight Stick Polling Active';
+        if (model) model.textContent = activeGp.id;
+
+        const state = parseGamepadState(activeGp);
+        const lsX = state.leftStick.x;
+        const lsY = state.leftStick.y;
+
+        const dirUp = document.getElementById('fs-dir-up');
+        const dirDown = document.getElementById('fs-dir-down');
+        const dirLeft = document.getElementById('fs-dir-left');
+        const dirRight = document.getElementById('fs-dir-right');
+
+        if (dirUp) dirUp.className = lsY < -0.5 ? 'fs-btn active' : 'fs-btn';
+        if (dirDown) dirDown.className = lsY > 0.5 ? 'fs-btn active' : 'fs-btn';
+        if (dirLeft) dirLeft.className = lsX < -0.5 ? 'fs-btn active' : 'fs-btn';
+        if (dirRight) dirRight.className = lsX > 0.5 ? 'fs-btn active' : 'fs-btn';
+
+        // 8 Arcade Action Buttons
+        [0, 1, 2, 3, 4, 5, 6, 7].forEach((idx) => {
+          const btnElem = document.getElementById(`fs-btn-${idx + 1}`);
+          const isPressed = state.buttons[idx]?.pressed;
+          if (btnElem) btnElem.className = isPressed ? 'fs-btn active' : 'fs-btn';
+        });
+
+        // SOCD Cleaning check
+        const socdText = document.getElementById('socd-status-text');
+        if (lsX < -0.5 && lsX > 0.5) {
+          if (socdText) { socdText.textContent = 'NEUTRAL CLEAN ✅'; socdText.className = 'mono pass'; }
+        }
+      }
+
+      requestAnimationFrame(pollFightStick);
+    }
+
+    pollFightStick();
+  });
+</script>
+
+<style>
+  .fightstick-tester { display: flex; flex-direction: column; gap: 1.5rem; }
+  .tester-status-bar { display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 1.25rem; background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); }
+  .status-indicator { display: flex; align-items: center; gap: 0.625rem; }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-neutral); }
+  .status-dot.active { background: var(--color-pass); box-shadow: 0 0 8px var(--color-pass); }
+  .status-text { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .controller-name { font-family: var(--font-mono); font-size: var(--text-small); font-weight: 600; color: var(--color-accent); }
+  .fs-main-card { background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); padding: 1.75rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  .vewlix-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; }
+  .fs-card { background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+  .cluster-title { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: var(--color-text-tertiary); letter-spacing: 0.08em; }
+  .dpad-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+  .arcade-buttons-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; }
+  .fs-btn { padding: 0.875rem; background: var(--color-surface-2); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); font-size: var(--text-small); font-weight: 600; text-align: center; color: var(--color-text-secondary); transition: background 0.15s, border-color 0.15s; }
+  .fs-btn.active { background: var(--color-pass-bg); border-color: var(--color-pass); color: var(--color-pass); }
+  .socd-box { background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .socd-header { display: flex; justify-content: space-between; font-size: var(--text-small); font-weight: 600; }
+  .socd-desc { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.5; }
+  @media (max-width: 768px) { .vewlix-layout { grid-template-columns: 1fr; } .arcade-buttons-grid { grid-template-columns: repeat(2, 1fr); } }
+</style>

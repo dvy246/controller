@@ -1,0 +1,105 @@
+---
+/**
+ * /test/controller/dpad — 8-Way D-Pad Tester
+ * SEO Title: Controller D-Pad Test — Test Directional Pad & Diagonals Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import DpadTester from '../../../components/tools/controller/DpadTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'D-Pad Tester' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test D-pad diagonal inputs (↖ ↗ ↙ ↘)?',
+    answer: 'Press two adjacent direction buttons on your D-pad simultaneously (e.g., Up + Right). The diagonal chip visualizer above will illuminate in green when the combination is recognized cleanly.',
+  },
+  {
+    question: 'Why are D-pad diagonals important for fighting games?',
+    answer: 'In fighting games (Street Fighter, Tekken, Mortal Kombat), special moves and combos rely on quarter-circle and diagonal inputs. Missing diagonal registers cause dropped combos.',
+  },
+  {
+    question: 'Does this test membrane D-pads and mechanical D-pads?',
+    answer: 'Yes! It tests standard silicone membrane D-pads (DualSense, DualShock 4) and tactile switch D-pads (Xbox Series X/S, Switch Pro).',
+  },
+];
+---
+
+<ToolLayout
+  title="Controller D-Pad Test — Test Directional Pad & Diagonals Online | ControllerTesting.com"
+  description="Test 8-way D-pad inputs and diagonal combinations on PS5, Xbox, and Switch controllers. Test fighting game combo precision online."
+  toolName="8-Way D-Pad Tester"
+  category="Controller Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <DpadTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">D-Pad Performance Benchmarks</h2>
+      <p class="results-text">
+        All cardinal and diagonal inputs should register smoothly. If diagonal inputs fail to register while individual directions work, the internal D-pad pivot rubber is worn or misaligned.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Run full diagnostic checkup</h3>
+        <p class="export-desc">Combine D-pad diagnostics with stick drift and button testing.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Button Tester</h3>
+      <p class="tool-desc">Test face buttons and shoulder bumpers.</p>
+    </a>
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    </a>
+    <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Measure input rate in Hz.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Why D-Pad Precision Matters for Fighting Games & Retro Gaming</h2>
+    <p>
+      Directional pads are crucial for precise movement in 2D platformers and executing quarter-circle motion inputs in fighting games.
+    </p>
+
+    <h3>D-Pad Mechanical Architectures</h3>
+    <ul>
+      <li><strong>Silicone Rubber Membrane:</strong> Soft, quiet feel found in DualSense and DualShock 4 controllers.</li>
+      <li><strong>Tactile Clicky Microswitches:</strong> Clicky, tactile mechanical switches found in Xbox Series controllers for fast actuation.</li>
+    </ul>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+  .prose ul { margin-left: 1.25rem; margin-bottom: 1rem; }
+</style>

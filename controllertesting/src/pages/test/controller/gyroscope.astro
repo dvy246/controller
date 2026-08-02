@@ -1,0 +1,94 @@
+---
+/**
+ * /test/controller/gyroscope — Gyroscope & Motion Sensor Tester
+ * SEO Title: Controller Gyroscope Test — Test Motion Controls Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import GyroscopeTester from '../../../components/tools/controller/GyroscopeTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Gyroscope Tester' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test motion controls on PS5 DualSense or Switch Pro?',
+    answer: 'Connect your controller via USB or Bluetooth and tilt the controller up, down, left, and right. Pitch, Roll, and Yaw angles will update live on screen.',
+  },
+  {
+    question: 'Why is gyro aiming popular in competitive shooters?',
+    answer: 'Gyro aiming combines coarse thumbstick camera panning with fine motion-assisted crosshair micro-adjustments, delivering mouse-like accuracy on gamepads.',
+  },
+  {
+    question: 'Does Xbox Wireless Controller have a built-in gyroscope?',
+    answer: 'No. Standard Xbox Wireless Controllers do not feature internal motion sensors or gyroscopes. DualSense, Switch Pro, and DualShock 4 support motion controls.',
+  },
+];
+---
+
+<ToolLayout
+  title="Controller Gyroscope Test — Test Motion Controls & Calibration Online | ControllerTesting.com"
+  description="Test 3-axis motion sensors (Pitch, Roll, Yaw) on PS5 DualSense, Switch Pro, and DualShock 4 controllers. Free online gyro aiming diagnostic tool."
+  toolName="Gyroscope & Motion Tester"
+  category="Controller Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <GyroscopeTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Motion Control Benchmarks</h2>
+      <p class="results-text">
+        Motion sensors should report smooth angular changes across all 3 axes without drifting when resting flat on a desk.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Run full diagnostic checkup</h3>
+        <p class="export-desc">Combine gyro motion testing with stick drift and button matrix diagnostics.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    </a>
+    <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Measure input rate in Hz.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Understanding Gyro Aiming and Motion Sensor Calibration</h2>
+    <p>
+      Gyroscope sensors measure rotational speed and angular velocity across Pitch (elevation), Roll (tilt), and Yaw (rotation).
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>

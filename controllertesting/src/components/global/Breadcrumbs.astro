@@ -1,0 +1,88 @@
+---
+/**
+ * Breadcrumbs.astro — ControllerTesting.com
+ * Accessible breadcrumb navigation with schema.org BreadcrumbList support.
+ */
+
+export interface BreadcrumbItem {
+  name: string;
+  url?: string;
+}
+
+export interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol class="breadcrumbs-list" role="list">
+    <li class="breadcrumb-item">
+      <a href="/" class="breadcrumb-link">Home</a>
+      <span class="breadcrumb-sep" aria-hidden="true">/</span>
+    </li>
+
+    {items.map((item, index) => {
+      const isLast = index === items.length - 1;
+      return (
+        <li class="breadcrumb-item">
+          {!isLast && item.url ? (
+            <>
+              <a href={item.url} class="breadcrumb-link">{item.name}</a>
+              <span class="breadcrumb-sep" aria-hidden="true">/</span>
+            </>
+          ) : (
+            <span class="breadcrumb-current" aria-current="page">{item.name}</span>
+          )}
+        </li>
+      );
+    })}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs {
+    margin-bottom: 1.5rem;
+  }
+
+  .breadcrumbs-list {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-small);
+  }
+
+  .breadcrumb-link {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color var(--duration-fast);
+  }
+
+  .breadcrumb-link:hover {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+
+  .breadcrumb-sep {
+    color: var(--color-text-tertiary);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+
+  .breadcrumb-current {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+</style>

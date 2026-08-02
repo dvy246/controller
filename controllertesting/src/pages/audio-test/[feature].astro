@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AudioRadar from '../../components/features/AudioRadar.astro';
+
+export function getStaticPaths() {
+  const features = ['surround-sound', 'bluetooth-latency', 'bass-frequency'];
+
+  return features.map(feature => ({
+    params: { feature }
+  }));
+}
+
+const { feature } = Astro.params;
+const formattedFeature = feature.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
+const title = `Gaming Headset ${formattedFeature} & Spatial 3D Audio Test`;
+const description = `Test your gaming headset for ${formattedFeature}, 3D spatial HRTF directional accuracy, and wireless Bluetooth latency. Free uncompressed web audio benchmark.`;
+const canonical = `https://controllertesting.com/audio-test/${feature}`;
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": title,
+  "url": canonical,
+  "description": description,
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+};
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <main class="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <!-- Breadcrumb -->
+    <nav class="text-xs text-slate-400 mb-6 flex items-center gap-2">
+      <a href="/" class="hover:text-blue-400 transition-colors">Home</a>
+      <span>/</span>
+      <a href="/games" class="hover:text-blue-400 transition-colors">Tools</a>
+      <span>/</span>
+      <span class="text-slate-200">{formattedFeature}</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-8 text-center sm:text-left">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+        Gaming Audio Benchmark: {formattedFeature}
+      </h1>
+      <p class="mt-2 text-base text-slate-300 max-w-3xl">
+        Benchmark your headset's binaural 3D driver resolution, positional footstep tracking, and input-to-sound latency directly in browser.
+      </p>
+    </div>
+
+    <!-- Component -->
+    <AudioRadar featureKey={feature} />
+
+    <!-- AEO/GEO FAQ -->
+    <section class="mt-16 bg-surface-1 p-6 sm:p-8 rounded-2xl border border-surface-3">
+      <h2 class="text-2xl font-bold text-white mb-6">Gaming Audio & Latency FAQ</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-300">
+        <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
+          <h3 class="font-semibold text-white text-base mb-2">Why is Bluetooth audio latency bad for gaming?</h3>
+          <p>
+            Standard Bluetooth (SBC/AAC codecs) introduces 150ms to 300ms of audio delay, causing footsteps and gunshot audio to lag behind on-screen actions. Dedicated 2.4GHz wireless headsets reduce latency under 20ms.
+          </p>
+        </div>
+
+        <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
+          <h3 class="font-semibold text-white text-base mb-2">How does 3D Spatial Audio work?</h3>
+          <p>
+            It uses Head-Related Transfer Functions (HRTF) to simulate sound timing and volume differences between your left and right ear, giving the illusion of 360-degree directionality.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

@@ -1,0 +1,49 @@
+---
+/**
+ * /de — German Homepage
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+
+const breadcrumbs = [{ name: 'Startseite', url: '/de' }];
+---
+
+<BaseLayout
+  title="Kostenloser Controller Test Online — Diagnose | ControllerTesting.com"
+  description="Testen Sie Ihren PS5, Xbox oder Nintendo Switch Controller kostenlos online. Stick-Drift, Tasten und Latenz im Browser prüfen."
+  breadcrumbs={breadcrumbs}
+  localized
+>
+  <Header />
+
+  <main id="main-content" class="de-page-wrapper">
+    <section class="hero-de">
+      <div class="hero-inner">
+        <span class="hero-badge">DIAGNOSE AUF DEUTSCH</span>
+        <h1 class="hero-title text-gradient">Finde genau heraus, was mit deinem Controller nicht stimmt</h1>
+        <p class="hero-subtext">
+          54 kostenlose Diagnose-Tools. Keine Downloads. Keine Registrierung. Datenschutz durch lokale Verarbeitung im Browser.
+        </p>
+
+        <div class="hero-ctas">
+          <a href="/test/controller/full-diagnostic" class="btn-primary">Vollständige Diagnose Starten</a>
+          <a href="/test/controller/drift" class="btn-secondary">Schneller Drift-Test</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .de-page-wrapper { min-height: 100dvh; padding-top: 80px; }
+  .hero-de { max-width: 1000px; margin: 3rem auto; padding: 0 1.5rem; text-align: center; }
+  .hero-inner { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
+  .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
+  .hero-title { font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.15; }
+  .hero-subtext { font-size: 1.125rem; color: var(--color-text-secondary); max-width: 680px; line-height: 1.6; }
+  .hero-ctas { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1rem; }
+</style>

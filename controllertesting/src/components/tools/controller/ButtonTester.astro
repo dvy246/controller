@@ -1,0 +1,249 @@
+---
+/**
+ * ButtonTester.astro — Interactive Button Response & Ghosting Diagnostic Tool
+ * Visual gamepad outline with real-time button highlights, latency counter per button,
+ * and multi-button ghosting test.
+ */
+---
+
+<div class="button-tester" id="btn-tester-root">
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="btn-status-dot"></span>
+      <span class="status-text" id="btn-status-text">Press any button to begin testing...</span>
+    </div>
+    <div class="controller-name" id="btn-model-name">Gamepad Disconnected</div>
+  </div>
+
+  <div class="button-tester-grid">
+    {/* Face Buttons */}
+    <div class="btn-group-card">
+      <h3 class="group-title">Face Buttons (Action)</h3>
+      <div class="chips-flex">
+        <div class="chip-item" id="chip-btn-0"><span class="chip-label">A / Cross</span> <span class="chip-count" id="count-0">0</span></div>
+        <div class="chip-item" id="chip-btn-1"><span class="chip-label">B / Circle</span> <span class="chip-count" id="count-1">0</span></div>
+        <div class="chip-item" id="chip-btn-2"><span class="chip-label">X / Square</span> <span class="chip-count" id="count-2">0</span></div>
+        <div class="chip-item" id="chip-btn-3"><span class="chip-label">Y / Triangle</span> <span class="chip-count" id="count-3">0</span></div>
+      </div>
+    </div>
+
+    {/* Bumpers & Triggers */}
+    <div class="btn-group-card">
+      <h3 class="group-title">Shoulders & Triggers</h3>
+      <div class="chips-flex">
+        <div class="chip-item" id="chip-btn-4"><span class="chip-label">L1 / LB</span> <span class="chip-count" id="count-4">0</span></div>
+        <div class="chip-item" id="chip-btn-5"><span class="chip-label">R1 / RB</span> <span class="chip-count" id="count-5">0</span></div>
+        <div class="chip-item" id="chip-btn-6"><span class="chip-label">L2 Pull</span> <span class="chip-count" id="count-6">0%</span></div>
+        <div class="chip-item" id="chip-btn-7"><span class="chip-label">R2 Pull</span> <span class="chip-count" id="count-7">0%</span></div>
+      </div>
+    </div>
+
+    {/* D-Pad */}
+    <div class="btn-group-card">
+      <h3 class="group-title">D-Pad Directional</h3>
+      <div class="chips-flex">
+        <div class="chip-item" id="chip-btn-12"><span class="chip-label">Up</span> <span class="chip-count" id="count-12">0</span></div>
+        <div class="chip-item" id="chip-btn-13"><span class="chip-label">Down</span> <span class="chip-count" id="count-13">0</span></div>
+        <div class="chip-item" id="chip-btn-14"><span class="chip-label">Left</span> <span class="chip-count" id="count-14">0</span></div>
+        <div class="chip-item" id="chip-btn-15"><span class="chip-label">Right</span> <span class="chip-count" id="count-15">0</span></div>
+      </div>
+    </div>
+
+    {/* Center & Sticks Clicks */}
+    <div class="btn-group-card">
+      <h3 class="group-title">Center & Stick Clicks</h3>
+      <div class="chips-flex">
+        <div class="chip-item" id="chip-btn-8"><span class="chip-label">Select / Share</span> <span class="chip-count" id="count-8">0</span></div>
+        <div class="chip-item" id="chip-btn-9"><span class="chip-label">Start / Options</span> <span class="chip-count" id="count-9">0</span></div>
+        <div class="chip-item" id="chip-btn-10"><span class="chip-label">L3 (Left Stick)</span> <span class="chip-count" id="count-10">0</span></div>
+        <div class="chip-item" id="chip-btn-11"><span class="chip-label">R3 (Right Stick)</span> <span class="chip-count" id="count-11">0</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tester-controls">
+    <button type="button" class="btn-secondary" id="btn-clear-counts">Reset Click Counters</button>
+  </div>
+</div>
+
+<script>
+  import { parseGamepadState } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const counts: number[] = new Array(16).fill(0);
+    const prevPressed: boolean[] = new Array(16).fill(false);
+
+    function pollButtons() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp: Gamepad | null = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+          activeGp = gamepads[i];
+          break;
+        }
+      }
+
+      if (activeGp) {
+        const dot = document.getElementById('btn-status-dot');
+        const text = document.getElementById('btn-status-text');
+        const model = document.getElementById('btn-model-name');
+
+        if (dot) dot.className = 'status-dot active';
+        if (text) text.textContent = 'Controller Connected — Press Any Button';
+        if (model) model.textContent = activeGp.id;
+
+        const state = parseGamepadState(activeGp);
+
+        state.buttons.forEach((btn, idx) => {
+          const chip = document.getElementById(`chip-btn-${idx}`);
+          const countEl = document.getElementById(`count-${idx}`);
+
+          if (chip) {
+            if (btn.pressed) {
+              chip.classList.add('active');
+            } else {
+              chip.classList.remove('active');
+            }
+          }
+
+          if (idx === 6 || idx === 7) {
+            // Trigger values
+            if (countEl) countEl.textContent = `${Math.round(btn.value * 100)}%`;
+          } else {
+            // Button presses counter
+            if (btn.pressed && !prevPressed[idx]) {
+              counts[idx]++;
+              if (countEl) countEl.textContent = String(counts[idx]);
+            }
+          }
+          prevPressed[idx] = btn.pressed;
+        });
+      }
+
+      requestAnimationFrame(pollButtons);
+    }
+
+    pollButtons();
+
+    document.getElementById('btn-clear-counts')?.addEventListener('click', () => {
+      counts.fill(0);
+      for (let i = 0; i < 16; i++) {
+        const countEl = document.getElementById(`count-${i}`);
+        if (countEl && i !== 6 && i !== 7) countEl.textContent = '0';
+      }
+    });
+  });
+</script>
+
+<style>
+  .button-tester {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .tester-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-neutral);
+  }
+  .status-dot.active {
+    background: var(--color-pass);
+    box-shadow: 0 0 8px var(--color-pass);
+  }
+
+  .status-text {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .controller-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .button-tester-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .btn-group-card {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .group-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+  }
+
+  .chips-flex {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.625rem;
+  }
+
+  .chip-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 0.875rem;
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .chip-item.active {
+    background: var(--color-pass-bg);
+    border-color: var(--color-pass);
+  }
+
+  .chip-label {
+    font-size: var(--text-small);
+    font-weight: 500;
+    color: var(--color-text-primary);
+  }
+
+  .chip-count {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 700;
+    color: var(--color-accent);
+  }
+
+  .tester-controls {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 768px) {
+    .button-tester-grid { grid-template-columns: 1fr; }
+  }
+</style>

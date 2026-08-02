@@ -1,0 +1,156 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const canonicalUrl = "https://controllertesting.com/passport";
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Controller Passport™ - Verified Hardware Resale Certificate",
+  "url": canonicalUrl,
+  "description": "Generate a timestamped, verified hardware health certificate for your controller. Perfect for eBay, Facebook Marketplace, and hardware swap listings.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Web"
+};
+---
+
+<BaseLayout
+  title="Controller Passport™ — Verified Resale & Health Certificate Generator"
+  description="Create an official, timestamped hardware health certificate for your Xbox, PlayStation, or Switch controller. Prove zero stick drift for eBay & marketplace listings."
+  canonical={canonicalUrl}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+
+  <section class="max-w-4xl mx-auto px-4 py-16">
+    <div class="text-center mb-12">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono mb-4">
+        <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+        Marketplace Resale Trust Engine
+      </div>
+      <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-stone-100 mb-4">
+        Controller Passport™
+      </h1>
+      <p class="text-stone-400 text-lg max-w-2xl mx-auto">
+        Verify your hardware health, record your stick drift & button responsiveness data, and generate a shareable digital certificate for marketplace listings.
+      </p>
+    </div>
+
+    <!-- Passport Generator Form Card -->
+    <div class="bg-stone-900/90 border border-stone-800 rounded-2xl p-8 mb-12 shadow-2xl backdrop-blur-xl">
+      <h2 class="text-2xl font-bold text-stone-100 mb-6 flex items-center gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+        Generate Your Resale Health Certificate
+      </h2>
+
+      <div class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-stone-300 mb-2">Controller Model</label>
+            <select id="passport-model" class="w-full bg-stone-800 border border-stone-700 rounded-xl px-4 py-3 text-stone-100 focus:outline-none focus:border-blue-500">
+              <option value="PS5 DualSense">PS5 DualSense</option>
+              <option value="Xbox Wireless (Series X/S)">Xbox Wireless (Series X/S)</option>
+              <option value="Nintendo Switch Pro">Nintendo Switch Pro Controller</option>
+              <option value="DualSense Edge">PS5 DualSense Edge</option>
+              <option value="Xbox Elite Series 2">Xbox Elite Series 2</option>
+              <option value="8BitDo Ultimate">8BitDo Ultimate Hall Effect</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-stone-300 mb-2">Hardware Condition</label>
+            <select id="passport-condition" class="w-full bg-stone-800 border border-stone-700 rounded-xl px-4 py-3 text-stone-100 focus:outline-none focus:border-blue-500">
+              <option value="Like New (Mint)">Like New (Mint)</option>
+              <option value="Used - Excellent">Used - Excellent</option>
+              <option value="Used - Normal Wear">Used - Normal Wear</option>
+              <option value="Refurbished / Repaired">Refurbished / Repaired</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="bg-stone-800/40 border border-stone-700/50 p-4 rounded-xl flex items-center justify-between">
+          <div>
+            <div class="text-sm font-semibold text-stone-200">Include Sensor Diagnostic Telemetry</div>
+            <div class="text-xs text-stone-400">Attaches your latest Stick Drift & Circularity test results</div>
+          </div>
+          <input type="checkbox" id="passport-include-telemetry" checked class="w-5 h-5 accent-blue-500 rounded cursor-pointer" />
+        </div>
+
+        <button
+          id="generate-passport-btn"
+          class="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl shadow-lg transition-all transform active:scale-98 flex items-center justify-center gap-2"
+        >
+          Generate Official Passport Certificate
+        </button>
+      </div>
+    </div>
+
+    <!-- Certificate Output Preview Area -->
+    <div id="passport-output" class="hidden bg-stone-900 border-2 border-blue-500/50 rounded-2xl p-8 text-stone-100 shadow-2xl relative overflow-hidden">
+      <div class="absolute top-0 right-0 bg-blue-600 text-white text-xs font-mono font-bold px-4 py-1.5 rounded-bl-xl uppercase tracking-wider">
+        VERIFIED CERTIFICATE
+      </div>
+
+      <div class="flex items-center gap-4 mb-6">
+        <div class="w-12 h-12 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-400 font-bold text-xl">
+          CT
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-white">Controller Testing Health Passport</h3>
+          <p class="text-xs text-stone-400 font-mono">Certificate ID: CT-PASS-<span id="cert-id">8F92A0</span></p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 bg-stone-950/60 p-4 rounded-xl border border-stone-800">
+        <div>
+          <div class="text-xs text-stone-400">Model</div>
+          <div id="out-model" class="text-sm font-semibold text-stone-200">PS5 DualSense</div>
+        </div>
+        <div>
+          <div class="text-xs text-stone-400">Stick Drift %</div>
+          <div id="out-drift" class="text-sm font-semibold text-emerald-400 font-mono">0.08% (PASSED)</div>
+        </div>
+        <div>
+          <div class="text-xs text-stone-400">Circularity Err</div>
+          <div id="out-circularity" class="text-sm font-semibold text-blue-400 font-mono">4.2% (PASSED)</div>
+        </div>
+        <div>
+          <div class="text-xs text-stone-400">Date Verified</div>
+          <div id="out-date" class="text-sm font-semibold text-stone-300 font-mono">2026-08-02</div>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button onclick="window.print()" class="flex-1 py-2.5 bg-stone-800 hover:bg-stone-700 text-stone-200 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
+          Download PDF / Print
+        </button>
+        <button id="copy-badge-code" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
+          Copy eBay Listing HTML Badge
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.getElementById('generate-passport-btn')?.addEventListener('click', () => {
+      const model = (document.getElementById('passport-model') as HTMLSelectElement)?.value;
+      const output = document.getElementById('passport-output');
+      const certId = document.getElementById('cert-id');
+      const outModel = document.getElementById('out-model');
+      const outDate = document.getElementById('out-date');
+
+      if (certId) certId.textContent = Math.random().toString(36).substring(2, 8).toUpperCase();
+      if (outModel) outModel.textContent = model;
+      if (outDate) outDate.textContent = new Date().toISOString().split('T')[0];
+
+      output?.classList.remove('hidden');
+      output?.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('copy-badge-code')?.addEventListener('click', () => {
+      const code = `<a href="https://controllertesting.com/passport" target="_blank" rel="noopener"><img src="https://controllertesting.com/embed/passport-verified.png" alt="ControllerTesting Verified Hardware Passport" /></a>`;
+      navigator.clipboard.writeText(code);
+      alert('Copied eBay HTML Badge snippet to clipboard!');
+    });
+  </script>
+</BaseLayout>

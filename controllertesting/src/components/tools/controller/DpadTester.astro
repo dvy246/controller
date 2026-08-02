@@ -1,0 +1,247 @@
+---
+/**
+ * DpadTester.astro — 8-Way Directional Pad Precision & Diagonal Input Tool
+ * Tests 4 cardinal directions (Up, Down, Left, Right) and 4 diagonal combos (Up-Left, Up-Right, Down-Left, Down-Right) for fighting games & retro platformers.
+ */
+---
+
+<div class="dpad-tester" id="dpad-tester-root">
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="dpad-status-dot"></span>
+      <span class="status-text" id="dpad-status-text">Press D-pad buttons to test 8-way directional inputs...</span>
+    </div>
+    <div class="controller-name" id="dpad-model-name">No Controller Detected</div>
+  </div>
+
+  <div class="dpad-visualizer-container">
+
+    {/* 8-Way Visualizer Grid */}
+    <div class="dpad-cross">
+      <div class="dpad-btn dpad-up" id="dp-12">UP</div>
+      <div class="dpad-btn dpad-down" id="dp-13">DOWN</div>
+      <div class="dpad-btn dpad-left" id="dp-14">LEFT</div>
+      <div class="dpad-btn dpad-right" id="dp-15">RIGHT</div>
+      <div class="dpad-center" id="dp-center">8-WAY</div>
+    </div>
+
+    {/* Diagonal Status Displays */}
+    <div class="diagonals-card">
+      <h3 class="diag-card-title">Diagonal Input Recognition</h3>
+      <div class="diagonals-grid">
+        <div class="diag-chip" id="diag-ul">Up-Left (↖)</div>
+        <div class="diag-chip" id="diag-ur">Up-Right (↗)</div>
+        <div class="diag-chip" id="diag-dl">Down-Left (↙)</div>
+        <div class="diag-chip" id="diag-dr">Down-Right (↘)</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  import { parseGamepadState } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    function pollDpad() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp: Gamepad | null = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+          activeGp = gamepads[i];
+          break;
+        }
+      }
+
+      if (activeGp) {
+        const dot = document.getElementById('dpad-status-dot');
+        const text = document.getElementById('dpad-status-text');
+        const model = document.getElementById('dpad-model-name');
+        if (dot) dot.className = 'status-dot active';
+        if (text) text.textContent = 'D-Pad Active';
+        if (model) model.textContent = activeGp.id;
+
+        const state = parseGamepadState(activeGp);
+        const up = state.buttons[12]?.pressed;
+        const down = state.buttons[13]?.pressed;
+        const left = state.buttons[14]?.pressed;
+        const right = state.buttons[15]?.pressed;
+
+        const elUp = document.getElementById('dp-12');
+        const elDown = document.getElementById('dp-13');
+        const elLeft = document.getElementById('dp-14');
+        const elRight = document.getElementById('dp-15');
+
+        if (elUp) elUp.className = up ? 'dpad-btn dpad-up active' : 'dpad-btn dpad-up';
+        if (elDown) elDown.className = down ? 'dpad-btn dpad-down active' : 'dpad-btn dpad-down';
+        if (elLeft) elLeft.className = left ? 'dpad-btn dpad-left active' : 'dpad-btn dpad-left';
+        if (elRight) elRight.className = right ? 'dpad-btn dpad-right active' : 'dpad-btn dpad-right';
+
+        // Diagonals
+        const chipUL = document.getElementById('diag-ul');
+        const chipUR = document.getElementById('diag-ur');
+        const chipDL = document.getElementById('diag-dl');
+        const chipDR = document.getElementById('diag-dr');
+
+        if (chipUL) chipUL.className = (up && left) ? 'diag-chip active' : 'diag-chip';
+        if (chipUR) chipUR.className = (up && right) ? 'diag-chip active' : 'diag-chip';
+        if (chipDL) chipDL.className = (down && left) ? 'diag-chip active' : 'diag-chip';
+        if (chipDR) chipDR.className = (down && right) ? 'diag-chip active' : 'diag-chip';
+      }
+
+      requestAnimationFrame(pollDpad);
+    }
+
+    pollDpad();
+  });
+</script>
+
+<style>
+  .dpad-tester {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .tester-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-neutral);
+  }
+  .status-dot.active {
+    background: var(--color-pass);
+    box-shadow: 0 0 8px var(--color-pass);
+  }
+
+  .status-text {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .controller-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .dpad-visualizer-container {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  /* D-pad Cross Graphic */
+  .dpad-cross {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin-inline: auto;
+  }
+
+  .dpad-btn {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .dpad-btn.active {
+    background: var(--color-pass-bg);
+    border-color: var(--color-pass);
+    color: var(--color-pass);
+  }
+
+  .dpad-up { top: 0; left: 70px; }
+  .dpad-down { bottom: 0; left: 70px; }
+  .dpad-left { top: 70px; left: 0; }
+  .dpad-right { top: 70px; right: 0; }
+
+  .dpad-center {
+    position: absolute;
+    top: 70px;
+    left: 70px;
+    width: 60px;
+    height: 60px;
+    background: var(--color-surface-3);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--color-text-tertiary);
+  }
+
+  .diagonals-card {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .diag-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .diagonals-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .diag-chip {
+    padding: 1rem;
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+    text-align: center;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+
+  .diag-chip.active {
+    background: var(--color-pass-bg);
+    border-color: var(--color-pass);
+    color: var(--color-pass);
+  }
+
+  @media (max-width: 768px) {
+    .dpad-visualizer-container { grid-template-columns: 1fr; }
+  }
+</style>

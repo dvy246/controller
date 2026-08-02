@@ -1,0 +1,251 @@
+---
+/**
+ * /test/controller/index.astro — Controller Tools Hub
+ * SEO Title: Online Controller Tester — 17 Free Gamepad Diagnostic Tools
+ * Hub index listing all 17 controller tools.
+ */
+
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/global/Header.astro';
+import Footer from '../../../components/global/Footer.astro';
+import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Hub' },
+];
+
+const controllerTools = [
+  { name: 'Stick Drift Detector', href: '/test/controller/drift', desc: 'Real-time 0.1% stick drift canvas visualizer', badge: 'High Priority' },
+  { name: 'Full Diagnostic Wizard', href: '/test/controller/full-diagnostic', desc: '5-step hardware checkup for sticks, buttons & triggers', badge: 'Flagship' },
+  { name: 'Controller Health Score™', href: '/test/controller/health-score', desc: 'Compute 0-100 score & export printable PDF report card', badge: 'Flagship' },
+  { name: 'PS Controller WebHID Calibration', href: '/test/controller/ps-calibration', desc: 'Firmware-level center offset calibration & permanent save via WebHID', badge: 'Flagship' },
+  { name: 'Steering Wheel & Pedals', href: '/test/controller/steering-wheel', desc: 'Test 900°/1080° steering rotation, throttle, brake & clutch linearity', badge: 'Specialized' },
+  { name: 'Fight Stick & Hitbox', href: '/test/controller/fight-stick', desc: 'Vewlix 8-button layout & SOCD cleaner test for arcade sticks', badge: 'Specialized' },
+  { name: 'Flight Stick & HOTAS', href: '/test/controller/flight-stick', desc: 'Flight sim joysticks, 128+ buttons & multi-axis throttle quadrant', badge: 'Specialized' },
+  { name: 'MIDI Keyboard & Controller', href: '/test/midi', desc: 'Test USB MIDI keyboards, drum pads, CC messages & velocity', badge: 'Specialized' },
+  { name: 'Button Tester', href: '/test/controller/buttons', desc: 'Interactive button matrix & ghosting detector' },
+  { name: 'Trigger Pressure Tester', href: '/test/controller/triggers', desc: 'Analog L2/R2 pressure curve analyzer' },
+  { name: 'Vibration Tester', href: '/test/controller/vibration', desc: 'Dual haptic rumble motor pulse tester' },
+  { name: 'Circularity Test', href: '/test/controller/circularity', desc: '360-degree stick range of motion & error' },
+  { name: 'Deadzone Visualizer', href: '/test/controller/deadzone', desc: 'Inner & outer deadzone threshold tuning' },
+  { name: 'Polling Rate Checker', href: '/test/controller/polling-rate', desc: 'Real-time Hz input report frequency' },
+  { name: '8-Way D-Pad Tester', href: '/test/controller/dpad', desc: '8-way directional pad precision & diagonal inputs' },
+  { name: 'Latency Estimator', href: '/test/controller/latency', desc: 'Input delay & visual reaction speed timer' },
+  { name: 'Multi-Controller Tester', href: '/test/controller/multi', desc: 'Test 4 gamepads simultaneously in browser' },
+  { name: 'Drift Timeline Tracker', href: '/test/controller/timeline', desc: 'LocalStorage hardware degradation tracker' },
+  { name: 'Gyroscope Tester', href: '/test/controller/gyroscope', desc: '3-axis motion sensor calibration' },
+  { name: 'Touchpad Tester', href: '/test/controller/touchpad', desc: 'PS5 DualSense multi-touch trackpad' },
+  { name: 'Microphone Tester', href: '/test/controller/microphone', desc: 'Built-in mic & 3.5mm headset audio' },
+  { name: 'Competitive Readiness', href: '/test/controller/competitive-readiness', desc: 'Esports tournament benchmark assessor' },
+];
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Controller Diagnostic Tools',
+  numberOfItems: controllerTools.length,
+  itemListElement: controllerTools.map((t, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: t.name,
+    url: `https://controllertesting.com${t.href}`,
+  })),
+};
+function getHubIcon(href: string) {
+  if (href.includes('/drift')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>`;
+  if (href.includes('/full-diagnostic')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`;
+  if (href.includes('/health-score')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>`;
+  if (href.includes('/ps-calibration')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 15h3M1 9h3M1 15h3"/></svg>`;
+  if (href.includes('/steering-wheel')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v6M4.5 16.5l5.2-3M19.5 16.5l-5.2-3"/></svg>`;
+  if (href.includes('/fight-stick')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="3"/><circle cx="7" cy="11" r="2"/><circle cx="13" cy="10" r="1"/><circle cx="17" cy="10" r="1"/><circle cx="13" cy="14" r="1"/><circle cx="17" cy="14" r="1"/></svg>`;
+  if (href.includes('/flight-stick')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10M8 8h8M12 12l-4 8M12 12l4 8M5 20h14"/></svg>`;
+  if (href.includes('/midi')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 5v8M10 5v8M14 5v8M18 5v8"/></svg>`;
+  if (href.includes('/buttons')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="8" cy="12" r="1.5"/><circle cx="16" cy="10" r="1"/><circle cx="14" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="16" cy="14" r="1"/></svg>`;
+  if (href.includes('/triggers')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 11V3M1 14h6M9 8h6M17 16h6"/></svg>`;
+  if (href.includes('/vibration')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8c1.5 2 1.5 6 0 8M22 8c-1.5 2-1.5 6 0 8M6 5c2.5 3.5 2.5 10.5 0 14M18 5c-2.5 3.5-2.5 10.5 0 14"/><rect x="9" y="7" width="6" height="10" rx="2"/></svg>`;
+  if (href.includes('/circularity')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6"/><path d="M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>`;
+  if (href.includes('/deadzone')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 8v8M8 12h8"/></svg>`;
+  if (href.includes('/polling-rate')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-5 5"/></svg>`;
+  if (href.includes('/dpad')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M7 7l10 10M17 7L7 17"/></svg>`;
+  if (href.includes('/latency')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M12 2v3M9 2h6"/></svg>`;
+  if (href.includes('/multi')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="10" rx="3"/><rect x="8" y="10" width="14" height="10" rx="3"/></svg>`;
+  if (href.includes('/timeline')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 2 5-6"/></svg>`;
+  if (href.includes('/gyroscope')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`;
+  if (href.includes('/touchpad')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="12" cy="12" r="2"/></svg>`;
+  if (href.includes('/microphone')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg>`;
+  if (href.includes('/competitive-readiness')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34M18 4H6v7a6 6 0 0 0 12 0V4z"/></svg>`;
+  return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="6"/></svg>`;
+}
+---
+
+<BaseLayout
+  title="Online Controller Tester — 17 Free Gamepad Diagnostic Tools | ControllerTesting.com"
+  description="Test any gamepad online. 17 free diagnostic tools for stick drift, button response, trigger linearity, polling rate, and rumble motors. Works with PS5, Xbox, Switch & PC."
+  schema={itemListSchema}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="hub-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="hub-header">
+        <span class="hub-badge">17 Diagnostic Tools</span>
+        <h1 class="hub-title">Controller Diagnostic Hub</h1>
+        <p class="hub-subtitle">
+          Select a tool below to diagnose stick drift, button responsiveness, trigger linearity, or complete health checkups. All tools run 100% locally in your browser.
+        </p>
+      </header>
+
+      <div class="grid-tools">
+        {controllerTools.map((tool) => (
+          <a href={tool.href} class="tool-hub-card card-base card-hover">
+            <div class="card-top-bar">
+              <span class="card-icon" set:html={getHubIcon(tool.href)} aria-hidden="true" />
+              {tool.badge && <span class="badge-tag">{tool.badge}</span>}
+            </div>
+            <h2 class="card-tool-name">{tool.name}</h2>
+            <p class="card-tool-desc">{tool.desc}</p>
+            <span class="card-action-link">
+              Run test
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .hub-page {
+    padding-top: 96px;
+    padding-bottom: var(--spacing-section);
+  }
+
+  .container-site {
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .hub-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .hub-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-accent);
+    background: rgba(37, 99, 235, 0.1);
+    padding: 0.25em 0.75em;
+    border-radius: var(--radius-pill);
+    margin-bottom: 0.75rem;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+  }
+
+  .hub-title {
+    font-size: var(--text-h1);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+  }
+
+  .hub-subtitle {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    max-width: 65ch;
+  }
+
+  .grid-tools {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    width: 100%;
+  }
+
+  .tool-hub-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    padding: 1.5rem;
+    text-decoration: none;
+    cursor: pointer;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    transition: background var(--duration-fast), border-color var(--duration-fast), transform var(--duration-fast);
+  }
+
+  .tool-hub-card:hover {
+    background: var(--color-surface-3);
+    border-color: var(--color-accent);
+    transform: translateY(-3px);
+    text-decoration: none;
+  }
+
+  .card-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-3);
+    border: 1px solid var(--color-border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent);
+  }
+
+  .badge-tag {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    background: rgba(37, 99, 235, 0.15);
+    color: var(--color-accent);
+    padding: 0.2em 0.55em;
+    border-radius: 3px;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+  }
+
+  .card-tool-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .card-tool-desc {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    flex-grow: 1;
+  }
+
+  .card-action-link {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-top: 0.25rem;
+  }
+</style>

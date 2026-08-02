@@ -1,0 +1,293 @@
+---
+/**
+ * TriggerTester.astro — Interactive Trigger Linearity & Analog Range Tester
+ * Real-time analog L2/R2 pressure graphs, min/max range detection, and deadzone analysis.
+ */
+---
+
+<div class="trigger-tester" id="trig-tester-root">
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="trig-status-dot"></span>
+      <span class="status-text" id="trig-status-text">Press L2 and R2 triggers to measure analog response...</span>
+    </div>
+    <div class="controller-name" id="trig-model-name">No Controller Detected</div>
+  </div>
+
+  <div class="triggers-grid">
+
+    {/* L2 Trigger Card */}
+    <div class="trigger-card">
+      <div class="trig-card-header">
+        <h3 class="trig-title">Left Trigger (L2 / LT)</h3>
+        <span class="trig-percentage" id="l2-pct-val">0.0%</span>
+      </div>
+
+      <div class="trig-visual-container">
+        <div class="trig-bar-outer">
+          <div class="trig-bar-inner" id="l2-fill-bar" style="height: 0%"></div>
+        </div>
+      </div>
+
+      <div class="trig-metrics">
+        <div class="metric">
+          <span class="m-label">Raw Value</span>
+          <span class="m-val mono" id="l2-raw-val">0.0000</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Max Reached</span>
+          <span class="m-val mono" id="l2-max-val">0.0%</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Linearity</span>
+          <span class="m-val badge-pass" id="l2-status-badge">Smooth</span>
+        </div>
+      </div>
+    </div>
+
+    {/* R2 Trigger Card */}
+    <div class="trigger-card">
+      <div class="trig-card-header">
+        <h3 class="trig-title">Right Trigger (R2 / RT)</h3>
+        <span class="trig-percentage" id="r2-pct-val">0.0%</span>
+      </div>
+
+      <div class="trig-visual-container">
+        <div class="trig-bar-outer">
+          <div class="trig-bar-inner" id="r2-fill-bar" style="height: 0%"></div>
+        </div>
+      </div>
+
+      <div class="trig-metrics">
+        <div class="metric">
+          <span class="m-label">Raw Value</span>
+          <span class="m-val mono" id="r2-raw-val">0.0000</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Max Reached</span>
+          <span class="m-val mono" id="r2-max-val">0.0%</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Linearity</span>
+          <span class="m-val badge-pass" id="r2-status-badge">Smooth</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tester-controls">
+    <button type="button" class="btn-secondary" id="btn-reset-trig-max">Reset Max Peak Range</button>
+  </div>
+</div>
+
+<script>
+  import { parseGamepadState } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    let l2MaxPeak = 0;
+    let r2MaxPeak = 0;
+
+    function pollTriggers() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp: Gamepad | null = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+          activeGp = gamepads[i];
+          break;
+        }
+      }
+
+      if (activeGp) {
+        const dot = document.getElementById('trig-status-dot');
+        const text = document.getElementById('trig-status-text');
+        const model = document.getElementById('trig-model-name');
+
+        if (dot) dot.className = 'status-dot active';
+        if (text) text.textContent = 'Controller Connected';
+        if (model) model.textContent = activeGp.id;
+
+        const state = parseGamepadState(activeGp);
+        const l2Val = state.triggers.l2;
+        const r2Val = state.triggers.r2;
+
+        if (l2Val > l2MaxPeak) l2MaxPeak = l2Val;
+        if (r2Val > r2MaxPeak) r2MaxPeak = r2Val;
+
+        // L2 UI
+        const l2Pct = (l2Val * 100).toFixed(1);
+        const l2PctVal = document.getElementById('l2-pct-val');
+        const l2RawVal = document.getElementById('l2-raw-val');
+        const l2MaxVal = document.getElementById('l2-max-val');
+        const l2FillBar = document.getElementById('l2-fill-bar');
+
+        if (l2PctVal) l2PctVal.textContent = `${l2Pct}%`;
+        if (l2RawVal) l2RawVal.textContent = l2Val.toFixed(4);
+        if (l2MaxVal) l2MaxVal.textContent = `${(l2MaxPeak * 100).toFixed(1)}%`;
+        if (l2FillBar) l2FillBar.style.height = `${l2Val * 100}%`;
+
+        // R2 UI
+        const r2Pct = (r2Val * 100).toFixed(1);
+        const r2PctVal = document.getElementById('r2-pct-val');
+        const r2RawVal = document.getElementById('r2-raw-val');
+        const r2MaxVal = document.getElementById('r2-max-val');
+        const r2FillBar = document.getElementById('r2-fill-bar');
+
+        if (r2PctVal) r2PctVal.textContent = `${r2Pct}%`;
+        if (r2RawVal) r2RawVal.textContent = r2Val.toFixed(4);
+        if (r2MaxVal) r2MaxVal.textContent = `${(r2MaxPeak * 100).toFixed(1)}%`;
+        if (r2FillBar) r2FillBar.style.height = `${r2Val * 100}%`;
+      }
+
+      requestAnimationFrame(pollTriggers);
+    }
+
+    pollTriggers();
+
+    document.getElementById('btn-reset-trig-max')?.addEventListener('click', () => {
+      l2MaxPeak = 0;
+      r2MaxPeak = 0;
+    });
+  });
+</script>
+
+<style>
+  .trigger-tester {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .tester-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-neutral);
+  }
+  .status-dot.active {
+    background: var(--color-pass);
+    box-shadow: 0 0 8px var(--color-pass);
+  }
+
+  .status-text {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .controller-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .triggers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .trigger-card {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .trig-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .trig-title {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .trig-percentage {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-accent);
+  }
+
+  .trig-visual-container {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .trig-bar-outer {
+    width: 48px;
+    height: 180px;
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    padding: 3px;
+  }
+
+  .trig-bar-inner {
+    width: 100%;
+    background: linear-gradient(to top, var(--color-accent), var(--color-emerald));
+    border-radius: var(--radius-sm);
+    transition: height 0.05s ease-out;
+  }
+
+  .trig-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .m-label {
+    font-size: var(--text-micro);
+    color: var(--color-text-tertiary);
+    font-family: var(--font-mono);
+  }
+
+  .m-val {
+    font-size: var(--text-small);
+    font-weight: 600;
+  }
+
+  .tester-controls {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 768px) {
+    .triggers-grid { grid-template-columns: 1fr; }
+  }
+</style>

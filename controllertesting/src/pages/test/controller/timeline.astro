@@ -1,0 +1,99 @@
+---
+/**
+ * /test/controller/timeline — Drift Timeline Tracker
+ * SEO Title: Controller Drift Timeline Tracker — Track Stick Degradation Over Time
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import DriftTimeline from '../../../components/tools/controller/DriftTimeline.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Drift Timeline' },
+];
+
+const faqs = [
+  {
+    question: 'How does the Drift Timeline Tracker save my test history?',
+    answer: 'Snapshots are saved locally in your browser\'s localStorage. No accounts or server uploads are required, protecting your privacy completely.',
+  },
+  {
+    question: 'How often should I save a drift snapshot?',
+    answer: 'We recommend saving a snapshot once every 2–4 weeks or whenever you notice changes in aiming precision during competitive gameplay.',
+  },
+  {
+    question: 'Will my saved drift snapshots persist if I close my browser?',
+    answer: 'Yes! LocalStorage data remains saved indefinitely on your device until you clear your browser cache or click "Clear Saved History".',
+  },
+];
+---
+
+<ToolLayout
+  title="Controller Drift Timeline Tracker — Track Stick Degradation Over Time | ControllerTesting.com"
+  description="Track analog stick drift degradation over time. Save monthly drift snapshots locally to monitor hardware wear on PS5, Xbox, and Switch controllers."
+  toolName="Drift Timeline Tracker"
+  category="Controller Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <DriftTimeline />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Tracking Degradation Rate</h2>
+      <p class="results-text">
+        Potentiometer thumbsticks typically degrade by 0.5% to 1.5% drift per 100 hours of active play. If your drift increases by more than 5% in a single month, check for internal dust accumulation.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Run full diagnostic checkup</h3>
+        <p class="export-desc">Combine timeline tracking with complete 5-step hardware checkups.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    </a>
+    <a href="/test/controller/health-score" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Health Score Generator</h3>
+      <p class="tool-desc">Compute 0-100 quality grade.</p>
+    </a>
+    <a href="/test/controller/circularity" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Circularity Test</h3>
+      <p class="tool-desc">Measure stick range of motion.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Why Tracking Stick Drift Over Time Prevents In-Game Surprises</h2>
+    <p>
+      Potentiometer degradation occurs gradually as graphite tracks wear down. By recording periodic drift snapshots,
+      you can predict when a thumbstick will reach severe drift thresholds before tournament events.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>

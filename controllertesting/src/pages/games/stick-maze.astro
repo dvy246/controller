@@ -1,0 +1,137 @@
+---
+/**
+ * /games/stick-maze — Stick Maze Runner Arcade Game
+ * Precision analog stick navigation game.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Games Arcade', url: '/games' },
+  { name: 'Stick Maze Runner' },
+];
+---
+
+<BaseLayout
+  title="Stick Maze Runner — Controller Arcade Game | ControllerTesting.com"
+  description="Test your analog stick precision in Stick Maze Runner. Navigate through narrow vector corridors without hitting walls."
+  breadcrumbs={breadcrumbs}
+>
+  <div class="game-container">
+    <div class="hero-card card-base">
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="hero-badge">PRECISION ARCADE GAME</span>
+      <h1 class="hero-title text-gradient">Stick Maze Runner</h1>
+      <p class="hero-desc">
+        Use your left or right analog stick to navigate the orb through the vector corridor to the finish zone without touching the walls.
+      </p>
+    </div>
+
+    <div class="canvas-card card-base">
+      <div class="game-score-bar">
+        <span>SCORE: <strong class="mono" id="maze-score">0</strong></span>
+        <span>LEVEL: <strong class="mono" id="maze-level">1</strong></span>
+        <span>STATUS: <strong class="mono pass" id="maze-status">READY</strong></span>
+      </div>
+
+      <canvas id="maze-canvas" width="700" height="400"></canvas>
+
+      <div class="game-controls">
+        <button type="button" class="btn-primary" id="btn-start-maze">Start Run</button>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import { addXP } from '../../lib/rewards';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('maze-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let ballX = 50;
+    let ballY = 200;
+    let score = 0;
+    let level = 1;
+    let isPlaying = false;
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Background
+      ctx.fillStyle = '#0c0c14';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Corridor Walls
+      ctx.strokeStyle = '#2563eb';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+
+      // Obstacles
+      ctx.fillStyle = '#ef4444';
+      ctx.fillRect(200, 20, 30, 260);
+      ctx.fillRect(400, 120, 30, 260);
+
+      // Finish zone
+      ctx.fillStyle = '#10b981';
+      ctx.fillRect(620, 160, 40, 80);
+
+      // Ball
+      ctx.beginPath();
+      ctx.arc(ballX, ballY, 12, 0, Math.PI * 2);
+      ctx.fillStyle = '#3b82f6';
+      ctx.fill();
+      ctx.closePath();
+
+      if (isPlaying) {
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        const gp = gamepads[0];
+        if (gp) {
+          const axisX = gp.axes[0] || 0;
+          const axisY = gp.axes[1] || 0;
+          ballX += axisX * 4;
+          ballY += axisY * 4;
+        }
+
+        // Boundary checks
+        if (ballX > 620 && ballY > 160 && ballY < 240) {
+          isPlaying = false;
+          score += 500;
+          addXP(100);
+          const st = document.getElementById('maze-status');
+          if (st) st.textContent = 'STAGE CLEAR! (+100 XP)';
+        }
+
+        requestAnimationFrame(draw);
+      }
+    }
+
+    document.getElementById('btn-start-maze')?.addEventListener('click', () => {
+      ballX = 50;
+      ballY = 200;
+      isPlaying = true;
+      const st = document.getElementById('maze-status');
+      if (st) st.textContent = 'RUNNING';
+      draw();
+    });
+
+    draw();
+  });
+</script>
+
+<style>
+  .game-container { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
+  .hero-card { padding: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
+  .hero-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.15; }
+  .hero-desc { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .canvas-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+  .game-score-bar { width: 100%; display: flex; justify-content: space-between; font-size: 1rem; font-weight: 600; }
+  #maze-canvas { border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); max-width: 100%; }
+  .game-controls { display: flex; justify-content: center; width: 100%; margin-top: 0.5rem; }
+</style>

@@ -1,0 +1,94 @@
+---
+/**
+ * /test/controller/flight-stick — Flight Stick & HOTAS Tester
+ * SEO Title: Flight Stick & HOTAS Tester — Test Flight Sim Controllers Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import FlightStickTester from '../../../components/tools/controller/FlightStickTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Flight Stick & HOTAS' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test a Flight Stick or HOTAS throttle quadrant?',
+    answer: 'Connect your Thrustmaster Warthog, Logitech X56, or Turtle Beach flight stick via USB. The tool measures Pitch, Roll, Yaw twist rudder, throttle lever linearity, and 8-way hat switch inputs.',
+  },
+  {
+    question: 'How many buttons and axes does this flight stick tester support?',
+    answer: 'Our diagnostic engine supports up to 128 buttons and 10 independent analog axes simultaneously.',
+  },
+  {
+    question: 'Can I test Microsoft Flight Simulator 2024 controllers?',
+    answer: 'Yes! It is fully compatible with MSFS 2024, DCS World, Star Citizen, and Elite Dangerous flight hardware.',
+  },
+];
+---
+
+<ToolLayout
+  title="Flight Stick & HOTAS Tester — Test Flight Sim Controllers Online | ControllerTesting.com"
+  description="Test Flight Sticks, HOTAS throttles, twist rudders, and 8-way hat switches online. Free diagnostic tool for MSFS 2024 and flight simulators."
+  toolName="Flight Stick & HOTAS Tester"
+  category="Specialized Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <FlightStickTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Flight Simulator Hardware Guidelines</h2>
+      <p class="results-text">
+        Pitch, Roll, and Yaw axes should maintain smooth 16-bit precision without center jitter.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Run full diagnostic checkup</h3>
+        <p class="export-desc">Combine flight stick testing with full button matrix and polling rate diagnostics.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/steering-wheel" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Steering Wheel Tester</h3>
+      <p class="tool-desc">Test racing wheels and pedals.</p>
+    </a>
+    <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Measure input rate in Hz.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>HOTAS Flight Control Systems and Axis Deadzones</h2>
+    <p>
+      Flight simulation hardware (HOTAS and dual-stick HOSAS) requires precise Hall-effect sensors across Pitch, Roll, and Yaw axes.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>

@@ -1,0 +1,42 @@
+{
+  "valorant": {
+    "name": "Valorant",
+    "yaw": 0.07,
+    "defaultFov": 103
+  },
+  "counter-strike-2": {
+    "name": "Counter-Strike 2",
+    "yaw": 0.022,
+    "defaultFov": 90
+  },
+  "apex-legends": {
+    "name": "Apex Legends",
+    "yaw": 0.022,
+    "defaultFov": 90
+  },
+  "fortnite": {
+    "name": "Fortnite",
+    "yaw": 0.005555,
+    "defaultFov": 80
+  },
+  "overwatch-2": {
+    "name": "Overwatch 2",
+    "yaw": 0.0066,
+    "defaultFov": 103
+  },
+  "rainbow-six-siege": {
+    "name": "Rainbow Six Siege",
+    "yaw": 0.00572957795,
+    "defaultFov": 90
+  },
+  "call-of-duty-warzone": {
+    "name": "Call of Duty: Warzone",
+    "yaw": 0.022,
+    "defaultFov": 80
+  },
+  "roblox": {
+    "name": "Roblox",
+    "yaw": 0.0035,
+    "defaultFov": 70
+  }
+}

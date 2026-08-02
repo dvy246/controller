@@ -1,0 +1,145 @@
+---
+/**
+ * /compare/[slug] — Controller Hardware Comparisons
+ * SEO Title: {Controller A} vs {Controller B} — Detailed Hardware Comparison ({Year})
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+export function getStaticPaths() {
+  const comparisons = [
+    {
+      slug: 'dualsense-vs-xbox-series',
+      title: 'PS5 DualSense vs Xbox Series Wireless Controller',
+      cA: { name: 'PS5 DualSense', score: 88, latency: '~3.1 ms', polling: '~1000 Hz wired / ~250 Hz BT', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
+      cB: { name: 'Xbox Series Controller', score: 84, latency: '~6.8 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Potentiometer', price: '~$59.99 MSRP' },
+      driftAnswer: 'Both the PS5 DualSense and Xbox Series controller use potentiometer thumbstick modules, and both have a well-documented history of stick drift over heavy use. Neither offers user-swappable stick modules on the standard models — replaceable modules are reserved for the DualSense Edge and Xbox Elite Series 2.',
+      sourceNote: 'Figures are approximate. Latency and polling rate vary with connection mode (Bluetooth vs wired vs 2.4GHz dongle), platform, and individual units; values compiled from manufacturer specifications and third-party community measurements, not from our own lab tests.',
+    },
+    {
+      slug: 'dualsense-edge-vs-xbox-elite-2',
+      title: 'DualSense Edge vs Xbox Elite Series 2',
+      cA: { name: 'DualSense Edge', score: 92, latency: '~2.5 ms', polling: '~1000 Hz wired / ~250 Hz BT', sensor: 'Replaceable Potentiometer Modules', price: '~$199.99 MSRP' },
+      cB: { name: 'Xbox Elite Series 2', score: 86, latency: '~5.2 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Adjustable Tension Potentiometer', price: '~$179.99 MSRP' },
+      driftAnswer: 'Both premium controllers keep potentiometer sticks but address drift differently: the DualSense Edge ships with replaceable stick modules you can swap without opening the shell, while the Xbox Elite Series 2 offers adjustable stick tension to tune resistance. Neither uses Hall-effect magnetic sensors, so stick drift remains a long-term failure mode for both.',
+      sourceNote: 'Figures are approximate. Latency and polling rate vary with connection mode, platform, and individual units; values compiled from manufacturer specifications and third-party community measurements, not from our own lab tests.',
+    },
+  ];
+
+  return comparisons.map((comp) => ({
+    params: { slug: comp.slug },
+    props: { comp },
+  }));
+}
+
+const { comp } = Astro.props;
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Comparisons', url: '/compare' },
+  { name: comp.title },
+];
+
+const faqs = [
+  {
+    question: `Which controller has lower input latency: ${comp.cA.name} or ${comp.cB.name}?`,
+    answer: `${comp.cA.name} features lower input latency at approximately ${comp.cA.latency} (${comp.cA.polling} polling rate) compared to ${comp.cB.name} at ${comp.cB.latency} (${comp.cB.polling} polling rate).`,
+  },
+  {
+    question: `Which controller is less prone to analog stick drift?`,
+    answer: comp.driftAnswer,
+  },
+];
+---
+
+<BaseLayout
+  title={`${comp.title} — Detailed Hardware Comparison (2026) | ControllerTesting.com`}
+  description={`Head-to-head hardware comparison between ${comp.cA.name} and ${comp.cB.name}. Latency, stick drift durability, polling rate, and health score analysis.`}
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <div class="compare-container">
+    <div class="hero-card card-base">
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="hero-badge">HARDWARE HEAD-TO-HEAD</span>
+      <h1 class="hero-title text-gradient">{comp.title}</h1>
+      <p class="hero-desc">
+        Head-to-head comparison of input latency, polling rates, thumbstick sensors, and drift resistance between {comp.cA.name} and {comp.cB.name}.
+      </p>
+    </div>
+
+    <div class="comparison-grid">
+
+      {/* Controller A */}
+      <div class="comp-card card-base">
+        <h2 class="c-name">{comp.cA.name}</h2>
+        <div class="score-pill text-gradient">Health Score: {comp.cA.score}/100</div>
+
+        <div class="specs-list">
+          <div class="spec-row"><span>Input Latency:</span> <span class="mono">{comp.cA.latency}</span></div>
+          <div class="spec-row"><span>Polling Rate:</span> <span class="mono">{comp.cA.polling}</span></div>
+          <div class="spec-row"><span>Stick Sensor:</span> <span class="mono">{comp.cA.sensor}</span></div>
+          <div class="spec-row"><span>MSRP:</span> <span class="mono">{comp.cA.price}</span></div>
+        </div>
+
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Test {comp.cA.name}</a>
+      </div>
+
+      {/* Controller B */}
+      <div class="comp-card card-base">
+        <h2 class="c-name">{comp.cB.name}</h2>
+        <div class="score-pill text-gradient">Health Score: {comp.cB.score}/100</div>
+
+        <div class="specs-list">
+          <div class="spec-row"><span>Input Latency:</span> <span class="mono">{comp.cB.latency}</span></div>
+          <div class="spec-row"><span>Polling Rate:</span> <span class="mono">{comp.cB.polling}</span></div>
+          <div class="spec-row"><span>Stick Sensor:</span> <span class="mono">{comp.cB.sensor}</span></div>
+          <div class="spec-row"><span>MSRP:</span> <span class="mono">{comp.cB.price}</span></div>
+        </div>
+
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Test {comp.cB.name}</a>
+      </div>
+
+    </div>
+
+    <p class="source-note">
+      <strong>Data sources:</strong> {comp.sourceNote}
+    </p>
+
+    {/* FAQ Section */}
+    <div class="faq-section card-base">
+      <h2 class="section-title">Comparison FAQs</h2>
+      <div class="faq-list">
+        {faqs.map((faq) => (
+          <div class="faq-item">
+            <h3 class="faq-question">{faq.question}</h3>
+            <p class="faq-answer">{faq.answer}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .compare-container { max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
+  .hero-card { padding: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
+  .hero-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.15; }
+  .hero-desc { font-size: 1.125rem; color: var(--color-text-secondary); max-width: 720px; line-height: 1.6; }
+  .comparison-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+  .comp-card { padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
+  .c-name { font-size: 1.375rem; font-weight: 800; color: var(--color-text-primary); }
+  .score-pill { font-family: var(--font-mono); font-size: 1.25rem; font-weight: 800; }
+  .specs-list { display: flex; flex-direction: column; gap: 0.75rem; background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1.25rem; }
+  .spec-row { display: flex; justify-content: space-between; font-size: var(--text-small); color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 0.5rem; }
+  .spec-row span.mono { font-weight: 600; color: var(--color-text-primary); }
+  .faq-section { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  .faq-list { display: flex; flex-direction: column; gap: 1.25rem; }
+  .faq-item { display: flex; flex-direction: column; gap: 0.375rem; border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 1rem; }
+  .faq-question { font-size: 1.125rem; font-weight: 700; color: var(--color-text-primary); }
+  .faq-answer { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; }
+  .source-note { font-size: var(--text-micro); color: var(--color-text-tertiary); line-height: 1.6; border-left: 2px solid var(--color-border-subtle); padding-left: 1rem; }
+  @media (max-width: 768px) { .comparison-grid { grid-template-columns: 1fr; } }
+</style>

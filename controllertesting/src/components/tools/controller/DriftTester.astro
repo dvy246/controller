@@ -1,0 +1,390 @@
+---
+/**
+ * DriftTester.astro — Interactive Stick Drift Diagnostic Tool
+ * Calculates stick position, drift percentage, live visual crosshair,
+ * and deadzone threshold alerts using Web Gamepad API.
+ */
+---
+
+<div class="drift-tester" id="drift-tester-root">
+  {/* ── Status Bar ── */}
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="gp-status-dot"></span>
+      <span class="status-text" id="gp-status-text">Connect a controller and press any button...</span>
+    </div>
+    <div class="controller-name" id="gp-model-name">No Controller Detected</div>
+  </div>
+
+  {/* ── Visualizers Grid (Left & Right Sticks) ── */}
+  <div class="sticks-grid">
+
+    {/* Left Analog Stick */}
+    <div class="stick-card">
+      <div class="stick-card-header">
+        <h3 class="stick-title">Left Analog Stick</h3>
+        <span class="drift-value" id="left-drift-val">0.0%</span>
+      </div>
+
+      <div class="canvas-container">
+        <canvas id="left-stick-canvas" width="260" height="260"></canvas>
+        <div class="canvas-center-crosshair"></div>
+      </div>
+
+      <div class="stick-metrics">
+        <div class="metric">
+          <span class="m-label">X Axis</span>
+          <span class="m-val mono" id="left-x-val">0.0000</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Y Axis</span>
+          <span class="m-val mono" id="left-y-val">0.0000</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Status</span>
+          <span class="m-val badge-pass" id="left-status-badge">Healthy</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Right Analog Stick */}
+    <div class="stick-card">
+      <div class="stick-card-header">
+        <h3 class="stick-title">Right Analog Stick</h3>
+        <span class="drift-value" id="right-drift-val">0.0%</span>
+      </div>
+
+      <div class="canvas-container">
+        <canvas id="right-stick-canvas" width="260" height="260"></canvas>
+        <div class="canvas-center-crosshair"></div>
+      </div>
+
+      <div class="stick-metrics">
+        <div class="metric">
+          <span class="m-label">X Axis</span>
+          <span class="m-val mono" id="right-x-val">0.0000</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Y Axis</span>
+          <span class="m-val mono" id="right-y-val">0.0000</span>
+        </div>
+        <div class="metric">
+          <span class="m-label">Status</span>
+          <span class="m-val badge-pass" id="right-status-badge">Healthy</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {/* ── Controls & Calibration ── */}
+  <div class="tester-controls">
+    <button type="button" class="btn-primary" id="btn-calibrate">Calibrate Deadzone</button>
+    <button type="button" class="btn-secondary" id="btn-reset-history">Reset Canvas Trail</button>
+  </div>
+</div>
+
+<script>
+  import { parseGamepadState } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const statusDot = document.getElementById('gp-status-dot');
+    const statusText = document.getElementById('gp-status-text');
+    const modelName = document.getElementById('gp-model-name');
+
+    const leftCanvas = document.getElementById('left-stick-canvas') as HTMLCanvasElement;
+    const rightCanvas = document.getElementById('right-stick-canvas') as HTMLCanvasElement;
+    if (!leftCanvas || !rightCanvas) return;
+
+    const leftCtx = leftCanvas.getContext('2d');
+    const rightCtx = rightCanvas.getContext('2d');
+
+    const leftXVal = document.getElementById('left-x-val');
+    const leftYVal = document.getElementById('left-y-val');
+    const leftDriftVal = document.getElementById('left-drift-val');
+    const leftBadge = document.getElementById('left-status-badge');
+
+    const rightXVal = document.getElementById('right-x-val');
+    const rightYVal = document.getElementById('right-y-val');
+    const rightDriftVal = document.getElementById('right-drift-val');
+    const rightBadge = document.getElementById('right-status-badge');
+
+    const leftTrail: { x: number; y: number }[] = [];
+    const rightTrail: { x: number; y: number }[] = [];
+
+    let animId: number | null = null;
+
+    function renderStick(
+      ctx: CanvasRenderingContext2D | null,
+      x: number,
+      y: number,
+      trail: { x: number; y: number }[]
+    ) {
+      if (!ctx) return;
+      const w = ctx.canvas.width;
+      const h = ctx.canvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = (w / 2) - 20;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Background outer circle
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#0C0C14';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      // Deadzone threshold circle (5%)
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius * 0.05, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 3]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Center crosshair axes
+      ctx.beginPath();
+      ctx.moveTo(cx - radius, cy);
+      ctx.lineTo(cx + radius, cy);
+      ctx.moveTo(cx, cy - radius);
+      ctx.lineTo(cx, cy + radius);
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      ctx.stroke();
+
+      // Draw stick position trail
+      const px = cx + x * radius;
+      const py = cy + y * radius;
+      trail.push({ x: px, y: py });
+      if (trail.length > 100) trail.shift();
+
+      for (let i = 0; i < trail.length; i++) {
+        const pt = trail[i];
+        const alpha = (i / trail.length) * 0.4;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(37, 99, 235, ${alpha})`;
+        ctx.fill();
+      }
+
+      // Draw current stick position dot
+      ctx.beginPath();
+      ctx.arc(px, py, 6, 0, Math.PI * 2);
+      const isDrifting = Math.hypot(x, y) > 0.05;
+      ctx.fillStyle = isDrifting ? '#EF4444' : '#10B981';
+      ctx.fill();
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    function poll() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp: Gamepad | null = null;
+
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+          activeGp = gamepads[i];
+          break;
+        }
+      }
+
+      if (activeGp) {
+        if (statusDot) statusDot.className = 'status-dot active';
+        if (statusText) statusText.textContent = 'Controller Connected';
+        if (modelName) modelName.textContent = activeGp.id;
+
+        const state = parseGamepadState(activeGp);
+
+        // Left stick
+        renderStick(leftCtx, state.leftStick.x, state.leftStick.y, leftTrail);
+        if (leftXVal) leftXVal.textContent = state.leftStick.x.toFixed(4);
+        if (leftYVal) leftYVal.textContent = state.leftStick.y.toFixed(4);
+        if (leftDriftVal) leftDriftVal.textContent = `${state.leftStick.driftPct}%`;
+
+        if (leftBadge) {
+          if (state.leftStick.driftPct > 10) {
+            leftBadge.textContent = 'Severe Drift';
+            leftBadge.className = 'm-val badge-fail';
+          } else if (state.leftStick.driftPct > 2) {
+            leftBadge.textContent = 'Minor Drift';
+            leftBadge.className = 'm-val badge-warning';
+          } else {
+            leftBadge.textContent = 'Healthy';
+            leftBadge.className = 'm-val badge-pass';
+          }
+        }
+
+        // Right stick
+        renderStick(rightCtx, state.rightStick.x, state.rightStick.y, rightTrail);
+        if (rightXVal) rightXVal.textContent = state.rightStick.x.toFixed(4);
+        if (rightYVal) rightYVal.textContent = state.rightStick.y.toFixed(4);
+        if (rightDriftVal) rightDriftVal.textContent = `${state.rightStick.driftPct}%`;
+
+        if (rightBadge) {
+          if (state.rightStick.driftPct > 10) {
+            rightBadge.textContent = 'Severe Drift';
+            rightBadge.className = 'm-val badge-fail';
+          } else if (state.rightStick.driftPct > 2) {
+            rightBadge.textContent = 'Minor Drift';
+            rightBadge.className = 'm-val badge-warning';
+          } else {
+            rightBadge.textContent = 'Healthy';
+            rightBadge.className = 'm-val badge-pass';
+          }
+        }
+
+      } else {
+        if (statusDot) statusDot.className = 'status-dot';
+        if (statusText) statusText.textContent = 'Connect a controller and press any button...';
+        if (modelName) modelName.textContent = 'No Controller Detected';
+
+        renderStick(leftCtx, 0, 0, leftTrail);
+        renderStick(rightCtx, 0, 0, rightTrail);
+      }
+
+      animId = requestAnimationFrame(poll);
+    }
+
+    window.addEventListener('gamepadconnected', () => {
+      if (!animId) poll();
+    });
+
+    // Start polling immediately in case gamepad is already connected
+    poll();
+
+    document.getElementById('btn-reset-history')?.addEventListener('click', () => {
+      leftTrail.length = 0;
+      rightTrail.length = 0;
+    });
+  });
+</script>
+
+<style>
+  .drift-tester {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .tester-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-neutral);
+  }
+  .status-dot.active {
+    background: var(--color-pass);
+    box-shadow: 0 0 8px var(--color-pass);
+  }
+
+  .status-text {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .controller-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .sticks-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .stick-card {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .stick-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .stick-title {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .drift-value {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-accent);
+  }
+
+  .canvas-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .stick-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .m-label {
+    font-size: var(--text-micro);
+    color: var(--color-text-tertiary);
+    font-family: var(--font-mono);
+  }
+
+  .m-val {
+    font-size: var(--text-small);
+    font-weight: 600;
+  }
+
+  .tester-controls {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 768px) {
+    .sticks-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

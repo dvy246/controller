@@ -1,0 +1,10 @@
+# robots.txt — ControllerTesting.com
+User-agent: *
+Allow: /
+
+# Exclude private/internal directories
+Disallow: /api/
+Disallow: /admin/
+
+# Sitemap directive
+Sitemap: https://controllertesting.com/sitemap-index.xml

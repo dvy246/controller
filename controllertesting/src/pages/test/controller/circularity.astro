@@ -1,0 +1,126 @@
+---
+/**
+ * /test/controller/circularity — Analog Stick Circularity Test
+ * SEO Title: Controller Circularity Test — Test Stick Range of Motion & Outer Error
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import CircularityTester from '../../../components/tools/controller/CircularityTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Circularity Test' },
+];
+
+const faqs = [
+  {
+    question: 'What is controller circularity error?',
+    answer: 'Circularity error measures how far a thumbstick\'s actual maximum movement boundary deviates from a perfect 360-degree mathematical circle. Lower error percentages indicate better diagonal movement accuracy.',
+  },
+  {
+    question: 'What is a good circularity error score?',
+    answer: 'An error score below 5.0% is considered excellent. Factory DualSense and Xbox controllers typically score between 5% and 12% due to squarish outer gate restrictors.',
+  },
+  {
+    question: 'Does circularity affect aiming in FPS games?',
+    answer: 'Yes! High circularity error distorts diagonal aiming sensitivity, causing diagonal crosshair movement to feel faster or slower than cardinal (horizontal/vertical) aiming.',
+  },
+];
+---
+
+<ToolLayout
+  title="Controller Circularity Test — Measure Stick Range of Motion Online | ControllerTesting.com"
+  description="Test thumbstick circularity error and outer range of motion on PS5, Xbox, and Switch gamepads. Plot 360-degree outer boundaries in real time."
+  toolName="Circularity Test"
+  category="Controller Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <CircularityTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Circularity Error Ratings</h2>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">0.0% – 5.0% (Excellent)</strong>
+          <p class="legend-text">Near-perfect circular boundary. Consistent diagonal aiming sensitivity in shooters.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">5.1% – 12.0% (Standard Factory)</strong>
+          <p class="legend-text">Normal factory stick variance. Typical for standard PS5 and Xbox controllers.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">> 12.0% (High Error)</strong>
+          <p class="legend-text">Noticeable diagonal distortion. Octagonal physical gate or worn potentiometer housing.</p>
+        </div>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Generate comprehensive diagnostic report</h3>
+        <p class="export-desc">Combine circularity analysis with stick drift and polling rate testing.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    </a>
+    <a href="/test/controller/deadzone" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Deadzone Visualizer</h3>
+      <p class="tool-desc">Find optimal deadzone threshold settings.</p>
+    </a>
+    <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Measure input rate in Hz.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Why Analog Stick Circularity Is Critical for Competitive Gaming</h2>
+    <p>
+      When playing first-person shooters or racing simulators, game engines translate 2D analog stick coordinates (X, Y) into camera rotation or steering angle.
+      If your thumbstick housing produces a squared or distorted outer boundary, diagonal inputs reach 100% magnitude earlier than cardinal inputs.
+    </p>
+
+    <h3>Hall-Effect vs Potentiometer Circularity</h3>
+    <p>
+      Modern Hall-effect thumbstick replacements feature digital anti-aliasing algorithms that calibrate circularity down to sub-1.0% error rates,
+      delivering perfectly uniform 360-degree turning speeds.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 1rem; }
+  .results-legend-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .legend-card { padding: 1rem; border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 0.375rem; }
+  .legend-pass { background: var(--color-pass-bg); border: 1px solid var(--color-pass); }
+  .legend-pass .legend-title { color: var(--color-pass); }
+  .legend-warning { background: var(--color-warning-bg); border: 1px solid var(--color-warning); }
+  .legend-warning .legend-title { color: var(--color-warning); }
+  .legend-fail { background: var(--color-fail-bg); border: 1px solid var(--color-fail); }
+  .legend-fail .legend-title { color: var(--color-fail); }
+  .legend-title { font-family: var(--font-mono); font-size: var(--text-small); }
+  .legend-text { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.5; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+  @media (max-width: 768px) { .results-legend-grid { grid-template-columns: 1fr; } }
+</style>

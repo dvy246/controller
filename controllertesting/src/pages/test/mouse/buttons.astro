@@ -1,0 +1,94 @@
+---
+/**
+ * /test/mouse/buttons — Mouse Button Tester
+ * SEO Title: Mouse Button Tester — Test Mouse Buttons & Side Keys Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import MouseButtonTester from '../../../components/tools/mouse/MouseButtonTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/mouse' },
+  { name: 'Mouse Tests', url: '/test/mouse' },
+  { name: 'Mouse Button Tester' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test mouse side buttons (Forward / Back)?',
+    answer: 'Click any mouse button — including left click, right click, scroll wheel click, and side thumb buttons — anywhere on the page. The corresponding button card will illuminate in green.',
+  },
+  {
+    question: 'Why does right click open a context menu during testing?',
+    answer: 'Our tool automatically suppresses browser right-click context menus on this page so you can test right-click switch actuations smoothly.',
+  },
+  {
+    question: 'Does this test gaming mouse side buttons (MB4 / MB5)?',
+    answer: 'Yes! It tests Left Click (MB1), Right Click (MB2), Scroll Click (MB3), Side Back (MB4), and Side Forward (MB5).',
+  },
+];
+---
+
+<ToolLayout
+  title="Mouse Button Tester — Test Mouse Buttons & Side Keys Online | ControllerTesting.com"
+  description="Test left click, right click, scroll click, and side thumb buttons on your gaming mouse online. Real-time click counter and visualizer."
+  toolName="Mouse Button Tester"
+  category="Mouse Diagnostic"
+  categoryUrl="/test/mouse"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <MouseButtonTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Button Switch Benchmarks</h2>
+      <p class="results-text">
+        All buttons should highlight crisp green upon press. If a side button fails to register, check mouse driver remapping settings.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Test double-click switch faulting</h3>
+        <p class="export-desc">Check if your mouse switch suffers from unintentional double-clicks.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/mouse/double-click" class="btn-primary">Double-Click Test</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/mouse/cps" class="tool-card card-base card-hover">
+      <h3 class="tool-name">CPS Test</h3>
+      <p class="tool-desc">Test clicks per second speed.</p>
+    </a>
+    <a href="/test/mouse/scroll" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Scroll Test</h3>
+      <p class="tool-desc">Test scroll wheel direction & step lines.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Gaming Mouse Switch Types and Microswitches</h2>
+    <p>
+      Gaming mice use mechanical microswitches (Omron, Kailh GM 8.0, Huano) or optical switches (Razer Gen-3, Light Strike).
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>

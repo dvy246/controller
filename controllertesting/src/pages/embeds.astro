@@ -1,0 +1,556 @@
+---
+/**
+ * /embeds — Embed Free Controller Diagnostic Widgets Hub Page
+ * SEO Title: Free Embeddable Controller Diagnostic Widgets | ControllerTesting.com
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Embed Widgets' },
+];
+
+const widgets = [
+  {
+    id: 'drift',
+    num: '01',
+    title: 'Stick Drift Detector Widget',
+    desc: 'Real-time 0.1% stick drift visualizer canvas. Ideal for controller hardware reviews, unboxing articles, and repair guides.',
+    tag: 'Most Embedded',
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>`,
+    code: `<iframe src="https://controllertesting.com/embed/drift" width="100%" height="450" frameborder="0" allow="gamepad; hid" title="Stick Drift Detector Widget"></iframe>\n<div style="text-align:right; font-size:12px; font-family:sans-serif;">\n  Powered by <a href="https://controllertesting.com/test/controller/drift" target="_blank" style="color:#2563EB; font-weight:600; text-decoration:none;">ControllerTesting.com Stick Drift Tool</a>\n</div>`,
+  },
+  {
+    id: 'polling',
+    num: '02',
+    title: 'Polling Rate Tester Widget',
+    desc: 'Measure input report frequency in Hz up to 8000Hz. Great for esports and latency benchmark articles.',
+    tag: 'Esports',
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-5 5"/></svg>`,
+    code: `<iframe src="https://controllertesting.com/embed/polling" width="100%" height="450" frameborder="0" allow="gamepad; hid" title="Polling Rate Tester Widget"></iframe>\n<div style="text-align:right; font-size:12px; font-family:sans-serif;">\n  Powered by <a href="https://controllertesting.com/test/controller/polling-rate" target="_blank" style="color:#2563EB; font-weight:600; text-decoration:none;">ControllerTesting.com Polling Rate Checker</a>\n</div>`,
+  },
+  {
+    id: 'gamepad',
+    num: '03',
+    title: 'Full Gamepad Diagnostic Widget',
+    desc: 'Comprehensive 5-step hardware wizard covering stick drift, buttons, trigger pressure, and vibration motors.',
+    tag: 'Full Suite',
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="6"/><path d="M10 10v4M8 12h4M16 10v.01M18 12v.01"/></svg>`,
+    code: `<iframe src="https://controllertesting.com/embed/gamepad" width="100%" height="550" frameborder="0" allow="gamepad; hid" title="Gamepad Diagnostic Widget"></iframe>\n<div style="text-align:right; font-size:12px; font-family:sans-serif;">\n  Powered by <a href="https://controllertesting.com/test/controller/full-diagnostic" target="_blank" style="color:#2563EB; font-weight:600; text-decoration:none;">ControllerTesting.com Full Diagnostic Suite</a>\n</div>`,
+  },
+  {
+    id: 'health',
+    num: '04',
+    title: 'Controller Health Score™ Widget',
+    desc: 'Generates a 0–100 hardware health grade with a printable PDF report card. Perfect for used controller listings.',
+    tag: 'Premium',
+    icon: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
+    code: `<iframe src="https://controllertesting.com/embed/health" width="100%" height="500" frameborder="0" allow="gamepad; hid" title="Controller Health Score Widget"></iframe>\n<div style="text-align:right; font-size:12px; font-family:sans-serif;">\n  Powered by <a href="https://controllertesting.com/test/controller/health-score" target="_blank" style="color:#2563EB; font-weight:600; text-decoration:none;">ControllerTesting.com Health Score Generator</a>\n</div>`,
+  },
+];
+
+const benefits = [
+  { icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`, label: 'Zero dependencies' },
+  { icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>`, label: 'Fully responsive' },
+  { icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>`, label: 'One-line iframe embed' },
+  { icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V22H4V12"/><path d="M22 7H2v5h20V7z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>`, label: 'Free commercial use' },
+];
+
+const faqs = [
+  {
+    q: 'How do I embed a controller diagnostic widget on my website?',
+    a: 'Select your preferred widget below, copy the iframe HTML snippet, and paste it anywhere in your website or CMS. No registration or API key required.',
+  },
+  {
+    q: 'Are ControllerTesting.com widgets free for commercial use?',
+    a: 'Yes — 100% free for gaming blogs, hardware review outlets, forums, and e-commerce platforms. No attribution required beyond the included Powered by backlink.',
+  },
+  {
+    q: 'Do the widgets work on mobile and all major browsers?',
+    a: 'All widgets are fully responsive and rely on native browser Gamepad and WebHID APIs supported in Chrome, Edge, Opera, and Brave.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(f => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<BaseLayout
+  title="Free Embeddable Controller Diagnostic Widgets | ControllerTesting.com"
+  description="Enrich your gaming website, blog, or store with interactive controller testing widgets. Free, customizable, mobile-friendly iframe embed snippets for drift, polling rate, and health score."
+  breadcrumbs={breadcrumbs}
+  schema={faqSchema}
+>
+  <Header />
+
+  <main id="main-content" class="embeds-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <!-- Hero -->
+      <section class="embeds-hero">
+        <div class="hero-text-col">
+          <span class="hero-eyebrow">Widget Suite for Webmasters</span>
+          <h1 class="hero-title">Embed Interactive Controller<br/>Diagnostic Widgets</h1>
+          <p class="hero-desc">
+            Enhance your gaming blog, hardware reviews, or e-commerce store with zero-dependency, real-time gamepad testing tools. Free for commercial and personal websites.
+          </p>
+          <ul class="hero-benefits" role="list" aria-label="Widget benefits">
+            {benefits.map((b) => (
+              <li class="benefit-chip">
+                <span class="benefit-icon" set:html={b.icon} aria-hidden="true" />
+                {b.label}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="hero-preview-col" aria-hidden="true">
+          <div class="preview-mockup">
+            <div class="preview-bar">
+              <span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span>
+              <span class="preview-url">controllertesting.com/embed/drift</span>
+            </div>
+            <div class="preview-content">
+              <div class="preview-drift-ring">
+                <div class="drift-ring-outer"></div>
+                <div class="drift-ring-inner"></div>
+                <div class="drift-dot"></div>
+              </div>
+              <div class="preview-chips">
+                <span class="preview-chip pass">DRIFT 0.04% — PASS</span>
+                <span class="preview-chip">1000 Hz</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Widget cards -->
+      <section class="widgets-section" aria-labelledby="widgets-heading">
+        <h2 class="sr-only" id="widgets-heading">Available Widgets</h2>
+        <div class="widgets-grid">
+          {widgets.map((w) => (
+            <article class="widget-card" id={`widget-${w.id}`}>
+              <div class="widget-card-header">
+                <div class="widget-icon-wrap" aria-hidden="true" set:html={w.icon} />
+                <div class="widget-meta">
+                  <span class="widget-num">{w.num}</span>
+                  <span class="widget-tag">{w.tag}</span>
+                </div>
+              </div>
+              <h3 class="widget-title">{w.title}</h3>
+              <p class="widget-desc">{w.desc}</p>
+              <div class="code-block-wrap">
+                <div class="code-block-topbar">
+                  <span class="code-lang">HTML</span>
+                  <span class="code-dots" aria-hidden="true">···</span>
+                </div>
+                <pre class="code-snippet" id={`code-${w.id}`}><code>{w.code}</code></pre>
+              </div>
+              <button
+                type="button"
+                class="copy-btn"
+                data-target={`code-${w.id}`}
+                aria-label={`Copy HTML embed code for ${w.title}`}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy HTML Code
+              </button>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <!-- FAQ section -->
+      <section class="faq-section" aria-labelledby="faq-heading">
+        <h2 class="section-heading" id="faq-heading">Frequently Asked Questions</h2>
+        <div class="faq-list" role="list">
+          {faqs.map((faq) => (
+            <div class="faq-item" role="listitem">
+              <h3 class="faq-q">{faq.q}</h3>
+              <p class="faq-a">{faq.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  // Copy button behavior with visual feedback
+  document.querySelectorAll<HTMLButtonElement>('.copy-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const targetId = btn.getAttribute('data-target');
+      if (!targetId) return;
+      const el = document.getElementById(targetId);
+      if (!el) return;
+      try {
+        await navigator.clipboard.writeText(el.innerText);
+        const orig = btn.innerHTML;
+        btn.innerHTML = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
+        btn.classList.add('copied');
+        setTimeout(() => { btn.innerHTML = orig; btn.classList.remove('copied'); }, 2000);
+      } catch {
+        btn.textContent = 'Copy failed';
+      }
+    });
+  });
+</script>
+
+<style>
+  .embeds-page {
+    padding-top: 96px;
+    padding-bottom: var(--spacing-section);
+  }
+  .container-site {
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+
+  /* ── Hero ── */
+  .embeds-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    padding-block: 2rem;
+  }
+  .hero-text-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-accent);
+  }
+  .hero-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--color-text-primary);
+  }
+  .hero-desc {
+    font-size: 1.125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    max-width: 50ch;
+  }
+  .hero-benefits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .benefit-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-pill);
+    padding: 0.35em 0.85em;
+  }
+  .benefit-chip svg { color: var(--color-accent); flex-shrink: 0; }
+
+  /* ── Hero preview mockup ── */
+  .hero-preview-col { display: flex; justify-content: center; }
+  .preview-mockup {
+    width: 100%;
+    max-width: 420px;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+  }
+  .preview-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--color-surface-3);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.red { background: #EF4444; }
+  .dot.amber { background: #F59E0B; }
+  .dot.green { background: #10B981; }
+  .preview-url {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--color-text-tertiary);
+    margin-left: 0.5rem;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .preview-content {
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    min-height: 200px;
+  }
+  .preview-drift-ring {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .drift-ring-outer {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(37,99,235,0.3);
+    animation: drift-spin 6s linear infinite;
+  }
+  .drift-ring-inner {
+    position: absolute;
+    inset: 12px;
+    border-radius: 50%;
+    border: 1.5px dashed rgba(37,99,235,0.5);
+  }
+  .drift-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 12px rgba(37,99,235,0.7);
+    animation: drift-move 3s ease-in-out infinite;
+  }
+  @keyframes drift-spin { to { transform: rotate(360deg); } }
+  @keyframes drift-move {
+    0%,100% { transform: translate(0,0); }
+    25% { transform: translate(6px,-4px); }
+    50% { transform: translate(-3px,5px); }
+    75% { transform: translate(4px,3px); }
+  }
+  .preview-chips { display: flex; gap: 0.625rem; flex-wrap: wrap; justify-content: center; }
+  .preview-chip {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.3em 0.75em;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-3);
+    border: 1px solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
+  }
+  .preview-chip.pass {
+    background: rgba(16,185,129,0.12);
+    border-color: rgba(16,185,129,0.3);
+    color: #10B981;
+  }
+
+  /* ── Widgets Grid ── */
+  .widgets-section { display: flex; flex-direction: column; gap: 1.5rem; }
+  .widgets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+  }
+  .widget-card {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: border-color var(--duration-fast);
+  }
+  .widget-card:hover { border-color: var(--color-accent); }
+  .widget-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .widget-icon-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-3);
+    border: 1px solid var(--color-border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent);
+  }
+  .widget-meta { display: flex; align-items: center; gap: 0.625rem; }
+  .widget-num {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--color-text-tertiary);
+    letter-spacing: 0.05em;
+  }
+  .widget-tag {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    background: rgba(37,99,235,0.12);
+    color: var(--color-accent);
+    border: 1px solid rgba(37,99,235,0.2);
+    padding: 0.2em 0.55em;
+    border-radius: 3px;
+  }
+  .widget-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+  }
+  .widget-desc {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+  }
+
+  /* ── Code block ── */
+  .code-block-wrap {
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+  .code-block-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.875rem;
+    background: var(--color-surface-3);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .code-lang {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-accent);
+  }
+  .code-dots { font-size: 0.8rem; color: var(--color-text-tertiary); letter-spacing: 0.1em; }
+  .code-snippet {
+    margin: 0;
+    padding: 1rem;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-family: var(--font-mono);
+    font-size: 0.725rem;
+    line-height: 1.55;
+    color: var(--color-text-secondary);
+    max-height: 110px;
+    overflow-y: auto;
+  }
+
+  /* ── Copy button ── */
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    align-self: flex-start;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    background: var(--color-surface-3);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 0.55rem 1.1rem;
+    cursor: pointer;
+    transition: background var(--duration-fast), border-color var(--duration-fast), color var(--duration-fast);
+  }
+  .copy-btn:hover { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+  .copy-btn.copied { background: rgba(16,185,129,0.15); border-color: #10B981; color: #10B981; }
+
+  /* ── FAQ ── */
+  .faq-section {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .section-heading {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+  }
+  .faq-list { display: flex; flex-direction: column; gap: 1.5rem; }
+  .faq-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .faq-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .faq-q {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+  }
+  .faq-a {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+  }
+
+  /* ── Screen reader only ── */
+  .sr-only {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1024px) {
+    .embeds-hero { grid-template-columns: 1fr; gap: 2.5rem; }
+    .hero-preview-col { display: none; }
+    .widgets-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .faq-section { padding: 1.5rem; }
+  }
+</style>

@@ -1,0 +1,361 @@
+---
+/**
+ * GlobalSearch.astro — Cmd+K Instant Site-Wide Search Modal
+ * Indexes 32 diagnostic tools, 15 arcade games, embed widgets, repair guides, and warranty tools.
+ * Accessible keyboard navigation (Up/Down/Enter/Esc), ARIA labels, zero-layout-shift modal overlay.
+ */
+
+const searchItems = [
+  // Controller Tools
+  { title: 'Stick Drift Detector', category: 'Controller Tools', url: '/test/controller/drift', desc: 'Real-time 0.1% stick drift visualizer canvas' },
+  { title: 'Full Diagnostic Wizard', category: 'Controller Tools', url: '/test/controller/full-diagnostic', desc: '5-step hardware checkup for sticks, buttons & triggers' },
+  { title: 'Controller Health Score™', category: 'Controller Tools', url: '/test/controller/health-score', desc: '0-100 score grade & printable PDF report card' },
+  { title: 'PS Controller WebHID Calibration', category: 'Controller Tools', url: '/test/controller/ps-calibration', desc: 'Firmware-level center offset calibration & save' },
+  { title: 'Steering Wheel & Pedals', category: 'Controller Tools', url: '/test/controller/steering-wheel', desc: 'Test 900°/1080° steering rotation & pedal linearity' },
+  { title: 'Fight Stick & Hitbox', category: 'Controller Tools', url: '/test/controller/fight-stick', desc: 'Vewlix 8-button layout & Capcom SOCD cleaner test' },
+  { title: 'Flight Stick & HOTAS', category: 'Controller Tools', url: '/test/controller/flight-stick', desc: 'Flight sim joysticks, 128+ buttons & throttle quadrant' },
+  { title: 'Button Tester', category: 'Controller Tools', url: '/test/controller/buttons', desc: 'Interactive button matrix & ghosting detector' },
+  { title: 'Trigger Pressure Tester', category: 'Controller Tools', url: '/test/controller/triggers', desc: 'Analog L2/R2 pressure curve analyzer' },
+  { title: 'Vibration Tester', category: 'Controller Tools', url: '/test/controller/vibration', desc: 'Dual haptic rumble motor pulse tester' },
+  { title: 'Circularity Test', category: 'Controller Tools', url: '/test/controller/circularity', desc: '360-degree stick range of motion & error' },
+  { title: 'Deadzone Visualizer', category: 'Controller Tools', url: '/test/controller/deadzone', desc: 'Inner & outer deadzone threshold tuning' },
+  { title: 'Polling Rate Checker', category: 'Controller Tools', url: '/test/controller/polling-rate', desc: 'Real-time Hz input report frequency' },
+  { title: '8-Way D-Pad Tester', category: 'Controller Tools', url: '/test/controller/dpad', desc: '8-way directional pad precision & diagonal inputs' },
+  { title: 'Latency Estimator', category: 'Controller Tools', url: '/test/controller/latency', desc: 'Input delay & visual reaction speed timer' },
+  { title: 'Multi-Controller Tester', category: 'Controller Tools', url: '/test/controller/multi', desc: 'Test 4 gamepads simultaneously in browser' },
+  { title: 'Drift Timeline Tracker', category: 'Controller Tools', url: '/test/controller/timeline', desc: 'LocalStorage hardware degradation tracker' },
+  { title: 'Gyroscope Tester', category: 'Controller Tools', url: '/test/controller/gyroscope', desc: '3-axis motion sensor calibration' },
+  { title: 'Touchpad Tester', category: 'Controller Tools', url: '/test/controller/touchpad', desc: 'PS5 DualSense multi-touch trackpad' },
+  { title: 'Microphone Tester', category: 'Controller Tools', url: '/test/controller/microphone', desc: 'Built-in mic & 3.5mm headset audio' },
+  { title: 'Competitive Readiness', category: 'Controller Tools', url: '/test/controller/competitive-readiness', desc: 'Esports tournament benchmark assessor' },
+
+  // Specialized / MIDI
+  { title: 'MIDI Keyboard & Controller', category: 'Specialized Tools', url: '/test/midi', desc: 'Test USB MIDI keyboards, drum pads, CC messages & velocity' },
+
+  // Mouse Tools
+  { title: 'CPS Test (Clicks Per Second)', category: 'Mouse Tools', url: '/test/mouse/cps', desc: '1s, 5s, 10s click speed test' },
+  { title: 'Mouse Polling Rate (Hz)', category: 'Mouse Tools', url: '/test/mouse/polling-rate', desc: 'Measure report rate up to 8000Hz (8KHz)' },
+  { title: 'DPI Sensitivity Analyzer', category: 'Mouse Tools', url: '/test/mouse/dpi', desc: 'Calculate true hardware mouse DPI' },
+  { title: 'Click Latency Test', category: 'Mouse Tools', url: '/test/mouse/click-latency', desc: 'Measure mouse click delay in ms' },
+  { title: 'Mouse Button Matrix', category: 'Mouse Tools', url: '/test/mouse/buttons', desc: 'Test MB1, MB2, MB3, MB4, MB5 side buttons' },
+  { title: 'Scroll Wheel Tester', category: 'Mouse Tools', url: '/test/mouse/scroll', desc: 'Scroll direction & encoder jumping faults' },
+  { title: 'Double-Click Fault Test', category: 'Mouse Tools', url: '/test/mouse/double-click', desc: 'Switch bounce & chatter detector' },
+
+  // Games & Arcade
+  { title: 'Stick Sniper Aim Trainer', category: 'Games Arcade', url: '/games/stick-sniper', desc: 'Canvas target acquisition precision game' },
+  { title: 'Button Blitz Reaction Challenge', category: 'Games Arcade', url: '/games/button-blitz', desc: 'Reflex button prompt challenge' },
+  { title: 'Stick Maze Runner', category: 'Games Arcade', url: '/games/stick-maze', desc: 'Navigate vector corridors with analog stick' },
+  { title: 'Trigger Racer', category: 'Games Arcade', url: '/games/trigger-racer', desc: 'Analog trigger throttle control race' },
+  { title: 'Quick Draw Reaction', category: 'Games Arcade', url: '/games/quick-draw', desc: 'Millisecond signal reaction shootout' },
+
+  // Widgets & Embeds
+  { title: 'Embeddable Widgets Hub', category: 'Widgets & Embeds', url: '/embeds', desc: 'Free <iframe> widget code snippets for website owners' },
+  { title: 'Stick Drift Embed Widget', category: 'Widgets & Embeds', url: '/embed/drift', desc: 'Embeddable stick drift visualizer widget' },
+  { title: 'Polling Rate Embed Widget', category: 'Widgets & Embeds', url: '/embed/polling', desc: 'Embeddable polling rate Hz widget' },
+
+  // Decision & Guides
+  { title: 'Warranty Assistant', category: 'Decision Tools', url: '/warranty', desc: 'Check RMA claim eligibility & generate reports' },
+  { title: 'Fix vs Replace Calculator', category: 'Decision Tools', url: '/fix-or-replace', desc: 'Weigh repair cost vs replacement price' },
+  { title: 'PS5 DualSense Repair Guide', category: 'Repair Guides', url: '/fix/stick-drift/ps5-dualsense', desc: 'Step-by-step stick drift repair guide' },
+  { title: 'PS5 DualSense Hardware Profile', category: 'Hardware Profiles', url: '/controller/ps5-dualsense', desc: 'Teardown specs, latency & polling rate' },
+];
+---
+
+<div id="search-modal-backdrop" class="search-modal-backdrop" aria-hidden="true" hidden>
+  <div class="search-modal-container" role="dialog" aria-modal="true" aria-label="Site Search">
+    <div class="search-modal-header">
+      <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input
+        type="text"
+        id="global-search-input"
+        class="search-input"
+        placeholder="Type to search tools, games, guides... (Esc to close)"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <span class="search-kbd">ESC</span>
+    </div>
+
+    <div class="search-modal-results" id="search-results-container">
+      <div class="search-empty-state" id="search-initial-state">
+        <span>Popular Quick Searches:</span>
+        <div class="search-quick-tags">
+          <button type="button" class="quick-tag" data-query="drift">Stick Drift</button>
+          <button type="button" class="quick-tag" data-query="polling">Polling Rate</button>
+          <button type="button" class="quick-tag" data-query="calibration">PS Calibration</button>
+          <button type="button" class="quick-tag" data-query="mouse">Mouse Hz</button>
+          <button type="button" class="quick-tag" data-query="wheel">Steering Wheel</button>
+        </div>
+      </div>
+      <div id="search-dynamic-list" class="search-dynamic-list"></div>
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ searchItems }}>
+  (function () {
+    var backdrop = document.getElementById('search-modal-backdrop');
+    var input = document.getElementById('global-search-input');
+    var listContainer = document.getElementById('search-dynamic-list');
+    var initialState = document.getElementById('search-initial-state');
+    var selectedIndex = -1;
+
+    function openSearch() {
+      if (!backdrop || !input) return;
+      backdrop.hidden = false;
+      backdrop.setAttribute('aria-hidden', 'false');
+      input.value = '';
+      renderResults('');
+      setTimeout(function () { input.focus(); }, 50);
+    }
+
+    function closeSearch() {
+      if (!backdrop) return;
+      backdrop.hidden = true;
+      backdrop.setAttribute('aria-hidden', 'true');
+    }
+
+    function renderResults(query) {
+      if (!listContainer || !initialState) return;
+      var q = query.trim().toLowerCase();
+      selectedIndex = -1;
+
+      if (!q) {
+        initialState.style.display = 'block';
+        listContainer.innerHTML = '';
+        return;
+      }
+
+      initialState.style.display = 'none';
+
+      var filtered = searchItems.filter(function (item) {
+        return (
+          item.title.toLowerCase().indexOf(q) !== -1 ||
+          item.category.toLowerCase().indexOf(q) !== -1 ||
+          item.desc.toLowerCase().indexOf(q) !== -1
+        );
+      });
+
+      if (filtered.length === 0) {
+        listContainer.innerHTML = '<div class="search-no-results">No diagnostic tools found for "' + query + '"</div>';
+        return;
+      }
+
+      var html = '';
+      var currentCat = '';
+      filtered.forEach(function (item, idx) {
+        if (item.category !== currentCat) {
+          currentCat = item.category;
+          html += '<div class="search-category-header">' + currentCat + '</div>';
+        }
+        html +=
+          '<a href="' + item.url + '" class="search-result-item" data-index="' + idx + '">' +
+            '<div class="res-left">' +
+              '<span class="res-title">' + item.title + '</span>' +
+              '<span class="res-desc">' + item.desc + '</span>' +
+            '</div>' +
+            '<svg class="res-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>' +
+          '</a>';
+      });
+
+      listContainer.innerHTML = html;
+    }
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', function (e) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        if (backdrop && backdrop.hidden) {
+          openSearch();
+        } else {
+          closeSearch();
+        }
+      } else if (e.key === 'Escape' && backdrop && !backdrop.hidden) {
+        closeSearch();
+      }
+    });
+
+    if (input) {
+      input.addEventListener('input', function (e) {
+        renderResults(e.target.value);
+      });
+
+      input.addEventListener('keydown', function (e) {
+        var items = listContainer ? listContainer.querySelectorAll('.search-result-item') : [];
+        if (items.length === 0) return;
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+          updateSelection(items);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          selectedIndex = Math.max(selectedIndex - 1, 0);
+          updateSelection(items);
+        } else if (e.key === 'Enter' && selectedIndex >= 0) {
+          e.preventDefault();
+          var href = items[selectedIndex].getAttribute('href');
+          if (href) window.location.href = href;
+        }
+      });
+    }
+
+    function updateSelection(items) {
+      items.forEach(function (el, i) {
+        if (i === selectedIndex) {
+          el.classList.add('selected');
+          el.scrollIntoView({ block: 'nearest' });
+        } else {
+          el.classList.remove('selected');
+        }
+      });
+    }
+
+    // Backdrop click close
+    if (backdrop) {
+      backdrop.addEventListener('click', function (e) {
+        if (e.target === backdrop) closeSearch();
+      });
+    }
+
+    // Export window openSearch helper for header search button trigger
+    window.openGlobalSearch = openSearch;
+
+    // Quick Tags click
+    document.addEventListener('click', function (e) {
+      if (e.target && e.target.classList.contains('quick-tag')) {
+        var q = e.target.getAttribute('data-query');
+        if (input && q) {
+          input.value = q;
+          renderResults(q);
+        }
+      }
+    });
+  })();
+</script>
+
+<style>
+  .search-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    background: rgba(6, 6, 11, 0.8);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 10vh;
+    padding-inline: 1rem;
+  }
+  .search-modal-container {
+    width: 100%;
+    max-width: 640px;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-card);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 75vh;
+  }
+  .search-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-surface-1);
+  }
+  .search-icon { color: var(--color-text-tertiary); flex-shrink: 0; }
+  .search-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  .search-kbd {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--color-text-tertiary);
+    background: var(--color-surface-3);
+    border: 1px solid var(--color-border-subtle);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+  }
+  .search-modal-results {
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .search-empty-state {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .search-quick-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .quick-tag {
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-pill);
+    padding: 0.35rem 0.75rem;
+    font-size: var(--text-small);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .quick-tag:hover {
+    background: var(--color-surface-3);
+    border-color: var(--color-accent);
+  }
+  .search-category-header {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.5rem 0.75rem 0.25rem;
+  }
+  .search-result-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .search-result-item:hover, .search-result-item.selected {
+    background: var(--color-surface-3);
+  }
+  .res-left { display: flex; flex-direction: column; gap: 0.2rem; }
+  .res-title { font-size: 0.9375rem; font-weight: 700; color: var(--color-text-primary); }
+  .res-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .res-arrow { color: var(--color-text-tertiary); flex-shrink: 0; }
+  .search-no-results {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+  }
+</style>

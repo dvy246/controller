@@ -1,0 +1,57 @@
+---
+/**
+ * /privacy — Privacy Policy
+ * SEO Title: Privacy Policy — ControllerTesting.com
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Privacy Policy' },
+];
+---
+
+<BaseLayout
+  title="Privacy Policy — ControllerTesting.com"
+  description="ControllerTesting.com privacy policy. 100% client-side Gamepad API processing with zero data collection or tracking."
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="legal-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="page-hero">
+        <h1 class="page-title">Privacy Policy</h1>
+        <p class="page-subtitle">Last updated: August 2026</p>
+      </header>
+
+      <div class="legal-content card-base">
+        <h2>1. Zero Data Collection Policy</h2>
+        <p>
+          ControllerTesting.com processes all Gamepad API signals, button presses, analog stick coordinates, and mouse movement locally in your web browser. We do not collect, transmit, store, or sell any hardware data.
+        </p>
+
+        <h2>2. Local Storage</h2>
+        <p>
+          Features like the Drift Timeline Tracker and Arcade Rewards use your browser's local storage (`localStorage`) to save snapshots and XP scores on your device. This data never leaves your browser.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .legal-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .page-hero { margin-bottom: 2.5rem; }
+  .page-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .page-subtitle { font-size: 1rem; color: var(--color-text-secondary); }
+  .legal-content { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; line-height: 1.7; color: var(--color-text-secondary); }
+  .legal-content h2 { color: var(--color-text-primary); font-size: 1.25rem; font-weight: 700; }
+</style>

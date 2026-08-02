@@ -1,0 +1,98 @@
+---
+/**
+ * /test/controller/multi — Multi-Controller Tester
+ * SEO Title: Multi-Controller Tester — Test 4 Gamepads Simultaneously Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import MultiController from '../../../components/tools/controller/MultiController.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Multi-Controller Tester' },
+];
+
+const faqs = [
+  {
+    question: 'How many controllers can I test simultaneously?',
+    answer: 'You can test up to 4 gamepads at the same time in your web browser. Each connected controller is assigned to Player 1 through Player 4 slots.',
+  },
+  {
+    question: 'Can I test different controller brands at the same time?',
+    answer: 'Yes! You can connect a PS5 DualSense, Xbox Series Controller, Nintendo Switch Pro Controller, and a third-party gamepad at the same time.',
+  },
+  {
+    question: 'Is this tool useful for couch multiplayer & fighting game tournaments?',
+    answer: 'Yes. It allows tournament organizers and party game hosts to verify all 4 controllers before starting matches.',
+  },
+];
+---
+
+<ToolLayout
+  title="Multi-Controller Tester — Test 4 Gamepads Simultaneously Online | ControllerTesting.com"
+  description="Test up to 4 controllers at the same time online. Simultaneous multi-gamepad diagnostic for PS5, Xbox, Switch, and PC controllers."
+  toolName="Multi-Controller Tester"
+  category="Controller Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <MultiController />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Multi-Controller Setup Guidelines</h2>
+      <p class="results-text">
+        All 4 gamepad slots update simultaneously. Ensure your USB hub or Bluetooth adapter supports multiple concurrent HID input devices.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Run individual controller health tests</h3>
+        <p class="export-desc">Run individual 0.1% stick drift and button matrix diagnostics for each controller.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/drift" class="btn-primary">Stick Drift Test</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/full-diagnostic" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Full Diagnostic Wizard</h3>
+      <p class="tool-desc">Run 5-step hardware checkup.</p>
+    </a>
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    </a>
+    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Button Tester</h3>
+      <p class="tool-desc">Test button ghosting and click speed.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Testing Multiple Gamepads for Local Multiplayer</h2>
+    <p>
+      When hosting fighting game tournaments or local couch co-op sessions, verifying controller health across all connected gamepads prevents input interference.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>

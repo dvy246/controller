@@ -1,0 +1,94 @@
+---
+/**
+ * /test/controller/steering-wheel — Steering Wheel & Pedals Tester
+ * SEO Title: Steering Wheel & Pedals Tester — Test Logitech, Fanatec & Thrustmaster
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import SteeringWheelTester from '../../../components/tools/controller/SteeringWheelTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Steering Wheel & Pedals' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test my racing wheel rotation angle and pedals?',
+    answer: 'Connect your Logitech G29/G923, Thrustmaster T300RS, or Fanatec racing wheel to your computer via USB, turn the wheel left and right, and depress the throttle, brake, and clutch pedals.',
+  },
+  {
+    question: 'Does this tool test 900-degree and 1080-degree rotation angles?',
+    answer: 'Yes! The visualizer tracks full 900° and 1080° steering lock-to-lock rotation angles in real time.',
+  },
+  {
+    question: 'Can I test load cell brake pedals and H-pattern shifters?',
+    answer: 'Yes! Analog pedal travel linearity is measured from 0% to 100% full depression.',
+  },
+];
+---
+
+<ToolLayout
+  title="Steering Wheel & Pedals Tester — Test Logitech, Fanatec & Thrustmaster | ControllerTesting.com"
+  description="Test racing wheel rotation angles (900°/1080°), pedal linearity (Throttle, Brake, Clutch), and H-pattern gear shifters online free."
+  toolName="Steering Wheel & Pedals Tester"
+  category="Specialized Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <SteeringWheelTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Racing Wheel Diagnostic Guidelines</h2>
+      <p class="results-text">
+        Steering rotation should track smoothly from center (0°) to maximum lock-to-lock angle without deadzone gaps.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Run full diagnostic checkup</h3>
+        <p class="export-desc">Combine steering wheel diagnostics with complete button and vibration testing.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/triggers" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Trigger Pressure Test</h3>
+      <p class="tool-desc">Test analog trigger linearity.</p>
+    </a>
+    <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Measure input rate in Hz.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Sim Racing Hardware Calibration and Linearity</h2>
+    <p>
+      Direct-drive and belt-driven racing wheels (Logitech, Thrustmaster, Fanatec, Moza) rely on linear optical encoders to measure steering input.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>

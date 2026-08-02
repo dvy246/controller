@@ -1,0 +1,262 @@
+---
+/**
+ * MultiController.astro — Simultaneous Multi-Gamepad Diagnostic Tool
+ * Tests up to 4 gamepads connected at the same time for couch co-op, party games, or tournament setups.
+ */
+---
+
+<div class="multi-tester" id="multi-tester-root">
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="multi-status-dot"></span>
+      <span class="status-text" id="multi-status-text">Connect up to 4 gamepads to test simultaneously...</span>
+    </div>
+    <div class="controller-name" id="multi-active-count">0 Controllers Connected</div>
+  </div>
+
+  <div class="multi-gamepads-grid">
+
+    {/* Gamepad 1 */}
+    <div class="multi-card" id="gp-slot-0">
+      <div class="slot-header">
+        <span class="slot-badge">Player 1</span>
+        <span class="slot-status mono" id="gp0-status">Disconnected</span>
+      </div>
+      <h3 class="slot-model" id="gp0-model">Gamepad 1</h3>
+      <div class="slot-body">
+        <div class="slot-row"><span>Left Stick:</span> <span class="mono" id="gp0-ls">0.0, 0.0</span></div>
+        <div class="slot-row"><span>Right Stick:</span> <span class="mono" id="gp0-rs">0.0, 0.0</span></div>
+        <div class="slot-row"><span>Buttons Active:</span> <span class="mono" id="gp0-btns">None</span></div>
+      </div>
+    </div>
+
+    {/* Gamepad 2 */}
+    <div class="multi-card" id="gp-slot-1">
+      <div class="slot-header">
+        <span class="slot-badge">Player 2</span>
+        <span class="slot-status mono" id="gp1-status">Disconnected</span>
+      </div>
+      <h3 class="slot-model" id="gp1-model">Gamepad 2</h3>
+      <div class="slot-body">
+        <div class="slot-row"><span>Left Stick:</span> <span class="mono" id="gp1-ls">0.0, 0.0</span></div>
+        <div class="slot-row"><span>Right Stick:</span> <span class="mono" id="gp1-rs">0.0, 0.0</span></div>
+        <div class="slot-row"><span>Buttons Active:</span> <span class="mono" id="gp1-btns">None</span></div>
+      </div>
+    </div>
+
+    {/* Gamepad 3 */}
+    <div class="multi-card" id="gp-slot-2">
+      <div class="slot-header">
+        <span class="slot-badge">Player 3</span>
+        <span class="slot-status mono" id="gp2-status">Disconnected</span>
+      </div>
+      <h3 class="slot-model" id="gp2-model">Gamepad 3</h3>
+      <div class="slot-body">
+        <div class="slot-row"><span>Left Stick:</span> <span class="mono" id="gp2-ls">0.0, 0.0</span></div>
+        <div class="slot-row"><span>Right Stick:</span> <span class="mono" id="gp2-rs">0.0, 0.0</span></div>
+        <div class="slot-row"><span>Buttons Active:</span> <span class="mono" id="gp2-btns">None</span></div>
+      </div>
+    </div>
+
+    {/* Gamepad 4 */}
+    <div class="multi-card" id="gp-slot-3">
+      <div class="slot-header">
+        <span class="slot-badge">Player 4</span>
+        <span class="slot-status mono" id="gp3-status">Disconnected</span>
+      </div>
+      <h3 class="slot-model" id="gp3-model">Gamepad 4</h3>
+      <div class="slot-body">
+        <div class="slot-row"><span>Left Stick:</span> <span class="mono" id="gp3-ls">0.0, 0.0</span></div>
+        <div class="slot-row"><span>Right Stick:</span> <span class="mono" id="gp3-rs">0.0, 0.0</span></div>
+        <div class="slot-row"><span>Buttons Active:</span> <span class="mono" id="gp3-btns">None</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  import { parseGamepadState } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    function pollMulti() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeCount = 0;
+
+      for (let idx = 0; idx < 4; idx++) {
+        const gp = gamepads[idx];
+        const slotCard = document.getElementById(`gp-slot-${idx}`);
+        const statusEl = document.getElementById(`gp${idx}-status`);
+        const modelEl = document.getElementById(`gp${idx}-model`);
+        const lsEl = document.getElementById(`gp${idx}-ls`);
+        const rsEl = document.getElementById(`gp${idx}-rs`);
+        const btnsEl = document.getElementById(`gp${idx}-btns`);
+
+        if (gp && gp.connected) {
+          activeCount++;
+          if (slotCard) slotCard.className = 'multi-card active';
+          if (statusEl) { statusEl.textContent = 'Connected'; statusEl.className = 'slot-status mono pass'; }
+          if (modelEl) modelEl.textContent = gp.id;
+
+          const state = parseGamepadState(gp);
+          if (lsEl) lsEl.textContent = `${state.leftStick.x.toFixed(2)}, ${state.leftStick.y.toFixed(2)}`;
+          if (rsEl) rsEl.textContent = `${state.rightStick.x.toFixed(2)}, ${state.rightStick.y.toFixed(2)}`;
+
+          const pressedNames: string[] = [];
+          state.buttons.forEach((b, i) => { if (b.pressed) pressedNames.push(`B${i}`); });
+          if (btnsEl) btnsEl.textContent = pressedNames.length > 0 ? pressedNames.join(', ') : 'None';
+        } else {
+          if (slotCard) slotCard.className = 'multi-card';
+          if (statusEl) { statusEl.textContent = 'Disconnected'; statusEl.className = 'slot-status mono'; }
+          if (modelEl) modelEl.textContent = `Gamepad ${idx + 1}`;
+          if (lsEl) lsEl.textContent = '0.0, 0.0';
+          if (rsEl) rsEl.textContent = '0.0, 0.0';
+          if (btnsEl) btnsEl.textContent = 'None';
+        }
+      }
+
+      const dot = document.getElementById('multi-status-dot');
+      const text = document.getElementById('multi-status-text');
+      const countText = document.getElementById('multi-active-count');
+
+      if (activeCount > 0) {
+        if (dot) dot.className = 'status-dot active';
+        if (text) text.textContent = 'Simultaneous gamepad polling active';
+        if (countText) countText.textContent = `${activeCount} Controller${activeCount > 1 ? 's' : ''} Connected`;
+      } else {
+        if (dot) dot.className = 'status-dot';
+        if (text) text.textContent = 'Connect up to 4 gamepads to test simultaneously...';
+        if (countText) countText.textContent = '0 Controllers Connected';
+      }
+
+      requestAnimationFrame(pollMulti);
+    }
+
+    pollMulti();
+  });
+</script>
+
+<style>
+  .multi-tester {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .tester-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-neutral);
+  }
+  .status-dot.active {
+    background: var(--color-pass);
+    box-shadow: 0 0 8px var(--color-pass);
+  }
+
+  .status-text {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .controller-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .multi-gamepads-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .multi-card {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    opacity: 0.6;
+    transition: opacity 0.2s, border-color 0.2s;
+  }
+
+  .multi-card.active {
+    opacity: 1;
+    border-color: var(--color-accent);
+  }
+
+  .slot-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .slot-badge {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: var(--color-accent);
+    color: white;
+    padding: 0.15em 0.5em;
+    border-radius: 3px;
+  }
+
+  .slot-status {
+    font-size: var(--text-micro);
+    color: var(--color-text-tertiary);
+  }
+  .slot-status.pass { color: var(--color-pass); }
+
+  .slot-model {
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .slot-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .slot-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .slot-row span.mono {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .multi-gamepads-grid { grid-template-columns: 1fr; }
+  }
+</style>

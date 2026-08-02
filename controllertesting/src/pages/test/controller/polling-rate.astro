@@ -1,0 +1,120 @@
+---
+/**
+ * /test/controller/polling-rate — Controller Polling Rate Checker
+ * SEO Title: Controller Polling Rate Test — Test Gamepad Hz & Response Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import PollingRateTester from '../../../components/tools/controller/PollingRateTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Polling Rate Checker' },
+];
+
+const faqs = [
+  {
+    question: 'What is controller polling rate (Hz)?',
+    answer: 'Polling rate (measured in Hertz) is the frequency at which your controller reports input updates to your PC or console every second. A 250Hz polling rate updates every 4ms; a 1000Hz polling rate updates every 1ms.',
+  },
+  {
+    question: 'What is a good polling rate for competitive gaming?',
+    answer: '500Hz to 1000Hz is recommended for competitive esports (Rocket League, Apex Legends, Call of Duty). Overclocking PS5 DualSense controllers over USB allows 1000Hz polling rates.',
+  },
+  {
+    question: 'Why does Bluetooth polling rate vary?',
+    answer: 'Bluetooth wireless connections use dynamic polling intervals to conserve battery power. Connecting via USB cable or using an overclocked wireless dongle stabilizes input report frequency.',
+  },
+];
+---
+
+<ToolLayout
+  title="Controller Polling Rate Test — Measure Gamepad Hz & Latency Online | ControllerTesting.com"
+  description="Test controller polling rate frequency in Hz and report interval in milliseconds. Test PS5 DualSense, Xbox, and Switch controller input latency online."
+  toolName="Polling Rate Checker"
+  category="Controller Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <PollingRateTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Polling Rate Ratings</h2>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">800 – 1000 Hz (1.0ms delay)</strong>
+          <p class="legend-text">Overclocked USB connection. Maximum precision for competitive esports play.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">250 – 500 Hz (2.0-4.0ms delay)</strong>
+          <p class="legend-text">Standard wired or high-speed wireless connection. Excellent overall performance.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">&lt; 250 Hz (&gt; 4.0ms delay)</strong>
+          <p class="legend-text">Standard Bluetooth connection. Noticeable input delay in fast-paced games.</p>
+        </div>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Generate full controller health score</h3>
+        <p class="export-desc">Combine polling rate results with stick drift and button diagnostics.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    </a>
+    <a href="/test/controller/latency" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Latency Estimator</h3>
+      <p class="tool-desc">Measure input delay & reaction speed.</p>
+    </a>
+    <a href="/test/controller/deadzone" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Deadzone Visualizer</h3>
+      <p class="tool-desc">Find optimal stick deadzones.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Why Controller Polling Rate Matters in Esports</h2>
+    <p>
+      Input polling rate dictates how rapidly your physical inputs are recognized by game engines. Higher polling rates reduce input latency,
+      allowing faster shot registration and smoother camera panning in first-person shooters.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 1rem; }
+  .results-legend-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .legend-card { padding: 1rem; border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 0.375rem; }
+  .legend-pass { background: var(--color-pass-bg); border: 1px solid var(--color-pass); }
+  .legend-pass .legend-title { color: var(--color-pass); }
+  .legend-warning { background: var(--color-warning-bg); border: 1px solid var(--color-warning); }
+  .legend-warning .legend-title { color: var(--color-warning); }
+  .legend-fail { background: var(--color-fail-bg); border: 1px solid var(--color-fail); }
+  .legend-fail .legend-title { color: var(--color-fail); }
+  .legend-title { font-family: var(--font-mono); font-size: var(--text-small); }
+  .legend-text { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.5; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+  @media (max-width: 768px) { .results-legend-grid { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,212 @@
+---
+/**
+ * VibrationTester.astro — Haptic Rumble & Vibration Motor Tester
+ * Independent left (heavy ERM) and right (light ERM) pulse testing, dual motor rumble, and duration sliders.
+ */
+---
+
+<div class="vibration-tester" id="vib-tester-root">
+  <div class="tester-status-bar">
+    <div class="status-indicator">
+      <span class="status-dot" id="vib-status-dot"></span>
+      <span class="status-text" id="vib-status-text">Connect a gamepad supporting vibration actuators...</span>
+    </div>
+    <div class="controller-name" id="vib-model-name">No Controller Detected</div>
+  </div>
+
+  <div class="vib-controls-grid">
+
+    {/* Left Motor (Heavy) */}
+    <div class="vib-card">
+      <h3 class="vib-card-title">Heavy Rumble Motor (Left)</h3>
+      <p class="vib-card-desc">Tests low-frequency heavy rumble weight motor typically used for explosions & impacts.</p>
+      <div class="slider-row">
+        <label for="heavy-magnitude">Intensity</label>
+        <input type="range" id="heavy-magnitude" min="0" max="100" value="100" class="input-range" />
+        <span class="mono" id="heavy-mag-val">100%</span>
+      </div>
+      <button type="button" class="btn-primary" id="btn-pulse-heavy">Pulse Left Heavy Motor</button>
+    </div>
+
+    {/* Right Motor (Light) */}
+    <div class="vib-card">
+      <h3 class="vib-card-title">Light Rumble Motor (Right)</h3>
+      <p class="vib-card-desc">Tests high-frequency light rumble motor used for subtle textures, gunshots & engine revs.</p>
+      <div class="slider-row">
+        <label for="light-magnitude">Intensity</label>
+        <input type="range" id="light-magnitude" min="0" max="100" value="100" class="input-range" />
+        <span class="mono" id="light-mag-val">100%</span>
+      </div>
+      <button type="button" class="btn-primary" id="btn-pulse-light">Pulse Right Light Motor</button>
+    </div>
+
+  </div>
+
+  <div class="vib-dual-card">
+    <div class="dual-header">
+      <h3 class="vib-card-title">Dual Motor Haptic Sweep</h3>
+      <p class="vib-card-desc">Sweeps both motors simultaneously from 0% to 100% power over 2 seconds.</p>
+    </div>
+    <button type="button" class="btn-primary" id="btn-pulse-both">Run Full Haptic Sweep</button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const heavySlider = document.getElementById('heavy-magnitude') as HTMLInputElement;
+    const lightSlider = document.getElementById('light-magnitude') as HTMLInputElement;
+    const heavyVal = document.getElementById('heavy-mag-val');
+    const lightVal = document.getElementById('light-mag-val');
+
+    if (heavySlider && heavyVal) {
+      heavySlider.addEventListener('input', () => heavyVal.textContent = `${heavySlider.value}%`);
+    }
+    if (lightSlider && lightVal) {
+      lightSlider.addEventListener('input', () => lightVal.textContent = `${lightSlider.value}%`);
+    }
+
+    async function triggerVibration(duration: number, strongMag: number, weakMag: number) {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let found = false;
+
+      for (const gp of gamepads) {
+        if (gp && gp.connected) {
+          const dot = document.getElementById('vib-status-dot');
+          const text = document.getElementById('vib-status-text');
+          const model = document.getElementById('vib-model-name');
+          if (dot) dot.className = 'status-dot active';
+          if (text) text.textContent = 'Vibration Actuator Active';
+          if (model) model.textContent = gp.id;
+
+          if (gp.vibrationActuator) {
+            found = true;
+            try {
+              await gp.vibrationActuator.playEffect('dual-rumble', {
+                startDelay: 0,
+                duration: duration,
+                weakMagnitude: weakMag,
+                strongMagnitude: strongMag,
+              });
+            } catch (e) {}
+          }
+        }
+      }
+
+      if (!found) {
+        const text = document.getElementById('vib-status-text');
+        if (text) text.textContent = 'Connected gamepad does not expose VibrationActuator in Chrome/Edge.';
+      }
+    }
+
+    document.getElementById('btn-pulse-heavy')?.addEventListener('click', () => {
+      const mag = (parseInt(heavySlider?.value || '100', 10)) / 100;
+      triggerVibration(600, mag, 0.0);
+    });
+
+    document.getElementById('btn-pulse-light')?.addEventListener('click', () => {
+      const mag = (parseInt(lightSlider?.value || '100', 10)) / 100;
+      triggerVibration(600, 0.0, mag);
+    });
+
+    document.getElementById('btn-pulse-both')?.addEventListener('click', () => {
+      triggerVibration(2000, 1.0, 1.0);
+    });
+  });
+</script>
+
+<style>
+  .vibration-tester {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .tester-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-neutral);
+  }
+  .status-dot.active {
+    background: var(--color-pass);
+    box-shadow: 0 0 8px var(--color-pass);
+  }
+
+  .status-text {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .controller-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .vib-controls-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .vib-card, .vib-dual-card {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .vib-card-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+
+  .vib-card-desc {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: var(--text-small);
+  }
+
+  .slider-row label {
+    font-weight: 600;
+    width: 70px;
+  }
+
+  .vib-dual-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 768px) {
+    .vib-controls-grid { grid-template-columns: 1fr; }
+    .vib-dual-card { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  }
+</style>

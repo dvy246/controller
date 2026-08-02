@@ -1,0 +1,93 @@
+---
+/**
+ * /test/midi — MIDI Keyboard & Controller Tester
+ * SEO Title: Online MIDI Tester — Test MIDI Keyboards, Drum Pads & Controllers Online
+ */
+
+import ToolLayout from '../../layouts/ToolLayout.astro';
+import MIDITester from '../../components/tools/midi/MIDITester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'MIDI Tester' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test a USB MIDI keyboard or drum pad online?',
+    answer: 'Connect your USB MIDI keyboard, synthesizer, or drum pad to your computer, click "Enable Web MIDI Access" above, grant browser MIDI permissions, and press keys or pads. Real-time MIDI note events and velocity levels will display.',
+  },
+  {
+    question: 'What MIDI messages does this online tester monitor?',
+    answer: 'Our tool monitors MIDI Note ON/OFF, Note Velocity (0-127), Continuous Controller (CC) messages, Pitch Bend, and Modulation wheel parameters via the standard Web MIDI API.',
+  },
+  {
+    question: 'Which browsers support Web MIDI API testing?',
+    answer: 'Google Chrome, Microsoft Edge, Opera, and Brave natively support the Web MIDI API on Windows, macOS, and Linux without installing external MIDI drivers.',
+  },
+];
+---
+
+<ToolLayout
+  title="Online MIDI Tester — Test MIDI Keyboards, Drum Pads & CC Messages | ControllerTesting.com"
+  description="Test USB MIDI keyboards, drum pads, pitch bend, and CC controllers online. Monitor MIDI note events, velocity (0-127), and control change messages free."
+  toolName="MIDI Controller & Keyboard Tester"
+  category="Specialized Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <MIDITester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">MIDI Signal Guidelines</h2>
+      <p class="results-text">
+        Key velocity ranges from 1 (softest) to 127 (maximum dynamic velocity). Pitch bend and modulation wheel CC messages update continuously.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Test standard gamepad controllers</h3>
+        <p class="export-desc">Run full diagnostic checkups on PS5, Xbox, and Nintendo controllers.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/fight-stick" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Fight Stick & Hitbox</h3>
+      <p class="tool-desc">Test arcade sticks and SOCD.</p>
+    </a>
+    <a href="/test/controller/flight-stick" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Flight Stick & HOTAS</h3>
+      <p class="tool-desc">Test flight simulator controls.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Web MIDI API Standard and Controller Diagnostics</h2>
+    <p>
+      The W3C Web MIDI API allows web applications to communicate directly with Musical Instrument Digital Interface (MIDI) hardware over USB or Bluetooth MIDI.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>

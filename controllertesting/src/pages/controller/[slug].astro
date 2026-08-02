@@ -1,0 +1,152 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  const controllers = [
+    {
+      slug: 'xbox-elite-series-2',
+      name: 'Xbox Elite Series 2',
+      brand: 'Microsoft',
+      type: 'Pro Gamepad',
+      knownIssues: [
+        'Tactile switch bumper (LB/RB) double-clicking or chatter',
+        'Tension-adjustable stick module center offset',
+        'Back paddle microswitch responsiveness'
+      ],
+      description: 'Complete diagnostic suite for Xbox Elite Series 2. Test 4x rear paddles, adjustable stick tension torque, and trigger stop calibration.'
+    },
+    {
+      slug: 'dualsense-edge',
+      name: 'PlayStation DualSense Edge',
+      brand: 'Sony',
+      type: 'Pro Gamepad',
+      knownIssues: [
+        'Replaceable stick module zero-point misalignment',
+        'Fn lever button mapping indices',
+        'Adaptive trigger mechanical stop travel'
+      ],
+      description: 'Professional hardware tester for PS5 DualSense Edge. Verify swappable stick module drift %, back lever switches, and trigger travel profiles.'
+    },
+    {
+      slug: 'scuf-instinct-pro',
+      name: 'SCUF Instinct Pro',
+      brand: 'Corsair / SCUF',
+      type: 'Esports Gamepad',
+      knownIssues: [
+        'Instant trigger mouse-click switch bounce',
+        'Ergonomic rear paddle contact degradation'
+      ],
+      description: 'Hardware diagnostic wizard for SCUF Instinct Pro. Test ultra-fast instant triggers and ergonomic 4-paddle layout.'
+    },
+    {
+      slug: '8bitdo-ultimate',
+      name: '8BitDo Ultimate Hall Effect',
+      brand: '8BitDo',
+      type: 'Hall Effect Gamepad',
+      knownIssues: [
+        'Magnetic center bounce under rapid snap-back',
+        '2.4G wireless adapter report rate jitter'
+      ],
+      description: 'Hall Effect stick drift & circularity tester for 8BitDo Ultimate. Verify 0.01% drift stability and magnetic sensor precision.'
+    },
+    {
+      slug: 'razer-wolverine-v2',
+      name: 'Razer Wolverine V2 Pro',
+      brand: 'Razer',
+      type: 'Esports Gamepad',
+      knownIssues: [
+        'Mecha-tactile action button actuation point',
+        'Multi-function top bumper (M1/M2) index mapping'
+      ],
+      description: 'Diagnostic tool for Razer Wolverine V2 Pro. Check mecha-tactile switch actuation speeds and multi-function remapped buttons.'
+    },
+    {
+      slug: 'logitech-f310',
+      name: 'Logitech F310 / F710',
+      brand: 'Logitech',
+      type: 'Classic Gamepad',
+      knownIssues: [
+        'DirectInput (D) vs XInput (X) toggle mode mismatch',
+        'Floating D-Pad diagonal sensitivity'
+      ],
+      description: 'Online test tool for Logitech F310 & F710 wireless controllers. Verify XInput/DirectInput modes and floating D-pad diagonal accuracy.'
+    }
+  ];
+
+  return controllers.map((c) => ({
+    params: { slug: c.slug },
+    props: { controller: c }
+  }));
+}
+
+const { slug } = Astro.params;
+const { controller } = Astro.props;
+
+const canonicalUrl = `https://controllertesting.com/controller/${slug}`;
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": controller.name,
+  "description": controller.description,
+  "brand": {
+    "@type": "Brand",
+    "name": controller.brand
+  }
+};
+---
+
+<BaseLayout
+  title={`${controller.name} Hardware Test & Diagnostic Tool`}
+  description={controller.description}
+  canonical={canonicalUrl}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+
+  <section class="max-w-4xl mx-auto px-4 py-16">
+    <div class="text-center mb-12">
+      <span class="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono">
+        {controller.brand} • {controller.type}
+      </span>
+      <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-stone-100 mt-4 mb-4">
+        {controller.name} Diagnostic Suite
+      </h1>
+      <p class="text-stone-400 text-lg max-w-2xl mx-auto">
+        {controller.description}
+      </p>
+    </div>
+
+    <!-- Quick Action Links -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
+      <a href="/test/controller/drift" class="p-4 bg-stone-900 border border-stone-800 rounded-xl text-center hover:border-blue-500 transition-colors group">
+        <div class="text-blue-400 font-bold mb-1 group-hover:underline">Test Stick Drift</div>
+        <div class="text-xs text-stone-400">Precision 0.1% Axis Check</div>
+      </a>
+      <a href={`/reliability/${slug === 'dualsense-edge' ? 'dualsense-edge' : slug === '8bitdo-ultimate' ? 'hall-effect-generic' : 'xbox-series-x'}`} class="p-4 bg-stone-900 border border-stone-800 rounded-xl text-center hover:border-emerald-500 transition-colors group">
+        <div class="text-emerald-400 font-bold mb-1 group-hover:underline">Reliability Benchmark</div>
+        <div class="text-xs text-stone-400">View Empirical Lifespan</div>
+      </a>
+      <a href="/passport" class="p-4 bg-stone-900 border border-stone-800 rounded-xl text-center hover:border-indigo-500 transition-colors group">
+        <div class="text-indigo-400 font-bold mb-1 group-hover:underline">Controller Passport™</div>
+        <div class="text-xs text-stone-400">Create Resale Certificate</div>
+      </a>
+    </div>
+
+    <!-- Hardware Specific Known Issues -->
+    <div class="bg-stone-900/80 border border-stone-800 rounded-2xl p-8 mb-12">
+      <h2 class="text-2xl font-bold text-stone-100 mb-4 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        Model-Specific Diagnostic Guidance: {controller.name}
+      </h2>
+      <ul class="space-y-3 text-stone-300">
+        {controller.knownIssues.map((issue) => (
+          <li class="flex items-start gap-3">
+            <span class="text-amber-400 font-bold">•</span>
+            <span>{issue}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

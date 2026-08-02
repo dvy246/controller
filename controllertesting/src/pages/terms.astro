@@ -1,0 +1,57 @@
+---
+/**
+ * /terms — Terms of Service
+ * SEO Title: Terms of Service — ControllerTesting.com
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Terms of Service' },
+];
+---
+
+<BaseLayout
+  title="Terms of Service — ControllerTesting.com"
+  description="ControllerTesting.com terms of service and usage disclaimers."
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="legal-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="page-hero">
+        <h1 class="page-title">Terms of Service</h1>
+        <p class="page-subtitle">Last updated: August 2026</p>
+      </header>
+
+      <div class="legal-content card-base">
+        <h2>1. Free Web Service</h2>
+        <p>
+          ControllerTesting.com provides web-based controller and mouse diagnostic utilities free of charge for informational and testing purposes.
+        </p>
+
+        <h2>2. Hardware & Trademark Disclaimer</h2>
+        <p>
+          PlayStation, DualSense, DualShock, Xbox, Joy-Con, and Nintendo Switch are registered trademarks of their respective owners. ControllerTesting.com is an independent utility platform and is not affiliated with or endorsed by Sony, Microsoft, or Nintendo.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .legal-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .page-hero { margin-bottom: 2.5rem; }
+  .page-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .page-subtitle { font-size: 1rem; color: var(--color-text-secondary); }
+  .legal-content { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; line-height: 1.7; color: var(--color-text-secondary); }
+  .legal-content h2 { color: var(--color-text-primary); font-size: 1.25rem; font-weight: 700; }
+</style>

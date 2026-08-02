@@ -1,0 +1,107 @@
+---
+/**
+ * /test/controller/deadzone — Deadzone Visualizer Tool
+ * SEO Title: Controller Deadzone Test — Find Optimal Game Deadzone Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import DeadzoneTester from '../../../components/tools/controller/DeadzoneTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Deadzone Visualizer' },
+];
+
+const faqs = [
+  {
+    question: 'What is controller deadzone?',
+    answer: 'A deadzone is a designated area around an analog stick\'s central resting point where movement is intentionally ignored by games. It prevents minor thumbstick drift from causing unwanted camera or character movement.',
+  },
+  {
+    question: 'Should I use a lower or higher deadzone in FPS games?',
+    answer: 'Competitive FPS players (Apex Legends, COD) aim for the lowest possible inner deadzone (3% to 5%) for faster reaction times. If your controller has stick drift, increase the deadzone until camera movement stops.',
+  },
+  {
+    question: 'What is outer deadzone?',
+    answer: 'Outer deadzone sets the threshold where stick input registers at 100% maximum value. Setting an outer deadzone of 95% ensures you reach full turn speed even if your stick housing is slightly worn.',
+  },
+];
+---
+
+<ToolLayout
+  title="Controller Deadzone Test — Find Optimal Game Deadzone Online | ControllerTesting.com"
+  description="Test and visualize inner and outer stick deadzones for Apex, COD, and Fortnite. Find the perfect deadzone setting to eliminate drift while keeping max responsiveness."
+  toolName="Deadzone Visualizer"
+  category="Controller Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <DeadzoneTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Optimal Deadzone Guidelines</h2>
+      <p class="results-text">
+        Adjust the inner deadzone slider above until your resting thumbsticks show "Filtered (Deadzone)". That exact percentage is your ideal in-game inner deadzone setting.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Optimize settings for your favorite games</h3>
+        <p class="export-desc">Get custom deadzone recommendations for Apex Legends, Warzone, and Fortnite.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/competitive-readiness" class="btn-primary">View Game Presets</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    </a>
+    <a href="/test/controller/circularity" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Circularity Test</h3>
+      <p class="tool-desc">Measure stick range of motion.</p>
+    </a>
+    <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Measure input rate in Hz.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>How Controller Deadzones Work and How to Tune Them</h2>
+    <p>
+      In competitive gaming, deadzones bridge the gap between mechanical hardware wear and software responsiveness.
+      Setting your deadzone too high creates input lag; setting it too low causes stick drift.
+    </p>
+
+    <h3>Inner vs Outer Deadzones</h3>
+    <ul>
+      <li><strong>Inner Deadzone:</strong> Filters out small resting stick vibrations near the center position.</li>
+      <li><strong>Outer Deadzone:</strong> Caps maximum input distance, allowing full speed activation without pushing to the physical gate edge.</li>
+    </ul>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+  .prose ul { margin-left: 1.25rem; margin-bottom: 1rem; }
+  .prose li { margin-bottom: 0.5rem; }
+</style>

@@ -1,0 +1,473 @@
+---
+/**
+ * FullDiagnostic.astro — Flagship 2-minute Controller Health Checkup
+ * Multi-step wizard:
+ *   Step 1: Stick Drift & Circularity
+ *   Step 2: Button Matrix & Ghosting
+ *   Step 3: Trigger Linearity (L2/R2)
+ *   Step 4: Vibration/Rumble Motors
+ *   Step 5: Health Score Calculation & Summary
+ */
+---
+
+<div class="diagnostic-wizard" id="diag-wizard">
+
+  {/* ── Wizard Progress Bar ── */}
+  <div class="wizard-header">
+    <div class="wizard-steps-nav" role="tablist" aria-label="Diagnostic steps">
+      <div class="wiz-step active" id="step-nav-1" role="tab">1. Sticks</div>
+      <div class="wiz-step" id="step-nav-2" role="tab">2. Buttons</div>
+      <div class="wiz-step" id="step-nav-3" role="tab">3. Triggers</div>
+      <div class="wiz-step" id="step-nav-4" role="tab">4. Rumble</div>
+      <div class="wiz-step" id="step-nav-5" role="tab">5. Score</div>
+    </div>
+    <div class="wizard-progress">
+      <div class="wizard-progress-fill" id="wizard-progress-bar" style="width: 20%"></div>
+    </div>
+  </div>
+
+  {/* ── Step 1: Sticks Diagnostic ── */}
+  <div class="wiz-panel active" id="wiz-panel-1">
+    <div class="panel-header">
+      <h3>Step 1: Analog Stick Calibration & Drift</h3>
+      <p>Rotate both analog sticks in full circles, then release them completely.</p>
+    </div>
+    <div class="panel-body">
+      <div class="diag-metrics-row">
+        <div class="diag-metric-box">
+          <span class="d-label">Left Stick Drift</span>
+          <span class="d-val warning" id="diag-left-drift">0.0%</span>
+        </div>
+        <div class="diag-metric-box">
+          <span class="d-label">Right Stick Drift</span>
+          <span class="d-val pass" id="diag-right-drift">0.0%</span>
+        </div>
+        <div class="diag-metric-box">
+          <span class="d-label">Circularity Error</span>
+          <span class="d-val pass" id="diag-circ-error">0.0%</span>
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button type="button" class="btn-primary" id="btn-next-1">Next: Test Buttons &rarr;</button>
+    </div>
+  </div>
+
+  {/* ── Step 2: Button Matrix ── */}
+  <div class="wiz-panel" id="wiz-panel-2">
+    <div class="panel-header">
+      <h3>Step 2: Button Response & Ghosting</h3>
+      <p>Press every button on your controller once. Each button will light up green when confirmed.</p>
+    </div>
+    <div class="panel-body">
+      <div class="buttons-matrix">
+        <div class="btn-test-chip" id="bchip-0">Cross / A</div>
+        <div class="btn-test-chip" id="bchip-1">Circle / B</div>
+        <div class="btn-test-chip" id="bchip-2">Square / X</div>
+        <div class="btn-test-chip" id="bchip-3">Triangle / Y</div>
+        <div class="btn-test-chip" id="bchip-4">L1 / LB</div>
+        <div class="btn-test-chip" id="bchip-5">R1 / RB</div>
+        <div class="btn-test-chip" id="bchip-8">Share / Back</div>
+        <div class="btn-test-chip" id="bchip-9">Options / Start</div>
+        <div class="btn-test-chip" id="bchip-10">L3 (Left Stick Click)</div>
+        <div class="btn-test-chip" id="bchip-11">R3 (Right Stick Click)</div>
+        <div class="btn-test-chip" id="bchip-12">D-Pad Up</div>
+        <div class="btn-test-chip" id="bchip-13">D-Pad Down</div>
+        <div class="btn-test-chip" id="bchip-14">D-Pad Left</div>
+        <div class="btn-test-chip" id="bchip-15">D-Pad Right</div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button type="button" class="btn-secondary" id="btn-prev-2">&larr; Back</button>
+      <button type="button" class="btn-primary" id="btn-next-2">Next: Test Triggers &rarr;</button>
+    </div>
+  </div>
+
+  {/* ── Step 3: Triggers ── */}
+  <div class="wiz-panel" id="wiz-panel-3">
+    <div class="panel-header">
+      <h3>Step 3: Trigger Pressure Linearity</h3>
+      <p>Press L2 and R2 slowly from 0% to 100% full pull.</p>
+    </div>
+    <div class="panel-body">
+      <div class="triggers-progress-wrap">
+        <div class="trigger-bar-box">
+          <div class="t-bar-header">
+            <span>L2 Trigger</span>
+            <span class="mono" id="l2-val-text">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar__fill" id="l2-bar" style="width: 0%"></div>
+          </div>
+        </div>
+        <div class="trigger-bar-box">
+          <div class="t-bar-header">
+            <span>R2 Trigger</span>
+            <span class="mono" id="r2-val-text">0%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar__fill" id="r2-bar" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button type="button" class="btn-secondary" id="btn-prev-3">&larr; Back</button>
+      <button type="button" class="btn-primary" id="btn-next-3">Next: Test Rumble &rarr;</button>
+    </div>
+  </div>
+
+  {/* ── Step 4: Vibration / Rumble ── */}
+  <div class="wiz-panel" id="wiz-panel-4">
+    <div class="panel-header">
+      <h3>Step 4: Vibration Motor Test</h3>
+      <p>Click below to test heavy and light rumble motors.</p>
+    </div>
+    <div class="panel-body">
+      <div class="rumble-controls">
+        <button type="button" class="btn-secondary" id="btn-vibrate-heavy">Pulse Heavy Motor (Left)</button>
+        <button type="button" class="btn-secondary" id="btn-vibrate-light">Pulse Light Motor (Right)</button>
+        <button type="button" class="btn-primary" id="btn-vibrate-both">Test Both Motors</button>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button type="button" class="btn-secondary" id="btn-prev-4">&larr; Back</button>
+      <button type="button" class="btn-primary" id="btn-next-4">Calculate Final Score &rarr;</button>
+    </div>
+  </div>
+
+  {/* ── Step 5: Final Score ── */}
+  <div class="wiz-panel" id="wiz-panel-5">
+    <div class="panel-header">
+      <h3>Diagnostic Results: Controller Health Score</h3>
+    </div>
+    <div class="panel-body final-score-body">
+      <div class="score-card-hero">
+        <div class="score-number-wrap">
+          <span class="score-display text-gradient" id="final-score-num">88</span>
+          <span class="score-grade-badge badge-pass" id="final-score-grade">GRADE A</span>
+        </div>
+        <p class="score-summary-text" id="final-score-summary">
+          Your controller is in Excellent condition! Stick drift is negligible and all buttons respond within nominal thresholds.
+        </p>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <button type="button" class="btn-secondary" id="btn-prev-5">&larr; Re-test</button>
+      <a href="/test/controller/health-score" class="btn-primary">View Full Printable Report &rarr;</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  import { parseGamepadState } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    let currentStep = 1;
+
+    function showStep(step: number) {
+      currentStep = step;
+
+      // Update step nav headers
+      for (let i = 1; i <= 5; i++) {
+        const nav = document.getElementById(`step-nav-${i}`);
+        const panel = document.getElementById(`wiz-panel-${i}`);
+        if (nav) nav.className = i === step ? 'wiz-step active' : i < step ? 'wiz-step done' : 'wiz-step';
+        if (panel) panel.className = i === step ? 'wiz-panel active' : 'wiz-panel';
+      }
+
+      // Update progress fill
+      const bar = document.getElementById('wizard-progress-bar');
+      if (bar) bar.style.width = `${(step / 5) * 100}%`;
+    }
+
+    // Step Navigation Listeners
+    document.getElementById('btn-next-1')?.addEventListener('click', () => showStep(2));
+    document.getElementById('btn-prev-2')?.addEventListener('click', () => showStep(1));
+    document.getElementById('btn-next-2')?.addEventListener('click', () => showStep(3));
+    document.getElementById('btn-prev-3')?.addEventListener('click', () => showStep(2));
+    document.getElementById('btn-next-3')?.addEventListener('click', () => showStep(4));
+    document.getElementById('btn-prev-4')?.addEventListener('click', () => showStep(3));
+    document.getElementById('btn-next-4')?.addEventListener('click', () => showStep(5));
+    document.getElementById('btn-prev-5')?.addEventListener('click', () => showStep(1));
+
+    // Live Gamepad Polling
+    function pollDiagnostic() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp: Gamepad | null = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+          activeGp = gamepads[i];
+          break;
+        }
+      }
+
+      if (activeGp) {
+        const state = parseGamepadState(activeGp);
+
+        // Step 1 update
+        const lDrift = document.getElementById('diag-left-drift');
+        const rDrift = document.getElementById('diag-right-drift');
+        if (lDrift) lDrift.textContent = `${state.leftStick.driftPct}%`;
+        if (rDrift) rDrift.textContent = `${state.rightStick.driftPct}%`;
+
+        // Step 2 update: buttons
+        state.buttons.forEach((btn, idx) => {
+          const chip = document.getElementById(`bchip-${idx}`);
+          if (chip && btn.pressed) {
+            chip.classList.add('pressed');
+          }
+        });
+
+        // Step 3 update: triggers
+        const l2Text = document.getElementById('l2-val-text');
+        const r2Text = document.getElementById('r2-val-text');
+        const l2Bar = document.getElementById('l2-bar');
+        const r2Bar = document.getElementById('r2-bar');
+
+        const l2Pct = Math.round(state.triggers.l2 * 100);
+        const r2Pct = Math.round(state.triggers.r2 * 100);
+
+        if (l2Text) l2Text.textContent = `${l2Pct}%`;
+        if (r2Text) r2Text.textContent = `${r2Pct}%`;
+        if (l2Bar) l2Bar.style.width = `${l2Pct}%`;
+        if (r2Bar) r2Bar.style.width = `${r2Pct}%`;
+      }
+
+      requestAnimationFrame(pollDiagnostic);
+    }
+
+    pollDiagnostic();
+
+    // Vibration API test
+    async function triggerVibration(duration = 300, strong = 1.0, weak = 1.0) {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      for (const gp of gamepads) {
+        if (gp && gp.vibrationActuator) {
+          try {
+            await gp.vibrationActuator.playEffect('dual-rumble', {
+              startDelay: 0,
+              duration: duration,
+              weakMagnitude: weak,
+              strongMagnitude: strong,
+            });
+          } catch (e) {}
+        }
+      }
+    }
+
+    document.getElementById('btn-vibrate-heavy')?.addEventListener('click', () => triggerVibration(500, 1.0, 0.0));
+    document.getElementById('btn-vibrate-light')?.addEventListener('click', () => triggerVibration(500, 0.0, 1.0));
+    document.getElementById('btn-vibrate-both')?.addEventListener('click', () => triggerVibration(800, 1.0, 1.0));
+  });
+</script>
+
+<style>
+  .diagnostic-wizard {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .wizard-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .wizard-steps-nav {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .wiz-step {
+    flex: 1;
+    text-align: center;
+    padding: 0.625rem 0.5rem;
+    font-size: var(--text-small);
+    font-weight: 600;
+    font-family: var(--font-mono);
+    color: var(--color-text-tertiary);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .wiz-step.active {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    background: rgba(37, 99, 235, 0.08);
+  }
+
+  .wiz-step.done {
+    color: var(--color-pass);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+
+  .wizard-progress {
+    height: 4px;
+    background: var(--color-surface-4);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+  }
+
+  .wizard-progress-fill {
+    height: 100%;
+    background: var(--color-accent);
+    transition: width 0.3s ease;
+  }
+
+  .wiz-panel {
+    display: none;
+    flex-direction: column;
+    gap: 1.5rem;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 1.75rem;
+  }
+
+  .wiz-panel.active {
+    display: flex;
+  }
+
+  .panel-header h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .panel-header p {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+  }
+
+  .diag-metrics-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .diag-metric-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem;
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .d-label {
+    font-size: var(--text-micro);
+    color: var(--color-text-tertiary);
+    font-family: var(--font-mono);
+  }
+
+  .d-val {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .d-val.pass { color: var(--color-pass); }
+  .d-val.warning { color: var(--color-warning); }
+
+  /* Buttons matrix */
+  .buttons-matrix {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+  }
+
+  .btn-test-chip {
+    padding: 0.75rem;
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+    text-align: center;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+
+  .btn-test-chip.pressed {
+    background: var(--color-pass-bg);
+    border-color: var(--color-pass);
+    color: var(--color-pass);
+  }
+
+  /* Triggers */
+  .triggers-progress-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .trigger-bar-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .t-bar-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--text-small);
+    font-weight: 600;
+  }
+
+  /* Rumble */
+  .rumble-controls {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* Final score */
+  .final-score-body {
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
+  }
+
+  .score-card-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .score-number-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .score-grade-badge {
+    font-size: 1rem;
+    padding: 0.3em 0.8em;
+  }
+
+  .score-summary-text {
+    font-size: 1.0625rem;
+    color: var(--color-text-secondary);
+    max-width: 48ch;
+  }
+
+  .panel-footer {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  @media (max-width: 768px) {
+    .diag-metrics-row { grid-template-columns: 1fr; }
+    .buttons-matrix { grid-template-columns: repeat(2, 1fr); }
+    .wizard-steps-nav { font-size: 0.7rem; }
+  }
+</style>

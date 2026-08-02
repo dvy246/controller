@@ -1,0 +1,201 @@
+---
+/**
+ * /games/stick-sniper — Stick Sniper Gamepad Aim Trainer
+ * SEO Title: Stick Sniper — Controller Aim Trainer & Target Acquisition Game
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Games Arcade', url: '/games' },
+  { name: 'Stick Sniper' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoGame',
+  name: 'Stick Sniper Gamepad Aim Trainer',
+  description: 'Target-acquisition aim training game for PS5, Xbox, and Switch controllers.',
+  gamePlatform: 'Web Browser',
+};
+---
+
+<BaseLayout
+  title="Stick Sniper — Controller Aim Trainer Game | ControllerTesting.com"
+  description="Train gamepad stick accuracy and target tracking in Stick Sniper. Aim training game for PS5, Xbox, and Switch controllers."
+  schema={schema}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="game-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="game-header">
+        <span class="badge-tag">Gamepad Aim Trainer</span>
+        <h1 class="game-title">Stick Sniper Aim Trainer</h1>
+        <p class="game-subtitle">
+          Use your right analog stick to aim crosshairs and press R2 / RT trigger to shoot targets before they disappear.
+        </p>
+      </header>
+
+      <div class="game-canvas-card card-base">
+        <canvas id="sniper-canvas" width="800" height="450"></canvas>
+        <div class="game-overlay-bar">
+          <div class="g-stat"><span class="g-label">SCORE</span><span class="g-val text-gradient" id="g-score-val">0</span></div>
+          <div class="g-stat"><span class="g-label">ACCURACY</span><span class="g-val mono" id="g-acc-val">100%</span></div>
+          <div class="g-stat"><span class="g-label">TIME LEFT</span><span class="g-val mono" id="g-time-val">30s</span></div>
+          <button type="button" class="btn-primary" id="btn-start-game">Start 30s Aim Test</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { parseGamepadState } from '../../lib/gamepad';
+  import { addPoints } from '../../lib/rewards';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('sniper-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let isPlaying = false;
+    let score = 0;
+    let shots = 0;
+    let hits = 0;
+    let timeLeft = 30;
+    let timerId: number | null = null;
+
+    let crosshairX = canvas.width / 2;
+    let crosshairY = canvas.height / 2;
+
+    let targetX = 200 + Math.random() * 400;
+    let targetY = 100 + Math.random() * 250;
+    let targetRadius = 24;
+
+    function resetTarget() {
+      targetX = 60 + Math.random() * (canvas.width - 120);
+      targetY = 60 + Math.random() * (canvas.height - 120);
+    }
+
+    function render() {
+      ctx.fillStyle = '#0a0d14';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw Grid
+      ctx.strokeStyle = '#1e2638';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < canvas.width; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+      }
+
+      // Draw Target
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.arc(targetX, targetY, targetRadius, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(targetX, targetY, targetRadius * 0.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw Crosshair
+      ctx.strokeStyle = '#2563eb';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(crosshairX, crosshairY, 14, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(crosshairX - 20, crosshairY); ctx.lineTo(crosshairX + 20, crosshairY); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(crosshairX, crosshairY - 20); ctx.lineTo(crosshairX, crosshairY + 20); ctx.stroke();
+
+      if (isPlaying) {
+        // Poll Gamepad
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        let activeGp: Gamepad | null = null;
+        for (let i = 0; i < gamepads.length; i++) {
+          if (gamepads[i] && gamepads[i]?.connected) { activeGp = gamepads[i]; break; }
+        }
+
+        if (activeGp) {
+          const state = parseGamepadState(activeGp);
+          const rx = state.rightStick.x;
+          const ry = state.rightStick.y;
+
+          crosshairX += rx * 10;
+          crosshairY += ry * 10;
+
+          crosshairX = Math.max(10, Math.min(canvas.width - 10, crosshairX));
+          crosshairY = Math.max(10, Math.min(canvas.height - 10, crosshairY));
+
+          // Shoot trigger (R2 or RT)
+          if (state.triggers.r2 > 0.5) {
+            const dist = Math.sqrt(Math.pow(crosshairX - targetX, 2) + Math.pow(crosshairY - targetY, 2));
+            shots++;
+            if (dist <= targetRadius) {
+              hits++;
+              score += 100;
+              resetTarget();
+            }
+            const acc = Math.round((hits / Math.max(1, shots)) * 100);
+            const scoreEl = document.getElementById('g-score-val');
+            const accEl = document.getElementById('g-acc-val');
+            if (scoreEl) scoreEl.textContent = String(score);
+            if (accEl) accEl.textContent = `${acc}%`;
+          }
+        }
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    render();
+
+    document.getElementById('btn-start-game')?.addEventListener('click', () => {
+      if (isPlaying) return;
+      isPlaying = true;
+      score = 0;
+      shots = 0;
+      hits = 0;
+      timeLeft = 30;
+
+      timerId = window.setInterval(() => {
+        timeLeft--;
+        const timeEl = document.getElementById('g-time-val');
+        if (timeEl) timeEl.textContent = `${timeLeft}s`;
+
+        if (timeLeft <= 0) {
+          isPlaying = false;
+          if (timerId) clearInterval(timerId);
+          addPoints(50);
+          alert(`Game Over! Final Score: ${score}. You earned +50 Arcade XP!`);
+        }
+      }, 1000);
+    });
+  });
+</script>
+
+<style>
+  .game-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .game-header { margin-bottom: 2rem; }
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .game-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .game-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
+  .game-canvas-card { padding: 1rem; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+  #sniper-canvas { width: 100%; max-width: 800px; height: auto; background: var(--color-surface-1); border-radius: var(--radius-sm); border: 1px solid var(--color-border-subtle); }
+  .game-overlay-bar { width: 100%; max-width: 800px; display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: var(--color-surface-2); border-radius: var(--radius-sm); }
+  .g-stat { display: flex; flex-direction: column; gap: 0.1rem; }
+  .g-label { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: var(--color-text-tertiary); }
+  .g-val { font-size: 1.25rem; font-weight: 700; }
+  @media (max-width: 768px) { .game-overlay-bar { flex-wrap: wrap; gap: 1rem; } }
+</style>

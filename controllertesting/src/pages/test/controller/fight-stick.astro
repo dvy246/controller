@@ -1,0 +1,94 @@
+---
+/**
+ * /test/controller/fight-stick — Fight Stick & Hitbox Arcade Tester
+ * SEO Title: Fight Stick & Hitbox Tester — Test Arcade Sticks & SOCD Cleaning
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import FightStickTester from '../../../components/tools/controller/FightStickTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Fight Stick & Hitbox' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test an Arcade Stick, Hitbox, or Mixbox controller?',
+    answer: 'Connect your arcade stick or leverless controller via USB. The tool displays a Vewlix 8-button layout (LP, MP, HP, LK, MK, HK) and tests Sanwa microswitch response.',
+  },
+  {
+    question: 'What is SOCD (Simultaneous Opposing Cardinal Directions) cleaning?',
+    answer: 'SOCD cleaning rules dictate how leverless Hitbox controllers handle simultaneous opposing direction inputs (e.g. Left + Right or Up + Down) to ensure tournament compliance under Capcom Pro Tour rules.',
+  },
+  {
+    question: 'Does this tool support Sanwa, Seimitsu, and Crown arcade buttons?',
+    answer: 'Yes! It tests all Japanese microswitches and Brook Universal Fighting Boards.',
+  },
+];
+---
+
+<ToolLayout
+  title="Fight Stick & Hitbox Tester — Test Arcade Sticks & SOCD Cleaning | ControllerTesting.com"
+  description="Test Arcade Sticks, Hitbox, Mixbox, and leverless controllers online. Vewlix 8-button layout visualizer and Capcom Pro Tour SOCD cleaner test."
+  toolName="Fight Stick & Hitbox Tester"
+  category="Specialized Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <FightStickTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Fighting Game Layout Guidelines</h2>
+      <p class="results-text">
+        All 8 arcade buttons and directional inputs should register crisp green with zero input latency or button ghosting.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Test controller latency in milliseconds</h3>
+        <p class="export-desc">Measure input delay on Brook fighting boards and USB converters.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/latency" class="btn-primary">Test Input Latency</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Button Tester</h3>
+      <p class="tool-desc">Test standard face buttons.</p>
+    </a>
+    <a href="/test/controller/latency" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Latency Estimator</h3>
+      <p class="tool-desc">Measure input response delay.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Arcade Stick & Leverless Hitbox Controller Diagnostics</h2>
+    <p>
+      In competitive fighting games like <em>Street Fighter 6</em>, <em>Tekken 8</em>, and <em>Guilty Gear Strive</em>, microswitch reliability and SOCD cleaning compliance are essential for executing motion inputs.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>

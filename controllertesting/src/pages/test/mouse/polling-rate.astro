@@ -1,0 +1,119 @@
+---
+/**
+ * /test/mouse/polling-rate — Mouse Polling Rate Checker
+ * SEO Title: Mouse Polling Rate Test — Test Mouse Hz & Report Rate Online
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import MousePollingTester from '../../../components/tools/mouse/MousePollingTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/mouse' },
+  { name: 'Mouse Tests', url: '/test/mouse' },
+  { name: 'Mouse Polling Rate' },
+];
+
+const faqs = [
+  {
+    question: 'How do I test my mouse polling rate (Hz)?',
+    answer: 'Move your mouse cursor rapidly inside the dashed target area above. The tool measures your mouse sensor\'s report interval in milliseconds and displays real-time Hz.',
+  },
+  {
+    question: 'Is 1000Hz, 4000Hz, or 8000Hz better for gaming?',
+    answer: 'Higher polling rates reduce cursor jitter and input delay. A 1000Hz mouse updates every 1.0ms, while an 8000Hz (8KHz) mouse updates every 0.125ms for ultra-smooth tracking on high-refresh monitors (240Hz+).',
+  },
+  {
+    question: 'Why is my mouse polling rate lower than advertised?',
+    answer: 'Ensure your mouse is plugged into a USB 3.0/3.1 port, close background CPU-heavy applications, and enable maximum polling rate in your mouse driver software (Razer Synapse, Logitech G HUB).',
+  },
+];
+---
+
+<ToolLayout
+  title="Mouse Polling Rate Test — Check Mouse Hz & Report Rate Online | ControllerTesting.com"
+  description="Test your gaming mouse polling rate in Hz. Measure 125Hz, 500Hz, 1000Hz, 4000Hz, and 8000Hz report intervals free online."
+  toolName="Mouse Polling Rate Checker"
+  category="Mouse Diagnostic"
+  categoryUrl="/test/mouse"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <MousePollingTester />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Mouse Polling Rate Ratings</h2>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">1000Hz – 8000Hz (0.125ms – 1ms)</strong>
+          <p class="legend-text">Esports standard. Ultra-smooth tracking for 240Hz+ monitors.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">500Hz (2ms)</strong>
+          <p class="legend-text">Standard gaming rate. Great balance of performance and CPU usage.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">125Hz (8ms)</strong>
+          <p class="legend-text">Office mouse default. High input delay in fast shooters.</p>
+        </div>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Test mouse click speed (CPS)</h3>
+        <p class="export-desc">Measure how fast you can click in 5s, 10s, or 30s modes.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/mouse/cps" class="btn-primary">CPS Speed Test</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/mouse/cps" class="tool-card card-base card-hover">
+      <h3 class="tool-name">CPS Test</h3>
+      <p class="tool-desc">Test clicks per second speed.</p>
+    </a>
+    <a href="/test/mouse/click-latency" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Click Latency</h3>
+      <p class="tool-desc">Measure click response delay.</p>
+    </a>
+    <a href="/test/mouse/dpi" class="tool-card card-base card-hover">
+      <h3 class="tool-name">DPI Analyzer</h3>
+      <p class="tool-desc">Calculate mouse DPI sensitivity.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Why Mouse Polling Rate Is Vital for High-Refresh Gaming</h2>
+    <p>
+      Mouse polling rate determines how many times per second your optical mouse sensor reports cursor coordinates to the operating system.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 1rem; }
+  .results-legend-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .legend-card { padding: 1rem; border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 0.375rem; }
+  .legend-pass { background: var(--color-pass-bg); border: 1px solid var(--color-pass); }
+  .legend-pass .legend-title { color: var(--color-pass); }
+  .legend-warning { background: var(--color-warning-bg); border: 1px solid var(--color-warning); }
+  .legend-warning .legend-title { color: var(--color-warning); }
+  .legend-fail { background: var(--color-fail-bg); border: 1px solid var(--color-fail); }
+  .legend-fail .legend-title { color: var(--color-fail); }
+  .legend-title { font-family: var(--font-mono); font-size: var(--text-small); }
+  .legend-text { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.5; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+  @media (max-width: 768px) { .results-legend-grid { grid-template-columns: 1fr; } }
+</style>

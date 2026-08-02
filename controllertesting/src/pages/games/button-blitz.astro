@@ -1,0 +1,150 @@
+---
+/**
+ * /games/button-blitz — Button Blitz Reaction Game
+ * SEO Title: Button Blitz — Controller Button Reaction & Speed Game
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Games Arcade', url: '/games' },
+  { name: 'Button Blitz' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoGame',
+  name: 'Button Blitz Reaction Game',
+  description: 'Fast-paced button reaction game for PS5, Xbox, and Switch gamepads.',
+  gamePlatform: 'Web Browser',
+};
+---
+
+<BaseLayout
+  title="Button Blitz — Controller Button Reaction Game | ControllerTesting.com"
+  description="Test your button reaction speed in Button Blitz. Press on-screen button prompts on your PS5, Xbox, or Switch controller."
+  schema={schema}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="game-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="game-header">
+        <span class="badge-tag">Reflex Challenge</span>
+        <h1 class="game-title">Button Blitz Reaction Speed</h1>
+        <p class="game-subtitle">
+          Press the matching controller button as soon as it appears on screen. Test your muscle memory and reflex speed.
+        </p>
+      </header>
+
+      <div class="blitz-card card-base">
+        <div class="blitz-prompt-box" id="blitz-prompt">
+          <span class="prompt-text text-gradient" id="prompt-btn-name">PRESS START</span>
+        </div>
+
+        <div class="blitz-stats-bar">
+          <div class="b-stat"><span class="b-label">SCORE</span><span class="b-val text-gradient" id="blitz-score">0</span></div>
+          <div class="b-stat"><span class="b-label">STREAK</span><span class="b-val mono" id="blitz-streak">0</span></div>
+          <button type="button" class="btn-primary" id="btn-start-blitz">Start Game</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { parseGamepadState } from '../../lib/gamepad';
+  import { addPoints } from '../../lib/rewards';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    let isPlaying = false;
+    let score = 0;
+    let streak = 0;
+    let currentTargetBtn = 0; // 0=A/Cross, 1=B/Circle, 2=X/Square, 3=Y/Triangle
+
+    const btnNames = ['A / CROSS (B0)', 'B / CIRCLE (B1)', 'X / SQUARE (B2)', 'Y / TRIANGLE (B3)'];
+
+    const promptEl = document.getElementById('prompt-btn-name');
+    const scoreEl = document.getElementById('blitz-score');
+    const streakEl = document.getElementById('blitz-streak');
+
+    function nextPrompt() {
+      currentTargetBtn = Math.floor(Math.random() * 4);
+      if (promptEl) promptEl.textContent = btnNames[currentTargetBtn];
+    }
+
+    let prevButtons: boolean[] = [];
+
+    function pollBlitz() {
+      if (isPlaying) {
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        let activeGp: Gamepad | null = null;
+        for (let i = 0; i < gamepads.length; i++) {
+          if (gamepads[i] && gamepads[i]?.connected) { activeGp = gamepads[i]; break; }
+        }
+
+        if (activeGp) {
+          const state = parseGamepadState(activeGp);
+          [0, 1, 2, 3].forEach((btnIdx) => {
+            const isPressed = state.buttons[btnIdx]?.pressed;
+            if (isPressed && !prevButtons[btnIdx]) {
+              if (btnIdx === currentTargetBtn) {
+                score += 100 + (streak * 10);
+                streak++;
+                nextPrompt();
+              } else {
+                streak = 0;
+              }
+              if (scoreEl) scoreEl.textContent = String(score);
+              if (streakEl) streakEl.textContent = String(streak);
+            }
+            prevButtons[btnIdx] = isPressed;
+          });
+        }
+      }
+
+      requestAnimationFrame(pollBlitz);
+    }
+
+    pollBlitz();
+
+    document.getElementById('btn-start-blitz')?.addEventListener('click', () => {
+      isPlaying = true;
+      score = 0;
+      streak = 0;
+      if (scoreEl) scoreEl.textContent = '0';
+      if (streakEl) streakEl.textContent = '0';
+      nextPrompt();
+
+      setTimeout(() => {
+        isPlaying = false;
+        if (promptEl) promptEl.textContent = 'GAME OVER!';
+        addPoints(50);
+        alert(`Game Over! Final Score: ${score}. You earned +50 Arcade XP!`);
+      }, 20000);
+    });
+  });
+</script>
+
+<style>
+  .game-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .game-header { margin-bottom: 2rem; }
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .game-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .game-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
+  .blitz-card { padding: 2rem; display: flex; flex-direction: column; gap: 2rem; align-items: center; }
+  .blitz-prompt-box { width: 100%; max-width: 600px; height: 220px; background: var(--color-surface-1); border: 2px dashed var(--color-accent); border-radius: var(--radius-card); display: flex; align-items: center; justify-content: center; text-align: center; }
+  .prompt-text { font-family: var(--font-mono); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; }
+  .blitz-stats-bar { width: 100%; max-width: 600px; display: flex; align-items: center; justify-content: space-between; }
+  .b-stat { display: flex; flex-direction: column; gap: 0.1rem; }
+  .b-label { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: var(--color-text-tertiary); }
+  .b-val { font-size: 1.5rem; font-weight: 700; }
+</style>

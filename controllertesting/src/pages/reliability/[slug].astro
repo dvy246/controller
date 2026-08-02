@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import reliabilityData from '../../data/reliabilityData.json';
+
+export function getStaticPaths() {
+  const models = Object.keys(reliabilityData.models);
+  return models.map((slug) => ({
+    params: { slug },
+    props: { modelData: (reliabilityData.models as Record<string, any>)[slug], slug }
+  }));
+}
+
+const { slug } = Astro.params;
+const { modelData } = Astro.props;
+
+const canonicalUrl = `https://controllertesting.com/reliability/${slug}`;
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": `${modelData.name} Hardware Stick Drift & Sensor Reliability Dataset`,
+  "description": `Baseline stick drift degradation, circularity error %, and sensor lifespan reference figures compiled from ${modelData.samples.toLocaleString()} documented test results aggregated on ControllerTesting.com. Baseline figures — not a guarantee for any individual unit.`,
+  "url": canonicalUrl,
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "creator": {
+    "@type": "Organization",
+    "name": "ControllerTesting.com"
+  }
+};
+---
+
+<BaseLayout
+  title={`${modelData.name} Hardware Reliability & Stick Drift Report (Baseline Reference Dataset)`}
+  description={`Baseline stick drift magnitude, circularity error %, and sensor wear reference figures for ${modelData.name}, compiled from ${modelData.samples.toLocaleString()} documented test results.`}
+  canonical={canonicalUrl}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+
+  <section class="max-w-5xl mx-auto px-4 py-16">
+    <!-- Header -->
+    <div class="mb-12 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono mb-4">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        Baseline Reference Dataset • {modelData.samples.toLocaleString()} Documented Results • Snapshot {reliabilityData.updatedAt}
+      </div>
+      <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-stone-100 mb-4">
+        {modelData.name} Reliability Report
+      </h1>
+      <p class="text-stone-400 text-lg max-w-2xl mx-auto">
+        Baseline stick drift degradation figures, circularity error metrics, and sensor wear references compiled from aggregated test results. Every unit is different — measure yours directly with our free diagnostics.
+      </p>
+    </div>
+
+    <!-- Metric Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div class="bg-stone-900/80 border border-stone-800 p-6 rounded-2xl">
+        <div class="text-stone-400 text-sm font-medium mb-1">Avg 12-Month Drift</div>
+        <div class="text-3xl font-bold text-amber-400 font-mono">{modelData.avgDriftAfter12MonthsPercent}%</div>
+        <p class="text-xs text-stone-500 mt-2">Measured static offset at rest</p>
+      </div>
+
+      <div class="bg-stone-900/80 border border-stone-800 p-6 rounded-2xl">
+        <div class="text-stone-400 text-sm font-medium mb-1">Avg Circularity Error</div>
+        <div class="text-3xl font-bold text-blue-400 font-mono">{modelData.avgCircularityErrorPercent}%</div>
+        <p class="text-xs text-stone-500 mt-2">Deviation from 100% outer circle</p>
+      </div>
+
+      <div class="bg-stone-900/80 border border-stone-800 p-6 rounded-2xl">
+        <div class="text-stone-400 text-sm font-medium mb-1">Avg Drift-Free Lifespan</div>
+        <div class="text-3xl font-bold text-emerald-400 font-mono">{modelData.avgLifespanMonthsBeforeDrift} Mo</div>
+        <p class="text-xs text-stone-500 mt-2">Before >2.5% deadzone tuning required</p>
+      </div>
+    </div>
+
+    <!-- Percentile Benchmark Table -->
+    <div class="bg-stone-900/80 border border-stone-800 rounded-2xl p-8 mb-12">
+      <h2 class="text-2xl font-bold text-stone-100 mb-6">Drift Magnitude Percentiles</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-stone-300">
+          <thead class="bg-stone-800/50 text-stone-400 border-b border-stone-800">
+            <tr>
+              <th class="py-3 px-4">Tier</th>
+              <th class="py-3 px-4">Drift Threshold (%)</th>
+              <th class="py-3 px-4">Percentile Standing</th>
+              <th class="py-3 px-4">Recommended Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-stone-800">
+            <tr>
+              <td class="py-3 px-4 font-semibold text-emerald-400">Excellent</td>
+              <td class="py-3 px-4 font-mono">≤ {modelData.percentileThresholds.excellent}%</td>
+              <td class="py-3 px-4">Top 10% cleanest sensors</td>
+              <td class="py-3 px-4">No action needed (0% deadzone)</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold text-blue-400">Good</td>
+              <td class="py-3 px-4 font-mono">≤ {modelData.percentileThresholds.good}%</td>
+              <td class="py-3 px-4">Top 30% normal wear</td>
+              <td class="py-3 px-4">Default game deadzone (2-3%)</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold text-amber-400">Average</td>
+              <td class="py-3 px-4 font-mono">≤ {modelData.percentileThresholds.average}%</td>
+              <td class="py-3 px-4">50th percentile baseline</td>
+              <td class="py-3 px-4">Set 5% deadzone in settings</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-semibold text-rose-400">Poor / Degraded</td>
+              <td class="py-3 px-4 font-mono">> {modelData.percentileThresholds.average}%</td>
+              <td class="py-3 px-4">Bottom 20% high drift</td>
+              <td class="py-3 px-4">Clean potentiometers or replace module</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Known Issues Sourced from Hardware Telemetry -->
+    <div class="bg-stone-900/80 border border-stone-800 rounded-2xl p-8">
+      <h2 class="text-2xl font-bold text-stone-100 mb-4">Documented Wear Characteristics</h2>
+      <ul class="space-y-3 text-stone-300">
+        {modelData.commonIssues.map((issue: string) => (
+          <li class="flex items-start gap-3">
+            <span class="text-amber-400 font-bold">•</span>
+            <span>{issue}</span>
+          </li>
+        ))}
+      </ul>
+      <p class="text-xs text-stone-500 mt-6">
+        About this data: this is a static baseline snapshot (compiled {reliabilityData.updatedAt}), not live telemetry.
+        Figures are aggregated reference values; your individual controller may perform better or worse.
+        For a measurement of your own hardware, run the <a href="/test/controller/drift" class="text-blue-400 underline">Stick Drift Detector</a> or the <a href="/test/controller/circularity" class="text-blue-400 underline">Circularity Test</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

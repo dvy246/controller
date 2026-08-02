@@ -1,0 +1,98 @@
+---
+/**
+ * /test/controller/competitive-readiness — Competitive Readiness Assessor
+ * SEO Title: Controller Competitive Readiness Test — Esports Benchmark Tool
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import CompetitiveReadiness from '../../../components/tools/controller/CompetitiveReadiness.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Competitive Readiness' },
+];
+
+const faqs = [
+  {
+    question: 'What is the Controller Competitive Readiness Benchmark?',
+    answer: 'The Competitive Readiness Benchmark evaluates whether your controller meets esports tournament hardware standards for stick drift, circularity error, trigger linearity, and polling rate.',
+  },
+  {
+    question: 'What stick drift threshold is allowed in esports tournaments?',
+    answer: 'Professional FPS leagues (ALGS, CDL, FNCS) recommend less than 2.0% stick drift so players can run 0% to 3% in-game deadzones without phantom camera movement.',
+  },
+  {
+    question: 'Should I overclock my controller polling rate for competitive play?',
+    answer: 'Yes! Overclocking your controller to 1000Hz polling rate via USB reduces input delay to 1ms, providing faster shot registration in competitive shooters.',
+  },
+];
+---
+
+<ToolLayout
+  title="Controller Competitive Readiness Test — Esports Tournament Benchmark | ControllerTesting.com"
+  description="Benchmark your controller for ALGS, CDL, and esports tournament readiness. Audit stick drift, circularity, polling rate, and deadzone precision online."
+  toolName="Competitive Readiness Assessor"
+  category="Flagship Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <CompetitiveReadiness />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Esports Hardware Specifications</h2>
+      <p class="results-text">
+        Pro controllers must exhibit &lt; 2.0% stick drift, &lt; 8.0% circularity error, and &ge; 500Hz polling rate to qualify for Pro Certified status.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="export-title">Generate printable esports certification</h3>
+        <p class="export-desc">Generate an official verified Health Score report to prove controller readiness.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/health-score" class="btn-primary">Generate Health Report</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/full-diagnostic" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Full Diagnostic Wizard</h3>
+      <p class="tool-desc">Run 5-step hardware checkup.</p>
+    </a>
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    </a>
+    <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Measure input rate in Hz.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Hardware Requirements for Professional Esports Controllers</h2>
+    <p>
+      In competitive shooters like Apex Legends, Call of Duty: Warzone, and Fortnite, controller hardware specifications directly impact aim assist behavior and reaction speeds.
+    </p>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .prose { line-height: 1.7; color: var(--color-text-secondary); }
+  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  .prose p { margin-bottom: 1rem; }
+</style>
