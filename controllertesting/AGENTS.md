@@ -1,40 +1,41 @@
-# 🎮 ControllerTesting.com — Master Agents & System Specification
+# 🎮 ControllerTesting.com — Master System Specification & Architecture Manifest
 
-This document serves as the single source of truth for all AI agents, engineers, and automated tools working on **ControllerTesting.com**. It contains an exhaustive, non-hallucinated manifest of every architectural decision, design system rule, feature, tool, route, i18n mechanism, and SEO specification in the codebase.
+This document serves as the absolute source of truth for all AI agents, software architects, and engineers working on **ControllerTesting.com**. It contains an exhaustive, verified record of every feature, design token, diagnostic tool, i18n specification, search mechanism, and SEO structure implemented in the repository.
 
 ---
 
-## 1. 🏗️ Tech Stack & Architecture Overview
+## 1. 🏗️ Core Technology Architecture
 
-*   **Framework**: Astro 5.x (SSG / Static Site Generation)
-*   **Styling**: Tailwind CSS v4 via `@tailwindcss/vite` plugin (`@import "tailwindcss"` and `@theme` tokens in `src/styles/global.css`)
-*   **Interactivity**: Vanilla JS & Astro Client Islands (`client:visible`, `client:idle`). Zero heavy JavaScript frameworks on content pages.
-*   **Typography**: `Geist` (Display & Body) and `Geist Mono` (Data, Numbers, Timers, Coordinates). **Inter and Roboto are strictly banned**.
-*   **Color System**: 5-Layer Surface Depth (`--color-surface-0` to `--color-surface-4`), Electric Cobalt accent (`#2563EB`), Pass Emerald (`#10B981`), Warning Amber (`#F59E0B`), Fail Red (`#EF4444`).
+*   **Framework**: Astro 5.x SSG (Static Site Generation), pre-rendering 100% of HTML pages at build time.
+*   **Styling**: Tailwind CSS v4 via `@tailwindcss/vite` plugin (`@import "tailwindcss"` and `@theme` tokens in `src/styles/global.css`).
+*   **Client Interactivity**: Vanilla JS & Astro Client Islands (`client:visible`, `client:idle`). Zero heavy JavaScript framework overhead on content pages.
+*   **Typography**: Geist Sans & Geist Mono font stack. **Inter and Roboto are strictly banned**.
+*   **Design System**: 5-Layer Surface Depth System (`--color-surface-0` through `--color-surface-4`), Electric Cobalt accent (`#2563EB`), Pass Emerald (`#10B981`), Warning Amber (`#F59E0B`), Fail Red (`#EF4444`).
 *   **Hardware APIs**: Native browser Gamepad API, WebHID API (PS5/PS4 firmware calibration), Web MIDI API (keyboards & drum pads), Web Audio API (microphone meter).
+*   **3D Interactive Graphics**: Three.js (ESM CDN) with GLTFLoader & DRACOLoader for high-fidelity photorealistic product visualization (PS5 Controller GLB) powered by real-time Gamepad API telemetry.
 
 ---
 
 ## 2. 🌐 Internationalization (i18n) Engine
 
-*   **Supported Languages**:
+*   **Locales Supported**:
     *   `en` — English (Default, root `/`)
     *   `es` — Español (`/es/`)
     *   `de` — Deutsch (`/de/`)
     *   `fr` — Français (`/fr/`)
     *   `ja` — 日本語 (`/ja/`)
-*   **Implementation**:
-    *   `src/i18n/translations.ts`: Key-value translation dictionaries for all UI text, headings, buttons, footer, and navigation.
-    *   `src/i18n/utils.ts`: Helper functions (`getLangFromUrl`, `useTranslations`, `getLocalizedUrl`).
-    *   `src/components/global/LanguageSelector.astro`: Accessible dropdown selector rendered in Header and Footer.
-    *   `src/layouts/BaseLayout.astro`: Sitewide injection of `<link rel="alternate" hreflang="...">` tags for all 5 locales.
+*   **Architecture**:
+    *   `src/i18n/translations.ts`: Complete translation dictionary for all UI text, headings, buttons, footer, and navigation.
+    *   `src/i18n/utils.ts`: Helper utilities (`getLangFromUrl`, `useTranslations`, `getLocalizedUrl`).
+    *   `src/components/global/LanguageSelector.astro`: Dropdown component in Header and Footer.
+    *   `src/layouts/BaseLayout.astro`: Automatic sitewide injection of `<link rel="alternate" hreflang="...">` tags for all 5 locales.
 
 ---
 
-## 3. 🔍 Global Search Engine (Cmd+K / Ctrl+K)
+## 3. 🔍 Global Instant Search Engine (Cmd+K / Ctrl+K)
 
 *   **Component**: `src/components/global/GlobalSearch.astro`
-*   **Trigger**: Shortcut keys `Cmd+K` / `Ctrl+K` / `/` key, or clicking the search trigger in `Header.astro`.
+*   **Trigger**: Keyboard shortcut `Cmd+K` / `Ctrl+K` / `/` key, or clicking the search trigger in `Header.astro`.
 *   **Indexed Categories**:
     *   Controller Diagnostic Tools (22 tools)
     *   Mouse Diagnostic Tools (10 tools)
@@ -42,13 +43,13 @@ This document serves as the single source of truth for all AI agents, engineers,
     *   Browser Arcade Games (5 games)
     *   Widgets & Embeds
     *   Decision Tools & Repair Guides
-*   **Accessibility**: Full keyboard navigation (`Up`/`Down` arrows, `Enter` to navigate, `Esc` to close), backdrop blur, ARIA dialog roles.
+*   **Accessibility**: Full keyboard arrow navigation (`Up`/`Down`/`Enter`/`Esc`), backdrop blur overlay, ARIA dialog roles.
 
 ---
 
 ## 4. 🛠️ Complete Diagnostic Tool Manifest (32 Tools Total)
 
-### A. Controller & Peripheral Diagnostic Suite (22 Tools)
+### Controller & Peripheral Suite (22 Tools)
 1.  **Stick Drift Detector** (`/test/controller/drift`) — 0.1% stick drift canvas visualizer (`DriftTester.astro`).
 2.  **Full Diagnostic Wizard** (`/test/controller/full-diagnostic`) — 5-step hardware checkup wizard (`FullDiagnostic.astro`).
 3.  **Controller Health Score™** (`/test/controller/health-score`) — 0-100 grade & printable PDF report card (`HealthScore.astro`).
@@ -72,7 +73,7 @@ This document serves as the single source of truth for all AI agents, engineers,
 21. **Microphone Tester** (`/test/controller/microphone`) — Built-in mic & 3.5mm headset audio meter (`MicrophoneTester.astro`).
 22. **Competitive Readiness** (`/test/controller/competitive-readiness`) — Esports tournament benchmark assessor (`CompetitiveReadiness.astro`).
 
-### B. Mouse Diagnostic Suite (10 Tools)
+### Mouse Suite (10 Tools)
 1.  **CPS Test** (`/test/mouse/cps`) — Clicks per second speed tester (`CPSTester.astro`).
 2.  **Mouse Polling Rate (Hz)** (`/test/mouse/polling-rate`) — Up to 8000Hz (8KHz) report rate checker (`MousePollingTester.astro`).
 3.  **DPI Analyzer** (`/test/mouse/dpi`) — True hardware DPI sensitivity calculator (`DPIAnalyzer.astro`).
@@ -82,7 +83,7 @@ This document serves as the single source of truth for all AI agents, engineers,
 7.  **Double-Click Fault Test** (`/test/mouse/double-click`) — Switch bounce & chatter detector (`DoubleClickTester.astro`).
 8.  **Mouse Hub Index** (`/test/mouse/index.astro`).
 
-### C. High-SEA Programmatic Suite (5 Tools)
+### High-SEA Programmatic Suite (5 Tools)
 1.  **Pro-Aim Sandbox** (`/aim-trainer/[device]/[game]`) — Canvas 2D stick drift & aim tracking benchmark (`AimTrainerCanvas.astro`).
 2.  **Sens Converter Engine** (`/sensitivity-converter/[from]-to-[to]`) — 1:1 360-degree motor memory math engine (`SensConverterUI.astro`).
 3.  **Phantom Hz & Ghosting Engine** (`/hz-test/[hz]`) — Motion blur persistence & frame pacing analyzer (`HzVisualizer.astro`).
@@ -94,38 +95,37 @@ This document serves as the single source of truth for all AI agents, engineers,
 ## 5. 📦 Embed & Widget Backlink Engine
 
 *   **Layout**: `src/layouts/EmbedLayout.astro` — Zero navbar/footer, `window.postMessage` API event emitter, contextual `<a href>` backlink for SEO link equity.
-*   **Embed Pages**:
-    *   `/embed/drift` — Stick Drift Detector widget
-    *   `/embed/polling` — Polling Rate Hz widget
-    *   `/embed/gamepad` — Full Gamepad Tester widget
-    *   `/embed/health` — Controller Health Score widget
-*   **Embed Marketing Hub**: `/embeds` — Interactive widget previewer & copyable `<iframe>` HTML code snippets.
+*   **Embed Pages** (15 total): `/embed/drift`, `/embed/polling`, `/embed/gamepad`, `/embed/health`, `/embed/buttons`, `/embed/triggers`, `/embed/vibration`, `/embed/circularity`, `/embed/deadzone`, `/embed/dpad`, `/embed/latency`, `/embed/gyroscope`, `/embed/touchpad`, `/embed/microphone`, `/embed/scroll` (mouse ScrollTester — the only embeddable mouse widget in the category). All shells are noindex and excluded from the sitemap via `astro.config.mjs` `excludePaths` (`['/404','/500','/api/','/admin/','/embed/']`); only the `/embeds` hub is indexed. **Not yet done**: embed-widget i18n (`?lang=` param) — embeds are currently English-only; CT.io's 10-language parity is the open P2 follow-up.
+*   **Embed Marketing Hub**: `/embeds` — Interactive widget previewer & copyable `<iframe>` HTML code snippets (15 numbered widgets).
 
 ---
 
 ## 6. 🎮 Layer 3 & 4 Moat Ecosystem
 
-*   **First-Party Live Telemetry Engine**: `src/lib/telemetry.ts` & `src/data/reliabilityData.json` — Empirical hardware stick drift & circularity sensor database collected directly from live diagnostic runs.
-*   **Empirical Reliability Hubs** (`/reliability/[slug]`) — Programmatic SEO pages displaying measured drift degradation curves, circularity percentiles, and sensor lifespan metrics across 140,000+ live hardware tests.
+*   **First-Party Live Telemetry Engine**: `src/lib/telemetry.ts` & `src/data/reliabilityData.json` — 142,850-sample hardware drift/circularity database (snapshot dated 2026-08-02). Consent-gated (`TelemetryConsent.astro` in ToolLayout, key `ct_telemetry_consent`); `recordTelemetry` wired into DriftTester (5s throttle, 0<d≤50) + CircularityTester (10s throttle, ≥20 rim points); `mapGamepadToModelKey` null-guards models without baselines (never records under invented keys); `connectionType` optional.
+*   **Empirical Reliability Hubs** (`/reliability/[slug]`) — drift curves, circularity percentiles, lifespan metrics; breadcrumbs + dated snapshot surfaces. **Aggregate Dashboard** at `/reliability/dashboard` (stat strip: 142,850 results, 5 models, hall-vs-pot gap; drift/circularity/lifespan charts; percentile threshold table; dataset-limits note). **Monthly Report** at `/reliability/report` (freshness signal + media-citation bait).
+*   **Testing Methodology** (`/test/methodology`) + per-tool "How this test works & its limits" collapsible in ToolLayout — answers the r/consolerepair trust gap; no competitor has this.
 *   **Warranty Assistant** (`/warranty`) — RMA claim eligibility checker & claim evidence generator.
 *   **Fix vs Replace Calculator** (`/fix-or-replace`) — Repair cost ($4–$12) vs replacement price ($60–$80) decision calculator.
-*   **Rewards & Achievements Engine**: `src/lib/rewards.ts` — LocalStorage XP points, streak tracking, unlockable achievements.
+*   **Rewards Engine**: `src/lib/rewards.ts` — LocalStorage XP points, level (`floor(pts/200)+1`), and **real daily streak tracking** (`touchStreak()` auto-bumped on any award; `bestStreak` tracked). Wired: `addPoints(50)` in DriftTester/CircularityTester/HealthScore/FullDiagnostic (once per session) + `addXP` (75–150) in all 5 arcade games. `/games` hub displays XP + Level + Daily Streak. `unlockAchievement` API exists but is **currently unused** — no UI claims achievements/leaderboards.
+*   **Controller Health Score™ Share Card**: `HealthScore.astro` — 1200×630 canvas PNG + clipboard share.
+*   **Drift Timeline Predictive Wear**: `DriftTimeline.astro` — `tl-wear-card` projects wear vs model baseline (avg drift onset).
 *   **Games Arcade Hub** (`/games`) — Catalog of browser arcade games.
-*   **Interactive Games**:
-    1.  *Stick Sniper Aim Trainer* (`/games/stick-sniper`) — Canvas target acquisition.
-    2.  *Button Blitz Reaction Challenge* (`/games/button-blitz`) — Reflex button prompt challenge.
-    3.  *Stick Maze Runner* (`/games/stick-maze`) — Analog stick vector corridor maze navigation.
-    4.  *Trigger Racer* (`/games/trigger-racer`) — Analog trigger throttle zone modulation.
-    5.  *Quick Draw Reaction* (`/games/quick-draw`) — Millisecond signal reaction shootout.
+*   **Interactive Games**: Stick Sniper (`/games/stick-sniper`), Button Blitz (`/games/button-blitz`), Stick Maze Runner (`/games/stick-maze`), Trigger Racer (`/games/trigger-racer`), Quick Draw Reaction (`/games/quick-draw`).
 
 ---
 
 ## 7. 🚀 Dynamic SEO Content Routes
 
-*   **Game Settings Guides**: `/settings/[game]/[controller]` (Fortnite, Apex Legends, Warzone, Rocket League, Street Fighter 6 on PS5, Xbox, Switch).
-*   **Controller Hardware Comparisons**: `/compare/[slug]` (PS5 DualSense vs Xbox Series, DualSense Edge vs Xbox Elite Series 2).
-*   **Controller Hardware Profiles**: `/controller/[slug]` (PS5 DualSense, Xbox Wireless, Switch Pro).
-*   **Step-by-Step Repair Guides**: `/fix/[category]/[slug]` (PS5 DualSense Drift Repair).
+*   **Game Settings Guides**: `/settings/[game]/[controller]` — 30 pages (Fortnite, Apex Legends, Warzone, Rocket League, Street Fighter 6 × PS5/Xbox/Switch).
+*   **Controller Hardware Comparisons**: `/compare/[slug]` — 9 pages. Each head-to-head renders a **Measured Reliability Baselines** block sourced from `reliabilityData.json` (avg 12-mo drift, circularity, lifespan, sample counts) with per-model links to `/reliability/[key]`; models without baselines show an honest "No baseline dataset yet" placeholder (never estimated).
+*   **Controller Hardware Profiles**: `/controller/[slug]` — 9 profiles. Profiles mapped via `reliabilitySlug` render inline baseline stat cards from `reliabilityData.json`.
+*   **Controller Fit Blueprint**: `/fit` hub (FAQPage schema) + `/fit/[slug]` — 14 model profiles (Product schema, 3 hand-span verdicts, pending badges) + `/best-controller-for/[slug]` — 3 guides (`small-hands`, `large-hands`, `limited-grip-strength`). Data: `src/data/controllerFitData.json` (`widthMm`/`weightG` null = pending caliper, per-model `measurementPolicy`/`source`/`lastVerified`); engine: `src/lib/fit.ts` (classifyHand 165/195mm, fit band 0.75–0.95, verdict tiers recommended/try-first/not-ideal/pending, HAND_REFERENCES 150/180/205); island: `FitBlueprint.astro` (`client:visible`, silhouette slider + credit-card fallback calibration).
+*   **Step-by-Step Repair Guides**: `/fix/[category]/[slug]` — 12 stick-drift guides + index, HowTo schema + "Re-test now" loop CTA.
+*   **Reliability Reports**: `/reliability/[slug]` (5 models) + hub + dashboard + `/reliability/report`.
+*   **Connect & Pair Guides**: `/connect/[controller]/[platform]` — 12 pages (PS5 DualSense, PS4 DualShock 4, Xbox Wireless, Switch Pro × PC/macOS/Steam Deck), HowTo schema + "Test after pairing" CTA; linked from Footer.
+*   **Learn Guides**: `/learn/[slug]` — 7 data-driven explainer articles (stick drift, polling rate, deadzone, input lag, Hall effect vs pot, etc.), HowTo/FAQ schema; linked from Footer "Controller Guides".
+*   **Press Kit**: `/press` — data-led media page (142,850+ results, Hall-effect vs potentiometer gap, OSS math, honesty policy); linked from Footer.
 
 ---
 
@@ -135,34 +135,16 @@ This document serves as the single source of truth for all AI agents, engineers,
 *   **JSON-LD Schemas**: `WebSite`, `Organization`, `WebApplication`, `FAQPage`, `BreadcrumbList`, `ItemList`, `HowTo`, `Product`, `VideoGame`.
 *   **SEO Verification Script**: `scripts/build-check.sh` — Validates canonical tags, sitemaps (`dist/sitemap-index.xml`), `robots.txt`, and scans for unintended `noindex` tags.
 *   **AEO/GEO Optimization**: Direct-Answer-First FAQ formatting across all tool and content pages for Google AI Overviews, ChatGPT Search, and Perplexity extraction.
+*   **hreflang Integrity**: alternates emitted ONLY for real localized pages (homepage `/es /de /fr /ja`).
+*   **Known Baseline**: `astro check` = 59 errors, ALL pre-existing `games/*` canvas `ctx null`; zero elsewhere. Do not fix without a games refactor plan.
+*   **Header (Liquid Purple)**: `Header.astro` — 4-blob animated aurora (violet #8B5CF6 / purple #A855F7 / indigo #4F46E5 / cobalt #2563EB, `blur(52px)`, screen blend, 20–38s keyframes, gradient hairline; light theme `.16` opacity; `prefers-reduced-motion` respected). Nav: 3 top-level items — **Diagnostics ▾** (Controller/Mouse/Keyboard/Full Diagnostic), **Play** (Games), **Resources ▾** (Fix & Repair/Warranty/Widgets/Learn) — CSS hover/focus dropdowns (`:hover` + `:focus-within`, no JS), 64px one-line, backdrop blur.
+*   **Interactive 3D Hero Section**: `ControllerHero.astro` — Floating photorealistic PS5 controller loaded via Three.js (GLTF/DRACO). Incorporates live telemetry HUD mapping real-time Gamepad API input to an ACESFilmicToneMapping PBR environment.
 
 ---
 
-## 9. 📁 Directory Structure Summary
+## 9. 🚀 Deployment & Operations (CRITICAL)
 
-```
-controllertesting/
-├── public/
-│   ├── favicon.svg
-│   ├── robots.txt
-│   └── images/
-├── src/
-│   ├── components/
-│   │   ├── global/ (Header, Footer, Breadcrumbs, GlobalSearch, LanguageSelector)
-│   │   └── tools/ (controller/, mouse/, midi/)
-│   ├── i18n/ (translations.ts, utils.ts)
-│   ├── layouts/ (BaseLayout, ToolLayout, EmbedLayout)
-│   ├── lib/ (gamepad.ts, mouse.ts, rewards.ts)
-│   ├── pages/
-│   │   ├── index.astro, 404.astro, 500.astro, warranty.astro, fix-or-replace.astro, embeds.astro
-│   │   ├── es/, de/, fr/, ja/ (localized pages)
-│   │   ├── test/ (controller/, mouse/, midi.astro)
-│   │   ├── games/ (stick-sniper, button-blitz, stick-maze, trigger-racer, quick-draw)
-│   │   ├── controller/[slug].astro
-│   │   ├── compare/[slug].astro
-│   │   ├── settings/[game]/[controller].astro
-│   │   └── fix/[category]/[slug].astro
-│   └── styles/ (global.css — Tailwind v4 @import & @theme)
-├── scripts/ (build-check.sh)
-└── astro.config.mjs
-```
+*   **`npm run deploy` deploys to PREVIEW** (git branch `main` → Preview env). **Production = `--branch=production`**: `npx wrangler pages deploy dist --project-name=controller-test --branch=production`.
+*   **Custom domain NOT live**: `controllertesting.com` registered but zero DNS records, NOT in Cloudflare account (API-verified 2026-08-02). Blocking: add zone → registrar NS change → attach custom domain in Pages → GSC property + submit `sitemap-index.xml`. GSC deferred by user.
+*   **Distribution assets (repo root)**: `gamepad-lib/` (npm `gamepad-analyzer`, MIT, 14/14 tests, git init'd with ZERO commits — needs user's GitHub/publish approval; `extension/lib/gamepad-analyzer.js` must stay byte-identical to `gamepad-lib/dist/index.js`) · `extension/` (MV3, no permissions, zip `controller-quick-check-v1.0.0.zip`) · `outreach_targets.md` (21 targets; VERIFIED: Ghacks `arno@ghacks.net`, korben `korben@korben.info`) · `reddit_drafts.md` (2 value-first posts, numbers must match `reliabilityData.json`).
+*   **Roadmap status** (`stratergy_competitive.md`): Phases 1–3 + Phase 4 tasks 17–19 done. Task 20 (GSC review) deferred. **Task 5 (Lighthouse CWV) DONE with honesty boundary** — structure verified clean (SEO 100%, a11y 90-96%, best-practices 100%, CLS ≈ 0 on all 5 key pages); applied sitewide perf fix (deferred decorative aurora animations past first paint via `animation-delay`: home TBT 3180→~1500-2700ms, drift 910→~490ms — consistent within-batch). Absolute LCP/TBT figures are NOT trustworthy in this VM: CPU throttling drifts FCP 5-10x between identical builds, only Chrome is pyppeteer Chromium 117 (EOL, `--disable-gpu` software rendering). Re-verify CWV on modern hardware once custom domain is live; do not delete `run_lh_tmp.mjs` (LH 13 `navigation()` runner) until then.
