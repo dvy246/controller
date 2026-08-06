@@ -1,0 +1,361 @@
+---
+/**
+ * src/pages/tools/index.astro
+ * Master Testing Toolkit Hub
+ * SEO optimized and aligned with Data Authority pivot.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const toolsSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  'name': 'Diagnostic Testing Toolkit',
+  'description': 'The complete suite of diagnostic tools for controllers, mice, and specialized peripherals.',
+  'itemListElement': [
+    { '@type': 'ListItem', 'position': 1, 'url': 'https://controllertesting.com/test/controller/full-diagnostic', 'name': 'Full Diagnostic Wizard' },
+    { '@type': 'ListItem', 'position': 2, 'url': 'https://controllertesting.com/test/controller/drift', 'name': 'Stick Drift Detector' },
+    { '@type': 'ListItem', 'position': 3, 'url': 'https://controllertesting.com/test/controller/polling-rate', 'name': 'Polling Rate Checker' },
+    { '@type': 'ListItem', 'position': 4, 'url': 'https://controllertesting.com/test/controller/circularity', 'name': 'Circularity Test' },
+    { '@type': 'ListItem', 'position': 5, 'url': 'https://controllertesting.com/test/controller/ps-calibration', 'name': 'PS Controller WebHID Calibration' }
+  ]
+};
+
+const controllerTools = [
+  { name: 'Full Diagnostic Wizard', url: '/test/controller/full-diagnostic', desc: '5-step hardware checkup wizard.', icon: '⚡' },
+  { name: 'Stick Drift Detector', url: '/test/controller/drift', desc: '0.1% stick drift canvas visualizer.', icon: '🎯' },
+  { name: 'Controller Health Score™', url: '/test/controller/health-score', desc: '0-100 grade & printable PDF report card.', icon: '📈' },
+  { name: 'PS Controller WebHID Calibration', url: '/test/controller/ps-calibration', desc: 'Low-level WebHID zero-point sampling & firmware save.', icon: '🔧' },
+  { name: 'Steering Wheel & Pedals', url: '/test/controller/steering-wheel', desc: '900°/1080° rotation disc & Throttle/Brake/Clutch linearity.', icon: '🏎️' },
+  { name: 'Fight Stick & Hitbox', url: '/test/controller/fight-stick', desc: 'Vewlix 8-button layout & Capcom SOCD cleaner rule check.', icon: '🕹️' },
+  { name: 'Flight Stick & HOTAS', url: '/test/controller/flight-stick', desc: 'Pitch/roll/yaw, 128+ buttons & throttle quadrant.', icon: '✈️' },
+  { name: 'MIDI Keyboard & Controller', url: '/test/midi', desc: 'Web MIDI API note events, velocity (0-127) & CC messages.', icon: '🎹' },
+  { name: 'Button Tester', url: '/test/controller/buttons', desc: 'Interactive face button matrix & ghosting detector.', icon: '⏺️' },
+  { name: 'Trigger Pressure Tester', url: '/test/controller/triggers', desc: 'Analog L2/R2 pressure curve analyzer.', icon: '🕹️' },
+  { name: 'Vibration Tester', url: '/test/controller/vibration', desc: 'Dual haptic rumble motor pulse tester.', icon: '📳' },
+  { name: 'Circularity Test', url: '/test/controller/circularity', desc: '360-degree stick range of motion & error.', icon: '⭕' },
+  { name: 'Deadzone Visualizer', url: '/test/controller/deadzone', desc: 'Inner & outer deadzone threshold tuning.', icon: '⚫' },
+  { name: 'Polling Rate Checker', url: '/test/controller/polling-rate', desc: 'Real-time Hz input report frequency.', icon: '⏱️' },
+  { name: '8-Way D-Pad Tester', url: '/test/controller/dpad', desc: 'Directional pad diagonal precision.', icon: '➕' },
+  { name: 'Latency Estimator', url: '/test/controller/latency', desc: 'Input delay & reaction speed timer.', icon: '⚡' },
+  { name: 'Multi-Controller Tester', url: '/test/controller/multi', desc: '4 gamepads simultaneous diagnostic.', icon: '👥' },
+  { name: 'Drift Timeline Tracker', url: '/test/controller/timeline', desc: 'LocalStorage hardware degradation tracker.', icon: '📊' },
+  { name: 'Gyroscope Tester', url: '/test/controller/gyroscope', desc: '3-axis motion sensor calibration.', icon: '🧭' },
+  { name: 'Touchpad Tester', url: '/test/controller/touchpad', desc: 'PS5 DualSense multi-touch trackpad.', icon: '👆' },
+  { name: 'Microphone Tester', url: '/test/controller/microphone', desc: 'Built-in mic & 3.5mm headset audio meter.', icon: '🎤' },
+  { name: 'Competitive Readiness', url: '/test/controller/competitive-readiness', desc: 'Esports tournament benchmark assessor.', icon: '🏆' },
+];
+
+const mouseTools = [
+  { name: 'CPS Test', url: '/test/mouse/cps', desc: 'Clicks per second speed tester.', icon: '🖱️' },
+  { name: 'Mouse Polling Rate (Hz)', url: '/test/mouse/polling-rate', desc: 'Up to 8000Hz (8KHz) report rate checker.', icon: '⚡' },
+  { name: 'DPI Analyzer', url: '/test/mouse/dpi', desc: 'True hardware DPI sensitivity calculator.', icon: '🎯' },
+  { name: 'Click Latency Test', url: '/test/mouse/click-latency', desc: 'Click delay timer in ms.', icon: '⏱️' },
+  { name: 'Mouse Button Matrix', url: '/test/mouse/buttons', desc: 'MB1, MB2, MB3, MB4, MB5 side buttons.', icon: '⏺️' },
+  { name: 'Scroll Wheel Tester', url: '/test/mouse/scroll', desc: 'Scroll direction & encoder jumping faults.', icon: '↕️' },
+  { name: 'Double-Click Fault Test', url: '/test/mouse/double-click', desc: 'Switch bounce & chatter detector.', icon: '⚠️' },
+  { name: 'Mouse Hub Index', url: '/test/mouse/', desc: 'Master dashboard for mouse diagnostics.', icon: '📋' },
+];
+
+const specializedTools = [
+  { name: 'Pro-Aim Sandbox', url: '/aim-trainer', desc: 'Canvas 2D stick drift & aim tracking benchmark.', icon: '🎯' },
+  { name: 'Sens Converter Engine', url: '/sensitivity-converter', desc: '1:1 360-degree motor memory math engine.', icon: '🔄' },
+  { name: 'Phantom Hz & Ghosting', url: '/hz-test', desc: 'Motion blur persistence & frame pacing analyzer.', icon: '👻' },
+  { name: 'Sonic-Space Audio', url: '/audio-test', desc: 'Web Audio API 3D binaural radar & Bluetooth latency.', icon: '🔊' },
+  { name: 'Mech-Matrix Keyboard', url: '/keyboard-tester', desc: '3D isometric keyboard visualizer with NKRO.', icon: '⌨️' },
+];
+---
+<BaseLayout 
+  title="Testing Toolkit | 32+ Diagnostic Tools for Controller & Mouse"
+  description="The world's most comprehensive hardware testing toolkit. Diagnose stick drift, polling rate, circularity, and latency. Used by 142,850+ players."
+>
+  <script type="application/ld+json" set:html={JSON.stringify(toolsSchema)} />
+
+  <main class="toolkit-page">
+    <header class="toolkit-hero">
+      <div class="hero-content">
+        <div class="telemetry-badge">
+          <span class="live-dot"></span>
+          <span>142,850+ Controllers Tested Globally</span>
+        </div>
+        <h1 class="hero-title">Diagnostic Testing Toolkit</h1>
+        <p class="hero-desc">
+          We provide the most comprehensive, privacy-first diagnostic suite available in the browser. 
+          No downloads required. Hardware telemetry powers our empirical reliability database.
+        </p>
+      </div>
+    </header>
+
+    <section class="toolkit-section">
+      <div class="section-header">
+        <h2>Controller & Peripheral Suite</h2>
+        <p>The definitive 22-tool suite for gamepads, flight sticks, racing wheels, and MIDI.</p>
+      </div>
+      <div class="bento-grid">
+        {controllerTools.map(tool => (
+          <a href={tool.url} class="bento-card">
+            <div class="bento-icon">{tool.icon}</div>
+            <div class="bento-content">
+              <h3>{tool.name}</h3>
+              <p>{tool.desc}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="toolkit-section">
+      <div class="section-header">
+        <h2>Mouse & Keyboard Suite</h2>
+        <p>High-precision polling rate and latency checkers for competitive peripherals.</p>
+      </div>
+      <div class="bento-grid">
+        {mouseTools.map(tool => (
+          <a href={tool.url} class="bento-card">
+            <div class="bento-icon">{tool.icon}</div>
+            <div class="bento-content">
+              <h3>{tool.name}</h3>
+              <p>{tool.desc}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="toolkit-section">
+      <div class="section-header">
+        <h2>High-SEA Programmatic Suite</h2>
+        <p>Advanced physics, spatial audio, and aim-training sandbox engines.</p>
+      </div>
+      <div class="bento-grid">
+        {specializedTools.map(tool => (
+          <a href={tool.url} class="bento-card">
+            <div class="bento-icon">{tool.icon}</div>
+            <div class="bento-content">
+              <h3>{tool.name}</h3>
+              <p>{tool.desc}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="toolkit-footer">
+      <div class="footer-card embed-card">
+        <h3>Want to embed these tools on your site?</h3>
+        <p>Get free gamepad testing widgets for your website. Easy to integrate, fully responsive, and zero dependencies.</p>
+        <a href="/embeds" class="btn-primary">Explore Widgets</a>
+      </div>
+      <div class="footer-card feedback-card">
+        <h3>Need a New Tool?</h3>
+        <p>We're constantly expanding our dataset and toolkit. If you need a specific tool, let us know.</p>
+        <a href="/contact" class="btn-secondary">Submit Feedback</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .toolkit-page {
+    padding-top: calc(var(--header-height) + 4rem);
+    padding-bottom: 6rem;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-inline: var(--spacing-layout);
+  }
+
+  .toolkit-hero {
+    margin-bottom: 5rem;
+    text-align: left;
+    max-width: 800px;
+  }
+
+  .telemetry-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.875rem;
+    background: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    border-radius: 9999px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--color-accent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--color-accent);
+    animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .hero-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--color-text-primary);
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-desc {
+    font-size: clamp(1.125rem, 2vw, 1.25rem);
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+    max-width: 54ch;
+  }
+
+  .toolkit-section {
+    margin-bottom: 5rem;
+  }
+
+  .section-header {
+    margin-bottom: 2rem;
+  }
+
+  .section-header h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-header p {
+    color: var(--color-text-secondary);
+    font-size: 1.0625rem;
+  }
+
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .bento-card {
+    display: flex;
+    gap: 1rem;
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 1.5rem;
+    text-decoration: none;
+    transition: all var(--duration-normal) var(--ease-smooth);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bento-card:hover {
+    background: var(--color-surface-2);
+    border-color: var(--color-border-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  .bento-icon {
+    font-size: 1.75rem;
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  .bento-content h3 {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 0.375rem;
+    line-height: 1.3;
+  }
+
+  .bento-content p {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .toolkit-footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 6rem;
+    padding-top: 4rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .footer-card {
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-card);
+    padding: 2.5rem;
+    text-align: left;
+  }
+
+  .footer-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  .footer-card p {
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-size: 1.0625rem;
+  }
+
+  .btn-primary, .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: all var(--duration-fast) var(--ease-out);
+  }
+
+  .btn-primary {
+    background: var(--color-accent);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: var(--color-accent-hover);
+  }
+
+  .btn-secondary {
+    background: var(--color-surface-2);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-hover);
+  }
+
+  .btn-secondary:hover {
+    background: var(--color-surface-3);
+  }
+
+  @media (max-width: 768px) {
+    .toolkit-footer {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
