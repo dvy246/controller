@@ -9,6 +9,18 @@ import LanguageSelector from './LanguageSelector.astro';
 ---
 
 <header class="site-header" role="banner">
+  {/* ── Scroll progress hairline (CSS scroll-driven, compositor-only) ── */}
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  {/* ── Liquid purple aurora layer (decorative, non-interactive) ── */}
+  <div class="header-aurora" aria-hidden="true">
+    <span class="aurora-blob blob-1"></span>
+    <span class="aurora-blob blob-2"></span>
+    <span class="aurora-blob blob-3"></span>
+    <span class="aurora-blob blob-4"></span>
+    <span class="aurora-line"></span>
+  </div>
+
   <nav class="site-nav" aria-label="Main navigation">
     <div class="nav-inner">
 
@@ -25,29 +37,40 @@ import LanguageSelector from './LanguageSelector.astro';
         </span>
       </a>
 
-      {/* ── Primary Nav Links ── */}
+      {/* ── Primary Nav Links (grouped into dropdowns) ── */}
       <ul class="nav-links" role="list">
-        <li>
-          <a href="/test/controller" class="nav-link">
-            Controller
-          </a>
+        <li class="nav-dropdown">
+          <button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">
+            Diagnostics
+            <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-label="Diagnostics">
+            <li role="none"><a role="menuitem" class="dropdown-link" href="/test/controller">Controller Tests</a></li>
+            <li role="none"><a role="menuitem" class="dropdown-link" href="/test/mouse">Mouse Tests</a></li>
+            <li role="none"><a role="menuitem" class="dropdown-link" href="/test/keyboard">Keyboard &amp; MIDI</a></li>
+            <li class="dropdown-sep" role="separator"></li>
+            <li role="none"><a role="menuitem" class="dropdown-link dropdown-link-em" href="/test/controller/full-diagnostic">Full Diagnostic Wizard</a></li>
+          </ul>
         </li>
-        <li>
-          <a href="/test/mouse" class="nav-link">Mouse</a>
+        <li class="nav-link-wrap">
+          <a href="/games" class="nav-link">Play</a>
         </li>
-        <li>
-          <a href="/test/keyboard" class="nav-link">Keyboard</a>
-        </li>
-        <li>
-          <a href="/games" class="nav-link">
-            <span class="nav-badge">Games</span>
-          </a>
-        </li>
-        <li>
-          <a href="/fix-or-replace" class="nav-link">Fix &amp; Repair</a>
-        </li>
-        <li>
-          <a href="/embeds" class="nav-link">Widgets &amp; Embeds</a>
+        <li class="nav-dropdown">
+          <button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">
+            Resources
+            <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-label="Resources">
+            <li role="none"><a role="menuitem" class="dropdown-link" href="/fix-or-replace">Fix &amp; Repair</a></li>
+            <li role="none"><a role="menuitem" class="dropdown-link" href="/warranty">Warranty Check</a></li>
+            <li role="none"><a role="menuitem" class="dropdown-link" href="/embeds">Widgets &amp; Embeds</a></li>
+            <li class="dropdown-sep" role="separator"></li>
+            <li role="none"><a role="menuitem" class="dropdown-link" href="/learn">Learn Guides</a></li>
+          </ul>
         </li>
       </ul>
 
@@ -71,20 +94,25 @@ import LanguageSelector from './LanguageSelector.astro';
         {/* Language selector */}
         <LanguageSelector />
 
-        {/* Theme toggle */}
+        {/* Theme toggle slider */}
         <button
           id="theme-toggle"
-          class="btn-ghost nav-icon-btn"
-          aria-label="Toggle dark/light theme"
+          class="theme-switch"
           type="button"
+          role="switch"
+          aria-checked="true"
+          aria-label="Toggle dark and light theme"
         >
-          <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <circle cx="12" cy="12" r="5"/>
-            <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke-linecap="round"/>
-          </svg>
-          <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          <span class="theme-track" aria-hidden="true">
+            <svg class="track-icon track-sun" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+              <circle cx="12" cy="12" r="5"/>
+              <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+            <svg class="track-icon track-moon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <span class="theme-knob"></span>
+          </span>
         </button>
 
         {/* Primary CTA */}
@@ -111,15 +139,30 @@ import LanguageSelector from './LanguageSelector.astro';
 
   {/* ── Mobile menu ── */}
   <div id="mobile-menu" class="mobile-menu" aria-hidden="true" hidden>
-    <ul role="list" class="mobile-nav-links">
-      <li><a href="/test/controller" class="mobile-nav-link">Controller Tests</a></li>
-      <li><a href="/test/mouse" class="mobile-nav-link">Mouse Tests</a></li>
-      <li><a href="/test/keyboard" class="mobile-nav-link">Keyboard Tests</a></li>
-      <li><a href="/games" class="mobile-nav-link">Game Arcade</a></li>
-      <li><a href="/fix-or-replace" class="mobile-nav-link">Fix &amp; Repair</a></li>
-      <li><a href="/warranty" class="mobile-nav-link">Warranty Check</a></li>
-      <li><a href="/embeds" class="mobile-nav-link">Widgets &amp; Embeds</a></li>
-    </ul>
+    <div role="list" class="mobile-nav-section">
+      <p class="mobile-nav-heading">Diagnostics</p>
+      <ul role="list" class="mobile-nav-links">
+        <li><a href="/test/controller" class="mobile-nav-link">Controller Tests</a></li>
+        <li><a href="/test/mouse" class="mobile-nav-link">Mouse Tests</a></li>
+        <li><a href="/test/keyboard" class="mobile-nav-link">Keyboard &amp; MIDI</a></li>
+        <li><a href="/test/controller/full-diagnostic" class="mobile-nav-link mobile-nav-link-em">Full Diagnostic Wizard</a></li>
+      </ul>
+    </div>
+    <div role="list" class="mobile-nav-section">
+      <p class="mobile-nav-heading">Play</p>
+      <ul role="list" class="mobile-nav-links">
+        <li><a href="/games" class="mobile-nav-link">Game Arcade</a></li>
+      </ul>
+    </div>
+    <div role="list" class="mobile-nav-section">
+      <p class="mobile-nav-heading">Resources</p>
+      <ul role="list" class="mobile-nav-links">
+        <li><a href="/fix-or-replace" class="mobile-nav-link">Fix &amp; Repair</a></li>
+        <li><a href="/warranty" class="mobile-nav-link">Warranty Check</a></li>
+        <li><a href="/embeds" class="mobile-nav-link">Widgets &amp; Embeds</a></li>
+        <li><a href="/learn" class="mobile-nav-link">Learn Guides</a></li>
+      </ul>
+    </div>
     <a href="/test/controller/full-diagnostic" class="btn-primary mobile-cta">
       Run Full Diagnostic
     </a>
@@ -145,6 +188,13 @@ import LanguageSelector from './LanguageSelector.astro';
         }
       });
     }
+
+    /* Keep the switch's ARIA state in sync with the persisted theme */
+    var toggle = document.getElementById('theme-toggle');
+    if (toggle) {
+      var theme = document.documentElement.getAttribute('data-theme') || 'dark';
+      toggle.setAttribute('aria-checked', String(theme === 'dark'));
+    }
   })();
 </script>
 
@@ -156,18 +206,165 @@ import LanguageSelector from './LanguageSelector.astro';
     left: 0;
     right: 0;
     z-index: 50;
-    border-bottom: 1px solid var(--color-border-subtle);
-    background: rgba(6, 6, 11, 0.85);
+    background: rgba(6, 6, 11, 0.72);
     backdrop-filter: blur(16px) saturate(150%);
     -webkit-backdrop-filter: blur(16px) saturate(150%);
   }
 
+  /* ── Scroll progress hairline ──
+     Pure CSS scroll-driven animation (zero JS). Runs on the compositor:
+     only `transform` is animated (scaleX). Progressive enhancement:
+     wrapped in @supports so unsupported browsers render nothing (no CLS). */
+  .scroll-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    z-index: 51;
+    pointer-events: none;
+    background: linear-gradient(90deg,
+      rgba(139, 92, 246, 0.9),
+      rgba(37, 99, 235, 0.9) 50%,
+      rgba(139, 92, 246, 0.9));
+    transform-origin: left center;
+    will-change: transform;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .scroll-progress {
+      animation: scroll-progress-grow linear both;
+      animation-timeline: scroll(root);
+      animation-duration: 1ms; /* Firefox requires non-zero duration */
+    }
+  }
+
+  @keyframes scroll-progress-grow {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-progress { animation: none; }
+  }
+
   :global([data-theme="light"]) .site-header {
-    background: rgba(250, 251, 253, 0.88);
+    background: rgba(250, 251, 253, 0.78);
+  }
+
+  /* ── Liquid purple aurora layer ── */
+  .header-aurora {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .aurora-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(52px);
+    will-change: transform;
+    opacity: 0.34;
+    mix-blend-mode: screen;
+  }
+
+  :global([data-theme="light"]) .aurora-blob {
+    opacity: 0.16;
+    mix-blend-mode: normal;
+  }
+
+  .blob-1 {
+    width: 440px;
+    height: 280px;
+    left: -140px;
+    top: -160px;
+    background: radial-gradient(circle at 30% 30%, rgba(139, 92, 246, 0.95), rgba(139, 92, 246, 0) 70%);
+    animation: aurora-drift-1 26s ease-in-out infinite alternate;
+    animation-delay: 0.8s;
+  }
+
+  .blob-2 {
+    width: 380px;
+    height: 240px;
+    right: -120px;
+    top: -150px;
+    background: radial-gradient(circle at 60% 40%, rgba(168, 85, 247, 0.9), rgba(168, 85, 247, 0) 70%);
+    animation: aurora-drift-2 32s ease-in-out infinite alternate;
+    animation-delay: 1s;
+  }
+
+  .blob-3 {
+    width: 320px;
+    height: 220px;
+    left: 34%;
+    top: -170px;
+    background: radial-gradient(circle at 50% 50%, rgba(79, 70, 229, 0.85), rgba(79, 70, 229, 0) 70%);
+    animation: aurora-drift-3 38s ease-in-out infinite alternate;
+    animation-delay: 1.2s;
+  }
+
+  .blob-4 {
+    width: 220px;
+    height: 160px;
+    left: 58%;
+    top: -120px;
+    background: radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.8), rgba(37, 99, 235, 0) 70%);
+    animation: aurora-drift-4 20s ease-in-out infinite alternate;
+    animation-delay: 1.4s;
+    opacity: 0.24;
+  }
+
+  @keyframes aurora-drift-1 {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(70px, 26px, 0) scale(1.18); }
+    100% { transform: translate3d(-50px, 14px, 0) scale(0.94); }
+  }
+
+  @keyframes aurora-drift-2 {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(-80px, 20px, 0) scale(1.12); }
+    100% { transform: translate3d(40px, -18px, 0) scale(1.22); }
+  }
+
+  @keyframes aurora-drift-3 {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(-60px, -22px, 0) scale(1.2); }
+    100% { transform: translate3d(60px, 12px, 0) scale(0.9); }
+  }
+
+  @keyframes aurora-drift-4 {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    100% { transform: translate3d(90px, 30px, 0) scale(1.35); }
+  }
+
+  /* Liquid bottom hairline */
+  .aurora-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(139, 92, 246, 0.55) 22%,
+      rgba(37, 99, 235, 0.65) 50%,
+      rgba(168, 85, 247, 0.55) 78%,
+      transparent 100%);
+    opacity: 0.85;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aurora-blob { animation: none; }
   }
 
   /* ── Nav inner — single line, max 72px ── */
-  .site-nav { width: 100%; }
+  .site-nav {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
 
   .nav-inner {
     display: flex;
@@ -208,6 +405,16 @@ import LanguageSelector from './LanguageSelector.astro';
     margin-left: auto;
   }
 
+  /* ── Dropdown nav ── */
+  .nav-dropdown {
+    position: relative;
+  }
+
+  .nav-link-wrap {
+    display: flex;
+    align-items: center;
+  }
+
   .nav-link {
     display: flex;
     align-items: center;
@@ -227,23 +434,93 @@ import LanguageSelector from './LanguageSelector.astro';
     background: var(--color-surface-3);
   }
 
-  .nav-badge {
-    position: relative;
+  .nav-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.4rem 0.75rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color var(--duration-fast), background var(--duration-fast);
   }
 
-  .nav-badge::after {
-    content: 'NEW';
+  .nav-dropdown-trigger:hover {
+    color: var(--color-text-primary);
+    background: var(--color-surface-3);
+  }
+
+  .dropdown-chevron {
+    opacity: 0.55;
+    transition: transform 180ms var(--ease-smooth);
+  }
+
+  .nav-dropdown:hover .dropdown-chevron,
+  .nav-dropdown:focus-within .dropdown-chevron {
+    transform: rotate(180deg);
+  }
+
+  .dropdown-menu {
     position: absolute;
-    top: -8px;
-    right: -28px;
-    font-size: 0.6rem;
-    font-weight: 700;
-    font-family: var(--font-mono);
-    background: var(--color-accent);
-    color: white;
-    padding: 0.05em 0.35em;
-    border-radius: 3px;
-    letter-spacing: 0.05em;
+    top: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    min-width: 220px;
+    padding: 0.375rem;
+    list-style: none;
+    margin: 0;
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.32), 0 4px 12px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 160ms var(--ease-smooth), transform 160ms var(--ease-smooth), visibility 160ms;
+  }
+
+  .nav-dropdown:hover .dropdown-menu,
+  .nav-dropdown:focus-within .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .dropdown-link {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--duration-fast), background var(--duration-fast);
+  }
+
+  .dropdown-link:hover,
+  .dropdown-link:focus-visible {
+    color: var(--color-text-primary);
+    background: var(--color-surface-3);
+    outline: none;
+  }
+
+  .dropdown-link-em {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  .dropdown-sep {
+    height: 1px;
+    margin: 0.375rem 0.5rem;
+    background: var(--color-border-subtle);
   }
 
   /* ── Right actions ── */
@@ -257,6 +534,82 @@ import LanguageSelector from './LanguageSelector.astro';
   .nav-icon-btn {
     padding: 0.4rem;
     color: var(--color-text-secondary);
+  }
+
+  /* ── Theme toggle slider ── */
+  .theme-switch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    cursor: pointer;
+    transition: border-color var(--duration-fast), background var(--duration-fast);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .theme-switch:hover {
+    background: var(--color-surface-2);
+    border-color: var(--color-border-subtle);
+  }
+
+  .theme-switch:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .theme-track {
+    position: relative;
+    display: block;
+    width: 44px;
+    height: 24px;
+    border-radius: 999px;
+    border: 1px solid var(--color-border-subtle);
+    background: var(--color-surface-2);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.18);
+    transition: background 300ms var(--ease-smooth), border-color 300ms var(--ease-smooth);
+  }
+
+  /* Sun (light side) / Moon (dark side) hints inside the track */
+  .track-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: opacity 250ms var(--ease-smooth);
+  }
+
+  .track-sun {
+    left: 6px;
+    color: var(--color-warning);
+    opacity: 0.55;
+  }
+
+  .track-moon {
+    right: 6px;
+    color: var(--color-accent);
+    opacity: 0.55;
+  }
+
+  :global([data-theme="dark"]) .track-sun { opacity: 0.25; }
+  :global([data-theme="light"]) .track-moon { opacity: 0.25; }
+
+  .theme-knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--color-text-primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+    transition: transform 320ms var(--ease-spring), background 300ms var(--ease-smooth);
+  }
+
+  :global([data-theme="light"]) .theme-knob {
+    transform: translateX(20px);
   }
 
   .nav-search-btn {
@@ -295,31 +648,44 @@ import LanguageSelector from './LanguageSelector.astro';
     padding: 0.45rem 1.125rem;
   }
 
-  /* Theme icon switching */
-  :global([data-theme="dark"]) .icon-moon { display: none; }
-  :global([data-theme="light"]) .icon-sun { display: none; }
-
   /* ── Mobile menu button — hidden on desktop ── */
   .mobile-menu-btn { display: none; }
 
   /* ── Mobile menu ── */
   .mobile-menu {
     border-top: 1px solid var(--color-border-subtle);
-    background: var(--color-surface-1);
-    padding: 1.25rem 1.5rem;
+    background:
+      linear-gradient(180deg, rgba(139, 92, 246, 0.07), transparent 40%),
+      var(--color-surface-1);
+    padding: 1rem 1.5rem 1.25rem;
+  }
+
+  .mobile-nav-section {
+    margin-bottom: 0.5rem;
+  }
+
+  .mobile-nav-heading {
+    margin: 0 0 0.125rem;
+    padding: 0.5rem 0.75rem 0.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
   }
 
   .mobile-nav-links {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-    margin-bottom: 1.25rem;
+    gap: 0.125rem;
+    margin: 0;
   }
 
   .mobile-nav-link {
     display: block;
-    padding: 0.625rem 0.75rem;
+    padding: 0.5rem 0.75rem;
     border-radius: var(--radius-sm);
     font-size: 1rem;
     font-weight: 500;
@@ -333,7 +699,16 @@ import LanguageSelector from './LanguageSelector.astro';
     background: var(--color-surface-3);
   }
 
-  .mobile-cta { width: 100%; justify-content: center; }
+  .mobile-nav-link-em {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  .mobile-cta {
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.75rem;
+  }
 
   /* ── Responsive ── */
   @media (max-width: 1024px) {

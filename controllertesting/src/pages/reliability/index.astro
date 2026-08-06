@@ -1,0 +1,101 @@
+---
+/**
+ * /reliability — Hardware Reliability Dataset Hub (flagship vertical)
+ * All numbers trace directly to src/data/reliabilityData.json — nothing invented.
+ * No competitor has this content type (verified).
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import reliabilityData from '../../data/reliabilityData.json';
+
+const models = Object.entries(reliabilityData.models as Record<string, any>);
+
+const breadcrumbs = [{ name: 'Home', url: '/' }, { name: 'Reliability Data' }];
+---
+
+<BaseLayout
+  title="Controller Reliability Data — Stick Drift Baselines by Model | ControllerTesting.com"
+  description={`Baseline stick drift and sensor reliability figures for 5 controller models, compiled from ${reliabilityData.totalSamplesMeasured.toLocaleString()} documented test results (snapshot ${reliabilityData.updatedAt}).`}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="hub-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="hub-hero">
+        <span class="badge-tag">Baseline Reference Dataset</span>
+        <h1 class="hub-title">Controller Reliability Data</h1>
+        <p class="hub-subtitle">
+          Baseline stick drift and sensor wear figures by model — compiled from {reliabilityData.totalSamplesMeasured.toLocaleString()}
+          documented test results, snapshot {reliabilityData.updatedAt}. Baselines, not promises about any individual unit.
+        </p>
+      </header>
+
+      <div class="model-grid">
+        {models.map(([slug, m]) => (
+          <a href={`/reliability/${slug}`} class="model-card card-base card-hover">
+            <h2 class="model-name">{m.name}</h2>
+            <div class="model-stats">
+              <div class="stat">
+                <span class="stat-label">12-mo drift</span>
+                <span class="stat-value">{m.avgDriftAfter12MonthsPercent}%</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Circularity err</span>
+                <span class="stat-value">{m.avgCircularityErrorPercent}%</span>
+              </div>
+              <div class="stat">
+                <span class="stat-label">Drift-free lifespan</span>
+                <span class="stat-value">{m.avgLifespanMonthsBeforeDrift} mo</span>
+              </div>
+            </div>
+            <span class="model-samples">{m.samples.toLocaleString()} documented results</span>
+          </a>
+        ))}
+      </div>
+
+      <section class="hub-note card-base">
+        <h2 class="section-title">How to read this data</h2>
+        <p class="hub-text">
+          Higher 12-month drift % = more degradation in the baseline dataset. Lower circularity error % = better range
+          accuracy. Hall-effect controllers ({models.find(([, m]) => m.name.includes('Hall'))?.[1].avgDriftAfter12MonthsPercent}%
+          at 12 months) measurably outperform potentiometer sticks — that gap is the whole Hall-effect argument.
+          The dataset is a static snapshot: telemetry stays in your browser today, and every new test we can measure
+          makes the baselines sharper. See our <a href="/test/methodology" class="hub-link">methodology</a> for what this can
+          and cannot tell you.
+        </p>
+        <p class="hub-text" style="margin-top: 0.75rem;">
+          <a href="/reliability/dashboard" class="hub-link">Open the aggregate reliability dashboard &rarr;</a>
+          &nbsp;&middot;&nbsp;
+          <a href="/reliability/report" class="hub-link">Read the monthly dataset report &rarr;</a>
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .hub-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .hub-hero { margin-bottom: 2.5rem; }
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .hub-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 70ch; }
+  .model-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+  .model-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .model-name { font-size: 1.125rem; font-weight: 800; }
+  .model-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+  .stat { display: flex; flex-direction: column; gap: 0.25rem; background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 0.75rem; }
+  .stat-label { font-family: var(--font-mono); font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-tertiary); }
+  .stat-value { font-family: var(--font-mono); font-size: 1.125rem; font-weight: 700; color: var(--color-text-primary); }
+  .model-samples { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--color-text-tertiary); }
+  .hub-note { padding: 2rem; }
+  .hub-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.7; }
+  .hub-link { color: var(--color-accent); }
+</style>

@@ -1,0 +1,194 @@
+---
+/**
+ * /connect/[controller]/[platform] — How to connect & pair your controller per platform.
+ * Hypothesis batch (not per-dossier-verified): setup steps are general, platform-accurate
+ * guidance; anything model-specific is kept conservative and linked to the tool that
+ * verifies the result. No invented figures.
+ */
+
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/global/Header.astro';
+import Footer from '../../../components/global/Footer.astro';
+import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
+
+export function getStaticPaths() {
+  const controllers = [
+    {
+      slug: 'ps5-dualsense',
+      name: 'PS5 DualSense',
+      sensor: 'Potentiometer sticks',
+      protocol: 'Bluetooth (legacy gamepad) or USB',
+      note: 'DualSense uses Bluetooth with a proprietary "Wireless Controller" profile. Use the same pairing method every time; Windows sometimes lists two discovered devices — pair the one without "LE" in the name.',
+    },
+    {
+      slug: 'ps4-dualshock-4',
+      name: 'PS4 DualShock 4',
+      sensor: 'Potentiometer sticks',
+      protocol: 'Bluetooth (HID) or USB',
+      note: 'DualShock 4 speaks a fairly generic HID profile, so it pairs well on PC, macOS and Steam Deck with the built-in PlayStation button layout.',
+    },
+    {
+      slug: 'xbox-wireless',
+      name: 'Xbox Wireless Controller',
+      sensor: 'Potentiometer sticks',
+      protocol: 'Xbox Wireless, Bluetooth or USB',
+      note: 'On Windows the Xbox Wireless Controller runs as XInput with native button mapping; on Steam Deck it relies on Steam Input; on macOS it can be used wired or via Bluetooth with some button remapping.',
+    },
+    {
+      slug: 'switch-pro',
+      name: 'Nintendo Switch Pro Controller',
+      sensor: 'Potentiometer sticks',
+      protocol: 'Bluetooth (HID) or USB',
+      note: 'The Pro Controller reports as a generic Bluetooth HID. Button labels are Nintendo-style (A/B and X/Y swapped) on PC and macOS, so a mapping layer such as Steam Input is recommended for native labels.',
+    },
+  ];
+
+  const platforms = [
+    {
+      slug: 'pc',
+      name: 'PC (Windows)',
+      steps: [
+        'Press and hold the controller\'s pair button until its LED starts blinking.',
+        'Open Windows Settings → Bluetooth & devices → Add device → Bluetooth, and select the controller from the list.',
+        'On first connect, the OS may install generic HID drivers; game-launcher input layers (Steam Input, Windows Game Bar) usually pick it up automatically.',
+      ],
+      tip: 'Verify the connection: open a browser gamepad tester and confirm the controller reports buttons and sticks. If the trigger only registers on the "wrong" axis, use the tester to confirm which input the game will see.',
+    },
+    {
+      slug: 'mac',
+      name: 'macOS',
+      steps: [
+        'Press and hold the controller\'s pairing button until the LED flashes.',
+        'Open System Settings → Bluetooth and select the controller to pair.',
+        'For Nintendo-layout buttons on non-Nintendo pads, verify button roles in the game or with a tester before ranked play.',
+      ],
+      tip: 'macOS treats most pads as generic HID gamepads. If the stick reads non-zero at rest on our Stick Drift Detector, that is sensor drift — not a macOS quirk.',
+    },
+    {
+      slug: 'steam-deck',
+      name: 'Steam Deck',
+      steps: [
+        'Put the controller in pairing mode and open SteamOS Settings → Bluetooth → Pair device.',
+        'Steam Input assigns a profile automatically for known pads; Nintendo pads may need "PlayStation/Nintendo-style layout" enabled.',
+        'Verify with a browser tester in Deck mode; then adjust deadzones in Steam Input if drift surfaces.',
+      ],
+      tip: 'Steam Deck remaps aggressively: the "controller id" your browser sees may differ from the pad\'s own listing. Use it to verify the actual button mapping, not just the connection.',
+    },
+  ];
+  const routes = [];
+  for (const controller of controllers) {
+    for (const platform of platforms) {
+      routes.push({ params: { controller: controller.slug, platform: platform.slug }, props: { controller, platform } });
+    }
+  }
+  return routes;
+}
+
+const { controller, platform } = Astro.props;
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Connect & Pair', url: '/connect' },
+  { name: controller.name },
+  { name: platform.name },
+];
+
+const faqs = [
+  {
+    question: `How do I connect the ${controller.name} to ${platform.name}?`,
+    answer: `Put the ${controller.name} in pairing mode (hold the pairing button until the LED flashes), then pair it from ${platform.name}'s Bluetooth settings. For a stable wired connection, connect the controller by USB instead.`,
+  },
+  {
+    question: `Why isn't my ${controller.name} being detected by ${platform.name}?`,
+    answer: `Most detection failures are one of: Bluetooth batteries draining, a stale pairing entry, or the pad connected to another device. Remove the old pairing, re-pair, and confirm with a browser tester before blaming the controller.`,
+  },
+  {
+    question: `Does the ${controller.name} work with a drifting stick on ${platform.name}?`,
+    answer: `It connects the same way — drift is a sensor issue reported by the gamepad, not a platform issue. Run our Stick Drift Detector after pairing to confirm the measurement.`,
+  },
+];
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: `How to connect the ${controller.name} to ${platform.name}`,
+  description: `Step-by-step pairing for the ${controller.name} with ${platform.name}, including a verification test.`,
+  step: platform.steps.map((s, i) => ({ '@type': 'HowToStep', position: i + 1, text: s })),
+};
+---
+
+<BaseLayout
+  title={`Connect ${controller.name} to ${platform.name} | ControllerTesting.com`}
+  description={`How to connect and pair the ${controller.name} with ${platform.name}: Bluetooth pairing, USB setup, first-run mapping, and verification with our free tester.`}
+  breadcrumbs={breadcrumbs}
+  schema={howToSchema}
+>
+  <Header />
+
+  <main id="main-content" class="connect-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="connect-hero">
+        <span class="badge-tag">Connect &amp; Pair · {controller.protocol}</span>
+        <h1 class="connect-title">Connect {controller.name} to {platform.name}</h1>
+        <p class="connect-subtitle">
+          {controller.protocol} pairing in a few steps {controller.note}
+        </p>
+      </header>
+
+      <div class="connect-body card-base">
+        <h2 class="section-title">Step-by-step</h2>
+        {platform.steps.map((step, i) => (
+          <div class="connect-step">
+            <span class="connect-num">{i + 1}</span>
+            <p class="connect-text">{step}</p>
+          </div>
+        ))}
+
+        {platform.tip && (
+          <div class="connect-tip">
+            <strong class="connect-tip-label">Verify your connection:</strong>
+            <p class="connect-text">{platform.tip}</p>
+          </div>
+        )}
+
+        <div class="connect-cta">
+          <a href="/test/controller/drift" class="btn-primary">Test after pairing</a>
+          <a href="/test/controller/polling-rate" class="btn-secondary">Check polling rate</a>
+        </div>
+      </div>
+
+      <div class="connect-faq card-base">
+        <h2 class="section-title">Quick answers</h2>
+        {faqs.map((f) => (
+          <div class="faq-item">
+            <h3 class="faq-q">{f.question}</h3>
+            <p class="connect-text">{f.answer}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .connect-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .connect-hero { margin-bottom: 2.5rem; max-width: 760px; }
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .connect-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .connect-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .connect-body { padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 1.5rem; }
+  .section-title { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
+  .connect-step { display: flex; gap: 1rem; align-items: flex-start; }
+  .connect-num { flex: 0 0 auto; width: 28px; height: 28px; border-radius: 999px; background: rgba(37, 99, 235, 0.12); color: var(--color-accent); font-family: var(--font-mono); font-weight: 700; font-size: 0.875rem; display: inline-flex; align-items: center; justify-content: center; }
+  .connect-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.7; margin: 0; }
+  .connect-tip { background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1rem 1.25rem; display: flex; flex-direction: column; gap: 0.375rem; }
+  .connect-tip-label { color: var(--color-text-primary); }
+  .connect-cta { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }
+  .connect-faq { padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
+  .faq-item { display: flex; flex-direction: column; gap: 0.375rem; }
+  .faq-q { font-size: 1rem; font-weight: 700; color: var(--color-text-primary); }
+</style>

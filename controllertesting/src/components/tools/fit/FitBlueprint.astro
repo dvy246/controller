@@ -1,0 +1,546 @@
+---
+/**
+ * FitBlueprint.astro — interactive hand-to-grip fit analyzer.
+ * Calibration: silhouette slider (primary) or credit-card reference (fallback).
+ * Output: visual width-band comparison + named picks. No numeric score.
+ */
+
+import { getFitModels } from '../../../lib/fit';
+
+const fitModels = getFitModels();
+---
+
+<div class="fit-app" id="fit-app">
+  <!-- Step 1: Calibration -->
+  <section class="fit-step" id="fit-step-cal" aria-labelledby="fit-cal-title">
+    <h2 id="fit-cal-title" class="fit-step-title">1. Calibrate your hand</h2>
+
+    <div class="fit-tabs" role="tablist" aria-label="Calibration method">
+      <button type="button" class="fit-tab is-active" role="tab" aria-selected="true" data-fit-tab="slider">
+        Match the silhouette
+      </button>
+      <button type="button" class="fit-tab" role="tab" aria-selected="false" data-fit-tab="card">
+        Credit-card reference
+      </button>
+    </div>
+
+    <!-- Slider mode (primary) -->
+    <div class="fit-pane is-active" id="fit-pane-slider" data-fit-pane="slider">
+      <p class="fit-pane-desc">
+        Drag the slider until the hand outline matches your own open hand, thumb to pinky.
+      </p>
+      <div class="fit-hand-stage" aria-hidden="true">
+        <svg id="fit-hand-svg" viewBox="0 0 120 190" class="fit-hand-svg">
+          <path
+            fill="rgba(37,99,235,0.18)"
+            stroke="#2563EB"
+            stroke-width="2"
+            d="M60 6c-14 0-24 10-24 24v16l-10 4c-8 4-13 12-13 21 0 9 5 17 13 21l22 9c10 4 21 2 29-5l18-14c8-6 12-16 11-26l-1-14c-1-9-7-16-16-18l-15-4-2-5c-5-7-13-9-12-9z"
+          />
+        </svg>
+      </div>
+      <div class="fit-slider-row">
+        <span class="fit-slider-label">Small</span>
+        <input
+          type="range"
+          id="fit-span-slider"
+          min="120"
+          max="240"
+          step="1"
+          value="180"
+          class="fit-slider"
+          aria-label="Hand span in millimetres"
+        />
+        <span class="fit-slider-label">Large</span>
+      </div>
+      <p class="fit-readout" aria-live="polite">
+        Hand span: <strong id="fit-span-readout">180</strong> mm
+      </p>
+      <button type="button" class="btn-primary fit-confirm" data-fit-continue>
+        Continue
+      </button>
+    </div>
+
+    <!-- Card mode (fallback) -->
+    <div class="fit-pane" id="fit-pane-card" data-fit-pane="card" hidden>
+      <p class="fit-pane-desc">
+        Hold a standard credit card (85.6&nbsp;mm) flat against your screen. Drag the slider until the green
+        bracket matches the card exactly, then hold your hand against the screen and drag the second bracket to
+        match your open hand, thumb to pinky.
+      </p>
+      <div class="fit-card-stage">
+        <div class="fit-bracket" id="fit-card-bracket" aria-hidden="true"></div>
+        <div class="fit-bracket fit-bracket-hand" id="fit-hand-bracket" aria-hidden="true"></div>
+        <span class="fit-bracket-tag">card 85.6 mm</span>
+        <span class="fit-bracket-tag fit-bracket-tag-hand">your hand</span>
+      </div>
+      <div class="fit-slider-row">
+        <span class="fit-slider-label">Narrow</span>
+        <input
+          type="range"
+          id="fit-card-slider"
+          min="40"
+          max="260"
+          step="1"
+          value="120"
+          class="fit-slider"
+          aria-label="Credit card calibration width"
+        />
+        <span class="fit-slider-label">Wide</span>
+      </div>
+      <p class="fit-readout">
+        Card bracket: <strong id="fit-card-readout">—</strong> (aim for exactly 85.6&nbsp;mm)
+      </p>
+      <div class="fit-slider-row">
+        <span class="fit-slider-label">Small</span>
+        <input
+          type="range"
+          id="fit-span-card-slider"
+          min="120"
+          max="240"
+          step="1"
+          value="180"
+          class="fit-slider"
+          aria-label="Hand span in millimetres (card mode)"
+        />
+        <span class="fit-slider-label">Large</span>
+      </div>
+      <p class="fit-readout" aria-live="polite">
+        Hand span: <strong id="fit-span-card-readout">180</strong> mm
+      </p>
+      <button type="button" class="btn-primary fit-confirm" data-fit-continue>
+        Continue
+      </button>
+    </div>
+  </section>
+
+  <!-- Step 2: Stick preference -->
+  <section class="fit-step" id="fit-step-layout" hidden aria-labelledby="fit-layout-title">
+    <h2 id="fit-layout-title" class="fit-step-title">2. Stick layout preference</h2>
+    <p class="fit-pane-desc">
+      Which stick layout do you play on most? Used to rank models when widths are a draw.
+    </p>
+    <div class="fit-layout-grid">
+      <button type="button" class="fit-layout-btn is-active" data-fit-layout="symmetrical">
+        <svg width="34" height="24" viewBox="0 0 34 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <circle cx="10" cy="8" r="5.5"/><circle cx="24" cy="8" r="5.5"/><rect x="6" y="13" width="22" height="8" rx="4"/>
+        </svg>
+        Symmetrical <span class="fit-layout-sub">PS-style</span>
+      </button>
+      <button type="button" class="fit-layout-btn" data-fit-layout="asymmetric">
+        <svg width="34" height="24" viewBox="0 0 34 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <circle cx="11" cy="7" r="5.5"/><circle cx="26" cy="14" r="5.5"/><rect x="6" y="14" width="22" height="7" rx="3.5"/>
+        </svg>
+        Asymmetric <span class="fit-layout-sub">Xbox-style</span>
+      </button>
+    </div>
+    <button type="button" class="btn-primary fit-confirm" data-fit-run>
+      Show my picks
+    </button>
+  </section>
+
+  <!-- Step 3: Results -->
+  <section class="fit-step" id="fit-step-results" hidden aria-labelledby="fit-results-title">
+    <div class="fit-results-head">
+      <div>
+        <h2 id="fit-results-title" class="fit-step-title">3. Your named picks</h2>
+        <p class="fit-pane-desc" id="fit-results-context"></p>
+      </div>
+      <button type="button" class="fit-restart" data-fit-restart>Re-calibrate</button>
+    </div>
+
+    <!-- Visual width band -->
+    <div class="fit-band-card">
+      <div class="fit-band-head">
+        <span class="fit-band-title">Controller body width vs your hand span</span>
+        <span class="fit-band-legend">
+          <span class="fit-legend-dot fit-legend-span"></span> your span
+          <span class="fit-legend-dot fit-legend-bar"></span> controller width
+        </span>
+      </div>
+      <div class="fit-band-scroll">
+        <div class="fit-band-rows" id="fit-band-rows">
+          <div class="fit-band-row fit-band-row-meta">
+            <span class="fit-band-name">model</span>
+            <div class="fit-band-track">
+              <span class="fit-span-marker" id="fit-span-marker">
+                <span class="fit-span-label" id="fit-span-marker-label">your span</span>
+              </span>
+            </div>
+            <span class="fit-band-mm"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ranked picks -->
+    <div class="fit-picks" id="fit-picks"></div>
+
+    <!-- Methodology note -->
+    <details class="fit-limits">
+      <summary>How this test works &amp; its limits</summary>
+      <div class="fit-limits-body">
+        <p>
+          Verdicts come from published manufacturer body dimensions compared against your calibrated hand span.
+          A model is <strong>recommended</strong> when its width sits comfortably inside your span (ratio 0.75–0.95)
+          and its stick layout matches your preference; <strong>try-first</strong> when the width fits but the layout
+          differs; <strong>not-ideal</strong> when the body is wider than your span or leaves too much overhang;
+          <strong>pending</strong> when we have not yet measured the body with calipers.
+        </p>
+        <p>
+          Body width is one signal — grip depth, thumb reach and trigger distance also matter, and those
+          measurements are still being collected. Treat these picks as a starting point, not a verdict on your
+          specific hand. Thresholds (165 mm / 195 mm band edges, 0.75 / 0.95 ratios) are published guidelines,
+          not lab results.
+        </p>
+      </div>
+    </details>
+  </section>
+</div>
+
+<script>
+  import { rankAll } from '../../../lib/fit';
+
+  interface ModelEntry {
+    name: string;
+    widthMm: number | null;
+  }
+  const models = JSON.parse(
+    (document.getElementById('fit-models-json') as HTMLScriptElement).textContent ?? '{}'
+  ) as Record<string, ModelEntry>;
+
+  const $ = (sel: string) => document.querySelector(sel);
+  const app = $('#fit-app') as HTMLElement;
+  const spanSlider = $('#fit-span-slider') as HTMLInputElement;
+  const spanReadout = $('#fit-span-readout') as HTMLElement;
+  const handSvg = $('#fit-hand-svg') as SVGElement;
+
+  let spanMm = 180;
+  let layout: 'symmetrical' | 'asymmetric' = 'symmetrical';
+
+  const tabButtons = Array.from(app.querySelectorAll<HTMLButtonElement>('.fit-tab'));
+  const panes = Array.from(app.querySelectorAll<HTMLElement>('[data-fit-pane]'));
+
+  function activateTab(mode: 'slider' | 'card') {
+    tabButtons.forEach((b) => {
+      const active = b.dataset.fitTab === mode;
+      b.classList.toggle('is-active', active);
+      b.setAttribute('aria-selected', String(active));
+    });
+    panes.forEach((p) => {
+      const active = p.dataset.fitPane === mode;
+      p.classList.toggle('is-active', active);
+      p.hidden = !active;
+    });
+  }
+
+  tabButtons.forEach((b) => {
+    b.addEventListener('click', () => activateTab(b.dataset.fitTab as 'slider' | 'card'));
+  });
+
+  function updateSpan(v: number, readout: HTMLElement) {
+    spanMm = v;
+    readout.textContent = String(v);
+    handSvg.style.width = `${(v / 180) * 150}px`;
+  }
+
+  spanSlider.addEventListener('input', () => updateSpan(Number(spanSlider.value), spanReadout));
+
+  // Card mode: bracket width in px vs slider value maps to mm at a fixed px/mm
+  // scale; the user calibrates by matching a physical card (85.6 mm).
+  const cardStage = $('.fit-card-stage') as HTMLElement;
+  const cardSlider = $('#fit-card-slider') as HTMLInputElement;
+  const cardReadout = $('#fit-card-readout') as HTMLElement;
+  const cardBracket = $('#fit-card-bracket') as HTMLElement;
+  const handBracket = $('#fit-hand-bracket') as HTMLElement;
+  const spanCardSlider = $('#fit-span-card-slider') as HTMLInputElement;
+  const spanCardReadout = $('#fit-span-card-readout') as HTMLElement;
+
+  const PX_PER_MM = 2.2;
+
+  function updateCardBracket() {
+    const px = Number(cardSlider.value);
+    const mm = Math.round(px / PX_PER_MM);
+    cardBracket.style.width = `${px}px`;
+    cardReadout.textContent = `${mm} mm`;
+  }
+  cardSlider.addEventListener('input', updateCardBracket);
+  updateCardBracket();
+
+  function updateCardSpan() {
+    const v = Number(spanCardSlider.value);
+    spanCardReadout.textContent = String(v);
+    handBracket.style.width = `${Math.round(v * PX_PER_MM)}px`;
+  }
+  spanCardSlider.addEventListener('input', updateCardSpan);
+  updateCardSpan();
+
+  app.querySelectorAll<HTMLButtonElement>('[data-fit-continue]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const stepCal = $('#fit-step-cal') as HTMLElement;
+      const stepLayout = $('#fit-step-layout') as HTMLElement;
+      stepCal.hidden = true;
+      stepLayout.hidden = false;
+      stepLayout.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  app.querySelectorAll<HTMLButtonElement>('.fit-layout-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      app.querySelectorAll('.fit-layout-btn').forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      layout = (btn.dataset.fitLayout as 'symmetrical' | 'asymmetric');
+    });
+  });
+
+  app.querySelectorAll<HTMLButtonElement>('[data-fit-restart]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const stepLayout = $('#fit-step-layout') as HTMLElement;
+      const stepResults = $('#fit-step-results') as HTMLElement;
+      stepResults.hidden = true;
+      stepLayout.hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  function renderResults() {
+    const { results } = rankAll(spanMm, layout);
+    const stepLayout = $('#fit-step-layout') as HTMLElement;
+    const stepResults = $('#fit-step-results') as HTMLElement;
+    stepLayout.hidden = true;
+    stepResults.hidden = false;
+
+    const ctx = $('#fit-results-context') as HTMLElement;
+    ctx.textContent = `${spanMm} mm span · ${layout} layout preference · rank uses published body widths only`;
+
+    const marker = $('#fit-span-marker') as HTMLElement;
+    marker.style.left = `${(spanMm / 240) * 100}%`;
+    const markerLabel = $('#fit-span-marker-label') as HTMLElement;
+    markerLabel.textContent = `${spanMm} mm`;
+
+    const rows = $('#fit-band-rows') as HTMLElement;
+    rows.querySelectorAll('.fit-band-row:not(.fit-band-row-meta)').forEach((el) => el.remove());
+    Object.entries(models).forEach(([slug, m]) => {
+      if (m.widthMm === null) return;
+      const row = document.createElement('div');
+      row.className = 'fit-band-row';
+      const pct = (m.widthMm / 240) * 100;
+      row.innerHTML = `
+        <a class="fit-band-name" href="/fit/${slug}">${m.name}</a>
+        <div class="fit-band-track">
+          <span class="fit-band-bar" style="width:${pct}%"></span>
+        </div>
+        <span class="fit-band-mm">${m.widthMm} mm</span>
+      `;
+      rows.appendChild(row);
+    });
+
+    const picks = $('#fit-picks') as HTMLElement;
+    picks.innerHTML = '';
+    const tierMeta: Record<string, { label: string; cls: string }> = {
+      recommended: { label: 'Recommended fit', cls: 'tier-rec' },
+      'try-first': { label: 'Try before you buy', cls: 'tier-try' },
+      'not-ideal': { label: 'Not ideal for this span', cls: 'tier-no' },
+      pending: { label: 'Verdict pending (unmeasured)', cls: 'tier-pend' },
+    };
+
+    results.forEach((r) => {
+      const meta = tierMeta[r.verdict];
+      const card = document.createElement('article');
+      card.className = `fit-pick ${meta.cls}`;
+      const weightText = r.weightTier === null ? 'weight unverified' : `${r.weightG} g · ${r.weightTier}`;
+      card.innerHTML = `
+        <div class="fit-pick-top">
+          <span class="fit-pick-tier">${meta.label}</span>
+          <span class="fit-pick-layout">${r.stickLayout}</span>
+        </div>
+        <h3 class="fit-pick-name"><a href="/fit/${r.slug}">${r.name}</a></h3>
+        <p class="fit-pick-reason">${r.reason}</p>
+        <p class="fit-pick-meta">${weightText}</p>
+      `;
+      picks.appendChild(card);
+    });
+  }
+
+  app.querySelectorAll<HTMLButtonElement>('[data-fit-run]').forEach((btn) => {
+    btn.addEventListener('click', renderResults);
+  });
+</script>
+
+<script type="application/json" id="fit-models-json" set:html={JSON.stringify(fitModels)}></script>
+
+<style>
+  .fit-app { display: flex; flex-direction: column; gap: 1.75rem; }
+  .fit-step {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .fit-step[hidden] { display: none; }
+  .fit-step-title { font-size: 1.375rem; font-weight: 800; letter-spacing: -0.02em; color: var(--color-text-primary); }
+
+  /* Tabs */
+  .fit-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .fit-tab {
+    font-size: 0.8125rem; font-weight: 600; color: var(--color-text-secondary);
+    background: var(--color-surface-1); border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-pill); padding: 0.45rem 1rem; cursor: pointer;
+    transition: all var(--duration-fast);
+  }
+  .fit-tab:hover { border-color: var(--color-accent); color: var(--color-text-primary); }
+  .fit-tab.is-active { background: var(--color-accent); border-color: var(--color-accent); color: #fff; }
+  .fit-pane { display: flex; flex-direction: column; gap: 1rem; }
+  .fit-pane[hidden] { display: none; }
+  .fit-pane-desc { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; max-width: 62ch; }
+
+  /* Hand stage */
+  .fit-hand-stage {
+    display: flex; justify-content: center; padding: 0.75rem 0;
+    border: 1px dashed var(--color-border-subtle); border-radius: var(--radius-sm);
+    background: var(--color-surface-1);
+  }
+  .fit-hand-svg { width: 150px; height: auto; transition: width 0.12s ease; }
+
+  /* Slider rows */
+  .fit-slider-row { display: flex; align-items: center; gap: 0.875rem; }
+  .fit-slider-label { font-family: var(--font-mono); font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); }
+  .fit-slider { flex: 1; accent-color: var(--color-accent); cursor: pointer; }
+  .fit-readout { font-family: var(--font-mono); font-size: 0.875rem; color: var(--color-text-secondary); }
+  .fit-readout strong { color: var(--color-accent); font-size: 1.125rem; }
+
+  /* Card mode stage */
+  .fit-card-stage {
+    position: relative; height: 150px; border: 1px dashed var(--color-border-subtle);
+    border-radius: var(--radius-sm); background: var(--color-surface-1);
+    display: flex; align-items: flex-end;
+  }
+  .fit-bracket {
+    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    height: 90px; border: 3px solid #10B981; border-radius: 4px;
+    transition: width 0.08s linear;
+  }
+  .fit-bracket::before, .fit-bracket::after {
+    content: ''; position: absolute; bottom: 0; top: 0; width: 3px; background: #10B981;
+  }
+  .fit-bracket::before { left: -3px; } .fit-bracket::after { right: -3px; }
+  .fit-bracket-hand { border-color: var(--color-accent); bottom: 8px; }
+  .fit-bracket-hand::before, .fit-bracket-hand::after { background: var(--color-accent); }
+  .fit-bracket-tag {
+    position: absolute; bottom: 106px; left: 50%; transform: translateX(-50%);
+    font-family: var(--font-mono); font-size: 0.5625rem; color: #10B981;
+    white-space: nowrap; background: var(--color-surface-2); padding: 0.1em 0.4em; border-radius: 3px;
+  }
+  .fit-bracket-tag-hand { bottom: 106px; color: var(--color-accent); }
+
+  /* Layout choice */
+  .fit-layout-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.875rem; }
+  .fit-layout-btn {
+    display: flex; align-items: center; gap: 0.875rem; padding: 1rem 1.25rem;
+    background: var(--color-surface-1); border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm); cursor: pointer; color: var(--color-text-primary);
+    font-weight: 700; font-size: 0.9375rem; text-align: left;
+    transition: all var(--duration-fast);
+  }
+  .fit-layout-btn:hover { border-color: var(--color-accent); }
+  .fit-layout-btn.is-active { border-color: var(--color-accent); background: rgba(37, 99, 235, 0.08); }
+  .fit-layout-btn svg { color: var(--color-text-secondary); }
+  .fit-layout-btn.is-active svg { color: var(--color-accent); }
+  .fit-layout-sub { display: block; font-size: 0.6875rem; font-weight: 500; color: var(--color-text-tertiary); }
+
+  .fit-confirm { align-self: flex-start; }
+
+  /* Results */
+  .fit-results-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  .fit-restart {
+    font-size: 0.75rem; font-weight: 600; color: var(--color-accent);
+    background: none; border: 1px solid rgba(37, 99, 235, 0.3); border-radius: var(--radius-pill);
+    padding: 0.4rem 0.9rem; cursor: pointer; white-space: nowrap;
+  }
+  .fit-restart:hover { background: rgba(37, 99, 235, 0.1); }
+
+  .fit-band-card {
+    background: var(--color-surface-1); border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;
+  }
+  .fit-band-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .fit-band-title { font-size: 0.875rem; font-weight: 700; color: var(--color-text-primary); }
+  .fit-band-legend { font-family: var(--font-mono); font-size: 0.625rem; color: var(--color-text-tertiary); display: flex; align-items: center; gap: 0.375rem; }
+  .fit-legend-dot { width: 12px; height: 4px; border-radius: 2px; display: inline-block; }
+  .fit-legend-span { background: var(--color-accent); height: 10px; width: 3px; }
+  .fit-legend-bar { background: linear-gradient(90deg, #2563EB, #7C3AED); }
+
+  .fit-band-scroll { overflow-x: auto; }
+  .fit-band-rows { display: flex; flex-direction: column; gap: 0.625rem; min-width: 560px; }
+  .fit-band-row {
+    display: grid; grid-template-columns: 190px 1fr 70px; align-items: center; gap: 0.875rem;
+    position: relative;
+  }
+  .fit-band-row-meta { margin-bottom: 0.25rem; }
+  .fit-band-name {
+    font-size: 0.75rem; font-weight: 600; color: var(--color-text-secondary);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-decoration: none;
+  }
+  .fit-band-name:hover { color: var(--color-accent); }
+  .fit-band-track { position: relative; height: 14px; background: var(--color-surface-3); border-radius: 999px; overflow: visible; border: 1px solid var(--color-border-subtle); }
+  .fit-band-bar {
+    display: block; height: 100%; border-radius: 999px;
+    background: linear-gradient(90deg, rgba(37,99,235,0.85), rgba(124,58,237,0.85));
+  }
+  .fit-span-marker {
+    position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--color-accent);
+    transform: translateX(-1px); z-index: 2;
+  }
+  .fit-span-label {
+    position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+    font-family: var(--font-mono); font-size: 0.5625rem; color: var(--color-accent);
+    background: var(--color-surface-2); border: 1px solid rgba(37,99,235,0.3); padding: 0.05em 0.35em; border-radius: 3px; white-space: nowrap;
+  }
+  .fit-band-mm { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--color-text-tertiary); text-align: right; }
+
+  /* Picks */
+  .fit-picks { display: flex; flex-direction: column; gap: 0.875rem; }
+  .fit-pick {
+    border: 1px solid var(--color-border-subtle); border-left: 3px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm); padding: 1.1rem 1.25rem; display: flex; flex-direction: column; gap: 0.375rem;
+    background: var(--color-surface-1);
+  }
+  .fit-pick.tier-rec { border-left-color: #10B981; }
+  .fit-pick.tier-try { border-left-color: #2563EB; }
+  .fit-pick.tier-no { border-left-color: #F59E0B; }
+  .fit-pick.tier-pend { border-left-color: var(--color-text-tertiary); opacity: 0.8; }
+  .fit-pick-top { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+  .fit-pick-tier {
+    font-family: var(--font-mono); font-size: 0.625rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: #10B981;
+  }
+  .tier-try .fit-pick-tier { color: #2563EB; }
+  .tier-no .fit-pick-tier { color: #F59E0B; }
+  .tier-pend .fit-pick-tier { color: var(--color-text-tertiary); }
+  .fit-pick-layout { font-family: var(--font-mono); font-size: 0.625rem; color: var(--color-text-tertiary); text-transform: uppercase; }
+  .fit-pick-name { font-size: 1.0625rem; font-weight: 800; color: var(--color-text-primary); }
+  .fit-pick-name a { color: inherit; text-decoration: none; }
+  .fit-pick-name a:hover { color: var(--color-accent); }
+  .fit-pick-reason { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; }
+  .fit-pick-meta { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--color-text-tertiary); }
+
+  /* Limits */
+  .fit-limits {
+    border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm);
+    background: var(--color-surface-1);
+  }
+  .fit-limits summary {
+    cursor: pointer; font-size: 0.8125rem; font-weight: 700; color: var(--color-text-primary);
+    padding: 1rem 1.25rem;
+  }
+  .fit-limits-body { padding: 0 1.25rem 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  .fit-limits-body p { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.65; }
+
+  @media (max-width: 640px) {
+    .fit-step { padding: 1.25rem; }
+    .fit-band-row { grid-template-columns: 130px 1fr 60px; }
+  }
+</style>

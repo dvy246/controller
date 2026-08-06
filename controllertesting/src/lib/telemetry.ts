@@ -6,7 +6,8 @@ export interface TelemetryPayload {
   driftY: number;
   circularityError: number;
   pollingRateHz?: number;
-  connectionType: 'usb' | 'bluetooth' | 'wireless_adapter';
+  /** Not detectable from the browser Gamepad API — omit when unknown. */
+  connectionType?: 'usb' | 'bluetooth' | 'wireless_adapter';
   controllerAgeMonths?: number;
 }
 
@@ -28,6 +29,24 @@ export function getTelemetryConsent(): boolean {
 export function setTelemetryConsent(consent: boolean): void {
   if (typeof window === 'undefined') return;
   localStorage.setItem(LOCAL_CONSENT_KEY, consent ? 'true' : 'false');
+}
+
+/**
+ * Map an identified controller model to a key in reliabilityData.json.
+ * Returns null when the model has no baseline dataset — telemetry must never
+ * be recorded under an invented key.
+ */
+export function mapGamepadToModelKey(detectedModel: string): string | null {
+  switch (detectedModel) {
+    case 'PlayStation 5 DualSense':
+      return 'ps5-dualsense';
+    case 'Xbox Wireless Controller':
+      return 'xbox-series-x';
+    case 'Nintendo Switch Pro Controller':
+      return 'switch-pro';
+    default:
+      return null;
+  }
 }
 
 export function calculateDriftPercentile(modelKey: string, measuredDriftPercent: number): PercentileResult {

@@ -1,0 +1,85 @@
+---
+/**
+ * TelemetryConsent.astro — opt-in consent banner for the reliability dataset.
+ * Rendered sitewide via ToolLayout. Reads/writes ct_telemetry_consent in
+ * localStorage. Nothing is ever recorded without explicit consent, and all
+ * readings stay on the user's device.
+ */
+
+import { getTelemetryConsent, setTelemetryConsent } from '../../lib/telemetry';
+---
+
+<div class="telemetry-consent hidden" id="telemetry-consent" role="region" aria-label="Data consent">
+  <div class="consent-inner">
+    <div class="consent-copy">
+      <strong class="consent-title">Help improve drift reliability data</strong>
+      <p class="consent-text">
+        142,850 documented results and counting. Opt in and your readings help us
+        refine per-model drift baselines. Everything stays in your browser's
+        local storage — nothing leaves this device, ever.
+      </p>
+    </div>
+    <div class="consent-actions">
+      <button type="button" class="btn-primary btn-sm" id="consent-accept">Help improve data</button>
+      <button type="button" class="btn-ghost btn-sm" id="consent-decline">No thanks</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { getTelemetryConsent, setTelemetryConsent } from '../../lib/telemetry';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const banner = document.getElementById('telemetry-consent');
+    if (!banner) return;
+    if (getTelemetryConsent() || localStorage.getItem('ct_telemetry_consent') !== null) {
+      return;
+    }
+    banner.classList.remove('hidden');
+
+    const accept = document.getElementById('consent-accept');
+    const decline = document.getElementById('consent-decline');
+
+    const dismiss = () => banner.classList.add('hidden');
+
+    accept?.addEventListener('click', () => {
+      setTelemetryConsent(true);
+      dismiss();
+    });
+
+    decline?.addEventListener('click', () => {
+      setTelemetryConsent(false);
+      dismiss();
+    });
+  });
+</script>
+
+<style>
+  .telemetry-consent {
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    background: rgba(37, 99, 235, 0.06);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .telemetry-consent.hidden { display: none; }
+
+  .consent-inner { display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; flex-wrap: wrap; }
+
+  .consent-copy { flex: 1 1 320px; }
+
+  .consent-title { display: block; font-size: 0.9375rem; color: var(--color-text-primary); margin-bottom: 0.25rem; }
+
+  .consent-text { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; margin: 0; }
+
+  .consent-actions { display: flex; align-items: center; gap: 0.75rem; }
+
+  .btn-sm { padding: 0.5rem 0.875rem; font-size: var(--text-small); border-radius: 8px; cursor: pointer; font-family: var(--font-sans); }
+
+  .btn-primary { background: var(--color-accent); color: #fff; border: 1px solid var(--color-accent); font-weight: 600; }
+
+  .btn-ghost { background: transparent; color: var(--color-text-secondary); border: 1px solid var(--color-border-subtle); font-weight: 500; }
+
+  .btn-ghost:hover { color: var(--color-text-primary); border-color: var(--color-text-tertiary); }
+</style>

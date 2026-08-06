@@ -75,6 +75,33 @@
 
 <script>
   import { parseGamepadState, calculateCircularityError } from '../../../lib/gamepad';
+  import { recordTelemetry, mapGamepadToModelKey } from '../../../lib/telemetry';
+  import { addPoints } from '../../../lib/rewards';
+
+  let lastTelemetryAt = 0;
+  let rewarded = false;
+
+  function awardFirstMeasurement(): void {
+    if (rewarded) return;
+    rewarded = true;
+    addPoints(50);
+  }
+
+  function maybeRecordCircularitySample(model: string, lErr: number, rErr: number, leftPts: number, rightPts: number): void {
+    const now = Date.now();
+    if (now - lastTelemetryAt < 10000) return;
+    const modelKey = mapGamepadToModelKey(model);
+    if (!modelKey) return;
+    if (leftPts < 20 && rightPts < 20) return;
+    lastTelemetryAt = now;
+    awardFirstMeasurement();
+    recordTelemetry({
+      modelKey,
+      driftX: 0,
+      driftY: 0,
+      circularityError: lErr > 0 ? lErr : rErr,
+    });
+  }
 
   document.addEventListener('DOMContentLoaded', () => {
     const leftCanvas = document.getElementById('left-circ-canvas') as HTMLCanvasElement;
@@ -174,6 +201,8 @@
         const lErrEl = document.getElementById('left-circ-err');
         const lPtsEl = document.getElementById('left-pts-count');
         const lBadge = document.getElementById('left-circ-badge');
+
+        maybeRecordCircularitySample(state.detectedModel, lErr, 0, leftPoints.length, 0);
 
         if (lErrEl) lErrEl.textContent = `${lErr}% Error`;
         if (lPtsEl) lPtsEl.textContent = String(leftPoints.length);

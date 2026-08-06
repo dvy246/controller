@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
 import reliabilityData from '../../data/reliabilityData.json';
 
 export function getStaticPaths() {
@@ -12,6 +13,12 @@ export function getStaticPaths() {
 
 const { slug } = Astro.params;
 const { modelData } = Astro.props;
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Reliability Data', url: '/reliability' },
+  { name: modelData.name },
+];
 
 const canonicalUrl = `https://controllertesting.com/reliability/${slug}`;
 const schemaData = {
@@ -32,10 +39,12 @@ const schemaData = {
   title={`${modelData.name} Hardware Reliability & Stick Drift Report (Baseline Reference Dataset)`}
   description={`Baseline stick drift magnitude, circularity error %, and sensor wear reference figures for ${modelData.name}, compiled from ${modelData.samples.toLocaleString()} documented test results.`}
   canonical={canonicalUrl}
+  breadcrumbs={breadcrumbs}
 >
   <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
 
   <section class="max-w-5xl mx-auto px-4 py-16">
+    <Breadcrumbs items={breadcrumbs} />
     <!-- Header -->
     <div class="mb-12 text-center">
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono mb-4">

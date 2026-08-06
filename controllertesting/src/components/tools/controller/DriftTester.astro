@@ -86,6 +86,64 @@
 
 <script>
   import { parseGamepadState } from '../../../lib/gamepad';
+  import { recordTelemetry, mapGamepadToModelKey } from '../../../lib/telemetry';
+  import { addPoints } from '../../../lib/rewards';
+
+  let lastTelemetryAt = 0;
+  let lastSavedAt = 0;
+  let lastSavedDrift = -1;
+  let rewarded = false;
+
+  function awardFirstMeasurement(): void {
+    if (rewarded) return;
+    rewarded = true;
+    addPoints(50);
+  }
+
+  function persistLastDrift(state: ReturnType<typeof parseGamepadState>): void {
+    const now = Date.now();
+    if (now - lastSavedAt < 3000) return;
+    const driftingLeft = state.leftStick.driftPct > 0;
+    const drivingRight = state.rightStick.driftPct > 0;
+    const drift = driftingLeft ? state.leftStick.driftPct : drivingRight ? state.rightStick.driftPct : 0;
+    if (drift <= 0 || drift > 50) return;
+    if (Math.abs(drift - lastSavedDrift) < 0.5 && now - lastSavedAt < 15000) return;
+    lastSavedAt = now;
+    lastSavedDrift = drift;
+    awardFirstMeasurement();
+    const stick = driftingLeft ? state.leftStick : state.rightStick;
+    try {
+      localStorage.setItem('ct_last_drift', JSON.stringify({
+        model: state.detectedModel,
+        modelKey: mapGamepadToModelKey(state.detectedModel),
+        drift: Math.round(drift * 100) / 100,
+        driftX: Math.round(stick.x * 10000) / 10000,
+        driftY: Math.round(stick.y * 10000) / 10000,
+        side: driftingLeft ? 'left' : 'right',
+        date: now,
+      }));
+    } catch {
+      /* storage unavailable — ignore */
+    }
+  }
+
+  function maybeRecordDriftSample(state: ReturnType<typeof parseGamepadState>): void {
+    const now = Date.now();
+    if (now - lastTelemetryAt < 5000) return;
+    const drift =
+      state.leftStick.driftPct > 0 ? state.leftStick.driftPct :
+      state.rightStick.driftPct > 0 ? state.rightStick.driftPct : 0;
+    if (drift <= 0 || drift > 50) return;
+    const modelKey = mapGamepadToModelKey(state.detectedModel);
+    if (!modelKey) return;
+    lastTelemetryAt = now;
+    recordTelemetry({
+      modelKey,
+      driftX: state.leftStick.x,
+      driftY: state.leftStick.y,
+      circularityError: 0,
+    });
+  }
 
   document.addEventListener('DOMContentLoaded', () => {
     const statusDot = document.getElementById('gp-status-dot');
@@ -199,6 +257,9 @@
         if (modelName) modelName.textContent = activeGp.id;
 
         const state = parseGamepadState(activeGp);
+
+        maybeRecordDriftSample(state);
+        persistLastDrift(state);
 
         // Left stick
         renderStick(leftCtx, state.leftStick.x, state.leftStick.y, leftTrail);

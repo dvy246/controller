@@ -18,6 +18,7 @@ import BaseLayout from './BaseLayout.astro';
 import Header from '../components/global/Header.astro';
 import Footer from '../components/global/Footer.astro';
 import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+import TelemetryConsent from '../components/global/TelemetryConsent.astro';
 
 export interface Props {
   title: string;
@@ -104,6 +105,9 @@ const allSchemas = [
         <slot name="tool" />
       </section>
 
+      {/* ── 3.5. Telemetry Consent (sitewide opt-in) ── */}
+      <TelemetryConsent />
+
       {/* ── 4. Results Card (Slot) ── */}
       <section class="tool-results-card card-base" aria-label="Test results summary">
         <slot name="results" />
@@ -166,6 +170,24 @@ const allSchemas = [
           </div>
         </section>
       )}
+
+      {/* ── 9.5. Methodology & Limits Collapsible ── */}
+      <details class="tool-limits-card card-base">
+        <summary class="limits-summary">
+          <span>How this test works &amp; its limits</span>
+          <span class="limits-toggle" aria-hidden="true">+</span>
+        </summary>
+        <div class="limits-body">
+          <ul class="limits-list">
+            <li>This test reads your controller through the browser's standard Gamepad API — no drivers, no installs, nothing leaves your device.</li>
+            <li>Readings depend on connection mode: Bluetooth reports at lower rates than USB. Compare like-for-like (wired vs wired).</li>
+            <li>We measure the input reaching the browser — display lag and game-engine queues are outside this test's view.</li>
+            <li>A clean reading now does not guarantee no drift in-game: deadzones differ per game, and wear develops over time. Use the Drift Timeline to track yours.</li>
+            <li>This is a diagnostic, not a hardware-lab certification. For repair or RMA decisions, confirm with a second run or second tool.</li>
+          </ul>
+          <a href="/test/methodology" class="limits-link">Read the full methodology &rarr;</a>
+        </div>
+      </details>
 
       {/* ── 10. Trust Card ── */}
       <section class="tool-trust-card card-base">
@@ -259,9 +281,67 @@ const allSchemas = [
   .related-tools-section,
   .tool-content-section,
   .tool-faq-section,
-  .tool-export-card {
+  .tool-export-card,
+  .tool-limits-card {
     margin-bottom: 2rem;
   }
+
+  /* Methodology & limits */
+  .tool-limits-card {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .limits-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    color: var(--color-text-primary);
+    list-style: none;
+  }
+
+  .limits-summary::-webkit-details-marker { display: none; }
+
+  .limits-summary:hover { color: var(--color-accent); }
+
+  .limits-toggle {
+    font-family: var(--font-mono);
+    color: var(--color-text-tertiary);
+    transition: transform var(--duration-fast);
+  }
+
+  .tool-limits-card[open] .limits-toggle { transform: rotate(45deg); }
+
+  .limits-body {
+    padding: 0 1.5rem 1.5rem;
+    border-top: 1px solid var(--color-border-subtle);
+    padding-top: 1rem;
+  }
+
+  .limits-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    margin-bottom: 0.875rem;
+  }
+
+  .limits-list li {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .limits-list li::before { content: '▸'; position: absolute; left: 0; color: var(--color-accent); }
+
+  .limits-link { font-size: var(--text-small); color: var(--color-accent); text-decoration: underline; }
 
   .action-card {
     display: flex;

@@ -616,6 +616,69 @@ img, video, svg {
   50%       { opacity: 0.75; }
 }
 
+/* ── Aurora hero background (CSS-only port, compositor-friendly) ──
+   Zero JS. No filter blur, no blend modes, no background-position
+   animation. Soft pre-blurred gradients + transform-only panning
+   layers = GPU compositing only, zero repaints per frame. */
+.hero-aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.85;
+  mask-image: radial-gradient(ellipse 115% 105% at 50% 38%, black 35%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 115% 105% at 50% 38%, black 35%, transparent 80%);
+  animation: aurora-breathe 7s var(--ease-smooth) 0.8s infinite alternate;
+}
+
+/* Aurora color field — cobalt + violet + indigo (card-gradient palette) */
+.hero-aurora::before {
+  content: '';
+  position: absolute;
+  inset: -25% -15%;
+  background:
+    radial-gradient(ellipse 46% 56% at 30% 32%, rgba(37, 99, 235, 0.32), transparent 70%),
+    radial-gradient(ellipse 38% 52% at 66% 60%, rgba(124, 58, 237, 0.28), transparent 70%),
+    radial-gradient(ellipse 30% 46% at 50% 10%, rgba(99, 102, 241, 0.24), transparent 70%),
+    radial-gradient(ellipse 42% 54% at 82% 28%, rgba(59, 130, 246, 0.20), transparent 70%);
+  animation: aurora-blob-drift 16s var(--ease-smooth) 1.2s infinite alternate;
+  will-change: transform;
+}
+
+/* Panning stripe layer — translate3d only, seamless alternate loop */
+.hero-aurora::after {
+  content: '';
+  position: absolute;
+  inset: -25% -15%;
+  background: repeating-linear-gradient(90deg,
+    rgba(37, 99, 235, 0.10) 0%, rgba(37, 99, 235, 0.14) 6%, transparent 10%,
+    transparent 14%, rgba(124, 58, 237, 0.10) 18%, rgba(124, 58, 237, 0.13) 24%, transparent 28%,
+    transparent 32%, rgba(99, 102, 241, 0.10) 36%, transparent 44%,
+    transparent 50%);
+  animation: aurora-stripe-pan 22s var(--ease-smooth) 1.6s infinite alternate;
+  will-change: transform;
+}
+
+@keyframes aurora-stripe-pan {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-14%, 0, 0); }
+}
+
+@keyframes aurora-blob-drift {
+  from { transform: translate3d(-2.5%, -1.5%, 0) scale(1); }
+  to   { transform: translate3d(2.5%, 1.8%, 0) scale(1.1); }
+}
+
+@keyframes aurora-breathe {
+  from { opacity: 0.7; }
+  to   { opacity: 0.95; }
+}
+
+[data-theme="light"] .hero-aurora {
+  opacity: 0.5;
+}
+
 /* ── @media prefers-reduced-motion: pause all tilt + shimmer ── */
 @media (prefers-reduced-motion: reduce) {
   .card-base,
@@ -628,8 +691,16 @@ img, video, svg {
   }
 
   .hero-shader-layer,
-  .hero-shader-noise {
+  .hero-shader-noise,
+  .hero-aurora,
+  .hero-aurora::before,
+  .hero-aurora::after {
     animation: none !important;
+  }
+
+  .hero-aurora,
+  .hero-aurora::after {
+    will-change: auto;
   }
 }
 
@@ -912,6 +983,20 @@ img, video, svg {
    ============================================================ */
 
 @media print {
+  :root {
+    --color-surface-0: #FFFFFF !important;
+    --color-surface-1: #FFFFFF !important;
+    --color-surface-2: #FAFAFC !important;
+    --color-surface-3: #F4F4F6 !important;
+    --color-surface-4: #EBECEF !important;
+    --color-text-primary: #09090B !important;
+    --color-text-secondary: #3F3F46 !important;
+    --color-text-tertiary: #71717A !important;
+    --color-text-inverse: #FFFFFF !important;
+  }
   body { background: white; color: black; }
-  nav, footer, .no-print { display: none !important; }
+  header, footer, .no-print, [data-reveal], .hero-aurora { display: none !important; }
+  .card-base, .report-card, .health-card { border: 1px solid #ddd !important; box-shadow: none !important; background: white !important; }
+  a { color: #09090B !important; text-decoration: none; }
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
 }

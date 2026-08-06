@@ -1,0 +1,115 @@
+---
+/**
+ * /test/methodology — How Our Tests Work & Their Limits
+ * The documented trust gap fix: r/consolerepair users report "site says perfect but controller drifts."
+ * This page explains exactly what browser tests can and cannot measure.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Methodology' },
+];
+---
+
+<BaseLayout
+  title="Testing Methodology — What Our Controller Tests Measure (and Can't) | ControllerTesting.com"
+  description="How our browser-based controller tests work: Gamepad API sampling, wired vs Bluetooth caveats, deadzone interpretation, and the honest limits of web testing."
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="method-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="method-hero">
+        <span class="badge-tag">Methodology · Honesty Layer</span>
+        <h1 class="method-title">How Our Controller Tests Work — and Their Limits</h1>
+        <p class="method-subtitle">
+          Every test on this site runs in your browser via the standard Gamepad API. That makes it private and
+          instant — and it also sets hard limits on what we can claim. Here is exactly what we measure, how, and
+          where the uncertainty lives.
+        </p>
+      </header>
+
+      <div class="method-body">
+        <section class="method-block card-base">
+          <h2 class="section-title">What we measure, and how</h2>
+          <ul class="method-list">
+            <li><strong>Stick position (drift, circularity, deadzone):</strong> read from the browser's raw stick axes at up to display refresh rate, averaged over a rolling window. Drift is the at-rest offset as a percentage of full travel; circularity is the deviation of your stick's outer range from a perfect circle.</li>
+            <li><strong>Buttons and triggers:</strong> direct digital/analog reads — pressed, released, and analog pressure where the controller reports it.</li>
+            <li><strong>Polling rate:</strong> derived from the timestamp deltas between consecutive Gamepad API state reports. This is an estimate, not a hardware protocol capture.</li>
+            <li><strong>Vibration:</strong> sent as standard rumble requests; we can confirm the browser accepted the command, not the physical motor force.</li>
+          </ul>
+        </section>
+
+        <section class="method-block card-base">
+          <h2 class="section-title">Where the limits are</h2>
+          <ul class="method-list">
+            <li><strong>We are not a hardware lab.</strong> No oscilloscope, no protocol analyzer. If a number matters enough to buy or RMA a controller over, confirm it with a second tool.</li>
+            <li><strong>Connection mode changes results.</strong> Bluetooth reports at lower rates than USB (typically 125–250 Hz vs up to 1000 Hz wired). Always compare like-for-like: test wired vs wired, wireless vs wireless.</li>
+            <li><strong>Latency here is input-to-browser, not end-to-end.</strong> Our latency tests measure the gamepad event reaching the browser — display lag, TV processing, and game engine input queues are outside the browser's view.</li>
+            <li><strong>Drift in a game can exist when our test reads clean.</strong> Three causes: (1) the game applies its own deadzone differently than our readout, (2) drift appears only during sustained off-center hold or temperature change, (3) per-unit variance — a test samples your stick now, not its full wear history. That's why we also ship the Drift Timeline tracker.</li>
+            <li><strong>WebHID calibration (PS4/PS5):</strong> only in Chromium-based browsers (Chrome, Edge), USB only, and only for officially supported models. It writes zero-point calibration to the controller's own memory — read the tool's warnings carefully.</li>
+            <li><strong>Sampling rate:</strong> browser polling is capped by the Gamepad API's own update frequency; sub-millisecond claims are not possible from a web page.</li>
+          </ul>
+        </section>
+
+        <section class="method-block card-base">
+          <h2 class="section-title">How to get trustworthy results</h2>
+          <ol class="method-list">
+            <li>Test wired with a known-good cable for the most stable readings.</li>
+            <li>Rest the controller on a flat surface — your thumb resting on the stick is not "drift."</li>
+            <li>Run the test twice, 30 seconds apart, and compare.</li>
+            <li>Interpret at-rest offset with the deadzone context of your game (see the settings guides — deadzone scales differ per game).</li>
+            <li>For repair decisions, pair the test with our repair guides and re-test after the fix.</li>
+          </ol>
+        </section>
+
+        <section class="method-block card-base">
+          <h2 class="section-title">Data &amp; privacy</h2>
+          <p class="method-text">
+            All measurements happen in your browser. Telemetry is opt-in, consent-based, and stored only in your
+            browser's local storage (key <code class="inline-code">ct_telemetry_log</code>). We cannot see your
+            results, your controller, or your browsing. The reliability dataset is a static baseline snapshot —
+            labeled with its date on every page, never presented as live instrumentation.
+          </p>
+        </section>
+
+        <section class="method-block card-base">
+          <h2 class="section-title">The baseline dataset</h2>
+          <p class="method-text">
+            Our reliability reports compile documented drift and circularity results by model. They answer
+            "how do these controllers compare on average?" — not "what will my controller do?" Individual units
+            vary. Read the <a href="/reliability" class="method-link">reliability hub</a> for the numbers.
+          </p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .method-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .method-hero { margin-bottom: 2.5rem; }
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .method-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .method-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 72ch; }
+  .method-body { display: flex; flex-direction: column; gap: 1.5rem; }
+  .method-block { padding: 2rem; }
+  .section-title { font-size: var(--text-h2); font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.02em; }
+  .method-list { list-style: none; display: flex; flex-direction: column; gap: 0.875rem; }
+  .method-list li { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.7; padding-left: 1.25rem; position: relative; }
+  .method-list li::before { content: '▸'; position: absolute; left: 0; color: var(--color-accent); }
+  .method-list ol { padding-left: 0; }
+  .method-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.7; }
+  .method-link { color: var(--color-accent); }
+  .inline-code { font-family: var(--font-mono); font-size: 0.875rem; background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: 4px; padding: 0.1em 0.35em; }
+</style>

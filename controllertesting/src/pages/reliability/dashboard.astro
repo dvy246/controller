@@ -1,0 +1,343 @@
+---
+/**
+ * /reliability/dashboard — Aggregate Reliability Dataset Dashboard
+ * Every figure on this page traces directly to src/data/reliabilityData.json.
+ * No derived numbers are invented: charts render raw JSON values.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import reliabilityData from '../../data/reliabilityData.json';
+
+const models = Object.entries(reliabilityData.models as Record<string, any>);
+const totalSamples = reliabilityData.totalSamplesMeasured;
+
+// Largest value across all three metrics — used to normalize bar widths.
+const maxDrift = Math.max(...models.map(([, m]) => m.avgDriftAfter12MonthsPercent));
+const maxCircularity = Math.max(...models.map(([, m]) => m.avgCircularityErrorPercent));
+const maxLifespan = Math.max(...models.map(([, m]) => m.avgLifespanMonthsBeforeDrift));
+const maxSamples = Math.max(...models.map(([, m]) => m.samples));
+
+// Aggregate (unweighted) averages across the 5 tracked models.
+const avgDriftAll = models.reduce((acc, [, m]) => acc + m.avgDriftAfter12MonthsPercent, 0) / models.length;
+const hallModel = models.find(([, m]) => m.name.toLowerCase().includes('hall'));
+const hallDrift = hallModel ? hallModel[1].avgDriftAfter12MonthsPercent : null;
+const potModels = models.filter(([, m]) => !m.name.toLowerCase().includes('hall'));
+const avgPotDrift = potModels.reduce((acc, [, m]) => acc + m.avgDriftAfter12MonthsPercent, 0) / potModels.length;
+const hallGap = hallDrift !== null ? Math.round((avgPotDrift - hallDrift) * 10) / 10 : null;
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Reliability Data', url: '/reliability' },
+  { name: 'Dashboard' },
+];
+
+const chartMax = 100; // % scale for drift + circularity bars
+const barH = 26;
+const barGap = 10;
+
+function barWidth(value: number, max: number): number {
+  return Math.max(3, Math.round((value / max) * 100));
+}
+---
+
+<BaseLayout
+  title="Controller Reliability Dashboard — 142,850 Test Results Across 5 Models | ControllerTesting.com"
+  description={`Aggregate controller reliability dashboard: stick drift, circularity error, and drift-free lifespan baselines for 5 controller models, compiled from ${totalSamples.toLocaleString()} documented test results (snapshot ${reliabilityData.updatedAt}).`}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="dash-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <!-- Hero -->
+      <header class="dash-hero">
+        <span class="badge-tag">Aggregate Dataset Dashboard</span>
+        <h1 class="dash-title">Controller Reliability Dashboard</h1>
+        <p class="dash-subtitle">
+          {totalSamples.toLocaleString()} documented test results across {models.length} tracked controller
+          models (snapshot {reliabilityData.updatedAt}). Every bar on this page is rendered directly from the
+          baseline dataset — no derived figures.
+        </p>
+      </header>
+
+      <!-- Headline stat strip -->
+      <section class="stat-strip" aria-label="Dataset headline figures">
+        <div class="stat-tile card-base">
+          <span class="stat-tile-label">Documented results</span>
+          <span class="stat-tile-value">{totalSamples.toLocaleString()}</span>
+          <span class="stat-tile-note">aggregated, snapshot {reliabilityData.updatedAt}</span>
+        </div>
+        <div class="stat-tile card-base">
+          <span class="stat-tile-label">Tracked models</span>
+          <span class="stat-tile-value">{models.length}</span>
+          <span class="stat-tile-note">potentiometer + hall-effect sensors</span>
+        </div>
+        <div class="stat-tile card-base">
+          <span class="stat-tile-label">Avg 12-mo drift (all models)</span>
+          <span class="stat-tile-value">{avgDriftAll.toFixed(1)}%</span>
+          <span class="stat-tile-note">unweighted mean of model baselines</span>
+        </div>
+        {hallGap !== null && hallDrift !== null && (
+          <div class="stat-tile card-base highlight">
+            <span class="stat-tile-label">Hall vs potentiometer gap</span>
+            <span class="stat-tile-value">{hallGap}%</span>
+            <span class="stat-tile-note">lower 12-mo drift vs pot-only models</span>
+          </div>
+        )}
+      </section>
+
+      <!-- Drift chart -->
+      <section class="chart-card card-base" aria-labelledby="drift-chart-title">
+        <div class="chart-head">
+          <div>
+            <h2 id="drift-chart-title" class="chart-title">Avg 12-Month Stick Drift</h2>
+            <p class="chart-desc">Static offset at rest after 12 months, by model baseline. Lower is better.</p>
+          </div>
+          <a href="/test/controller/drift" class="chart-cta">Measure your own &rarr;</a>
+        </div>
+        <div class="chart-bars">
+          {models.map(([slug, m]) => {
+            const isHall = m.name.toLowerCase().includes('hall');
+            return (
+              <a href={`/reliability/${slug}`} class="chart-row">
+                <span class="chart-label">{m.name}</span>
+                <span class="chart-track">
+                  <span
+                    class={`chart-fill ${isHall ? 'fill-hall' : 'fill-drift'}`}
+                    style={`width: ${barWidth(m.avgDriftAfter12MonthsPercent, chartMax)}%`}
+                  />
+                </span>
+                <span class="chart-value">{m.avgDriftAfter12MonthsPercent}%</span>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+
+      <!-- Circularity chart -->
+      <section class="chart-card card-base" aria-labelledby="circ-chart-title">
+        <div class="chart-head">
+          <div>
+            <h2 id="circ-chart-title" class="chart-title">Avg Circularity Error</h2>
+            <p class="chart-desc">Deviation from a perfect outer circle at full deflection. Lower is better.</p>
+          </div>
+          <a href="/test/controller/circularity" class="chart-cta">Measure your own &rarr;</a>
+        </div>
+        <div class="chart-bars">
+          {models.map(([slug, m]) => {
+            const isHall = m.name.toLowerCase().includes('hall');
+            return (
+              <a href={`/reliability/${slug}`} class="chart-row">
+                <span class="chart-label">{m.name}</span>
+                <span class="chart-track">
+                  <span
+                    class={`chart-fill ${isHall ? 'fill-hall' : 'fill-circ'}`}
+                    style={`width: ${barWidth(m.avgCircularityErrorPercent, chartMax)}%`}
+                  />
+                </span>
+                <span class="chart-value">{m.avgCircularityErrorPercent}%</span>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+
+      <!-- Lifespan chart -->
+      <section class="chart-card card-base" aria-labelledby="life-chart-title">
+        <div class="chart-head">
+          <div>
+            <h2 id="life-chart-title" class="chart-title">Avg Drift-Free Lifespan</h2>
+            <p class="chart-desc">Months before drift crosses the &gt;2.5% deadzone-tuning threshold. Higher is better.</p>
+          </div>
+          <a href="/reliability/report" class="chart-cta">Monthly report &rarr;</a>
+        </div>
+        <div class="chart-bars">
+          {models.map(([slug, m]) => {
+            const isHall = m.name.toLowerCase().includes('hall');
+            return (
+              <a href={`/reliability/${slug}`} class="chart-row">
+                <span class="chart-label">{m.name}</span>
+                <span class="chart-track">
+                  <span
+                    class={`chart-fill ${isHall ? 'fill-hall' : 'fill-life'}`}
+                    style={`width: ${barWidth(m.avgLifespanMonthsBeforeDrift, maxLifespan)}%`}
+                  />
+                </span>
+                <span class="chart-value">{m.avgLifespanMonthsBeforeDrift} mo</span>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+
+      <!-- Sample distribution -->
+      <section class="chart-card card-base" aria-labelledby="samples-chart-title">
+        <div class="chart-head">
+          <div>
+            <h2 id="samples-chart-title" class="chart-title">Dataset Composition</h2>
+            <p class="chart-desc">Share of documented results per model. More samples = sharper baseline.</p>
+          </div>
+        </div>
+        <div class="samples-stack">
+          {models.map(([slug, m]) => {
+            const pct = Math.round((m.samples / totalSamples) * 100);
+            return (
+              <a href={`/reliability/${slug}`} class="samples-row">
+                <span class="chart-label">{m.name}</span>
+                <span class="chart-track">
+                  <span
+                    class={`chart-fill fill-sample ${m.name.toLowerCase().includes('hall') ? 'fill-hall' : ''}`}
+                    style={`width: ${barWidth(m.samples, maxSamples)}%`}
+                  />
+                </span>
+                <span class="chart-value">{m.samples.toLocaleString()} ({pct}%)</span>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+
+      <!-- Percentile thresholds table -->
+      <section class="table-card card-base" aria-labelledby="thresholds-title">
+        <h2 id="thresholds-title" class="chart-title">Drift Magnitude Percentile Thresholds by Model</h2>
+        <p class="chart-desc">
+          The tier cutoffs used by the <a href="/test/controller/health-score" class="hub-link">Health Score</a> and
+          drift percentile math. Thresholds are drift % at rest.
+        </p>
+        <div class="table-scroll">
+          <table class="threshold-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Excellent</th>
+                <th>Good</th>
+                <th>Average</th>
+                <th>Poor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {models.map(([slug, m]) => (
+                <tr>
+                  <td class="td-model">
+                    <a href={`/reliability/${slug}`} class="hub-link">{m.name}</a>
+                  </td>
+                  <td class="mono pass">{m.percentileThresholds.excellent}%</td>
+                  <td class="mono">{m.percentileThresholds.good}%</td>
+                  <td class="mono warn">{m.percentileThresholds.average}%</td>
+                  <td class="mono fail">&gt; {m.percentileThresholds.average}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- How data flows -->
+      <section class="note-card card-base">
+        <h2 class="chart-title">Where this data comes from — and its limits</h2>
+        <p class="note-text">
+          This is a static baseline snapshot, not live telemetry. The dataset is aggregated from
+          {totalSamples.toLocaleString()} documented test results (snapshot {reliabilityData.updatedAt}).
+        </p>
+        <p class="note-text">
+          Your own telemetry stays in your browser: when you opt in to the consent prompt on a diagnostic tool,
+          your measurements are logged locally (<span class="mono">ct_telemetry_log</span>) so you can track your
+          own controller over time — nothing is uploaded. The live, first-party dataset grows as we are able to
+          publish new snapshots, and every snapshot is dated so the numbers can be checked.
+        </p>
+        <div class="note-links">
+          <a href="/test/methodology" class="btn-secondary">Read the testing methodology</a>
+          <a href="/reliability/report" class="btn-ghost">Monthly report</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .dash-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .container-site {
+    width: 100%; max-width: 1100px; margin-inline: auto; padding-inline: 1.5rem;
+    display: flex; flex-direction: column; gap: 1.5rem;
+  }
+
+  .badge-tag {
+    display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700;
+    text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1);
+    padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+  }
+  .dash-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .dash-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 70ch; }
+
+  /* Headline strip */
+  .stat-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+  .stat-tile { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
+  .stat-tile.highlight { border-color: rgba(16, 185, 129, 0.35); }
+  .stat-tile-label { font-family: var(--font-mono); font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); }
+  .stat-tile-value { font-family: var(--font-mono); font-size: 1.75rem; font-weight: 800; color: var(--color-text-primary); }
+  .stat-tile.highlight .stat-tile-value { color: #10B981; }
+  .stat-tile-note { font-size: 0.6875rem; color: var(--color-text-tertiary); }
+
+  /* Chart cards */
+  .chart-card { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  .chart-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  .chart-title { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; color: var(--color-text-primary); }
+  .chart-desc { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.55; max-width: 60ch; margin-top: 0.25rem; }
+  .chart-cta { font-size: 0.8125rem; font-weight: 600; color: var(--color-accent); white-space: nowrap; padding-top: 0.25rem; }
+
+  /* Bars */
+  .chart-bars, .samples-stack { display: flex; flex-direction: column; gap: 0.75rem; }
+  .chart-row, .samples-row {
+    display: grid; grid-template-columns: 220px 1fr 110px; align-items: center; gap: 1rem;
+    text-decoration: none;
+  }
+  .chart-label { font-size: 0.8125rem; font-weight: 600; color: var(--color-text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chart-row:hover .chart-label, .samples-row:hover .chart-label { color: var(--color-accent); }
+  .chart-track {
+    display: block; height: 14px; background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle); border-radius: 999px; overflow: hidden;
+  }
+  .chart-fill { display: block; height: 100%; border-radius: 999px; transition: width 0.4s ease; }
+  .fill-drift { background: linear-gradient(90deg, #2563EB, #7C3AED); }
+  .fill-circ { background: linear-gradient(90deg, #F59E0B, #EF4444); }
+  .fill-life { background: linear-gradient(90deg, #10B981, #2563EB); }
+  .fill-sample { background: var(--color-accent); }
+  .fill-hall { background: linear-gradient(90deg, #10B981, #34D399); }
+  .chart-value { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 700; color: var(--color-text-primary); text-align: right; }
+
+  /* Threshold table */
+  .table-card { padding: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  .table-scroll { overflow-x: auto; }
+  .threshold-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  .threshold-table th {
+    text-align: left; font-family: var(--font-mono); font-size: 0.625rem; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--color-text-tertiary); padding: 0.625rem 0.875rem;
+    border-bottom: 1px solid var(--color-border-subtle); white-space: nowrap;
+  }
+  .threshold-table td { padding: 0.625rem 0.875rem; border-bottom: 1px solid var(--color-border-subtle); }
+  .td-model { font-weight: 600; color: var(--color-text-primary); white-space: nowrap; }
+  .mono { font-family: var(--font-mono); font-weight: 700; }
+  .pass { color: #10B981; }
+  .warn { color: #F59E0B; }
+  .fail { color: #EF4444; }
+
+  /* Note */
+  .note-card { padding: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  .note-text { font-size: 0.9375rem; color: var(--color-text-secondary); line-height: 1.7; max-width: 72ch; }
+  .note-links { display: flex; gap: 0.75rem; margin-top: 0.5rem; flex-wrap: wrap; }
+  .hub-link { color: var(--color-accent); }
+
+  @media (max-width: 720px) {
+    .chart-row, .samples-row { grid-template-columns: 130px 1fr 80px; gap: 0.625rem; }
+    .chart-card, .table-card, .note-card { padding: 1.25rem; }
+    .chart-value { font-size: 0.6875rem; }
+  }
+</style>

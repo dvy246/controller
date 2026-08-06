@@ -1,0 +1,73 @@
+---
+/**
+ * /controller — Controller Profile Hub (8 profiles)
+ * Zero competitor coverage (verified: controllertest.io has no profile pages).
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+const controllers = [
+  { slug: 'ps5-dualsense', name: 'PS5 DualSense', brand: 'Sony', type: 'Standard Gamepad' },
+  { slug: 'xbox-wireless', name: 'Xbox Wireless Controller', brand: 'Microsoft', type: 'Standard Gamepad' },
+  { slug: 'switch-pro', name: 'Switch Pro Controller', brand: 'Nintendo', type: 'Standard Gamepad' },
+  { slug: 'dualsense-edge', name: 'DualSense Edge', brand: 'Sony', type: 'Pro Gamepad' },
+  { slug: 'xbox-elite-series-2', name: 'Xbox Elite Series 2', brand: 'Microsoft', type: 'Pro Gamepad' },
+  { slug: 'scuf-instinct-pro', name: 'SCUF Instinct Pro', brand: 'Corsair / SCUF', type: 'Esports Gamepad' },
+  { slug: '8bitdo-ultimate', name: '8BitDo Ultimate Hall Effect', brand: '8BitDo', type: 'Hall Effect Gamepad' },
+  { slug: 'razer-wolverine-v2', name: 'Razer Wolverine V2 Pro', brand: 'Razer', type: 'Esports Gamepad' },
+  { slug: 'logitech-f310', name: 'Logitech F310 / F710', brand: 'Logitech', type: 'Classic Gamepad' },
+];
+
+const breadcrumbs = [{ name: 'Home', url: '/' }, { name: 'Controller Profiles' }];
+---
+
+<BaseLayout
+  title="Controller Profiles — Specs, Known Issues & Diagnostics | ControllerTesting.com"
+  description="Hardware profiles for PS5 DualSense, Xbox, Switch Pro, DualSense Edge, Elite Series 2 and more: sensor types, known issues, and the right diagnostic for each."
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="hub-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="hub-hero">
+        <span class="badge-tag">Hardware Reference</span>
+        <h1 class="hub-title">Controller Profiles</h1>
+        <p class="hub-subtitle">
+          Sensor types, known failure modes, and the right diagnostic for each controller.
+          Reliability claims only appear where our baseline dataset has the model — no invented numbers.
+        </p>
+      </header>
+
+      <div class="profile-grid">
+        {controllers.map((c) => (
+          <a href={`/controller/${c.slug}`} class="profile-card card-base card-hover">
+            <span class="profile-type">{c.brand} · {c.type}</span>
+            <h2 class="profile-title">{c.name}</h2>
+            <span class="profile-link">Profile &amp; diagnostics &rarr;</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .hub-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .hub-hero { margin-bottom: 2.5rem; }
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .hub-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 70ch; }
+  .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+  .profile-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .profile-type { font-family: var(--font-mono); font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); }
+  .profile-title { font-size: 1.125rem; font-weight: 800; }
+  .profile-link { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-accent); }
+</style>

@@ -1,0 +1,260 @@
+---
+/**
+ * /best-controller-for/[slug] — static fit guides computed from the dataset.
+ * slug: small | large | limited-grip-strength
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import { picksForHandKey, HAND_REFERENCES, getFitModels, type HandKey } from '../../lib/fit';
+import fitData from '../../data/controllerFitData.json';
+
+type GuideKey = 'small' | 'large' | 'limited-grip-strength';
+
+export function getStaticPaths() {
+  const urlKeys: Record<string, GuideKey> = {
+    'small-hands': 'small',
+    'large-hands': 'large',
+    'limited-grip-strength': 'limited-grip-strength',
+  };
+  return Object.entries(urlKeys).map(([urlKey]) => ({ params: { slug: urlKey } }));
+}
+
+const { slug: urlKey } = Astro.params;
+const urlKeys: Record<string, GuideKey> = {
+  'small-hands': 'small',
+  'large-hands': 'large',
+  'limited-grip-strength': 'limited-grip-strength',
+};
+const handKey = urlKeys[urlKey] ?? 'medium' as GuideKey;
+const refKey: HandKey = handKey === 'limited-grip-strength' ? 'medium' : handKey;
+
+const content = {
+  small: {
+    title: 'Best Controllers for Small Hands',
+    intro: `Controllers that fit smaller hands well tend to be light, compact, and easy to wrap around. This guide is computed from the fit dataset at a reference span of ${HAND_REFERENCES.small.spanMm} mm (thumb to pinky, open hand). Models without measured body widths are excluded from the ranking until they are measured — we do not guess.`,
+    focus: 'span',
+  },
+  large: {
+    title: 'Best Controllers for Large Hands',
+    intro: `Large hands need controllers with deep grips and a body that doesn't demand an awkward palm stretch. This guide is computed from the fit dataset at a reference span of ${HAND_REFERENCES.large.spanMm} mm (thumb to pinky, open hand). Models without measured body widths are excluded from the ranking until they are measured — we do not guess.`,
+    focus: 'span',
+  },
+  'limited-grip-strength': {
+    title: 'Best Controllers for Limited Grip Strength',
+    intro: `When grip strength or hand stamina is limited, weight matters more than width. This guide ranks measured models by published weight, favoring lightweight options (≤ 250 g) for long sessions. Width verdicts still apply at a reference span of ${HAND_REFERENCES.medium.spanMm} mm — see the fit notes per model.`,
+    focus: 'weight',
+  },
+}[handKey];
+
+const ranked = picksForHandKey(refKey);
+const models = getFitModels();
+
+// Weight-first ordering for limited-grip-strength, span-first otherwise.
+const ordered = [...ranked.results].sort((a, b) => {
+  if (handKey === 'limited-grip-strength') {
+    const wa = a.weightG ?? Infinity;
+    const wb = b.weightG ?? Infinity;
+    if (wa !== wb) return wa - wb;
+  }
+  return ranked.results.indexOf(a) - ranked.results.indexOf(b);
+});
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Controller Fit', url: '/fit' },
+  { name: content.title },
+];
+
+const canonicalUrl = `https://controllertesting.com/best-controller-for/${handKey}`;
+
+const faqs = [
+  {
+    q: `What is the best controller for ${handKey === 'small' ? 'small hands' : handKey === 'large' ? 'large hands' : 'limited grip strength'}?`,
+    a: content.intro,
+  },
+  {
+    q: 'Why are some controllers excluded from this ranking?',
+    a: `Controllers whose body width or weight has not been measured are marked pending in the dataset. Excluding them keeps every recommendation traceable to a published measurement (snapshot ${fitData.updatedAt}).`,
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const tierLabel: Record<string, string> = {
+  recommended: 'Recommended fit',
+  'try-first': 'Try before you buy',
+  'not-ideal': 'Not ideal at reference span',
+  pending: 'Verdict pending (unmeasured)',
+};
+---
+
+<BaseLayout
+  title={`${content.title} (Computed from Measured Dimensions) | ControllerTesting.com`}
+  description={content.intro}
+  canonical={canonicalUrl}
+  breadcrumbs={breadcrumbs}
+  schema={faqSchema}
+>
+  <Header />
+
+  <main id="main-content" class="bcf-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="bcf-hero">
+        <span class="badge-tag">Computed from measured dimensions</span>
+        <h1 class="bcf-title">{content.title}</h1>
+        <p class="bcf-intro">{content.intro}</p>
+        <div class="bcf-meta">
+          <span class="bcf-meta-chip mono">{HAND_REFERENCES[refKey].note}</span>
+          <span class="bcf-meta-chip mono">dataset snapshot {fitData.updatedAt}</span>
+        </div>
+      </header>
+
+      <!-- Ranked list -->
+      <section class="bcf-list" aria-label="Ranked controller picks">
+        {ordered.map((r) => {
+          const model = models[r.slug];
+          return (
+            <article class={`bcf-card tier-${r.verdict}`}>
+              <div class="bcf-rank">
+                <span class="bcf-rank-num">{String(ordered.indexOf(r) + 1).padStart(2, '0')}</span>
+              </div>
+              <div class="bcf-body">
+                <div class="bcf-head">
+                  <h2 class="bcf-name">{r.name}</h2>
+                  <span class="bcf-tier">{tierLabel[r.verdict]}</span>
+                </div>
+                <p class="bcf-reason">{r.reason}</p>
+                <div class="bcf-specs">
+                  <span class="bcf-spec mono">{r.widthMm !== null ? `${r.widthMm} mm wide` : 'width pending'}</span>
+                  <span class="bcf-spec mono">{r.weightG !== null ? `${r.weightG} g` : 'weight pending'}</span>
+                  <span class="bcf-spec mono">{r.stickLayout} sticks</span>
+                  {model.priceUsd !== null && <span class="bcf-spec mono">${model.priceUsd}</span>}
+                </div>
+                <ul class="bcf-notes">
+                  {model.fitNotes.slice(0, 2).map((note) => (
+                    <li class="bcf-note">{note}</li>
+                  ))}
+                </ul>
+                <a href={`/fit/${r.slug}`} class="bcf-link">Full fit profile &rarr;</a>
+              </div>
+            </article>
+          );
+        })}
+      </section>
+
+      <!-- How this is computed -->
+      <section class="bcf-method card-base">
+        <h2 class="section-title">How this list is computed</h2>
+        <p class="bcf-method-text">
+          The same engine that powers the <a href="/fit" class="hub-link">interactive fit analyzer</a> produces
+          these ranks. For width verdicts, a model is recommended when its published body width sits between
+          75% and 95% of the reference hand span with a matching stick layout. For limited grip strength, the
+          list is re-ordered by published weight — lighter first — and the width verdict is shown for context.
+          Every figure is traceable to <span class="mono">src/data/controllerFitData.json</span>; anything not
+          yet measured is labeled pending rather than estimated.
+        </p>
+        <a href="/test/methodology" class="hub-link">Read the testing methodology &rarr;</a>
+      </section>
+
+      <!-- FAQ -->
+      <section class="bcf-faq" aria-labelledby="bcf-faq-title">
+        <h2 id="bcf-faq-title" class="section-title">Common questions</h2>
+        <div class="faq-list">
+          {faqs.map((f) => (
+            <div class="faq-item">
+              <h3 class="faq-q">{f.q}</h3>
+              <p class="faq-a">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .bcf-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .container-site {
+    width: 100%; max-width: 1000px; margin-inline: auto; padding-inline: 1.5rem;
+    display: flex; flex-direction: column; gap: 2.5rem;
+  }
+  .badge-tag {
+    display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700;
+    text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1);
+    padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+  }
+  .bcf-hero { max-width: 80ch; }
+  .bcf-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+  .bcf-intro { font-size: 1.0625rem; color: var(--color-text-secondary); line-height: 1.7; }
+  .bcf-meta { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.25rem; }
+  .bcf-meta-chip {
+    font-size: 0.6875rem; color: var(--color-text-tertiary); background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle); border-radius: var(--radius-pill); padding: 0.35em 0.9em;
+  }
+
+  .bcf-list { display: flex; flex-direction: column; gap: 1.25rem; }
+  .bcf-card {
+    display: grid; grid-template-columns: 56px 1fr; gap: 1.25rem;
+    background: var(--color-surface-2); border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card); padding: 1.5rem; border-left: 3px solid var(--color-border-subtle);
+  }
+  .bcf-card.tier-recommended { border-left-color: #10B981; }
+  .bcf-card.tier-try-first { border-left-color: #2563EB; }
+  .bcf-card.tier-not-ideal { border-left-color: #F59E0B; }
+  .bcf-card.tier-pending { border-left-color: var(--color-text-tertiary); opacity: 0.85; }
+  .bcf-rank-num { font-family: var(--font-mono); font-size: 1.375rem; font-weight: 800; color: var(--color-text-tertiary); }
+  .bcf-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .bcf-name { font-size: 1.25rem; font-weight: 800; color: var(--color-text-primary); }
+  .bcf-tier {
+    font-family: var(--font-mono); font-size: 0.625rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: #10B981; white-space: nowrap;
+  }
+  .tier-try-first .bcf-tier { color: #2563EB; }
+  .tier-not-ideal .bcf-tier { color: #F59E0B; }
+  .tier-pending .bcf-tier { color: var(--color-text-tertiary); }
+  .bcf-reason { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; margin-top: 0.375rem; }
+  .bcf-specs { display: flex; gap: 0.625rem; flex-wrap: wrap; margin-top: 0.625rem; }
+  .bcf-spec {
+    font-size: 0.6875rem; color: var(--color-text-secondary); background: var(--color-surface-3);
+    border: 1px solid var(--color-border-subtle); border-radius: var(--radius-pill); padding: 0.25em 0.7em;
+  }
+  .bcf-notes { list-style: none; padding: 0; margin: 0.75rem 0 0; display: flex; flex-direction: column; gap: 0.35rem; }
+  .bcf-note {
+    font-size: var(--text-small); color: var(--color-text-tertiary); line-height: 1.55;
+    padding-left: 1rem; position: relative;
+  }
+  .bcf-note::before { content: '—'; position: absolute; left: 0; color: var(--color-accent); }
+  .bcf-link { font-size: 0.8125rem; font-weight: 600; color: var(--color-accent); margin-top: 0.75rem; display: inline-block; }
+
+  .section-title { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; color: var(--color-text-primary); margin-bottom: 0.75rem; }
+  .bcf-method { padding: 1.75rem; display: flex; flex-direction: column; gap: 0.625rem; }
+  .bcf-method-text { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.7; max-width: 72ch; }
+
+  .bcf-faq { display: flex; flex-direction: column; gap: 1rem; }
+  .faq-list { display: flex; flex-direction: column; gap: 1rem; }
+  .faq-item { background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1.25rem 1.5rem; }
+  .faq-q { font-size: 0.9375rem; font-weight: 700; color: var(--color-text-primary); margin-bottom: 0.375rem; }
+  .faq-a { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.65; }
+  .hub-link { color: var(--color-accent); }
+  .mono { font-family: var(--font-mono); }
+
+  @media (max-width: 640px) {
+    .bcf-card { grid-template-columns: 1fr; gap: 0.75rem; padding: 1.25rem; }
+  }
+</style>

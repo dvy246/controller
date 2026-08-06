@@ -1,0 +1,135 @@
+---
+/**
+ * /press — Press kit for journalists & reviewers.
+ * Data-backed angles only: no invented stats. Everything here is traceable
+ * to reliabilityData.json, the methodology page, or the gamepad-lib repo.
+ */
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+import reliabilityData from '../data/reliabilityData.json';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Press Kit' },
+];
+
+const facts = [
+  { k: 'Documented diagnostic results', v: `${reliabilityData.totalSamplesMeasured.toLocaleString()}+` },
+  { k: 'Free browser diagnostics', v: '32' },
+  { k: 'Repair guides', v: '12' },
+  { k: 'Per-game settings guides', v: '30' },
+  { k: 'Controller comparisons', v: '9' },
+  { k: 'Locales', v: '5 (en, es, de, fr, ja)' },
+];
+---
+
+<BaseLayout
+  title="Press Kit — ControllerTesting.com | Media & Review Resources"
+  description="Press kit for ControllerTesting.com: the data-backed controller testing platform with 142,850+ documented results, open-source measurement math, and zero-invented-figures policy."
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content">
+    <div class="max-w-5xl mx-auto px-4 py-16">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="mb-12">
+        <span class="badge-tag">Press &amp; Media</span>
+        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-stone-100 mt-4 mb-3">Press Kit</h1>
+        <p class="text-stone-400 text-lg max-w-3xl leading-relaxed">
+          ControllerTesting.com is the free, browser-based controller testing platform that tells you
+          <em>why</em> your controller behaves the way it does — not just what the raw axes say. Every number we
+          publish traces back to a dated dataset or a published methodology. We do not invent figures.
+        </p>
+      </header>
+
+      <section class="card-base p-6 mb-8">
+        <h2 class="text-xl font-bold text-stone-100 mb-4">Key facts</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          {facts.map((f) => (
+            <div class="p-4 rounded-xl bg-stone-900/60 border border-stone-800">
+              <div class="text-2xl font-bold text-blue-400">{f.v}</div>
+              <div class="text-stone-500 text-sm mt-1">{f.k}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="card-base p-6 mb-8">
+        <h2 class="text-xl font-bold text-stone-100 mb-4">Story angles</h2>
+        <ul class="space-y-3 text-stone-400 leading-relaxed">
+          <li>
+            <strong class="text-stone-200">The Hall-effect vs potentiometer gap, measured.</strong> Our baseline
+            dataset shows Hall-effect sticks average <strong class="text-stone-200">0.1%</strong> drift after 12
+            months vs <strong class="text-stone-200">3.1–5.2%</strong> for potentiometer sticks, and a
+            <strong class="text-stone-200">36-month</strong> average lifespan before drift onset vs
+            <strong class="text-stone-200">9–14 months</strong>. A 30–50× measured difference behind a hardware
+            trend that's reshaping the controller market (see also Valve's 2026 TMR-stick Steam Controller).
+          </li>
+          <li>
+            <strong class="text-stone-200">A testing site that admits its limits.</strong> Published methodology
+            page, per-tool "how this test works &amp; its limits" block, "no data yet" labels instead of invented
+            numbers, and a recommendation to an open-source alternative (dualshock-tools) where our own tool is
+            narrower. We are building trust with repair-minded users who distrust single-tool readings.
+          </li>
+          <li>
+            <strong class="text-stone-200">Measurement math open-sourced.</strong> The core drift/circularity
+            library (<code class="inline-code">gamepad-analyzer</code>, MIT) is the exact code running our tools —
+            auditable, forkable, verifiable.
+          </li>
+          <li>
+            <strong class="text-stone-200">Repair-first content.</strong> 12 step-by-step stick-drift repair
+            guides, 30 per-game deadzone/sensitivity settings guides, 9 controller comparisons — all linked back
+            to re-testing tools, closing the diagnose→fix→verify loop.
+          </li>
+        </ul>
+      </section>
+
+      <section class="card-base p-6 mb-8">
+        <h2 class="text-xl font-bold text-stone-100 mb-4">The one-line pitch</h2>
+        <p class="text-stone-300 text-lg leading-relaxed">
+          "The controller tester that shows its work: 142,850+ documented results, open-source measurement math,
+          published methodology — and repair guides for what you find."
+        </p>
+      </section>
+
+      <section class="card-base p-6 mb-8">
+        <h2 class="text-xl font-bold text-stone-100 mb-4">Why journalists trust us (and should)</h2>
+        <ul class="space-y-3 text-stone-400 leading-relaxed">
+          <li><strong class="text-stone-200">No ad network, no trackers, no sign-ups.</strong> The tools run
+            locally in your browser; telemetry is opt-in consent and stays on-device.</li>
+          <li><strong class="text-stone-200">No lab-certification claims.</strong> We state precisely what browser
+            testing can and cannot measure.</li>
+          <li><strong class="text-stone-200">Figures are dated and cited.</strong> The reliability dataset page
+            displays its snapshot date; the monthly report archives changes.</li>
+        </ul>
+      </section>
+
+      <section class="card-base p-6">
+        <h2 class="text-xl font-bold text-stone-100 mb-4">Media resources</h2>
+        <ul class="space-y-3 text-stone-400 leading-relaxed">
+          <li><a href="/reliability/report" class="text-blue-400 hover:underline">Monthly reliability dataset report</a> — the numbers behind the Hall-effect angle.</li>
+          <li><a href="/test/methodology" class="text-blue-400 hover:underline">Testing methodology</a> — what browser tests can and cannot measure.</li>
+          <li><a href="/reliability" class="text-blue-400 hover:underline">Reliability hub</a> — per-model baselines.</li>
+          <li><a href="/games" class="text-blue-400 hover:underline">Browser gamepad arcade</a> — playable demonstration of input precision.</li>
+          <li><a href="/embeds" class="text-blue-400 hover:underline">Embeds &amp; widgets</a> — iframe widgets with attribution backlinks.</li>
+        </ul>
+        <p class="text-stone-500 text-sm mt-6">
+          For interviews, data access, or review codes: <a href="mailto:press@controllertesting.com" class="text-blue-400 hover:underline">press@controllertesting.com</a>.
+          We answer data questions with data.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); border: 1px solid rgba(37, 99, 235, 0.2); }
+  .inline-code { font-family: var(--font-mono); font-size: 0.875rem; background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: 4px; padding: 0.1em 0.35em; }
+</style>

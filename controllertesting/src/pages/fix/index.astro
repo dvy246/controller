@@ -1,0 +1,120 @@
+---
+/**
+ * /fix — Repair Guides Hub
+ * Zero competitor coverage (verified: controllertest.io has no /fix pages).
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+const categories = [
+  {
+    name: 'Stick Drift Repair',
+    slug: 'stick-drift',
+    description: 'Step-by-step drift fix guides for 12 controllers — diagnose, clean, adjust deadzones, repair or replace, then verify.',
+    count: 12,
+  },
+];
+
+const breadcrumbs = [{ name: 'Home', url: '/' }, { name: 'Repair Guides' }];
+
+const guides = [
+  { slug: 'ps5-dualsense', name: 'PS5 DualSense' },
+  { slug: 'xbox-wireless', name: 'Xbox Wireless (Series X/S)' },
+  { slug: 'switch-pro', name: 'Switch Pro Controller' },
+  { slug: 'joy-con', name: 'Joy-Con (L/R)' },
+  { slug: 'ps4-dualshock-4', name: 'PS4 DualShock 4' },
+  { slug: 'dualsense-edge', name: 'DualSense Edge' },
+  { slug: 'xbox-elite-2', name: 'Xbox Elite Series 2' },
+  { slug: '8bitdo-ultimate', name: '8BitDo Ultimate (Hall Effect)' },
+  { slug: 'scuf-instinct-pro', name: 'SCUF Instinct Pro' },
+  { slug: 'steam-deck', name: 'Steam Deck (LCD/OLED)' },
+  { slug: 'gamecube', name: 'GameCube Controller' },
+  { slug: 'logitech-f310', name: 'Logitech F310 / F710' },
+];
+---
+
+<BaseLayout
+  title="Controller Repair Guides — Fix Stick Drift Step by Step | ControllerTesting.com"
+  description="Free step-by-step stick drift repair guides for PS5, Xbox, Switch, Steam Deck and more: diagnose with our test, clean or replace, then verify the fix."
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="hub-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="hub-hero">
+        <span class="badge-tag">Repair Hub</span>
+        <h1 class="hub-title">Controller Repair Guides</h1>
+        <p class="hub-subtitle">
+          The full diagnose → fix → verify loop. Every guide starts with a real measurement, ends with a re-test —
+          no blind disassembly, no guesswork.
+        </p>
+      </header>
+
+      <section class="hub-categories">
+        {categories.map((cat) => (
+          <a href={`/fix/${cat.slug}`} class="cat-card card-base card-hover">
+            <div class="cat-badge">Repair</div>
+            <h2 class="cat-title">{cat.name}</h2>
+            <p class="cat-desc">{cat.description}</p>
+            <span class="cat-count">{cat.count} guides</span>
+          </a>
+        ))}
+      </section>
+
+      <section class="hub-list card-base">
+        <h2 class="section-title">Stick Drift Fix Guides</h2>
+        <ul class="guide-list" role="list">
+          {guides.map((g) => (
+            <li>
+              <a href={`/fix/stick-drift/${g.slug}`} class="guide-link">
+                <span class="guide-name">How to fix {g.name} stick drift</span>
+                <span class="guide-arrow">&rarr;</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="hub-note card-base">
+        <h2 class="section-title">Before you repair</h2>
+        <p class="hub-text">
+          Measure first. Roughly half of "drift" cases are deadzone or connection-mode issues, not hardware failure —
+          our <a href="/test/controller/drift" class="hub-link">Stick Drift Detector</a> tells you which one you have in two minutes.
+          Read our <a href="/test/methodology" class="hub-link">testing methodology</a> to understand what browser tests can and cannot measure.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .hub-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .hub-hero { margin-bottom: 2.5rem; }
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .hub-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
+  .hub-categories { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+  .cat-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .cat-badge { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); letter-spacing: 0.08em; }
+  .cat-title { font-size: 1.25rem; font-weight: 800; }
+  .cat-desc { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; flex-grow: 1; }
+  .cat-count { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-text-tertiary); }
+  .hub-list { padding: 2rem; margin-bottom: 1.5rem; }
+  .section-title { font-size: var(--text-h2); font-weight: 700; margin-bottom: 1.25rem; }
+  .guide-list { list-style: none; display: flex; flex-direction: column; }
+  .guide-link { display: flex; justify-content: space-between; align-items: center; padding: 0.875rem 0; border-bottom: 1px solid var(--color-border-subtle); color: var(--color-text-secondary); text-decoration: none; transition: color var(--duration-fast); }
+  .guide-link:hover { color: var(--color-accent); }
+  .guide-name { font-size: 1rem; }
+  .guide-arrow { color: var(--color-text-tertiary); }
+  .hub-note { padding: 2rem; }
+  .hub-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.7; }
+  .hub-link { color: var(--color-accent); }
+</style>

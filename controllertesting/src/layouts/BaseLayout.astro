@@ -210,6 +210,7 @@ const schemas = [
         var current = document.documentElement.getAttribute('data-theme') || 'dark';
         var next = current === 'dark' ? 'light' : 'dark';
         document.documentElement.setAttribute('data-theme', next);
+        btn.setAttribute('aria-checked', String(next === 'dark'));
         try { localStorage.setItem('ct-theme', next); } catch(e) {}
       });
     </script>

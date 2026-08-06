@@ -1,7 +1,7 @@
 ---
 /**
  * /games/index.astro — Controller Games Arcade Hub
- * SEO Title: Controller Arcade — 15 Free Browser Games for Gamepads
+ * SEO Title: Controller Arcade — 5 Free Browser Games for Gamepads
  */
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -16,8 +16,9 @@ const breadcrumbs = [
 const games = [
   { id: 'stick-sniper', name: 'Stick Sniper', type: 'Precision', desc: 'Target-acquisition precision game testing stick acceleration & deadzones', href: '/games/stick-sniper', pts: 50 },
   { id: 'button-blitz', name: 'Button Blitz', type: 'Reflex', desc: 'Fast-paced button reaction game pressing random face button prompts', href: '/games/button-blitz', pts: 50 },
+  { id: 'stick-maze', name: 'Stick Maze Runner', type: 'Precision', desc: 'Analog stick vector corridor maze navigation testing fine control', href: '/games/stick-maze', pts: 50 },
   { id: 'trigger-racer', name: 'Trigger Speed Racer', type: 'Precision', desc: 'Analog trigger linearity control game matching target speed curves', href: '/games/trigger-racer', pts: 50 },
-  { id: 'gyro-maze', name: 'Gyroscope Maze', type: 'Motion', desc: 'Tilt controller to navigate marble through 3D maze walls', href: '/games/gyro-maze', pts: 50 },
+  { id: 'quick-draw', name: 'Quick Draw Reaction', type: 'Reflex', desc: 'Millisecond signal reaction shootout testing input response', href: '/games/quick-draw', pts: 50 },
 ];
 
 const schema = {
@@ -37,13 +38,14 @@ function getGameIcon(id: string) {
   if (id.includes('blitz')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`;
   if (id.includes('racer')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 11V3M1 14h6M9 8h6M17 16h6"/></svg>`;
   if (id.includes('maze')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`;
+  if (id.includes('draw')) return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>`;
   return `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="6"/></svg>`;
 }
 ---
 
 <BaseLayout
-  title="Controller Arcade — 15 Free Browser Games for Gamepads | ControllerTesting.com"
-  description="Play free browser games using your PS5, Xbox, or Switch controller. Precision aim trainers, reflex challenges, and rewards Arcade."
+  title="Controller Arcade — 5 Free Browser Games for Gamepads | ControllerTesting.com"
+  description="Play 5 free browser games using your PS5, Xbox, or Switch controller. Precision aim trainers, reflex challenges, and rewards Arcade."
   schema={schema}
   breadcrumbs={breadcrumbs}
 >
@@ -57,18 +59,28 @@ function getGameIcon(id: string) {
         <span class="arcade-badge">Gamepad Arcade &amp; Benchmarks</span>
         <h1 class="arcade-title">Controller Arcade &amp; Aim Trainer</h1>
         <p class="arcade-subtitle">
-          Put your controller to the test in browser arcade games built specifically for gamepads. Earn XP points, unlock achievements, and climb the leaderboard.
+          Put your controller to the test in browser arcade games built specifically for gamepads. Earn XP points, level up, and build a daily streak.
         </p>
       </header>
 
       <div class="arcade-rewards-banner card-base">
         <div class="rewards-info">
           <h2 class="rewards-heading">Your Arcade Progression</h2>
-          <p class="rewards-sub">Earn +50 XP for every diagnostic test completed and game session played.</p>
+          <p class="rewards-sub">Earn +50 XP per diagnostic test and up to +150 XP per game session. Test every day to build your streak.</p>
         </div>
-        <div class="rewards-stat-box">
-          <span class="r-label">CURRENT XP POINTS</span>
-          <span class="r-val text-emerald-400" id="user-xp-val">0 XP</span>
+        <div class="rewards-stats">
+          <div class="rewards-stat-box">
+            <span class="r-label">CURRENT XP POINTS</span>
+            <span class="r-val text-emerald-400" id="user-xp-val">0 XP</span>
+          </div>
+          <div class="rewards-stat-box">
+            <span class="r-label">LEVEL</span>
+            <span class="r-val text-blue-400" id="user-level-val">1</span>
+          </div>
+          <div class="rewards-stat-box">
+            <span class="r-label">DAILY STREAK</span>
+            <span class="r-val text-amber-400" id="user-streak-val">0 days</span>
+          </div>
         </div>
       </div>
 
@@ -104,6 +116,10 @@ function getGameIcon(id: string) {
     const prog = getUserProgress();
     const xpEl = document.getElementById('user-xp-val');
     if (xpEl) xpEl.textContent = `${prog.pts} XP`;
+    const levelEl = document.getElementById('user-level-val');
+    if (levelEl) levelEl.textContent = String(prog.level || 1);
+    const streakEl = document.getElementById('user-streak-val');
+    if (streakEl) streakEl.textContent = `${prog.streak || 0} days`;
   });
 </script>
 
@@ -118,6 +134,7 @@ function getGameIcon(id: string) {
   .rewards-heading { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem; }
   .rewards-sub { font-size: var(--text-small); color: var(--color-text-secondary); }
   .rewards-stat-box { display: flex; flex-direction: column; align-items: flex-end; }
+  .rewards-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
   .r-label { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: var(--color-text-tertiary); letter-spacing: 0.08em; }
   .r-val { font-family: var(--font-mono); font-size: 2.25rem; font-weight: 800; }
   .grid-games { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; width: 100%; }

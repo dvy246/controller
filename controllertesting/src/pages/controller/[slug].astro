@@ -1,5 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import reliabilityData from '../../data/reliabilityData.json';
+
+const reliabilityModels = reliabilityData.models as Record<string, any>;
 
 export function getStaticPaths() {
   const controllers = [
@@ -13,7 +16,8 @@ export function getStaticPaths() {
         'Tension-adjustable stick module center offset',
         'Back paddle microswitch responsiveness'
       ],
-      description: 'Complete diagnostic suite for Xbox Elite Series 2. Test 4x rear paddles, adjustable stick tension torque, and trigger stop calibration.'
+      description: 'Complete diagnostic suite for Xbox Elite Series 2. Test 4x rear paddles, adjustable stick tension torque, and trigger stop calibration.',
+      reliabilitySlug: null,
     },
     {
       slug: 'dualsense-edge',
@@ -25,7 +29,8 @@ export function getStaticPaths() {
         'Fn lever button mapping indices',
         'Adaptive trigger mechanical stop travel'
       ],
-      description: 'Professional hardware tester for PS5 DualSense Edge. Verify swappable stick module drift %, back lever switches, and trigger travel profiles.'
+      description: 'Professional hardware tester for PS5 DualSense Edge. Verify swappable stick module drift %, back lever switches, and trigger travel profiles.',
+      reliabilitySlug: 'dualsense-edge',
     },
     {
       slug: 'scuf-instinct-pro',
@@ -36,7 +41,8 @@ export function getStaticPaths() {
         'Instant trigger mouse-click switch bounce',
         'Ergonomic rear paddle contact degradation'
       ],
-      description: 'Hardware diagnostic wizard for SCUF Instinct Pro. Test ultra-fast instant triggers and ergonomic 4-paddle layout.'
+      description: 'Hardware diagnostic wizard for SCUF Instinct Pro. Test ultra-fast instant triggers and ergonomic 4-paddle layout.',
+      reliabilitySlug: null,
     },
     {
       slug: '8bitdo-ultimate',
@@ -47,7 +53,8 @@ export function getStaticPaths() {
         'Magnetic center bounce under rapid snap-back',
         '2.4G wireless adapter report rate jitter'
       ],
-      description: 'Hall Effect stick drift & circularity tester for 8BitDo Ultimate. Verify 0.01% drift stability and magnetic sensor precision.'
+      description: 'Hall Effect stick drift & circularity tester for 8BitDo Ultimate. Verify 0.01% drift stability and magnetic sensor precision.',
+      reliabilitySlug: 'hall-effect-generic',
     },
     {
       slug: 'razer-wolverine-v2',
@@ -58,7 +65,20 @@ export function getStaticPaths() {
         'Mecha-tactile action button actuation point',
         'Multi-function top bumper (M1/M2) index mapping'
       ],
-      description: 'Diagnostic tool for Razer Wolverine V2 Pro. Check mecha-tactile switch actuation speeds and multi-function remapped buttons.'
+      description: 'Diagnostic tool for Razer Wolverine V2 Pro. Check mecha-tactile switch actuation speeds and multi-function remapped buttons.',
+      reliabilitySlug: null,
+    },
+    {
+      slug: 'switch-pro',
+      name: 'Nintendo Switch Pro Controller',
+      brand: 'Nintendo',
+      type: 'Gamepad',
+      knownIssues: [
+        'D-Pad diagonal misinputs',
+        'Minor stick powder buildup in housing'
+      ],
+      description: 'Hardware diagnostic suite for Nintendo Switch Pro Controller. Verify stick centering, D-pad diagonal accuracy, and button latency.',
+      reliabilitySlug: 'switch-pro',
     },
     {
       slug: 'logitech-f310',
@@ -69,7 +89,8 @@ export function getStaticPaths() {
         'DirectInput (D) vs XInput (X) toggle mode mismatch',
         'Floating D-Pad diagonal sensitivity'
       ],
-      description: 'Online test tool for Logitech F310 & F710 wireless controllers. Verify XInput/DirectInput modes and floating D-pad diagonal accuracy.'
+      description: 'Online test tool for Logitech F310 & F710 wireless controllers. Verify XInput/DirectInput modes and floating D-pad diagonal accuracy.',
+      reliabilitySlug: null,
     }
   ];
 
@@ -83,6 +104,10 @@ const { slug } = Astro.params;
 const { controller } = Astro.props;
 
 const canonicalUrl = `https://controllertesting.com/controller/${slug}`;
+const reliability =
+  controller.reliabilitySlug && reliabilityModels[controller.reliabilitySlug]
+    ? reliabilityModels[controller.reliabilitySlug]
+    : null;
 const schemaData = {
   "@context": "https://schema.org",
   "@type": "Product",
@@ -121,15 +146,53 @@ const schemaData = {
         <div class="text-blue-400 font-bold mb-1 group-hover:underline">Test Stick Drift</div>
         <div class="text-xs text-stone-400">Precision 0.1% Axis Check</div>
       </a>
-      <a href={`/reliability/${slug === 'dualsense-edge' ? 'dualsense-edge' : slug === '8bitdo-ultimate' ? 'hall-effect-generic' : 'xbox-series-x'}`} class="p-4 bg-stone-900 border border-stone-800 rounded-xl text-center hover:border-emerald-500 transition-colors group">
+      <a href={controller.reliabilitySlug ? `/reliability/${controller.reliabilitySlug}` : '/reliability'} class="p-4 bg-stone-900 border border-stone-800 rounded-xl text-center hover:border-emerald-500 transition-colors group">
         <div class="text-emerald-400 font-bold mb-1 group-hover:underline">Reliability Benchmark</div>
-        <div class="text-xs text-stone-400">View Empirical Lifespan</div>
+        <div class="text-xs text-stone-400">{controller.reliabilitySlug ? 'View Baseline Lifespan Data' : 'No Dataset Yet — View Hub'}</div>
       </a>
       <a href="/passport" class="p-4 bg-stone-900 border border-stone-800 rounded-xl text-center hover:border-indigo-500 transition-colors group">
         <div class="text-indigo-400 font-bold mb-1 group-hover:underline">Controller Passport™</div>
         <div class="text-xs text-stone-400">Create Resale Certificate</div>
       </a>
     </div>
+
+    <!-- Measured Reliability Baselines (from reliabilityData.json) -->
+    {reliability && (
+      <div class="bg-stone-900/80 border border-stone-800 rounded-2xl p-8 mb-12">
+        <div class="flex items-center justify-between gap-4 mb-6 flex-wrap">
+          <h2 class="text-2xl font-bold text-stone-100 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            Measured Reliability Baselines
+          </h2>
+          <a href={`/reliability/${controller.reliabilitySlug}`} class="text-emerald-400 text-sm font-medium hover:underline">
+            Full reliability report →
+          </a>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-stone-800/60 rounded-xl p-4">
+            <div class="text-stone-400 text-xs font-medium mb-1">Avg 12-Month Drift</div>
+            <div class="text-2xl font-bold text-amber-400 font-mono">{reliability.avgDriftAfter12MonthsPercent}%</div>
+          </div>
+          <div class="bg-stone-800/60 rounded-xl p-4">
+            <div class="text-stone-400 text-xs font-medium mb-1">Circularity Error</div>
+            <div class="text-2xl font-bold text-blue-400 font-mono">{reliability.avgCircularityErrorPercent}%</div>
+          </div>
+          <div class="bg-stone-800/60 rounded-xl p-4">
+            <div class="text-stone-400 text-xs font-medium mb-1">Drift-Free Lifespan</div>
+            <div class="text-2xl font-bold text-emerald-400 font-mono">{reliability.avgLifespanMonthsBeforeDrift} mo</div>
+          </div>
+          <div class="bg-stone-800/60 rounded-xl p-4">
+            <div class="text-stone-400 text-xs font-medium mb-1">Dataset Samples</div>
+            <div class="text-2xl font-bold text-stone-200 font-mono">{reliability.samples.toLocaleString()}</div>
+          </div>
+        </div>
+        <p class="text-xs text-stone-500 mt-4">
+          Baseline reference figures from {reliability.samples.toLocaleString()} documented test results (snapshot {reliabilityData.updatedAt}). Baselines, not a guarantee for any individual unit.
+        </p>
+      </div>
+    )}
 
     <!-- Hardware Specific Known Issues -->
     <div class="bg-stone-900/80 border border-stone-800 rounded-2xl p-8 mb-12">

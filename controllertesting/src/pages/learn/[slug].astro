@@ -1,0 +1,430 @@
+---
+/**
+ * /learn/[slug] — Data-driven explainer article.
+ * Facts policy: dataset figures come from reliabilityData.json via the press kit
+ * and /reliability/report (0.1% vs 3.1–5.2% at 12 months, 36 vs 9–14 months,
+ * 142,850+ samples). General hardware facts (polling tiers, sensor mechanics)
+ * are common-knowledge and kept qualitative where measurement could vary.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+export function getStaticPaths() {
+  const articles = [
+  {
+    slug: 'what-is-stick-drift',
+    title: 'What Is Stick Drift?',
+    subtitle:
+      'Stick drift is when a controller analog stick reports a position other than center while at rest — your character aims, moves, or rotates on their own. Here is what the number means and what to do about it.',
+    sections: [
+      {
+        h: 'How stick drift is measured',
+        body: [
+          'A resting analog stick should report the same center position (X/Y ≈ 0.000) on every read. Drift is the offset from that center, expressed as a percentage of the stick\'s full range of travel. Our Stick Drift Detector reads the raw Gamepad API values and converts the at-rest offset into a drift percentage with 0.1% precision.',
+          'For example, a stick reporting an X value of 0.012 at rest is drifting at roughly 1.2%. Values under 2% are considered clean; 2–10% is minor drift you will notice in aim-heavy games; above 10% is severe and usually requires hardware attention.',
+        ],
+      },
+      {
+        h: 'What causes it',
+        body: [
+          'Most first-party controllers use potentiometer sensors: a wiper glides over a carbon track and the voltage at that position becomes the stick\'s coordinate. Drift happens when carbon dust accumulates on the track or the wiper wears, shifting the voltage reading even when the stick is untouched.',
+          'Hall-effect sticks measure a magnetic field instead of a physical wiper — they have no wear contact, which is why our baseline dataset shows them aging dramatically better (see the Hall-effect vs potentiometer guide).',
+        ],
+      },
+      {
+        h: 'Drift is almost always fixable',
+        body: [
+          'In order of effort: (1) clean the sensor housings with isopropyl alcohol, (2) raise the in-game deadzone to cover the measured offset, (3) replace the stick module — drop-in on most Switch-style pads, soldered on Xbox. Each fix is a 5–20 minute job covered step-by-step in our repair guides.',
+          'The important part is measuring before and after. A 0.1%-precision before number tells you whether a fix worked; guessing wastes money on modules you do not need.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Measure your drift now', href: '/test/controller/drift', primary: true },
+      { label: 'Track drift over time', href: '/test/controller/timeline' },
+      { label: 'Repair guides', href: '/fix/stick-drift' },
+      { label: 'How sensors age', href: '/learn/hall-effect-vs-potentiometer-guide' },
+    ],
+    faqs: [
+      {
+        q: 'How much stick drift is acceptable?',
+        a: 'Under 2% at rest is effectively clean — most games ship with deadzones well above that. Between 2% and 10% you will notice it in aim-heavy titles and should raise the in-game deadzone. Above 10% is severe drift; repair or replacement beats masking it.',
+      },
+      {
+        q: 'Can stick drift be fixed permanently?',
+        a: 'Yes. Cleaning fixes dust-related drift, and replacing the stick module with a new (or Hall-effect) module fixes worn wipers permanently. Deadzone tuning only masks drift — it does not repair the sensor.',
+      },
+      {
+        q: 'Is my controller drifting or is it my imagination?',
+        a: 'Do not guess — measure. Connect the controller, open the Stick Drift Detector, and read the at-rest offset on both sticks. A drifting stick produces a stable, repeatable non-zero X/Y reading.',
+      },
+    ],
+  },
+  {
+    slug: 'controller-deadzone-guide',
+    title: 'Controller Deadzone Explained',
+    subtitle:
+      'A deadzone is a region of stick travel the game simply ignores. Set correctly, it hides sensor noise without slowing your aim; set too high, it makes every movement feel mushy.',
+    sections: [
+      {
+        h: 'Inner vs outer deadzone',
+        body: [
+          'The inner deadzone covers the area around center. Its job is to ignore the stick\'s at-rest noise so you never drift — the exact offset the Stick Drift Detector measures. The outer deadzone covers the edges and stops you from reaching full deflection too early.',
+          'You want the smallest inner deadzone that fully covers your stick\'s measured at-rest noise: too low and you drift, too high and small aiming corrections do nothing.',
+        ],
+      },
+      {
+        h: 'Deadzone is not the response curve',
+        body: [
+          'The response curve maps stick distance to aim speed (linear, exponential, dynamic). The deadzone decides where the stick starts responding at all. They are tuned separately: deadzone first, then curve — games expose them as separate settings, and so do our per-game settings guides.',
+        ],
+      },
+      {
+        h: 'How to find your number',
+        body: [
+          'Run the Stick Drift Detector and note the at-rest offset on both sticks. Set the in-game deadzone at or just above that value, then test in-game: if you drift, raise it one step; if you feel spongy, lower it. Games use wildly different scales — Fortnite\'s is 0–50, Rocket League uses 0–1 floats — so the same percentage means different travel per game. Our settings guides list each game\'s scale and community starting points.',
+          'Our Deadzone Visualizer shows your actual stick trace against inner/outer thresholds, which makes the tuning loop much faster than guessing in a lobby.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Visualize your deadzones', href: '/test/controller/deadzone', primary: true },
+      { label: 'Measure drift first', href: '/test/controller/drift' },
+      { label: 'Per-game settings', href: '/settings/fortnite/ps5-dualsense' },
+    ],
+    faqs: [
+      {
+        q: 'What is the best deadzone for a controller?',
+        a: 'The smallest value that fully covers your stick\'s at-rest noise — typically 0.5–1.5% on a healthy stick, or matching your measured drift percentage on a worn one. The community starting points in our settings guides are a good first guess; the detector gives you your exact number.',
+      },
+      {
+        q: 'Do higher deadzones reduce stick drift?',
+        a: 'They mask it: a deadzone above your stick\'s drift offset stops the game from reacting to it. The sensor still drifts and keeps wearing — cleaning or module replacement is the real fix.',
+      },
+    ],
+  },
+  {
+    slug: 'gamepad-polling-rate-guide',
+    title: 'Gamepad Polling Rate (Hz)',
+    subtitle:
+      'Polling rate is how often a controller reports its state to the device — typically 125Hz, 250Hz, 500Hz or 1000Hz on modern hardware. It affects how fresh your inputs are, but it is not the whole latency story.',
+    sections: [
+      {
+        h: 'What the number means',
+        body: [
+          'A controller is a tiny computer: your button press is digitized, and the device asks for the state at a fixed interval. At 125Hz the device receives a fresh report every 8ms; at 1000Hz every 1ms. High polling means your movement input arrives fresher — which matters for fast direction changes, not for raw button response.',
+          'Typical defaults: many budget pads report at 125Hz, most wireless gamepads at 250Hz, enthusiast and pro controllers at 500–1000Hz. A 500–1000Hz controller is not automatically "faster" than a 125Hz one — other latency components usually dominate (see input lag guide).',
+        ],
+      },
+      {
+        h: 'How to check yours',
+        body: [
+          'Our Polling Rate Checker reads the Gamepad API\'s timestamp field to estimate your controller\'s actual report frequency in Hz in real time. Run it wired and wireless — Bluetooth often caps the effective rate even if the pad supports more.',
+        ],
+      },
+      {
+        h: 'What polling rate does not fix',
+        body: [
+          'A high polling rate cannot reduce the sensor\'s own response time, the game engine\'s frame time, or display latency. It also cannot fix stick drift. Treat it as one variable among several, and do not buy on Hz alone.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Check your polling rate', href: '/test/controller/polling-rate', primary: true },
+      { label: 'Controller latency explained', href: '/learn/controller-input-lag-guide' },
+      { label: 'Estimate input lag', href: '/test/controller/latency' },
+    ],
+    faqs: [
+      {
+        q: 'What is a good polling rate for a controller?',
+        a: '250Hz is a solid baseline for most play; 500–1000Hz matters mostly for fast competitive aim games. The difference between 125Hz and 1000Hz is an 8ms vs 1ms report interval — real, but small next to frame time and display latency.',
+      },
+      {
+        q: 'Does polling rate affect stick drift?',
+        a: 'No. Drift is a sensor offset at rest; polling rate only changes how often the offset is reported. A high polling controller drifts just as visibly.',
+      },
+    ],
+  },
+  {
+    slug: 'controller-input-lag-guide',
+    title: 'Controller Input Latency',
+    subtitle:
+      'Input latency is the total time from pressing a button to seeing the result on screen. Your controller is only one link in that chain — here is where the delay actually lives.',
+    sections: [
+      {
+        h: 'The latency chain',
+        body: [
+          'Input → report: the controller digitizes your press and transmits it (USB or wireless). Then the report → game: the engine may only read inputs once per frame. Then game → display: the render, scan-out and the panel\'s own response time. Your monitor often contributes more than your controller does.',
+          'Wireless controllers add a small, measurable transport delay compared to USB — usually a few milliseconds, and it varies with the wireless stack and interference, not with "gaming mode" marketing.',
+        ],
+      },
+      {
+        h: 'What you can actually control',
+        body: [
+          'Use a low-latency connection mode when it matters (wired or a low-latency wireless mode), keep the battery from draining (some controllers poll differently on low battery), and match refresh rate to frame rate. Most of the chain is the display, not the pad.',
+        ],
+      },
+      {
+        h: 'Measure your own feel',
+        body: [
+          'Our Latency Estimator measures reaction-and-input time with a browser timer. Be clear about what it measures: human reaction plus input pipeline feel, not lab-grade input latency. For a controller that drifts or reports unreliably, fix the sensor before chasing milliseconds.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Estimate your reaction/input time', href: '/test/controller/latency', primary: true },
+      { label: 'Check polling rate', href: '/test/controller/polling-rate' },
+      { label: 'Is your stick healthy?', href: '/test/controller/drift' },
+    ],
+    faqs: [
+      {
+        q: 'Is Bluetooth controller input lag bad?',
+        a: 'Modern controllers over Bluetooth add roughly a few milliseconds of transport delay versus USB — measurable, but usually below perception for casual play. Competitive play on 240Hz+ setups favors wired for consistency, not dramatic gains.',
+      },
+      {
+        q: 'How do I reduce controller input lag?',
+        a: 'Order of impact: cap frame rate to a stable target (frame time dominates), use a low-latency display, then wire the controller. Fixing a drifting stick also "reduces" perceived lag — a stick fighting your inputs feels delayed.',
+      },
+    ],
+  },
+  {
+    slug: 'hall-effect-vs-potentiometer-guide',
+    title: 'Hall-Effect vs Potentiometer Sticks',
+    subtitle:
+      'These are the two sensor families inside modern analog sticks. Our baseline dataset — 142,850+ documented measurements — shows a dramatic aging gap between them. Here is the mechanism and the numbers.',
+    sections: [
+      {
+        h: 'The two mechanisms',
+        body: [
+          'Potentiometer sticks use a wiper that slides across a carbon track; the voltage at the wiper position becomes the coordinate. Every movement physically wears the wiper and track, and carbon dust shifts readings — the classic drift mechanism.',
+          'Hall-effect sticks measure a magnetic field with no physical contact. Nothing rubs, so there is no wear debris and no wiper fatigue. The sensor itself is the drift-resistant part; factory calibration and magnet centering are the only drift-adjacent risks.',
+        ],
+      },
+      {
+        h: 'What our dataset shows',
+        body: [
+          'Across our documented measurements, Hall-effect sticks average 0.1% drift after 12 months versus 3.1–5.2% for potentiometer sticks — and a 36-month average lifespan before drift onset versus 9–14 months. That is a 30–50× measured difference on the same test, which is why Hall-effect sticks are the recommended fix path for worn controllers.',
+          'Methodology and caveats are published on the reliability report page: the dataset is browser-opt-in telemetry, so it skews toward users who already suspect a problem — but the sensor-type gap holds within the same population.',
+        ],
+      },
+      {
+        h: 'What it means for buying and repairing',
+        body: [
+          'When a controller dies of drift, the permanent fix is a Hall-effect module swap rather than another potentiometer. When buying new, sensor type belongs in the decision: our buying guide and controller comparisons include it, and our repair guides list which pads accept drop-in Hall-effect modules.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Read the reliability report', href: '/reliability/report', primary: true },
+      { label: 'Hall-effect reliability page', href: '/reliability/hall-effect-generic' },
+      { label: 'Compare controllers', href: '/compare/dualsense-vs-xbox-series' },
+    ],
+    faqs: [
+      {
+        q: 'Are Hall-effect controllers worth it?',
+        a: 'For drift resistance, yes: our baseline dataset shows Hall-effect sticks at 0.1% average drift after 12 months versus 3.1–5.2% for potentiometers. Check the reliability report for methodology and caveats.',
+      },
+      {
+        q: 'Can I replace potentiometer sticks with Hall-effect modules?',
+        a: 'On many pads, yes — module-swap kits exist for controllers like the DualSense and Switch Pro. Our repair guides note which models accept drop-in modules.',
+      },
+    ],
+  },
+  {
+    slug: 'how-controllers-work',
+    title: 'How Video Game Controllers Work',
+    subtitle:
+      'A controller is a small computer that turns your physical inputs into numbers your device reads dozens or hundreds of times per second. Here is the mental model in ten minutes.',
+    sections: [
+      {
+        h: 'Buttons, sticks, triggers',
+        body: [
+          'Buttons are digital: a switch is open or closed, reported as 0 or 1. Sticks are analog: two potentiometer or Hall-effect sensors measure X and Y position as a value from about -1 to 1. Triggers are the same analog idea on one axis, which is why they support pressure-sensitive actions like throttle control.',
+          'Many modern pads add a gyroscope (motion aiming), a touchpad (DualSense), or dual rumble motors — extra sensor streams alongside the same report structure.',
+        ],
+      },
+      {
+        h: 'From your hands to the game',
+        body: [
+          'The controller samples its sensors, builds a state report (which buttons, what stick X/Y values, trigger pressure), and transmits it over USB or Bluetooth. Your device polls for that report at the polling rate, the game reads inputs once per frame, and renders. Everything from the sensor to the frame boundary is a latency and precision budget.',
+          'The Gamepad API in browsers exposes this report directly — buttons as a booleans array and sticks as float axes — which is why every diagnostic on this site runs with zero drivers and zero downloads.',
+        ],
+      },
+      {
+        h: 'Why controllers wear out',
+        body: [
+          'Every moving part is a wear candidate: potentiometer wipers and tracks (drift), button membranes and microswitches (double-clicks, dead buttons), trigger springs, and stick-centering mechanisms. The two big failure classes map to our most-used tools: stick drift and button/trigger faults. See the reliability report for measured failure timelines per model.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'See the full report live', href: '/test/controller/full-diagnostic', primary: true },
+      { label: 'Button tester', href: '/test/controller/buttons' },
+      { label: 'Reliability data', href: '/reliability/report' },
+    ],
+    faqs: [
+      {
+        q: 'Do controllers really send float values to the PC?',
+        a: 'Yes. The Gamepad API exposes stick axes as floats around 0.0 at center and ±1.0 at full deflection, and buttons as a 0/1 array (or pressure values on triggers). That is exactly what the browser-based testers on this site read.',
+      },
+      {
+        q: 'What wears out first on a controller?',
+        a: 'On potentiometer sticks, the analog stick is the most common failure — our dataset shows drift onset averaging 9–14 months on typical models. Button switches and membranes are the second most common, and both are covered by dedicated testers here.',
+      },
+    ],
+  },
+  {
+    slug: 'controller-buying-guide',
+    title: 'Controller Buying Guide (2026)',
+    subtitle:
+      'A decision framework organized by what actually wears out and what actually matters in play — sensor type first, then polling, buttons, and features. No affiliate bias: this is a checklist, not a review.',
+    sections: [
+      {
+        h: '1. Sensor type is the durability question',
+        body: [
+          'The single most important hardware question is potentiometer vs Hall-effect sticks. Our baseline dataset measures 0.1% average drift at 12 months for Hall-effect vs 3.1–5.2% for potentiometers — a 30–50× gap. If you are buying for longevity, Hall-effect sticks are the defining feature; our reliability report and controller comparisons show the per-model data.',
+        ],
+      },
+      {
+        h: '2. Polling rate and connection',
+        body: [
+          'Look for a documented polling rate (250Hz minimum, 500–1000Hz for competitive play) and check the wireless mode — some pads advertise high wired rates but cap Bluetooth. Run the pad through our Polling Rate Checker before you commit to a "pro" model.',
+        ],
+      },
+      {
+        h: '3. Buttons and triggers',
+        body: [
+          'Mechanical/microswitch face buttons feel crisper and last longer than membranes; trigger locks and adjustable tension only matter for specific genres (racing, shooters). Test every button and trigger with our Button Tester and Trigger Tester on arrival — manufacturing defects are the most common early failure.',
+        ],
+      },
+      {
+        h: '4. Repairability',
+        body: [
+          'Controllers with drop-in stick modules (many Switch-style pads, some pro models) are repairable for $8–$25; soldered modules mean paying for labor or a new pad. Prefer repairable, and prefer Hall-effect if you want to avoid the repair entirely.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Compare popular controllers', href: '/compare/dualsense-vs-xbox-series', primary: true },
+      { label: 'Per-model reliability', href: '/reliability/ps5-dualsense' },
+      { label: 'Test it on arrival', href: '/test/controller/full-diagnostic' },
+    ],
+    faqs: [
+      {
+        q: 'What should I look for when buying a controller in 2026?',
+        a: 'In order: Hall-effect (or at least swappable) sticks, a documented 250Hz+ polling rate, repairable modules, and your platform\'s native button layout. Everything else — triggers, paddles, gyro — is genre preference.',
+      },
+      {
+        q: 'Are expensive pro controllers worth it?',
+        a: 'Only if the price buys the features above. A $60 controller with Hall-effect sticks and 1000Hz polling beats a $200 controller with potentiometer sticks on durability. Compare specs, then verify with the testers here before and after purchase.',
+      },
+    ],
+  },
+  ];
+  return articles.map((a) => ({ params: { slug: a.slug }, props: { article: a } }));
+}
+
+const { article } = Astro.props;
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Learn', url: '/learn' },
+  { name: article.title },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: article.faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: article.title,
+  description: article.subtitle,
+  publisher: {
+    '@type': 'Organization',
+    name: 'ControllerTesting.com',
+    url: 'https://controllertesting.com',
+  },
+};
+---
+
+<BaseLayout
+  title={`${article.title} | ControllerTesting.com`}
+  description={article.subtitle}
+  breadcrumbs={breadcrumbs}
+  schema={[faqSchema, articleSchema]}
+>
+  <Header />
+
+  <main id="main-content" class="learn-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="learn-hero">
+        <span class="badge-tag">Learn guide</span>
+        <h1 class="learn-title">{article.title}</h1>
+        <p class="learn-subtitle">{article.subtitle}</p>
+      </header>
+
+      <div class="learn-body card-base">
+        {article.sections.map((s) => (
+          <section class="learn-section">
+            <h2 class="section-title">{s.h}</h2>
+            {s.body.map((p) => (
+              <p class="learn-text">{p}</p>
+            ))}
+          </section>
+        ))}
+      </div>
+
+      <div class="learn-faq card-base">
+        <h2 class="section-title">Quick answers</h2>
+        {article.faqs.map((f) => (
+          <div class="faq-item">
+            <h3 class="faq-q">{f.q}</h3>
+            <p class="learn-text">{f.a}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="learn-related card-base">
+        <h2 class="section-title">Do it, don't just read it</h2>
+        <div class="learn-related-links">
+          {article.related.map((r) => (
+            <a href={r.href} class={r.primary ? 'btn-primary' : 'btn-secondary'}>{r.label}</a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .learn-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .learn-hero { margin-bottom: 2.5rem; max-width: 760px; }
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .learn-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .learn-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .learn-body { padding: 2rem; display: flex; flex-direction: column; gap: 2rem; margin-bottom: 1.5rem; }
+  .learn-section { display: flex; flex-direction: column; gap: 0.75rem; }
+  .section-title { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
+  .learn-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.7; margin: 0; }
+  .learn-faq { padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 1.5rem; }
+  .faq-item { display: flex; flex-direction: column; gap: 0.375rem; }
+  .faq-q { font-size: 1rem; font-weight: 700; color: var(--color-text-primary); }
+  .learn-related { padding: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .learn-related-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  @media (max-width: 640px) { .learn-related { flex-direction: column; align-items: flex-start; } }
+</style>

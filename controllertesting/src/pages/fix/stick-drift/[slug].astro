@@ -1,0 +1,332 @@
+---
+/**
+ * /fix/stick-drift/[slug] — Step-by-Step Stick Drift Repair Guide (per controller)
+ * HowTo schema + repair-loop CTA ("Re-test now"). No invented numbers:
+ * reliability links only exist where reliabilityData.json has the model.
+ */
+
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Header from '../../../components/global/Header.astro';
+import Footer from '../../../components/global/Footer.astro';
+import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
+
+export function getStaticPaths() {
+  const guides = [
+    {
+      slug: 'ps5-dualsense',
+      name: 'PS5 DualSense',
+      platform: 'PlayStation 5 / PC',
+      sensor: 'Potentiometer (ALPS modules)',
+      intro: '90% of DualSense stick drift is carbon dust inside the green ALPS potentiometer housings. Cleaning fixes most cases; Hall-effect module swaps fix the rest permanently.',
+      steps: [
+        { title: 'Measure the exact drift', body: 'Run our Stick Drift Detector to identify which axis (left/right stick, X/Y) is drifting and how bad it is. Record the percentage before you open anything.' },
+        { title: 'Flush the potentiometer wipers', body: 'Remove the shell, lift the stick module flex cable, and spray 99% isopropyl alcohol into the green potentiometer housings while rotating the stick. Re-seat everything and re-test.' },
+        { title: 'Adjust in-game deadzones as a stopgap', body: 'While the module is drying, set an in-game deadzone that covers your measured drift (see our game settings guides). This restores playability instantly.' },
+        { title: 'Permanent fix: Hall-effect module swap', body: 'If cleaning fails, replace the potentiometer modules with Hall-effect magnetic modules (approx. $12–$25 per module, no soldering required on DualSense). Magnetic sensors do not wear.' },
+        { title: 'Re-test the fix', body: 'Run the Stick Drift Detector again. The stick should hold 0.0%–0.5% at rest. If drift persists, repeat the cleaning or swap the other module.' },
+      ],
+      reliabilitySlug: 'ps5-dualsense',
+      moduleReplacement: 'Swappable modules: No (soldering-free module kits exist; controller is not designed for hot-swap)',
+      warrantyNote: 'Opening the controller voids your warranty. If your DualSense is under the 1-year manufacturer warranty, request an RMA instead.',
+    },
+    {
+      slug: 'xbox-wireless',
+      name: 'Xbox Wireless Controller (Series X/S)',
+      platform: 'Xbox Series X/S / Xbox One / PC',
+      sensor: 'Potentiometer',
+      intro: 'Xbox Series controllers drift when the potentiometer wiper track accumulates carbon dust or the spring tension wears. Cleaning and tension checks resolve most cases.',
+      steps: [
+        { title: 'Measure the exact drift', body: 'Run our Stick Drift Detector with the controller wired via USB. Note which stick and axis shows offset at rest.' },
+        { title: 'Clean the potentiometer housings', body: 'Open the shell, remove the stick modules, and flush 99% isopropyl alcohol through the sensor housings while rotating the stick fully.' },
+        { title: 'Adjust in-game deadzones', body: 'Until the module is clean or replaced, set a small in-game deadzone that covers the measured drift — see our game settings guides.' },
+        { title: 'Replace the stick modules if needed', body: 'Series X/S sticks are soldered modules; replacement requires soldering or a module-swap service. If the controller is under warranty, prefer an RMA.' },
+        { title: 'Re-test the fix', body: 'Run the Stick Drift Detector again. A healthy stick reads 0.0%–0.5% at rest on both axes.' },
+      ],
+      reliabilitySlug: 'xbox-series-x',
+      moduleReplacement: 'Swappable modules: No (soldered; the Elite 2 has tension adjustment instead)',
+      warrantyNote: 'Opening the controller voids your warranty. Microsoft covers drift under the 1-year warranty — request an RMA first.',
+    },
+    {
+      slug: 'switch-pro',
+      name: 'Nintendo Switch Pro Controller',
+      platform: 'Nintendo Switch / PC',
+      sensor: 'Potentiometer',
+      intro: 'The Switch Pro Controller is one of the most drift-resistant first-party controllers, but its sticks still use potentiometers and can drift after heavy use or debris ingress.',
+      steps: [
+        { title: 'Measure the exact drift', body: 'Run our Stick Drift Detector in Bluetooth mode, then again wired, and compare the readings.' },
+        { title: 'Clean the stick sensors', body: 'Open the shell and flush 99% isopropyl alcohol into the sensor housings while rotating the sticks. Switch Pro sticks are fully sealed modules — cleaning usually means replacing them.' },
+        { title: 'Adjust in-game deadzones', body: 'Set a small deadzone in-game to cover the measured drift while you source a replacement module.' },
+        { title: 'Replace the stick module', body: 'Pro Controller stick modules are drop-in replacements (approx. $10–$15) with a ribbon cable — no soldering required.' },
+        { title: 'Re-test the fix', body: 'Re-run the Stick Drift Detector. The module should read clean at rest; also confirm the D-Pad registers diagonals without misinputs.' },
+      ],
+      reliabilitySlug: 'switch-pro',
+      moduleReplacement: 'Swappable modules: Yes (drop-in, ribbon cable, no soldering)',
+      warrantyNote: 'Opening the controller voids your warranty. Nintendo offers drift repairs for Joy-Con; Pro Controller is covered by standard regional warranty.',
+    },
+    {
+      slug: 'joy-con',
+      name: 'Nintendo Switch Joy-Con (L / R)',
+      platform: 'Nintendo Switch',
+      sensor: 'Potentiometer (ALPS)',
+      intro: 'Joy-Con drift is the most documented controller failure of the generation. The tiny ALPS modules wear fast; replacement modules are cheap and drop-in.',
+      steps: [
+        { title: 'Measure the exact drift', body: 'Run our Stick Drift Detector with each Joy-Con connected. Note which Joy-Con (L/R) drifts — drift can be one-sided.' },
+        { title: 'Clean the ALPS module', body: 'Pop the module open and flush 99% isopropyl alcohol into the sensor while rotating the stick. This temporarily revives many drifting Joy-Con sticks.' },
+        { title: 'Adjust in-game deadzones', body: 'As a stopgap, raise the in-game deadzone on Switch titles that expose it (e.g., Fortnite).' },
+        { title: 'Replace the module', body: 'Joy-Con stick modules are drop-in replacements (approx. $8–$15 each) with a ribbon cable; no soldering. If under warranty, use Nintendo\'s free Joy-Con drift repair program instead.' },
+        { title: 'Re-test the fix', body: 'Re-run the Stick Drift Detector. The replaced stick should read 0.0% at rest. Also test the ZL/ZR and SL/SR buttons while you are at it.' },
+      ],
+      reliabilitySlug: null,
+      moduleReplacement: 'Swappable modules: Yes (drop-in, ribbon cable, no soldering)',
+      warrantyNote: 'Nintendo offers free Joy-Con drift repairs in most regions — request a repair before opening your Joy-Con.',
+    },
+    {
+      slug: 'ps4-dualshock-4',
+      name: 'PS4 DualShock 4',
+      platform: 'PlayStation 4 / PC',
+      sensor: 'Potentiometer (ALPS)',
+      intro: 'DualShock 4 drift follows the same pattern as DualSense: carbon dust in the ALPS potentiometer wipers. Cleaning and module swaps both work.',
+      steps: [
+        { title: 'Measure the exact drift', body: 'Run our Stick Drift Detector wired via USB to rule out Bluetooth interference affecting the readings.' },
+        { title: 'Clean the potentiometer housings', body: 'Open the shell, flush 99% isopropyl alcohol into the green sensor housings, and rotate the sticks fully while flushing.' },
+        { title: 'Adjust in-game deadzones', body: 'Set an in-game deadzone covering the measured drift as a stopgap while the controller dries or you order modules.' },
+        { title: 'Replace the stick modules', body: 'DS4 stick modules are drop-in (approx. $8–$12 each) — ribbon cable only, no soldering.' },
+        { title: 'Re-test the fix', body: 'Re-run the Stick Drift Detector and confirm 0.0%–0.5% at rest on both axes.' },
+      ],
+      reliabilitySlug: null,
+      moduleReplacement: 'Swappable modules: Yes (drop-in, ribbon cable, no soldering)',
+      warrantyNote: 'Opening the controller voids your warranty. Sony service varies by region; check your local PlayStation repair portal.',
+    },
+    {
+      slug: 'dualsense-edge',
+      name: 'PS5 DualSense Edge',
+      platform: 'PlayStation 5 / PC',
+      sensor: 'Replaceable potentiometer stick modules',
+      intro: 'The Edge is the easiest controller to repair: Sony designed it with user-swappable stick modules. Drift = swap the module, no tools, no soldering.',
+      steps: [
+        { title: 'Measure the exact drift', body: 'Run our Stick Drift Detector to confirm which stick module is drifting and how far off-center it sits.' },
+        { title: 'Swap the stick module', body: 'Release the module latch on the underside, slide out the drifting module, and press in a new one (official modules approx. $19.99, third-party less). No tools needed.' },
+        { title: 'Adjust in-game deadzones', body: 'While you wait for a replacement module, set an in-game deadzone covering the drift.' },
+        { title: 'Re-test the fix', body: 'Re-run the Stick Drift Detector. A fresh module reads 0.0% at rest. Confirm both sticks and the Fn lever still register.' },
+      ],
+      reliabilitySlug: 'dualsense-edge',
+      moduleReplacement: 'Swappable modules: Yes — designed for it (latch release, no tools)',
+      warrantyNote: 'Module swaps do not void the Edge warranty. Keep your modules; used modules sell for parts.',
+    },
+    {
+      slug: 'xbox-elite-2',
+      name: 'Xbox Elite Series 2',
+      platform: 'Xbox Series X/S / Xbox One / PC',
+      sensor: 'Potentiometer (adjustable tension)',
+      intro: 'Elite 2 sticks are still potentiometers; tension adjustment masks early drift but wear is the same as standard Xbox sticks. Module replacement needs soldering or a service kit.',
+      steps: [
+        { title: 'Measure the exact drift', body: 'Run our Stick Drift Detector wired, with tension set to your normal preference.' },
+        { title: 'Clean the stick sensors', body: 'Open the shell and flush 99% isopropyl alcohol through the sensor housings while rotating the sticks.' },
+        { title: 'Adjust tension instead of deadzone where possible', body: 'The Elite 2 lets you raise stick tension, which can mask low-level drift. Use in-game deadzone for anything left over.' },
+        { title: 'Replace the stick modules', body: 'Elite 2 sticks are soldered; replacement requires soldering or a repair service. Under warranty? Request a Microsoft RMA.' },
+        { title: 'Re-test the fix', body: 'Re-run the Stick Drift Detector and confirm the stick holds center at your chosen tension.' },
+      ],
+      reliabilitySlug: null,
+      moduleReplacement: 'Swappable modules: No (soldered; tension adjustment only)',
+      warrantyNote: 'Opening the controller voids your warranty. Microsoft covers Elite 2 drift under warranty in most regions.',
+    },
+    {
+      slug: '8bitdo-ultimate',
+      name: '8BitDo Ultimate (Hall Effect)',
+      platform: 'PC / Switch / mobile',
+      sensor: 'Hall effect (contactless magnetic)',
+      intro: 'Hall-effect sticks do not wear like potentiometers — drift here is usually a factory centering offset or magnetic center bounce, both fixable in software without opening anything.',
+      steps: [
+        { title: 'Measure the exact drift', body: 'Run our Stick Drift Detector over both sticks. Hall-effect sticks read near-zero drift; anything above 1% is unusual and points to calibration, not wear.' },
+        { title: 'Re-centre via firmware', body: 'Use the 8BitDo Ultimate Software to re-calibrate the stick center point. No disassembly required.' },
+        { title: 'Tune the deadzone in software', body: 'Set a small deadzone in the 8BitDo software or in-game to absorb magnetic center bounce.' },
+        { title: 'Do not disassemble for cleaning', body: 'There are no potentiometer wipers to clean. If drift persists after recalibration and the controller is under warranty, request a replacement.' },
+        { title: 'Re-test the fix', body: 'Re-run the Stick Drift Detector to confirm the sticks hold center.' },
+      ],
+      reliabilitySlug: 'hall-effect-generic',
+      moduleReplacement: 'Swappable modules: No (Hall effect — no wear parts to swap)',
+      warrantyNote: '8BitDo offers a 12-month warranty — use it before disassembling.',
+    },
+    {
+      slug: 'scuf-instinct-pro',
+      name: 'SCUF Instinct Pro',
+      platform: 'Xbox Series X/S / PC',
+      sensor: 'Potentiometer',
+      intro: 'The Instinct Pro uses the same potentiometer stick tech as standard Xbox controllers inside a pro shell. Cleaning works; stick replacement needs soldering or SCUF repair service.',
+      steps: [
+        { title: 'Measure the exact drift', body: 'Run our Stick Drift Detector to confirm drift is the stick and not the paddles or triggers.' },
+        { title: 'Clean the stick sensors', body: 'Open the shell and flush 99% isopropyl alcohol through the sensor housings while rotating the sticks.' },
+        { title: 'Adjust in-game deadzones', body: 'Set a deadzone covering the measured drift while you arrange a repair.' },
+        { title: 'Arrange a module service', body: 'SCUF offers official repair services for stick drift. Third-party soldered replacements also work if you are experienced.' },
+        { title: 'Re-test the fix', body: 'Re-run the Stick Drift Detector — confirm center, then verify the paddles and instant triggers still register.' },
+      ],
+      reliabilitySlug: null,
+      moduleReplacement: 'Swappable modules: No (soldered; official SCUF repair service available)',
+      warrantyNote: 'SCUF offers a 6-month limited warranty; contact support before disassembling.',
+    },
+    {
+      slug: 'steam-deck',
+      name: 'Steam Deck (LCD / OLED)',
+      platform: 'SteamOS / PC',
+      sensor: 'LCD: potentiometer · OLED: Hall effect',
+      intro: 'Steam Deck LCD models use potentiometer sticks prone to the same carbon-dust drift; OLED models use Hall-effect sticks that do not wear. Identify your model before repairing.',
+      steps: [
+        { title: 'Measure the exact drift', body: 'Run our Stick Drift Detector in Desktop Mode or in the browser. Note your model: LCD (potentiometer) or OLED (Hall effect).' },
+        { title: 'LCD only: clean the sensors', body: 'Open the backplate and flush 99% isopropyl alcohol through the stick sensor housings while rotating.' },
+        { title: 'Update the controller firmware', body: 'SteamOS updates include stick calibration fixes — check for updates before hardware work.' },
+        { title: 'Replace the stick module (LCD)', body: 'Steam Deck stick modules are drop-in replacements (approx. $15–$25, ribbon cable). OLED units rarely need any of this.' },
+        { title: 'Re-test the fix', body: 'Re-run the Stick Drift Detector and confirm center on both sticks.' },
+      ],
+      reliabilitySlug: null,
+      moduleReplacement: 'LCD: drop-in modules · OLED: Hall effect (no wear parts)',
+      warrantyNote: 'Opening the Deck voids warranty. Valve warranty covers drift on OLED models; contact Steam Support first.',
+    },
+    {
+      slug: 'gamecube',
+      name: 'Nintendo GameCube Controller',
+      platform: 'GameCube / Switch (via adapter) / PC',
+      sensor: 'Potentiometer',
+      intro: 'GameCube sticks are famously durable, but 20-year-old controllers can develop center wobble or drift from a worn wiper track. Cleaning and drop-in modules are the fixes.',
+      steps: [
+        { title: 'Measure the exact drift', body: 'Run our Stick Drift Detector through an adapter (e.g., for Switch or PC) and note the at-rest offset.' },
+        { title: 'Clean the stick box', body: 'Open the stick box and flush 99% isopropyl alcohol through the sensor while rotating the stick.' },
+        { title: 'Replace the stick box', body: 'GameCube stick boxes are drop-in replacements (approx. $8–$15); many aftermarket boxes are tighter than the 20-year-old originals.' },
+        { title: 'Re-test the fix', body: 'Re-run the Stick Drift Detector and confirm center, plus full 360° range.' },
+      ],
+      reliabilitySlug: null,
+      moduleReplacement: 'Swappable modules: Yes (drop-in stick box)',
+      warrantyNote: 'No warranty to void on out-of-production hardware — safe to repair yourself.',
+    },
+    {
+      slug: 'logitech-f310',
+      name: 'Logitech F310 / F710',
+      platform: 'PC',
+      sensor: 'Potentiometer',
+      intro: 'Budget Logitech pads drift like any potentiometer stick. Given the F310 costs about as much as a module kit, replacement often beats repair.',
+      steps: [
+        { title: 'Measure the exact drift', body: 'Run our Stick Drift Detector in both XInput (X) and DirectInput (D) modes and compare.' },
+        { title: 'Clean the stick sensors', body: 'Open the shell and flush 99% isopropyl alcohol through the sensor housings while rotating.' },
+        { title: 'Compare repair cost vs replacement', body: 'F310 replacement is often cheaper than module kits — use our Fix vs Replace calculator to decide.' },
+        { title: 'Re-test the fix', body: 'If you repaired it, re-run the Stick Drift Detector and confirm center in both input modes.' },
+      ],
+      reliabilitySlug: null,
+      moduleReplacement: 'Swappable modules: No (soldered; budget price makes replacement the economical fix)',
+      warrantyNote: 'Logitech warranty is typically 2 years; register your product before opening it.',
+    },
+  ];
+
+  return guides.map((guide) => ({
+    params: { slug: guide.slug },
+    props: { guide },
+  }));
+}
+
+const { guide } = Astro.props;
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Repair Guides', url: '/fix' },
+  { name: 'Stick Drift', url: '/fix/stick-drift' },
+  { name: guide.name },
+];
+
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: `How to Fix ${guide.name} Stick Drift`,
+  description: `Step-by-step guide to fix ${guide.name} controller stick drift: diagnose, clean, adjust deadzones, repair or replace, and verify.`,
+  step: guide.steps.map((s, i) => ({
+    '@type': 'HowToStep',
+    position: i + 1,
+    name: s.title,
+    text: s.body,
+  })),
+};
+
+const reliabilitySnippet = guide.reliabilitySlug
+  ? `Baseline data: our ${guide.reliabilitySlug === 'hall-effect-generic' ? 'Hall-effect sensor' : guide.name} reliability dataset is compiled from documented test results — see the full report below.`
+  : 'Baseline data: we do not yet publish reliability numbers for this model — no invented figures here. Measure your own unit with the drift tool.';
+---
+
+<BaseLayout
+  title={`How to Fix ${guide.name} Stick Drift — Step-by-Step Repair Guide | ControllerTesting.com`}
+  description={`Step-by-step guide to fix ${guide.name} controller stick drift: ${guide.sensor} diagnosis, cleaning, deadzone tuning, and replacement options.`}
+  schema={howToSchema}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="guide-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="guide-hero">
+        <span class="badge-tag">Repair Guide · {guide.sensor}</span>
+        <h1 class="guide-title">How to Fix {guide.name} Stick Drift</h1>
+        <p class="guide-subtitle">
+          {guide.intro}
+        </p>
+      </header>
+
+      <div class="guide-body card-base">
+        {guide.steps.map((step, i) => (
+          <div class="guide-step">
+            <h2 class="section-title">Step {i + 1}: {step.title}</h2>
+            <p class="guide-text">{step.body}</p>
+          </div>
+        ))}
+
+        <div class="guide-step">
+          <h2 class="section-title">Module &amp; Parts Reference</h2>
+          <p class="guide-text"><strong>Sensor type:</strong> {guide.sensor}</p>
+          <p class="guide-text"><strong>{guide.moduleReplacement}</strong></p>
+          <p class="guide-text"><strong>Safety &amp; warranty:</strong> {guide.warrantyNote}</p>
+          <p class="guide-text">{reliabilitySnippet}</p>
+        </div>
+      </div>
+
+      <div class="guide-cta card-base">
+        <div>
+          <h2 class="section-title">Verify your fix — Re-test now</h2>
+          <p class="guide-text">
+            Repairs only count when the measurement confirms them. Run the Stick Drift Detector again to confirm 0%–0.5% at rest, then log the result in your drift timeline.
+          </p>
+        </div>
+        <div class="guide-cta-buttons">
+          <a href="/test/controller/drift" class="btn-primary">Re-test Stick Drift</a>
+          <a href="/test/controller/timeline" class="btn-secondary">Log in Timeline</a>
+        </div>
+      </div>
+
+      <div class="guide-cta card-base">
+        <div>
+          <h2 class="section-title">Still drifting? Compare alternatives</h2>
+          <p class="guide-text">
+            If repeated repairs fail, check Hall-effect controllers — they use contactless magnetic sensors that do not accumulate the carbon dust that causes drift.
+          </p>
+        </div>
+        <div class="guide-cta-buttons">
+          <a href="/reliability/hall-effect-generic" class="btn-primary">Hall Effect Reliability Data</a>
+          <a href="/compare/dualsense-vs-xbox-series" class="btn-secondary">Compare Controllers</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .guide-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .guide-hero { margin-bottom: 2.5rem; }
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .guide-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .guide-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
+  .guide-body { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 1.5rem; }
+  .guide-step { display: flex; flex-direction: column; gap: 0.5rem; }
+  .section-title { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
+  .guide-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .guide-cta { padding: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .guide-cta-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  @media (max-width: 640px) { .guide-cta { flex-direction: column; align-items: flex-start; } }
+</style>

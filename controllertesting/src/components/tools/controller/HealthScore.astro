@@ -94,14 +94,26 @@
   </div>
 
   <div class="hs-actions">
-    <button type="button" class="btn-primary" id="btn-print-report" onclick="window.print()">
+    <button type="button" class="btn-primary no-print" id="btn-print-report" onclick="window.print()">
       Print / Export PDF Certificate
+    </button>
+    <button type="button" class="btn-ghost no-print" id="btn-share-score">
+      Share my score
     </button>
   </div>
 </div>
 
 <script>
   import { parseGamepadState } from '../../../lib/gamepad';
+  import { addPoints } from '../../../lib/rewards';
+
+  let rewarded = false;
+
+  function awardFirstScore(): void {
+    if (rewarded) return;
+    rewarded = true;
+    addPoints(50);
+  }
 
   document.addEventListener('DOMContentLoaded', () => {
     function pollHealthScore() {
@@ -140,6 +152,7 @@
         const numDisplay = document.getElementById('hs-num-display');
         const gradeDisplay = document.getElementById('hs-grade-display');
         const verdictDisplay = document.getElementById('hs-verdict-display');
+        if (numDisplay && numDisplay.textContent !== '--') awardFirstScore();
 
         if (numDisplay) numDisplay.textContent = String(totalScore);
 
@@ -173,9 +186,66 @@
         const subDriftBar = document.getElementById('sub-drift-bar');
         if (subDriftScore) subDriftScore.textContent = `${driftScore}%`;
         if (subDriftBar) subDriftBar.style.width = `${driftScore}%`;
+
+        const shareBtn = document.getElementById('btn-share-score');
+        if (shareBtn) {
+          shareBtn.addEventListener('click', () => shareScoreCard(totalScore, activeGp.id));
+        }
       }
 
       requestAnimationFrame(pollHealthScore);
+    }
+
+    function shareScoreCard(totalScore: number, modelId: string): void {
+      const grade =
+        totalScore >= 95 ? 'A+' : totalScore >= 85 ? 'A' : totalScore >= 70 ? 'B' : 'C';
+      const color = totalScore >= 85 ? '#10B981' : totalScore >= 70 ? '#F59E0B' : '#EF4444';
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 1200;
+      canvas.height = 630;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      ctx.fillStyle = '#0c0a09';
+      ctx.fillRect(0, 0, 1200, 630);
+      ctx.fillStyle = '#18181b';
+      ctx.fillRect(0, 440, 1200, 190);
+
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(600, 250, 130, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#0c0a09';
+      ctx.beginPath();
+      ctx.arc(600, 250, 112, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#f5f5f4';
+      ctx.font = 'bold 88px system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`${totalScore}/100`, 600, 285);
+
+      ctx.fillStyle = '#a1a1aa';
+      ctx.font = '600 40px system-ui, sans-serif';
+      ctx.fillText(`Controller Health Score™ — Grade ${grade}`, 600, 90);
+
+      ctx.fillStyle = '#d4d4d8';
+      ctx.font = '30px system-ui, sans-serif';
+      const shortModel = modelId.length > 56 ? modelId.slice(0, 56) + '…' : modelId;
+      ctx.fillText(shortModel, 600, 520);
+
+      ctx.fillStyle = '#2563EB';
+      ctx.font = 'bold 34px system-ui, sans-serif';
+      ctx.fillText('controllertesting.com', 600, 580);
+
+      const link = document.createElement('a');
+      link.download = `controller-health-score-${totalScore}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+
+      const shareText = `My controller scored ${totalScore}/100 (Grade ${grade}) on the ControllerTesting.com Health Score. Test yours free: https://controllertesting.com/test/controller/health-score`;
+      navigator.clipboard?.writeText(shareText).catch(() => {});
     }
 
     pollHealthScore();

@@ -79,6 +79,15 @@ const faqs = [
     <p>
       Traditional deadzone adjustments only mask stick drift in software. WebHID zero-point sampling reads raw 16-bit analog stick values directly from the DualSense hardware microcontroller.
     </p>
+    <h3>Limitations &amp; alternatives</h3>
+    <p>
+      This tool calibrates the base PlayStation 4 DualShock 4 and PlayStation 5 DualSense models over USB in Chromium browsers (Chrome, Edge). It does not support the DualSense Edge, PS VR2 Sense controllers, or restoring factory calibration.
+    </p>
+    <p>
+      For those models — and for quick + four-step calibration, expert mode, and restore/reboot — we recommend the free, open-source
+      <a href="https://dualshock-tools.github.io/" rel="noopener" class="content-link">dualshock-tools</a>
+      (v2.27, actively maintained), which covers DualShock 4, DualSense, DualSense Edge, and PS VR2 Sense controllers and is widely recommended by the repair community on r/consolerepair. For our scope, stick with this page.
+    </p>
   </Fragment>
 </ToolLayout>
 
@@ -91,4 +100,5 @@ const faqs = [
   .prose { line-height: 1.7; color: var(--color-text-secondary); }
   .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
   .prose p { margin-bottom: 1rem; }
+  .content-link { color: var(--color-accent); text-decoration: underline; }
 </style>

@@ -1,0 +1,165 @@
+---
+/**
+ * /learn/index.astro — Learn hub: honest, no-invented-figures explainers
+ * linking straight into the diagnostic tools. Every stat derives from
+ * reliabilityData.json (see /reliability/report); general hardware facts
+ * are labeled as such and cross-linked for verification.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+const guides = [
+  {
+    slug: 'what-is-stick-drift',
+    title: 'What Is Stick Drift?',
+    blurb: 'A controller stick moves or aims on its own, even when untouched. Learn what the drift percentage means and when it is worth fixing vs tuning around.',
+    icon: '◎',
+  },
+  {
+    slug: 'controller-deadzone-guide',
+    title: 'Controller Deadzone Explained',
+    blurb: 'A deadzone is the region of stick travel a game ignores. Here is how inner vs outer deadzones work and how to set them without guesswork.',
+    icon: '◯',
+  },
+  {
+    slug: 'gamepad-polling-rate-guide',
+    title: 'Gamepad Polling Rate (Hz)',
+    blurb: 'How often your controller reports its state to your device. 125Hz vs 250Hz vs 1000Hz — what changes in feel, and what does not.',
+    icon: '≋',
+  },
+  {
+    slug: 'controller-input-lag-guide',
+    title: 'Controller Input Latency',
+    blurb: 'Where the delay in input → pixels actually lives, and the part a controller can and cannot control.',
+    icon: '⏱',
+  },
+  {
+    slug: 'hall-effect-vs-potentiometer-guide',
+    title: 'Hall-Effect vs Potentiometer Sticks',
+    blurb: 'The two dominant stick sensors, and what our 140,000+ measurement dataset shows about how they age.',
+    icon: '⛭',
+  },
+  {
+    slug: 'how-controllers-work',
+    title: 'How Video Game Controllers Work',
+    blurb: 'Sticks, triggers, buttons and the digital report your device actually receives — the 10-minute mental model.',
+    icon: '▤',
+  },
+  {
+    slug: 'controller-buying-guide',
+    title: 'Controller Buying Guide (2026)',
+    blurb: 'A decision framework tuned to what actually wears out — sensor type, polling, buttons, and sticks first.',
+    icon: '➜',
+  },
+];
+
+const breadcrumbs = [{ name: 'Learn', url: '/learn' }];
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: guides.map((g, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: g.title,
+    url: `https://controllertesting.com/learn/${g.slug}`,
+  })),
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'What causes controller stick drift?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Potentiometer sticks drift when carbon dust builds up on the sensor wiper or the wiper track wears, shifting the at-rest voltage reading. Hall-effect sticks use contactless magnetic sensors and do not wear this way.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is controller drift repairable?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Most drift is fixable: cleaning the sensor housings helps, in-game deadzones mask it, and module replacement fixes it permanently. Check our step-by-step repair guides with your measured drift percentage in hand.',
+      },
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title="Learn Controller Diagnostics — Stick Drift, Deadzones, Polling Rate, Input Lag | ControllerTesting.com"
+  description="Plain-English guides on stick drift, controller deadzones, polling rate, input latency, Hall-effect vs potentiometer sensors, and how controllers work — every figure traceable to our published dataset."
+  breadcrumbs={breadcrumbs}
+  schema={itemListSchema}
+>
+  <Header />
+
+  <main id="main-content" class="learn-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="learn-hero">
+        <span class="badge-tag">Learn · No invented figures</span>
+        <h1 class="learn-title">Learn how controllers really work</h1>
+        <p class="learn-subtitle">
+          Short, honest explainers that go straight from a question to a test you can run in your browser.
+          Where numbers appear they come from our published measurement dataset — not from a marketing page.
+        </p>
+      </header>
+
+      <div class="learn-grid">
+        {guides.map((g) => (
+          <a href={`/learn/${g.slug}`} class="learn-card card-base card-hover">
+            <div class="learn-card-top">
+              <span class="learn-icon" aria-hidden="true">{g.icon}</span>
+              <h2 class="learn-card-title">{g.title}</h2>
+            </div>
+            <p class="learn-card-desc">{g.blurb}</p>
+            <span class="learn-card-link">Read guide →</span>
+          </a>
+        ))}
+      </div>
+
+      <div class="learn-cta card-base">
+        <div>
+          <h2 class="section-title">Skip theory, start measuring</h2>
+          <p class="learn-text">
+            None of this matters if your stick already drifts. Run the Stick Drift Detector now — it takes two minutes and gives you a 0.1%-precision number to tune against.
+          </p>
+        </div>
+        <div class="learn-cta-buttons">
+          <a href="/test/controller/drift" class="btn-primary">Test Stick Drift</a>
+          <a href="/test/controller/deadzone" class="btn-secondary">Deadzone Visualizer</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .learn-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .learn-hero { margin-bottom: 2.5rem; max-width: 720px; }
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .learn-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .learn-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .learn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2.5rem; }
+  .learn-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  .learn-card-top { display: flex; align-items: center; gap: 0.75rem; }
+  .learn-icon { font-size: 1.25rem; color: var(--color-accent); }
+  .learn-card-title { font-size: 1.125rem; font-weight: 700; color: var(--color-text-primary); }
+  .learn-card-desc { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; flex: 1; }
+  .learn-card-link { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--color-accent); letter-spacing: 0.04em; }
+  .learn-cta { padding: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .learn-cta-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .section-title { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
+  @media (max-width: 900px) { .learn-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) { .learn-cta { flex-direction: column; align-items: flex-start; } }
+</style>

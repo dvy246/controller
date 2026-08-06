@@ -1,540 +1,333 @@
 ---
 /**
- * ControllerHero.astro — image-led homepage hero
- *
- * The supplied controller photograph is the hero's proof point. The stage
- * uses transform/opacity-only motion so the page stays static, cheap, and
- * predictable while still feeling like a precision instrument.
+ * ControllerHero.astro — 3D Three.js Realistic Controller Hero
+ * 
+ * Premium floating 3D controller implementation for the right column of the hero.
  */
 ---
-
-<div class="controller-hero" id="controller-hero">
-  <div class="hero-field" aria-hidden="true">
-    <span class="field-orbit field-orbit-wide"></span>
-    <span class="field-orbit field-orbit-tight"></span>
-    <span class="field-axis field-axis-horizontal"></span>
-    <span class="field-axis field-axis-vertical"></span>
+<div class="controller-3d-wrapper" id="hero-container">
+  
+  <!-- Loading State -->
+  <div class="loading-spinner" id="loading-spinner">
+    <div class="spinner-ring"></div>
+    <span class="loading-text">INITIALIZING 3D ENGINE...</span>
   </div>
 
-  <div
-    class="controller-stage"
-    id="controller-stage"
-    tabindex="0"
-    aria-label="Interactive controller preview. Move your pointer over the controller."
-  >
-    <div class="stage-marker stage-marker-top" aria-hidden="true">
-      <span class="marker-dot"></span>
-      <span>LIVE SENSOR MAP / MOVE TO INSPECT</span>
+  <!-- 3D Canvas -->
+  <canvas id="webgl-canvas" class="webgl-canvas"></canvas>
+  
+  <!-- Subtle Tech Overlay / Badge -->
+  <div class="telemetry-hud" id="telemetry-hud">
+    <div class="status-indicator">
+      <span class="status-dot" id="status-dot"></span>
+      <span id="status-text">Awaiting Gamepad</span>
     </div>
-
-    <div class="controller-art">
-      <div class="controller-float">
-        <div class="controller-image-wrap">
-          <div class="controller-image-backlight" aria-hidden="true"></div>
-          <img
-            class="controller-image"
-            src="/images/controller-hero.jpg"
-            width="736"
-            height="1308"
-            alt="White PlayStation DualSense controller lit against a dark background"
-            loading="eager"
-            fetchpriority="high"
-            decoding="async"
-          />
-          <span class="controller-sheen" aria-hidden="true"></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="stage-marker stage-marker-bottom" aria-hidden="true">
-      <span>DUALSENSE / USB + BT</span>
-      <span class="marker-line"></span>
-      <span>READY</span>
-    </div>
-  </div>
-
-  <div class="controller-readout" aria-label="Controller test preview">
-    <div class="readout-header">
-      <span class="readout-kicker">Input monitor</span>
-      <span class="readout-live"><span class="readout-dot"></span>Ready</span>
-    </div>
-    <div class="readout-grid">
-      <div>
-        <span class="readout-label">Drift</span>
-        <strong>0.08%</strong>
-      </div>
-      <div>
-        <span class="readout-label">Polling</span>
-        <strong>1000 Hz</strong>
-      </div>
-      <div>
-        <span class="readout-label">Health</span>
-        <strong class="readout-pass">PASS</strong>
-      </div>
+    <div class="telemetry-data" id="telemetry-data" style="display: none;">
+      <div>L-STICK: <span id="ls-val">0.00, 0.00</span></div>
+      <div>R-STICK: <span id="rs-val">0.00, 0.00</span></div>
     </div>
   </div>
 </div>
 
 <style>
-  .controller-hero {
-    --tilt-x: 0deg;
-    --tilt-y: 0deg;
-    --pointer-x: 0px;
-    --pointer-y: 0px;
-    --pointer-active: 0;
+  .controller-3d-wrapper {
     position: relative;
     width: 100%;
-    max-width: 560px;
-    min-height: 620px;
+    height: 100%;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Removed the ugly radial gradient and box-shadow to let it float naturally */
+  }
+
+  .loading-spinner {
+    position: absolute;
+    z-index: 5;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-    isolation: isolate;
-  }
-
-  .hero-field,
-  .controller-stage,
-  .controller-readout {
-    position: absolute;
-  }
-
-  .hero-field {
-    inset: 6% 0 8%;
-    z-index: -1;
-    overflow: hidden;
-    border-radius: 48% 52% 44% 56% / 50% 44% 56% 50%;
-    background:
-      radial-gradient(circle at 50% 48%, rgba(37, 99, 235, 0.17), transparent 33%),
-      radial-gradient(circle at 64% 26%, rgba(255, 255, 255, 0.06), transparent 28%);
-    animation: field-breathe 12s var(--ease-smooth) infinite alternate;
-  }
-
-  .hero-field::before,
-  .hero-field::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-
-  /* A quiet instrument grid gives the photograph a shared spatial plane. */
-  .hero-field::before {
-    opacity: 0.34;
-    background-image:
-      linear-gradient(rgba(126, 158, 224, 0.11) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(126, 158, 224, 0.11) 1px, transparent 1px);
-    background-size: 44px 44px;
-    mask-image: radial-gradient(ellipse at center, black 15%, transparent 76%);
-    transform: perspective(600px) rotateX(58deg) translateY(18%);
-    transform-origin: center bottom;
-  }
-
-  /* This is the interactive shade: it tracks the same pointer coordinates as the controller. */
-  .hero-field::after {
-    inset: 0 -10%;
-    opacity: calc(0.42 + (var(--pointer-active) * 0.16));
-    background:
-      radial-gradient(circle 150px at calc(50% + var(--pointer-x)) calc(46% + var(--pointer-y)), rgba(127, 170, 255, 0.22), transparent 72%),
-      linear-gradient(120deg, transparent 22%, rgba(255, 255, 255, 0.07) 49%, transparent 66%);
-    animation: field-scan 15s var(--ease-smooth) infinite alternate;
-    transition: opacity 500ms var(--ease-smooth);
-    will-change: transform, opacity;
-  }
-
-  .field-orbit,
-  .field-axis {
-    position: absolute;
-    display: block;
-    pointer-events: none;
-  }
-
-  .field-orbit {
-    left: 50%;
-    top: 48%;
-    border: 1px solid rgba(111, 157, 255, 0.16);
-    border-radius: 50%;
-    transform: translate(-50%, -50%) rotate(-18deg);
-    animation: orbit-drift 16s var(--ease-smooth) infinite alternate;
-  }
-
-  .field-orbit-wide {
-    width: 92%;
-    height: 42%;
-  }
-
-  .field-orbit-tight {
-    width: 70%;
-    height: 30%;
-    border-color: rgba(255, 255, 255, 0.1);
-    transform: translate(-50%, -50%) rotate(22deg);
-    animation-duration: 13s;
-    animation-direction: alternate-reverse;
-  }
-
-  .field-axis {
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
-    opacity: 0.45;
-  }
-
-  .field-axis-horizontal {
-    left: 5%;
-    right: 5%;
-    top: 50%;
-    height: 1px;
-  }
-
-  .field-axis-vertical {
-    top: 5%;
-    bottom: 5%;
-    left: 50%;
-    width: 1px;
-    background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.12), transparent);
-  }
-
-  .controller-stage {
-    position: relative;
-    width: 100%;
-    height: 540px;
-    display: grid;
-    place-items: center;
-    perspective: 1100px;
-    transform: translate3d(0, 0, 0) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
-    transform-style: preserve-3d;
-    transition: transform 700ms var(--ease-spring);
-    will-change: transform;
-    touch-action: pan-y;
-    outline: none;
-  }
-
-  .controller-stage:focus-visible {
-    border-radius: 24px;
-    outline: 2px solid var(--color-accent);
-    outline-offset: 5px;
-  }
-
-  .controller-art {
-    position: relative;
-    width: min(82%, 370px);
-    aspect-ratio: 736 / 1308;
-    transform: translateZ(16px);
-  }
-
-  .controller-float {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    animation: controller-float 9s var(--ease-smooth) infinite alternate;
-    will-change: transform;
-  }
-
-  .controller-image-wrap {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-    border-radius: 26px;
-    transform: translate3d(var(--image-x, 0px), var(--image-y, 0px), 0);
-    transition: transform 650ms var(--ease-spring);
-    will-change: transform;
-  }
-
-  .controller-image-backlight {
-    position: absolute;
-    inset: 16% 10% 16%;
-    background: radial-gradient(ellipse, rgba(37, 99, 235, 0.28), transparent 68%);
-    opacity: 0.42;
-    transform: translate3d(0, 0, -1px) scale(1.05);
-    z-index: -1;
-  }
-
-  .controller-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    object-position: center;
-    transform: none;
-    filter: drop-shadow(0 28px 30px rgba(0, 0, 0, 0.32));
-  }
-
-  .controller-image-wrap::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, transparent 56%, rgba(4, 6, 12, 0.12));
-    pointer-events: none;
-  }
-
-  .controller-sheen {
-    position: absolute;
-    top: -18%;
-    bottom: -18%;
-    left: -50%;
-    width: 18%;
-    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease;
     opacity: 0;
-    transform: skewX(-18deg) translateX(-120%);
-    animation: image-sweep 8s var(--ease-smooth) 1.4s infinite;
     pointer-events: none;
   }
 
-  .stage-marker {
+  .loading-spinner.active {
+    opacity: 1;
+  }
+
+  .spinner-ring {
+    width: 32px;
+    height: 32px;
+    border: 2px solid rgba(255,255,255,0.05);
+    border-top-color: var(--color-primary, #3b82f6);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 12px;
+  }
+
+  .loading-text {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.15em;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .webgl-canvas {
     position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 1;
+    outline: none;
+    opacity: 0;
+    transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    /* Allow touches to pass through empty space if needed, though orbit controls needs it */
+  }
+
+  .webgl-canvas.loaded {
+    opacity: 1;
+    z-index: 2;
+  }
+
+  /* Premium HUD styling */
+  .telemetry-hud {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 1s ease 0.5s;
+  }
+  
+  .webgl-canvas.loaded ~ .telemetry-hud {
+    opacity: 1;
+  }
+
+  .status-indicator {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 6px 14px;
+    border-radius: 20px;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    color: rgba(218, 226, 244, 0.64);
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.13em;
+    gap: 8px;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
     text-transform: uppercase;
-    white-space: nowrap;
+    letter-spacing: 0.05em;
   }
 
-  .stage-marker-top {
-    top: 9%;
-    left: 3%;
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+  }
+  .status-dot.connected { 
+    background: #10b981; 
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6); 
   }
 
-  .stage-marker-bottom {
-    right: 4%;
-    bottom: 9%;
-    color: rgba(218, 226, 244, 0.5);
-  }
-
-  .marker-dot,
-  .readout-dot {
-    width: 0.4rem;
-    height: 0.4rem;
-    border-radius: 999px;
-    background: var(--color-pass);
-    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1), 0 0 12px rgba(16, 185, 129, 0.75);
-  }
-
-  .marker-line {
-    width: 28px;
-    height: 1px;
-    background: currentColor;
-    opacity: 0.5;
-  }
-
-  .controller-readout {
-    position: relative;
-    z-index: 3;
-    width: min(92%, 300px);
-    margin: 0 4% 0 auto;
-    padding: 0.85rem 1rem 0.9rem;
-    border: 1px solid rgba(255, 255, 255, 0.13);
-    border-radius: 14px;
-    background: rgba(10, 12, 22, 0.86);
-    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(16px) saturate(120%);
-    -webkit-backdrop-filter: blur(16px) saturate(120%);
-    transform: translateZ(0);
-  }
-
-  .readout-header,
-  .readout-live {
+  .telemetry-data {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.3);
     display: flex;
-    align-items: center;
+    gap: 16px;
   }
-
-  .readout-header {
-    justify-content: space-between;
-    padding-bottom: 0.7rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  }
-
-  .readout-kicker,
-  .readout-label,
-  .readout-live {
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .readout-kicker { color: rgba(255, 255, 255, 0.54); }
-
-  .readout-live {
-    gap: 0.4rem;
-    color: var(--color-pass);
-  }
-
-  .readout-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
-    padding-top: 0.8rem;
-  }
-
-  .readout-grid > div {
-    display: grid;
-    gap: 0.25rem;
-  }
-
-  .readout-label { color: rgba(255, 255, 255, 0.42); }
-
-  .readout-grid strong {
-    color: rgba(255, 255, 255, 0.92);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 700;
-    white-space: nowrap;
-  }
-
-  .readout-grid .readout-pass { color: var(--color-pass); }
-
-  @keyframes controller-float {
-    from { transform: translate3d(0, -4px, 0) rotate(-0.4deg); }
-    to { transform: translate3d(0, 5px, 0) rotate(0.4deg); }
-  }
-
-  @keyframes image-sweep {
-    0%, 38% { opacity: 0; transform: skewX(-18deg) translateX(-120%); }
-    48% { opacity: 0.9; }
-    66%, 100% { opacity: 0; transform: skewX(-18deg) translateX(570%); }
-  }
-
-  @keyframes field-breathe {
-    from { opacity: 0.7; transform: scale(0.96) rotate(-1deg); }
-    to { opacity: 1; transform: scale(1.04) rotate(1deg); }
-  }
-
-  @keyframes orbit-drift {
-    from { transform: translate(-50%, -50%) rotate(-18deg) scale(0.96); opacity: 0.62; }
-    to { transform: translate(-50%, -50%) rotate(-8deg) scale(1.04); opacity: 1; }
-  }
-
-  @keyframes field-scan {
-    from { transform: translate3d(-3%, 0, 0); }
-    to { transform: translate3d(3%, 0, 0); }
-  }
-
-  @media (max-width: 1024px) {
-    .controller-hero { max-width: 480px; min-height: 560px; }
-    .controller-stage { height: 480px; }
-    .controller-art { width: min(82%, 330px); }
-    .stage-marker-top { top: 4%; }
-    .stage-marker-bottom { bottom: 4%; }
-  }
-
-  @media (max-width: 640px) {
-    .controller-hero { min-height: 490px; }
-    .controller-stage { height: 410px; }
-    .controller-art { width: min(78%, 280px); }
-    .controller-image-wrap { border-radius: 22px; }
-    .stage-marker { font-size: 0.5rem; letter-spacing: 0.1em; }
-    .stage-marker-top { left: 0; }
-    .stage-marker-bottom { right: 0; }
-    .controller-readout { width: min(96%, 270px); margin-right: 2%; }
-    .readout-grid { gap: 0.5rem; }
-    .readout-grid strong { font-size: 0.6875rem; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero-field,
-    .field-orbit,
-    .controller-float,
-    .controller-sheen {
-      animation: none;
-    }
-
-    .controller-stage {
-      transition: none;
-      transform: none;
-    }
-
-    .hero-field::after { animation: none; will-change: auto; }
-  }
-
-  :global([data-theme="light"]) .hero-field {
-    background:
-      radial-gradient(circle at 50% 48%, rgba(37, 99, 235, 0.1), transparent 33%),
-      radial-gradient(circle at 64% 26%, rgba(37, 99, 235, 0.05), transparent 28%);
-  }
-
-  :global([data-theme="light"]) .controller-image-wrap {
-    border-color: rgba(0, 0, 0, 0.14);
-    box-shadow: 0 28px 72px rgba(20, 30, 60, 0.18), 0 8px 24px rgba(20, 30, 60, 0.12);
-  }
-
-  :global([data-theme="light"]) .controller-readout {
-    background: rgba(255, 255, 255, 0.9);
-    border-color: rgba(0, 0, 0, 0.12);
-    box-shadow: 0 18px 36px rgba(20, 30, 60, 0.14);
-  }
-
-  :global([data-theme="light"]) .readout-header { border-bottom-color: rgba(0, 0, 0, 0.1); }
-  :global([data-theme="light"]) .readout-kicker { color: rgba(15, 23, 42, 0.58); }
-  :global([data-theme="light"]) .readout-label { color: rgba(15, 23, 42, 0.52); }
-  :global([data-theme="light"]) .readout-grid strong { color: rgba(15, 23, 42, 0.9); }
-  :global([data-theme="light"]) .stage-marker { color: rgba(15, 23, 42, 0.58); }
+  .telemetry-data span { color: rgba(255,255,255,0.7); }
 </style>
 
-<script is:inline>
-  (() => {
-    const root = document.getElementById('controller-hero');
-    const stage = document.getElementById('controller-stage');
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+<script>
+  import * as THREE from 'https://esm.sh/three@0.160.0';
+  import { GLTFLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
+  import { DRACOLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/DRACOLoader.js';
+  import { OrbitControls } from 'https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+  import { parseGamepadState } from '../../lib/gamepad.ts';
 
-    if (!root || !stage || reducedMotion.matches) return;
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('hero-container');
+    const canvas = document.getElementById('webgl-canvas');
+    const spinner = document.getElementById('loading-spinner');
+    
+    if (!container || !canvas) return;
 
-    let frame = 0;
-    let pointerX = 0;
-    let pointerY = 0;
+    // Wait for DOM layout
+    setTimeout(initThreeJS, 100); 
 
-    const applyTilt = (x, y) => {
-      root.style.setProperty('--tilt-x', `${(y * -4).toFixed(2)}deg`);
-      root.style.setProperty('--tilt-y', `${(x * 5).toFixed(2)}deg`);
-      root.style.setProperty('--image-x', `${(x * 10).toFixed(1)}px`);
-      root.style.setProperty('--image-y', `${(y * 8).toFixed(1)}px`);
-      root.style.setProperty('--pointer-x', `${(x * 90).toFixed(1)}px`);
-      root.style.setProperty('--pointer-y', `${(y * 70).toFixed(1)}px`);
-    };
+    let scene, camera, renderer, controls;
+    let controllerModel;
+    let isInteracting = false;
+    
+    function initThreeJS() {
+      spinner.classList.add('active');
 
-    const resetTilt = () => {
-      if (frame) cancelAnimationFrame(frame);
-      frame = 0;
-      root.style.setProperty('--tilt-x', '0deg');
-      root.style.setProperty('--tilt-y', '0deg');
-      root.style.setProperty('--image-x', '0px');
-      root.style.setProperty('--image-y', '0px');
-      root.style.setProperty('--pointer-x', '0px');
-      root.style.setProperty('--pointer-y', '0px');
-      root.style.setProperty('--pointer-active', '0');
-    };
+      scene = new THREE.Scene();
+      
+      // Premium camera setup (tighter FOV for product shots)
+      camera = new THREE.PerspectiveCamera(35, container.clientWidth / container.clientHeight, 0.1, 100);
+      camera.position.set(0, 1.2, 4);
 
-    stage.addEventListener('pointerenter', () => {
-      root.style.setProperty('--pointer-active', '1');
-    }, { passive: true });
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // High-res for premium feel
+      
+      // Premium lighting setup
+      // Use tone mapping for cinematic look
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.2;
 
-    stage.addEventListener('pointermove', (event) => {
-      const bounds = stage.getBoundingClientRect();
-      pointerX = (event.clientX - bounds.left) / bounds.width - 0.5;
-      pointerY = (event.clientY - bounds.top) / bounds.height - 0.5;
-      if (frame) return;
-      frame = requestAnimationFrame(() => {
-        frame = 0;
-        applyTilt(pointerX, pointerY);
-      });
-    }, { passive: true });
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+      scene.add(ambientLight);
 
-    stage.addEventListener('keydown', (event) => {
-      const step = 0.08;
-      if (event.key === 'ArrowLeft') pointerX = Math.max(-0.5, pointerX - step);
-      else if (event.key === 'ArrowRight') pointerX = Math.min(0.5, pointerX + step);
-      else if (event.key === 'ArrowUp') pointerY = Math.max(-0.5, pointerY - step);
-      else if (event.key === 'ArrowDown') pointerY = Math.min(0.5, pointerY + step);
-      else if (event.key === 'Escape') { resetTilt(); return; }
-      else return;
-      event.preventDefault();
-      root.style.setProperty('--pointer-active', '1');
-      applyTilt(pointerX, pointerY);
-    });
+      // Key light
+      const keyLight = new THREE.DirectionalLight(0xffffff, 2);
+      keyLight.position.set(5, 5, 2);
+      scene.add(keyLight);
 
-    stage.addEventListener('pointerleave', resetTilt, { passive: true });
-    stage.addEventListener('blur', resetTilt);
-  })();
+      // Fill light (subtle blue/purple tint from left)
+      const fillLight = new THREE.DirectionalLight(0x8b5cf6, 1.5);
+      fillLight.position.set(-5, 0, 5);
+      scene.add(fillLight);
+      
+      // Rim light (sharp highlight from behind)
+      const rimLight = new THREE.DirectionalLight(0xffffff, 1.5);
+      rimLight.position.set(0, 5, -5);
+      scene.add(rimLight);
+
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.04;
+      controls.enablePan = false;
+      controls.enableZoom = false; // Prevent zooming which breaks layout
+      controls.target.set(0, 0, 0);
+
+      controls.addEventListener('start', () => isInteracting = true);
+      controls.addEventListener('end', () => isInteracting = false);
+
+      loadControllerModel();
+      window.addEventListener('resize', onWindowResize);
+      renderer.setAnimationLoop(animate);
+    }
+
+    function loadControllerModel() {
+      const loader = new GLTFLoader();
+      const dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+      loader.setDRACOLoader(dracoLoader);
+
+      // Load the actual PS5 controller GLB we downloaded
+      loader.load(
+        '/models/controller.glb', 
+        (gltf) => {
+          controllerModel = gltf.scene;
+          
+          // Ensure materials look premium
+          controllerModel.traverse((child) => {
+            if (child.isMesh && child.material) {
+              // Boost environmental reflection if it's a standard material
+              if (child.material.isMeshStandardMaterial) {
+                child.material.envMapIntensity = 1.5;
+                child.material.needsUpdate = true;
+              }
+            }
+          });
+
+          // Center and scale model properly
+          const box = new THREE.Box3().setFromObject(controllerModel);
+          const center = box.getCenter(new THREE.Vector3());
+          const size = box.getSize(new THREE.Vector3());
+          
+          // Normalize scale so it always fits perfectly regardless of original GLB scale
+          const maxDim = Math.max(size.x, size.y, size.z);
+          const scale = 2.0 / maxDim; // Target size of ~2 units
+          controllerModel.scale.set(scale, scale, scale);
+          
+          controllerModel.position.sub(center.multiplyScalar(scale));
+          
+          // Rotate it slightly for a better hero angle
+          controllerModel.rotation.x = 0.2;
+          controllerModel.rotation.y = -0.3;
+
+          scene.add(controllerModel);
+
+          spinner.classList.remove('active');
+          canvas.classList.add('loaded');
+        },
+        undefined,
+        (error) => {
+          console.error('Error loading 3D model:', error);
+          spinner.innerHTML = '<span style="color:#ef4444;">Failed to load model</span>';
+        }
+      );
+    }
+
+    const clock = new THREE.Clock();
+
+    function animate() {
+      const delta = clock.getDelta();
+      controls.update();
+
+      if (controllerModel && !isInteracting) {
+        // Very slow premium rotation
+        controllerModel.rotation.y += 0.002;
+        // Floating hover effect
+        controllerModel.position.y = Math.sin(clock.getElapsedTime()) * 0.03;
+      }
+
+      // Telemetry hook
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i]?.connected) { activeGp = gamepads[i]; break; }
+      }
+
+      const statusDot = document.getElementById('status-dot');
+      const statusText = document.getElementById('status-text');
+      const telemetryData = document.getElementById('telemetry-data');
+      
+      if (activeGp) {
+        const state = parseGamepadState(activeGp);
+        statusDot.classList.add('connected');
+        statusText.style.color = '#fff';
+        statusText.textContent = `Connected: ${state.detectedModel || 'Gamepad'}`;
+        
+        telemetryData.style.display = 'flex';
+        document.getElementById('ls-val').textContent = `${state.leftStick.x.toFixed(2)}, ${state.leftStick.y.toFixed(2)}`;
+        document.getElementById('rs-val').textContent = `${state.rightStick.x.toFixed(2)}, ${state.rightStick.y.toFixed(2)}`;
+
+        // If the GLB has named nodes for sticks, we could rotate them here.
+        // Usually they are named 'Left_Stick' or similar depending on the specific model.
+      } else {
+        statusDot.classList.remove('connected');
+        statusText.style.color = 'rgba(255,255,255,0.6)';
+        statusText.textContent = 'Awaiting Gamepad';
+        telemetryData.style.display = 'none';
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    function onWindowResize() {
+      if (!camera || !renderer) return;
+      camera.aspect = container.clientWidth / container.clientHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(container.clientWidth, container.clientHeight);
+    }
+  });
 </script>

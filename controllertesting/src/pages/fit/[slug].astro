@@ -1,0 +1,221 @@
+---
+/**
+ * /fit/[slug] — per-model fit profile
+ * Static verdicts for the three reference hand bands + spec table.
+ * Everything traces to controllerFitData.json; null = pending measurement.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import { getFitModels, computeVerdict, HAND_REFERENCES, type HandKey } from '../../lib/fit';
+import fitData from '../../data/controllerFitData.json';
+
+export function getStaticPaths() {
+  const models = getFitModels();
+  return Object.entries(models).map(([slug, model]) => ({
+    params: { slug },
+    props: { model },
+  }));
+}
+
+const { slug } = Astro.params;
+const { model } = Astro.props;
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Controller Fit', url: '/fit' },
+  { name: model.name },
+];
+
+const canonicalUrl = `https://controllertesting.com/fit/${slug}`;
+
+const handKeys: HandKey[] = ['small', 'medium', 'large'];
+const verdicts = handKeys.map((key) => ({
+  key,
+  ref: HAND_REFERENCES[key],
+  result: computeVerdict(slug, model, HAND_REFERENCES[key].spanMm, 'symmetrical'),
+}));
+
+const tierLabel: Record<string, string> = {
+  recommended: 'Recommended fit',
+  'try-first': 'Try before you buy',
+  'not-ideal': 'Not ideal at this span',
+  pending: 'Verdict pending',
+};
+
+const schemaData = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: model.name,
+  brand: { '@type': 'Brand', name: model.brand },
+  description: `Hand-fit analysis for the ${model.name}: body width ${model.widthMm ?? 'unmeasured'} mm, weight ${model.weightG ?? 'unmeasured'} g, ${model.stickLayout} stick layout. Dimensions sourced from ${model.source} (verified ${model.lastVerified}).`,
+  url: canonicalUrl,
+  additionalProperty: [
+    { '@type': 'PropertyValue', name: 'Body width (mm)', value: model.widthMm ?? 'pending' },
+    { '@type': 'PropertyValue', name: 'Weight (g)', value: model.weightG ?? 'pending' },
+    { '@type': 'PropertyValue', name: 'Stick layout', value: model.stickLayout },
+  ],
+};
+---
+
+<BaseLayout
+  title={`${model.name} Hand Fit Analysis — Body Dimensions & Fit Verdicts | ControllerTesting.com`}
+  description={`Does the ${model.name} fit your hands? Body width ${model.widthMm ?? 'unmeasured'}, weight ${model.weightG ?? 'unmeasured'} g, ${model.stickLayout} layout, and reference fit verdicts for small, medium and large hands.`}
+  canonical={canonicalUrl}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+
+  <Header />
+
+  <main id="main-content" class="fit-profile">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="profile-hero">
+        <span class="badge-tag">{model.brand} · {model.stickLayout} layout</span>
+        <h1 class="profile-title">{model.name} — Fit Analysis</h1>
+        <p class="profile-sub">
+          Verdicts below use the same engine as the interactive fit tool, evaluated at three reference
+          hand spans. Body width is {model.widthMm !== null ? `measured at ${model.widthMm} mm` : 'not yet measured (pending caliper verification)'}.
+        </p>
+      </header>
+
+      <!-- Spec table -->
+      <section class="spec-card card-base" aria-labelledby="spec-title">
+        <h2 id="spec-title" class="section-title">Published dimensions</h2>
+        <div class="spec-grid">
+          <div class="spec-cell">
+            <span class="spec-label">Body width</span>
+            <span class="spec-value">{model.widthMm !== null ? `${model.widthMm} mm` : '—'}</span>
+            {model.widthMm === null && <span class="spec-pending">pending</span>}
+          </div>
+          <div class="spec-cell">
+            <span class="spec-label">Weight</span>
+            <span class="spec-value">{model.weightG !== null ? `${model.weightG} g` : '—'}</span>
+            {model.weightG === null && <span class="spec-pending">pending</span>}
+          </div>
+          <div class="spec-cell">
+            <span class="spec-label">Stick layout</span>
+            <span class="spec-value dim-cap">{model.stickLayout}</span>
+          </div>
+          <div class="spec-cell">
+            <span class="spec-label">Price (list)</span>
+            <span class="spec-value">{model.priceUsd !== null ? `$${model.priceUsd}` : '—'}</span>
+          </div>
+        </div>
+        <p class="spec-source">
+          Source: <span class="mono">{model.source}</span> · verified <span class="mono">{model.lastVerified}</span> ·
+          dataset snapshot <span class="mono">{fitData.updatedAt}</span>
+        </p>
+      </section>
+
+      <!-- Fit notes -->
+      <section class="notes-card card-base" aria-labelledby="notes-title">
+        <h2 id="notes-title" class="section-title">What the fit notes say</h2>
+        <ul class="notes-list">
+          {model.fitNotes.map((note) => (
+            <li class="notes-item">{note}</li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- Verdicts per hand band -->
+      <section class="verdict-card card-base" aria-labelledby="verdict-title">
+        <h2 id="verdict-title" class="section-title">Reference fit verdicts</h2>
+        <p class="verdict-desc">
+          Evaluated at three reference spans (thumb to pinky, open hand). Your actual result may differ —
+          run the <a href="/fit" class="hub-link">interactive fit tool</a> with your calibrated span.
+        </p>
+        <div class="verdict-grid">
+          {verdicts.map((v) => (
+            <div class={`verdict-cell tier-${v.result.verdict}`}>
+              <span class="verdict-band">{v.key} hands</span>
+              <span class="verdict-tier">{tierLabel[v.result.verdict]}</span>
+              <p class="verdict-reason">{v.result.reason}</p>
+              <span class="verdict-ref mono">{v.ref.note}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="cta-card card-base">
+        <h2 class="cta-title">Check it against your own hand</h2>
+        <p class="cta-text">
+          {model.widthMm !== null
+            ? 'Calibrate your span in 30 seconds and get a personalized verdict with named alternatives.'
+            : 'This model is awaiting caliper measurement — calibrate your span and we will rank the measured models for you.'}
+        </p>
+        <a href="/fit" class="btn-primary">Open the fit analyzer</a>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .fit-profile { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .container-site {
+    width: 100%; max-width: 1000px; margin-inline: auto; padding-inline: 1.5rem;
+    display: flex; flex-direction: column; gap: 2rem;
+  }
+  .badge-tag {
+    display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700;
+    text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1);
+    padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+  }
+  .profile-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .profile-sub { font-size: 1.0625rem; color: var(--color-text-secondary); line-height: 1.65; max-width: 70ch; }
+
+  .section-title { font-size: 1.125rem; font-weight: 800; letter-spacing: -0.02em; color: var(--color-text-primary); margin-bottom: 0.75rem; }
+
+  .spec-card, .notes-card, .verdict-card, .cta-card { padding: 1.75rem; }
+  .spec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; }
+  .spec-cell {
+    display: flex; flex-direction: column; gap: 0.2rem; background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 0.875rem 1rem;
+  }
+  .spec-label { font-family: var(--font-mono); font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-tertiary); }
+  .spec-value { font-family: var(--font-mono); font-size: 1.25rem; font-weight: 800; color: var(--color-text-primary); }
+  .spec-pending { font-family: var(--font-mono); font-size: 0.5625rem; color: var(--color-text-tertiary); }
+  .dim-cap { text-transform: capitalize; }
+  .spec-source { font-family: var(--font-mono); font-size: 0.625rem; color: var(--color-text-tertiary); margin-top: 1rem; }
+
+  .notes-list { display: flex; flex-direction: column; gap: 0.625rem; list-style: none; padding: 0; margin: 0; }
+  .notes-item {
+    font-size: 0.9375rem; color: var(--color-text-secondary); line-height: 1.65;
+    padding-left: 1.25rem; position: relative;
+  }
+  .notes-item::before { content: '•'; position: absolute; left: 0; color: var(--color-accent); font-weight: 800; }
+
+  .verdict-desc { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 1rem; }
+  .verdict-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.875rem; }
+  .verdict-cell {
+    border: 1px solid var(--color-border-subtle); border-left: 3px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm); padding: 1.1rem 1.25rem; display: flex; flex-direction: column; gap: 0.4rem;
+    background: var(--color-surface-1);
+  }
+  .verdict-cell.tier-recommended { border-left-color: #10B981; }
+  .verdict-cell.tier-try-first { border-left-color: #2563EB; }
+  .verdict-cell.tier-not-ideal { border-left-color: #F59E0B; }
+  .verdict-cell.tier-pending { border-left-color: var(--color-text-tertiary); }
+  .verdict-band { font-family: var(--font-mono); font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); }
+  .verdict-tier { font-size: 0.9375rem; font-weight: 800; color: var(--color-text-primary); }
+  .tier-recommended .verdict-tier { color: #10B981; }
+  .tier-try-first .verdict-tier { color: #2563EB; }
+  .tier-not-ideal .verdict-tier { color: #F59E0B; }
+  .tier-pending .verdict-tier { color: var(--color-text-tertiary); }
+  .verdict-reason { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; }
+  .verdict-ref { font-size: 0.625rem; color: var(--color-text-tertiary); }
+
+  .cta-card { display: flex; flex-direction: column; gap: 0.625rem; align-items: flex-start; }
+  .cta-title { font-size: 1.25rem; font-weight: 800; color: var(--color-text-primary); }
+  .cta-text { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.65; max-width: 64ch; }
+  .hub-link { color: var(--color-accent); }
+  .mono { font-family: var(--font-mono); }
+</style>

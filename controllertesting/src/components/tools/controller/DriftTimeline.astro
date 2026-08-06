@@ -25,16 +25,41 @@
       <p class="history-empty" id="tl-empty-text">No saved snapshots yet. Connect controller and click 'Save Current Drift Snapshot' above.</p>
     </div>
   </div>
+
+  <div class="tl-wear-card" id="tl-wear-card" hidden>
+    <h3 class="tl-history-title">Predictive wear reference</h3>
+    <p class="wear-note" id="tl-wear-note"></p>
+  </div>
 </div>
 
 <script>
   import { parseGamepadState } from '../../../lib/gamepad';
+  import { mapGamepadToModelKey } from '../../../lib/telemetry';
+  import reliabilityData from '../../../data/reliabilityData.json';
 
   interface DriftSnapshot {
     date: string;
     model: string;
     leftDrift: number;
     rightDrift: number;
+  }
+
+  function updateWearReference(detectedModel: string): void {
+    const wearCard = document.getElementById('tl-wear-card');
+    const wearNote = document.getElementById('tl-wear-note');
+    if (!wearCard || !wearNote) return;
+    const modelKey = mapGamepadToModelKey(detectedModel);
+    if (!modelKey) {
+      wearCard.hidden = true;
+      return;
+    }
+    const model = (reliabilityData.models as Record<string, any>)[modelKey];
+    if (!model) {
+      wearCard.hidden = true;
+      return;
+    }
+    wearNote.textContent = `Baseline reference for ${model.name}: average drift onset at ${model.avgLifespanMonthsBeforeDrift} months, ${model.avgDriftAfter12MonthsPercent}% average drift after 12 months (${model.samples.toLocaleString()} documented results). Track your own curve here — your unit may differ.`;
+    wearCard.hidden = false;
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -102,6 +127,7 @@
         if (model) model.textContent = activeGp.id;
 
         currentGpState = parseGamepadState(activeGp);
+        updateWearReference(currentGpState.detectedModel);
       }
 
       requestAnimationFrame(pollTimeline);
@@ -199,6 +225,22 @@
   .tl-history-title {
     font-size: 1.125rem;
     font-weight: 700;
+  }
+
+  .tl-wear-card {
+    background: var(--color-surface-2);
+    border: 1px solid rgba(37, 99, 235, 0.25);
+    border-radius: var(--radius-card);
+    padding: 1.5rem;
+  }
+
+  .tl-wear-card[hidden] { display: none; }
+
+  .wear-note {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin: 0;
   }
 
   .history-list {

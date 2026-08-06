@@ -1,0 +1,272 @@
+{
+  "updatedAt": "2026-08-03",
+  "measurementPolicy": "Only values traceable to published manufacturer specifications or confirmed public documentation are included. Grip-level dimensions (grip length, thumb reach, trigger reach) require caliper verification and are stored as null until measured. null = pending measurement, never an estimate.",
+  "models": {
+    "ps5-dualsense": {
+      "name": "PlayStation 5 DualSense",
+      "brand": "Sony",
+      "priceUsd": 69.99,
+      "priceIsVerifiedList": true,
+      "weightG": 280,
+      "widthMm": 160,
+      "heightMm": 106,
+      "depthMm": 66,
+      "stickLayout": "symmetrical",
+      "gripMeasured": false,
+      "fitNotes": [
+        "Widest body in the mainstream lineup (160 mm) — generally comfortable for medium and large hands.",
+        "Symmetrical stick layout keeps both thumbs equidistant from center.",
+        "Weight 280 g is middle of the pack; lighter than Elite 2, heavier than Switch Pro."
+      ],
+      "source": "sony_manufacturer_spec",
+      "lastVerified": "2026-08-03"
+    },
+    "ps4-dualshock-4": {
+      "name": "PlayStation 4 DualShock 4",
+      "brand": "Sony",
+      "priceUsd": 59.99,
+      "priceIsVerifiedList": false,
+      "weightG": 210,
+      "widthMm": 161.2,
+      "heightMm": null,
+      "depthMm": null,
+      "stickLayout": "symmetrical",
+      "gripMeasured": false,
+      "fitNotes": [
+        "Wide, flat body with short grips — a classic complaint from large-handed players.",
+        "At 210 g it is the lightest full-size controller here; easy on wrists during long sessions.",
+        "Same symmetrical layout as DualSense."
+      ],
+      "source": "sony_manufacturer_spec",
+      "lastVerified": "2026-08-03"
+    },
+    "xbox-series": {
+      "name": "Xbox Wireless Controller (Series X/S)",
+      "brand": "Microsoft",
+      "priceUsd": 64.99,
+      "priceIsVerifiedList": false,
+      "weightG": 286,
+      "widthMm": 153.3,
+      "heightMm": 61.1,
+      "depthMm": 69.9,
+      "stickLayout": "asymmetric",
+      "gripMeasured": false,
+      "fitNotes": [
+        "Narrowest mainstream body (153.3 mm) with the deepest grips — the classic 'fits larger hands' reputation.",
+        "Asymmetric sticks place the left stick where the palm sits; right thumb reaches lower than on symmetrical pads.",
+        "286 g with AA batteries; slightly heavier than DualSense."
+      ],
+      "source": "microsoft_manufacturer_spec",
+      "lastVerified": "2026-08-03"
+    },
+    "xbox-elite-2": {
+      "name": "Xbox Elite Series 2",
+      "brand": "Microsoft",
+      "priceUsd": 179.99,
+      "priceIsVerifiedList": true,
+      "weightG": 345,
+      "widthMm": 153.3,
+      "heightMm": 61.1,
+      "depthMm": 69.9,
+      "stickLayout": "asymmetric",
+      "gripMeasured": false,
+      "fitNotes": [
+        "Shares the Series X/S shell, so fit geometry matches the standard Xbox controller.",
+        "Heaviest mainstream controller (345 g) — premium feel, but tiring in long sessions unless you have strong grip.",
+        "Rubberized grips help limited-grip-strength players hold on with less force.",
+        "Elite Series 2 Core ($139.99) is the same shell with fewer accessories — identical fit."
+      ],
+      "source": "microsoft_spec_inherited_series_shell",
+      "lastVerified": "2026-08-03"
+    },
+    "dualsense-edge": {
+      "name": "PlayStation DualSense Edge",
+      "brand": "Sony",
+      "priceUsd": 199.99,
+      "priceIsVerifiedList": true,
+      "weightG": 325,
+      "widthMm": 160,
+      "heightMm": 106,
+      "depthMm": 66,
+      "stickLayout": "symmetrical",
+      "gripMeasured": false,
+      "fitNotes": [
+        "Same body geometry as the standard DualSense — if the DualSense fits, the Edge fits.",
+        "45 g heavier than the standard model due to swappable modules and batteries.",
+        "Swappable stick caps change thumb reach slightly (domed caps extend reach)."
+      ],
+      "source": "sony_manufacturer_spec_inherited_dualsense_shell",
+      "lastVerified": "2026-08-03"
+    },
+    "switch-pro": {
+      "name": "Nintendo Switch Pro Controller",
+      "brand": "Nintendo",
+      "priceUsd": 69.99,
+      "priceIsVerifiedList": false,
+      "weightG": 246,
+      "widthMm": 156,
+      "heightMm": null,
+      "depthMm": null,
+      "stickLayout": "symmetrical",
+      "gripMeasured": false,
+      "fitNotes": [
+        "Grip geometry is close to the Xbox family — deep grips with a narrower body.",
+        "At 246 g it is the lightest premium-feel controller; very forgiving on wrists.",
+        "Symmetrical sticks with comfortable reach for medium hands."
+      ],
+      "source": "nintendo_manufacturer_spec",
+      "lastVerified": "2026-08-03"
+    },
+    "gamesir-g7-se": {
+      "name": "GameSir G7 SE",
+      "brand": "GameSir",
+      "priceUsd": 45,
+      "priceIsVerifiedList": true,
+      "weightG": 218,
+      "widthMm": null,
+      "heightMm": null,
+      "depthMm": null,
+      "stickLayout": "asymmetric",
+      "gripMeasured": false,
+      "fitNotes": [
+        "Hall-effect sticks — drift-resistant sensor tech (see reliability dataset).",
+        "Xbox-style asymmetric layout; retail pricing puts it near your stated $45 budget tier.",
+        "Body width pending caliper verification before we publish a fit verdict."
+      ],
+      "source": "manufacturer_spec_partial",
+      "lastVerified": "2026-08-03"
+    },
+    "8bitdo-ultimate-c": {
+      "name": "8BitDo Ultimate C",
+      "brand": "8BitDo",
+      "priceUsd": 29.99,
+      "priceIsVerifiedList": false,
+      "weightG": 220,
+      "widthMm": null,
+      "heightMm": null,
+      "depthMm": null,
+      "stickLayout": "asymmetric",
+      "gripMeasured": false,
+      "fitNotes": [
+        "Budget Xbox-style layout with hall-effect sticks in the 2.4G version.",
+        "Light and compact — a reasonable first controller for small hands, pending dimension verification.",
+        "Body width pending caliper verification before we publish a fit verdict."
+      ],
+      "source": "manufacturer_spec_partial",
+      "lastVerified": "2026-08-03"
+    },
+    "8bitdo-pro-2": {
+      "name": "8BitDo Pro 2",
+      "brand": "8BitDo",
+      "priceUsd": 49.99,
+      "priceIsVerifiedList": false,
+      "weightG": null,
+      "widthMm": null,
+      "heightMm": null,
+      "depthMm": null,
+      "stickLayout": "symmetrical",
+      "gripMeasured": false,
+      "fitNotes": [
+        "Classic SNES-inspired symmetrical layout, very popular for emulation and fighting games.",
+        "Dimensions pending verification; verdict disabled until measured."
+      ],
+      "source": "manufacturer_spec_partial",
+      "lastVerified": "2026-08-03"
+    },
+    "scuf-reflex": {
+      "name": "Scuf Reflex FPS",
+      "brand": "Scuf Gaming",
+      "priceUsd": 199.99,
+      "priceIsVerifiedList": true,
+      "weightG": 285,
+      "widthMm": 161.2,
+      "heightMm": null,
+      "depthMm": null,
+      "stickLayout": "symmetrical",
+      "gripMeasured": false,
+      "fitNotes": [
+        "Licensed DualShock 4 shell — fit geometry matches the DS4 (161.2 mm wide).",
+        "Comes with interchangeable palm and grip assemblies for tailoring fit.",
+        "285 g measured in published reviews."
+      ],
+      "source": "ds4_shell_inherited",
+      "lastVerified": "2026-08-03"
+    },
+    "victrix-pro-bfg": {
+      "name": "Victrix Pro BFG",
+      "brand": "PDP",
+      "priceUsd": 179.99,
+      "priceIsVerifiedList": false,
+      "weightG": null,
+      "widthMm": null,
+      "heightMm": null,
+      "depthMm": null,
+      "stickLayout": "either",
+      "gripMeasured": false,
+      "fitNotes": [
+        "Unique modular layout — stick modules swap between symmetrical and asymmetric positions.",
+        "The only mainstream controller that can match either stick preference out of the box.",
+        "Dimensions and weight pending verification before we publish a fit verdict."
+      ],
+      "source": "manufacturer_spec_partial",
+      "lastVerified": "2026-08-03"
+    },
+    "hori-pad-mini": {
+      "name": "HORI Pad Mini (Xbox / PS variants)",
+      "brand": "HORI",
+      "priceUsd": 34.99,
+      "priceIsVerifiedList": false,
+      "weightG": null,
+      "widthMm": null,
+      "heightMm": null,
+      "depthMm": null,
+      "stickLayout": "symmetrical",
+      "gripMeasured": false,
+      "fitNotes": [
+        "Officially positioned as a compact controller for smaller hands.",
+        "The PS variant keeps the symmetrical PlayStation layout; the Xbox variant is asymmetric.",
+        "Dimensions pending verification before we publish exact numbers."
+      ],
+      "source": "manufacturer_spec_partial",
+      "lastVerified": "2026-08-03"
+    },
+    "logitech-f310": {
+      "name": "Logitech F310",
+      "brand": "Logitech",
+      "priceUsd": 39.99,
+      "priceIsVerifiedList": false,
+      "weightG": null,
+      "widthMm": null,
+      "heightMm": null,
+      "depthMm": null,
+      "stickLayout": "symmetrical",
+      "gripMeasured": false,
+      "fitNotes": [
+        "Budget PC staple with a PlayStation-style symmetrical layout.",
+        "Wired only, no rumble — picked for compatibility, not fit.",
+        "Dimensions pending verification before we publish a fit verdict."
+      ],
+      "source": "manufacturer_spec_partial",
+      "lastVerified": "2026-08-03"
+    },
+    "8bitdo-m30": {
+      "name": "8BitDo M30",
+      "brand": "8BitDo",
+      "priceUsd": 34.99,
+      "priceIsVerifiedList": false,
+      "weightG": null,
+      "widthMm": null,
+      "heightMm": null,
+      "depthMm": null,
+      "stickLayout": "symmetrical",
+      "gripMeasured": false,
+      "fitNotes": [
+        "Sega Saturn-style six-button face, aimed at fighting and retro genres.",
+        "Small and light — a niche pick, not a general recommendation.",
+        "Dimensions pending verification before we publish a fit verdict."
+      ],
+      "source": "manufacturer_spec_partial",
+      "lastVerified": "2026-08-03"
+    }
+  }
+}

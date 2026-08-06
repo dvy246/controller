@@ -1,0 +1,84 @@
+---
+/**
+ * /compare — Controller Comparison Hub (8 head-to-heads)
+ * Zero competitor coverage (verified: controllertest.io has no /compare pages).
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+const comparisons = [
+  { slug: 'dualsense-vs-xbox-series', title: 'PS5 DualSense vs Xbox Series Wireless' },
+  { slug: 'dualsense-edge-vs-xbox-elite-2', title: 'DualSense Edge vs Xbox Elite Series 2' },
+  { slug: 'dualsense-vs-dualsense-edge', title: 'PS5 DualSense vs DualSense Edge' },
+  { slug: 'xbox-series-vs-elite-2', title: 'Xbox Series Controller vs Elite Series 2' },
+  { slug: 'switch-pro-vs-xbox', title: 'Switch Pro Controller vs Xbox Wireless' },
+  { slug: 'joy-con-vs-switch-pro', title: 'Joy-Con vs Switch Pro Controller' },
+  { slug: 'ps4-vs-ps5', title: 'PS4 DualShock 4 vs PS5 DualSense' },
+  { slug: 'xbox-one-vs-series', title: 'Xbox One vs Xbox Series X/S Controller' },
+  { slug: 'dualsense-vs-scuf', title: 'PS5 DualSense vs SCUF Pro Pads' },
+];
+
+const breadcrumbs = [{ name: 'Home', url: '/' }, { name: 'Comparisons' }];
+---
+
+<BaseLayout
+  title="Controller Comparisons — Head-to-Head Hardware Reviews | ControllerTesting.com"
+  description="Compare PS5 DualSense vs Xbox, DualSense Edge vs Elite Series 2, Switch Pro vs Xbox, and more. Latency, stick drift durability, polling rate and price."
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="hub-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="hub-hero">
+        <span class="badge-tag">Comparison Hub</span>
+        <h1 class="hub-title">Controller Comparisons</h1>
+        <p class="hub-subtitle">
+          Head-to-head hardware analysis: input latency, polling rate, stick sensor type, drift resistance, and price.
+          Figures are labeled approximate — measure your own unit with our free diagnostics.
+        </p>
+      </header>
+
+      <div class="compare-grid">
+        {comparisons.map((c) => (
+          <a href={`/compare/${c.slug}`} class="compare-card card-base card-hover">
+            <h2 class="compare-title">{c.title}</h2>
+            <span class="compare-link">Read comparison &rarr;</span>
+          </a>
+        ))}
+      </div>
+
+      <section class="hub-note card-base">
+        <h2 class="section-title">How we compare controllers</h2>
+        <p class="hub-text">
+          Specs are compiled from manufacturer documentation and third-party community measurements, never from our own
+          claims. Health Scores are our composite model over latency, sensor type, and documented reliability —
+          see the <a href="/reliability" class="hub-link">reliability hub</a> for the underlying baseline data and
+          <a href="/test/methodology" class="hub-link">methodology</a> for what browser testing can verify.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .hub-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .hub-hero { margin-bottom: 2.5rem; }
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .hub-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 70ch; }
+  .compare-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+  .compare-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  .compare-title { font-size: 1.0625rem; font-weight: 700; }
+  .compare-link { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-accent); }
+  .hub-note { padding: 2rem; }
+  .hub-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.7; }
+  .hub-link { color: var(--color-accent); }
+</style>

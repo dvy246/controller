@@ -1,18 +1,136 @@
 ---
 /**
  * /settings/[game]/[controller] — Game-Specific Controller & Deadzone Settings
- * SEO Title: Best {Game} Controller Settings for {Controller} ({Year})
+ * Per-game data: deadzone scales and community-standard starting points differ
+ * by game (Fortnite uses a 0-50 slider, Rocket League 0-1 floats, etc.).
+ * All values are labeled as starting points, not absolute truths — test first.
  */
 
 import ToolLayout from '../../../layouts/ToolLayout.astro';
+import SettingsOptimizer from '../../../components/tools/controller/SettingsOptimizer.astro';
 
 export function getStaticPaths() {
   const games = [
-    { slug: 'fortnite', name: 'Fortnite' },
-    { slug: 'apex-legends', name: 'Apex Legends' },
-    { slug: 'warzone', name: 'Call of Duty: Warzone' },
-    { slug: 'rocket-league', name: 'Rocket League' },
-    { slug: 'street-fighter-6', name: 'Street Fighter 6' },
+    {
+      slug: 'fortnite',
+      name: 'Fortnite',
+      deadzoneScale: '0–50 slider',
+      deadzoneRange: '10% – 15%',
+      deadzoneNote: 'Fortnite defaults both stick deadzones to 15%. Most competitive players lower toward 10%, or lower, on clean sticks.',
+      responseCurve: 'Linear',
+      curveNote: 'Linear is the competitive standard; Exponential is the default and smooths small inputs.',
+      sensNote: 'Common starting point: X/Y ~35–40, ADS ~15 (sensitivity % sliders).',
+      triggerNote: 'Trigger deadzone available in settings; raise it if triggers are loose.',
+      driftRiskNote: 'Fortnite is a drift-pressure test: constant aim-down and build inputs wear sticks faster.',
+    },
+    {
+      slug: 'apex-legends',
+      name: 'Apex Legends',
+      deadzoneScale: '0–100 slider',
+      deadzoneRange: '3% – 5%',
+      deadzoneNote: 'Apex has one of the tightest competitive deadzone scales; many pros run 0–4 on clean sticks and raise to ~10 on drifting sticks.',
+      responseCurve: 'Linear',
+      curveNote: 'Linear is dominant in competitive Apex for consistent flick aim; "Classic" is the default curve.',
+      sensNote: 'Common starting point: Look sensitivity 4–5 (classic), ADS 1x.',
+      triggerNote: 'N/A — Apex uses buttons; no trigger-deadzone setting.',
+      driftRiskNote: 'Apex rewards micro-aim at long range, so even 2–3% drift is visible in-game.',
+    },
+    {
+      slug: 'warzone',
+      name: 'Call of Duty: Warzone',
+      deadzoneScale: '0–100 slider',
+      deadzoneRange: '5% – 10%',
+      deadzoneNote: 'Warzone exposes minimum/maximum stick deadzones. Community standard starts at ~5%, raised to cover visible drift.',
+      responseCurve: 'Dynamic',
+      curveNote: 'Dynamic gives fast outer-edge turns with fine small-input control — the popular competitive pick.',
+      sensNote: 'Common starting point: Look sens 6–7, ADS multiplier ~0.8–1.0.',
+      triggerNote: 'Trigger deadzone matters for semi-auto guns; lower it for instant shots.',
+      driftRiskNote: 'Warzone\'s long-range recoil control makes drift visible as slow camera movement.',
+    },
+    {
+      slug: 'rocket-league',
+      name: 'Rocket League',
+      deadzoneScale: '0–1 float',
+      deadzoneRange: '0.05 – 0.10',
+      deadzoneNote: 'Rocket League uses 0–1 float deadzones. Community standard: 0.05–0.10 for sticks; dodge deadzone ~0.50.',
+      responseCurve: 'N/A',
+      curveNote: 'Rocket League has no response curve; stick feel comes from deadzone shape (square vs circle) in settings.',
+      sensNote: 'No sensitivity slider — controller feel is tuned entirely via deadzone and the square/circle shape toggle.',
+      triggerNote: 'Trigger used for throttle; keep default (no deadzone issue).',
+      driftRiskNote: 'Drift shows as slow car rotation at rest; even 0.03 deadzone gaps are noticeable to players.',
+    },
+    {
+      slug: 'street-fighter-6',
+      name: 'Street Fighter 6',
+      deadzoneScale: 'No in-game slider',
+      deadzoneRange: 'System default',
+      deadzoneNote: 'SF6 does not expose a stick deadzone setting — lever behavior is governed by system/console-level settings. Keep sticks clean; drift causes phantom directional inputs.',
+      responseCurve: 'N/A',
+      curveNote: 'Fighting games need raw gate direction; SF6 has no curve option.',
+      sensNote: 'N/A — movement is discrete (lever shortcuts available in settings for 360/720 inputs).',
+      triggerNote: 'Trigger/L1 are mapped to parry/drive impacts; no deadzone setting.',
+      driftRiskNote: 'A drifting stick in SF6 reads as false left/right inputs — the worst kind of failure for a fighting game.',
+    },
+    {
+      slug: 'valorant',
+      name: 'Valorant',
+      deadzoneScale: '0–100 slider',
+      deadzoneRange: '8% – 15%',
+      deadzoneNote: 'Valorant\'s controller support exposes a stick deadzone; community starting point ~10%, raised only if your stick drifts.',
+      responseCurve: 'Standard (s-curve)',
+      curveNote: 'Valorant\'s controller curve is fixed; aim assist settings matter more than curve choice.',
+      sensNote: 'Common starting point: Horizontal/Vertical ~50%, ADS multiplier ~0.7–0.9.',
+      triggerNote: 'Trigger not used for shooting on controller defaults (R2 is fire).',
+      driftRiskNote: 'Tactical shooters punish drift hardest — a drifting stick moves your crosshair off a held angle.',
+    },
+    {
+      slug: 'counter-strike-2',
+      name: 'Counter-Strike 2',
+      deadzoneScale: '0–100 slider',
+      deadzoneRange: '10% – 15%',
+      deadzoneNote: 'CS2 shipped official controller support in 2025 with a deadzone slider; community starting point ~10–15%.',
+      responseCurve: 'Standard',
+      curveNote: 'CS2 offers no curve customization; stick response is fixed.',
+      sensNote: 'Common starting point: sensitivity ~1.0–1.5 with controller aim assist enabled.',
+      triggerNote: 'Trigger deadzone applies to semi-auto and one-tap shooting — keep it minimal.',
+      driftRiskNote: 'One-tap precision makes any center drift a headshot miss; test before ranked.',
+    },
+    {
+      slug: 'overwatch-2',
+      name: 'Overwatch 2',
+      deadzoneScale: '0–100 slider',
+      deadzoneRange: '8% – 15%',
+      deadzoneNote: 'OW2 deadzone default is 0.10 (10%). Community tuning usually 8–15%, raised to mask drift.',
+      responseCurve: 'Dual-Zone',
+      curveNote: 'Dual-zone keeps fine inner control with fast outer turns — the competitive standard.',
+      sensNote: 'Common starting point: Horizontal/Vertical ~40–50, aim assist window ~25–30.',
+      triggerNote: 'N/A — abilities on buttons; no trigger-deadzone setting.',
+      driftRiskNote: 'Heroes like Widowmaker make drift immediately visible; supports feel it on flick heals.',
+    },
+    {
+      slug: 'halo-infinite',
+      name: 'Halo Infinite',
+      deadzoneScale: '0–10 sliders',
+      deadzoneRange: 'Center 0 – 1, Axial 0 – 1',
+      deadzoneNote: 'Halo Infinite exposes center + axial deadzones on a 0–10 scale. Most players set center and axial at 0–1 on clean sticks.',
+      responseCurve: 'Standard',
+      curveNote: 'Halo\'s curve is fixed; feel is tuned via deadzone and "Look Acceleration" settings.',
+      sensNote: 'Common starting point: Look sensitivity 3–4, acceleration ~2.',
+      triggerNote: 'Trigger deadzone exists for semi-auto weapons; keep near 0.',
+      driftRiskNote: 'Halo\'s magnetism and large hitboxes mask some drift, but BR shots expose center offset.',
+    },
+    {
+      slug: 'elden-ring',
+      name: 'Elden Ring',
+      deadzoneScale: 'No in-game slider',
+      deadzoneRange: 'System default',
+      deadzoneNote: 'Elden Ring has no in-game deadzone setting — adjust at console/Steam level, or use third-party remapping tools on PC.',
+      responseCurve: 'N/A',
+      curveNote: 'No curve options; Souls-style camera is raw stick input.',
+      sensNote: 'Camera sensitivity slider exists in-game; no deadzone control.',
+      triggerNote: 'Triggers are not analog-meaningful (light/heavy attack on R1/R2) — drift on the camera stick is the real problem.',
+      driftRiskNote: 'A drifting camera stick causes unintended slow panning — lethal when platforming or fighting.',
+    },
   ];
 
   const controllers = [
@@ -39,23 +157,25 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: `What is the best deadzone setting for ${game.name} on ${controller.name}?`,
-    answer: `The optimal left and right stick deadzone for ${game.name} on the ${controller.name} is 5% to 8%. If your controller exhibits minor stick drift, increase the deadzone to 10% in the ${game.name} controller settings menu.`,
+    question: `What is the best stick deadzone for ${game.name} on the ${controller.name}?`,
+    answer: `For ${game.name}, the deadzone scale is a ${game.deadzoneScale} and the community-standard starting point is ${game.deadzoneRange}. ${game.deadzoneNote} Every stick is different — measure yours with our Stick Drift Detector before tuning.`,
   },
   {
     question: `How do I test my ${controller.name} for stick drift before playing ${game.name}?`,
-    answer: `Connect your ${controller.name} via USB or Bluetooth, open our free Stick Drift Detector tool, and verify if stick drift is under 5%. If drift is higher, adjust your in-game deadzone accordingly.`,
+    answer: `Connect your ${controller.name} via USB or Bluetooth, open our free Stick Drift Detector, and check the at-rest offset on both sticks. If drift is above the ${game.deadzoneRange} starting point, raise your deadzone in ${game.name} — or clean/repair the stick first (see our repair guides).`,
   },
   {
-    question: `Should I enable linear or exponential stick response curve in ${game.name}?`,
-    answer: `Linear stick response offers raw 1:1 input speed for fast target acquisition, while Exponential provides smoother micro-aim precision at small thumbstick deflections.`,
+    question: `Which stick response curve should I use in ${game.name}?`,
+    answer: game.responseCurve === 'N/A'
+      ? `${game.name} does not expose a stick response curve setting. ${game.curveNote}`
+      : `${game.responseCurve} is the common competitive choice in ${game.name}. ${game.curveNote}`,
   },
 ];
 ---
 
 <ToolLayout
   title={`Best ${game.name} Controller Settings for ${controller.name} (2026) | ControllerTesting.com`}
-  description={`Optimal sensitivity, response curve, and deadzone settings for ${game.name} using the ${controller.name}. Tested for zero drift and maximum aim precision.`}
+  description={`Deadzone, response curve, and sensitivity starting points for ${game.name} using the ${controller.name}. ${game.deadzoneScale} scale — test your stick before tuning.`}
   toolName={`${game.name} Controller Settings`}
   category="Game Settings"
   categoryUrl="/settings"
@@ -65,44 +185,56 @@ const faqs = [
   <Fragment slot="tool">
     <div class="settings-card card-base">
       <div class="settings-header">
-        <span class="badge-accent">RECOMMENDED PRO SETUP</span>
+        <span class="badge-accent">COMMUNITY-STANDARD STARTING POINTS</span>
         <h2 class="settings-title">{game.name} Settings on {controller.name}</h2>
       </div>
 
       <div class="settings-grid">
         <div class="setting-item">
           <span class="s-label">Left Stick Deadzone</span>
-          <span class="s-val text-gradient">5% – 8%</span>
+          <span class="s-val text-gradient">{game.deadzoneRange}</span>
         </div>
         <div class="setting-item">
           <span class="s-label">Right Stick Deadzone</span>
-          <span class="s-val text-gradient">5% – 8%</span>
+          <span class="s-val text-gradient">{game.deadzoneRange}</span>
         </div>
         <div class="setting-item">
-          <span class="s-label">Look Sensitivity</span>
-          <span class="s-val mono">6.0 / High</span>
-        </div>
-        <div class="setting-item">
-          <span class="s-label">Aim Down Sights (ADS)</span>
-          <span class="s-val mono">1.0x Uniform</span>
+          <span class="s-label">Deadzone Scale</span>
+          <span class="s-val mono">{game.deadzoneScale}</span>
         </div>
         <div class="setting-item">
           <span class="s-label">Response Curve</span>
-          <span class="s-val mono">Linear / Dynamic</span>
+          <span class="s-val mono">{game.responseCurve}</span>
         </div>
         <div class="setting-item">
-          <span class="s-label">Trigger Minimum Input</span>
-          <span class="s-val mono">0% (Instant)</span>
+          <span class="s-label">Sensitivity</span>
+          <span class="s-val mono">{game.sensNote}</span>
+        </div>
+        <div class="setting-item">
+          <span class="s-label">Triggers</span>
+          <span class="s-val mono">{game.triggerNote}</span>
         </div>
       </div>
+
+      <p class="settings-note">
+        <strong>About these numbers:</strong> {game.deadzoneNote} {game.curveNote} These are starting points, not
+        guarantees — your controller\'s drift profile is unique.
+      </p>
     </div>
+
+    <SettingsOptimizer
+      gameName={game.name}
+      gameRange={game.deadzoneRange}
+      controllerName={controller.name}
+    />
   </Fragment>
 
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Hardware Verification Needed</h2>
+      <h2 class="section-title">Test Before You Tune</h2>
       <p class="results-text">
-        Before applying these deadzone settings in {game.name}, run our 2-minute diagnostic check to verify if your {controller.name} thumbsticks have physical drift.
+        {game.driftRiskNote} Run the 2-minute Stick Drift Detector first — if your {controller.name} shows more drift
+        than the {game.deadzoneRange} starting point, fixing the stick beats raising the deadzone.
       </p>
     </div>
   </Fragment>
@@ -110,8 +242,8 @@ const faqs = [
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Test your controller stick drift now</h3>
-        <p class="export-desc">Measure stick drift accuracy to 0.1% before fine-tuning in-game sensitivity.</p>
+        <h3 class="export-title">Measure your stick drift now</h3>
+        <p class="export-desc">Get your exact drift % (0.1% precision) before applying {game.name} settings.</p>
       </div>
       <div class="export-buttons">
         <a href="/test/controller/drift" class="btn-primary">Test Stick Drift</a>
@@ -128,12 +260,23 @@ const faqs = [
       <h3 class="tool-name">Stick Drift Detector</h3>
       <p class="tool-desc">Test analog stick drift in real-time.</p>
     </a>
+    <a href="/fix/stick-drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Repair Guides</h3>
+      <p class="tool-desc">12 step-by-step controller fixes.</p>
+    </a>
   </Fragment>
 
   <Fragment slot="content">
     <h2>Optimizing {controller.name} Deadzones for {game.name}</h2>
     <p>
-      In competitive gaming titles like {game.name}, deadzone tuning determines how responsive your movement and aim feel. Setting your deadzone too low can cause unintended camera drift, while setting it too high creates input delay.
+      {game.name} uses a {game.deadzoneScale} deadzone scale, so the same percentage means different physical stick
+      travel than other games. Set the deadzone just high enough to cover your stick's at-rest noise: too low and you
+      get {game.driftRiskNote.toLowerCase()} too high and your aim feels spongy.
+    </p>
+    <h2>Connection mode matters</h2>
+    <p>
+      Wireless controllers report at the same deadzone values but can add input latency. For the most precise tuning,
+      connect via USB first, verify your stick, then match the settings wirelessly.
     </p>
   </Fragment>
 </ToolLayout>
@@ -147,6 +290,7 @@ const faqs = [
   .setting-item { background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.375rem; text-align: center; }
   .s-label { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: var(--color-text-tertiary); letter-spacing: 0.06em; }
   .s-val { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
+  .settings-note { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1rem; }
   .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
   .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
   .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }

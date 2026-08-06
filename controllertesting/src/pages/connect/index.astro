@@ -1,0 +1,117 @@
+---
+/**
+ * /connect/index.astro — Hub for controller × platform pairing guides.
+ * 4 controllers × 3 platforms (PC/macOS/Steam Deck).
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+const controllers = [
+  { slug: 'ps5-dualsense', name: 'PS5 DualSense', tag: 'Potentiometer sticks' },
+  { slug: 'ps4-dualshock-4', name: 'PS4 DualShock 4', tag: 'Potentiometer sticks' },
+  { slug: 'xbox-wireless', name: 'Xbox Wireless Controller', tag: 'XInput / Bluetooth' },
+  { slug: 'switch-pro', name: 'Nintendo Switch Pro Controller', tag: 'HID / Bluetooth' },
+];
+
+const platforms = [
+  { slug: 'pc', name: 'PC (Windows)' },
+  { slug: 'mac', name: 'macOS' },
+  { slug: 'steam-deck', name: 'Steam Deck' },
+];
+
+const breadcrumbs = [{ name: 'Connect & Pair', url: '/connect' }];
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: controllers.flatMap((c, i) =>
+    platforms.map((p, j) => ({
+      '@type': 'ListItem',
+      position: i * platforms.length + j + 1,
+      name: `${c.name} on ${p.name}`,
+      url: `https://controllertesting.com/connect/${c.slug}/${p.slug}`,
+    }))
+  ),
+};
+---
+
+<BaseLayout
+  title="Connect & Pair Controllers — PS5, Xbox, Switch, PS4 on PC, macOS, Steam Deck | ControllerTesting.com"
+  description="Step-by-step connection and pairing guides for PS5 DualSense, PS4 DualShock 4, Xbox Wireless, and Switch Pro controllers on Windows, macOS, and Steam Deck."
+  breadcrumbs={breadcrumbs}
+  schema={itemListSchema}
+>
+  <Header />
+
+  <main id="main-content" class="connect-hub">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="hub-hero">
+        <span class="badge-tag">Connect &amp; Pair</span>
+        <h1 class="hub-title">Connect your controller on any device</h1>
+        <p class="hub-subtitle">
+          Which controller, connected to which platform? Pick a pad below, then pick your PC, Mac, or Steam Deck.
+          Every guide ends with a verification test so you know it actually worked.
+        </p>
+      </header>
+
+      <div class="hub-grid card-base">
+        <div class="hub-row hub-head">
+          <span class="hub-cell">Controller</span>
+          {platforms.map((p) => <span class="hub-cell">{p.name}</span>)}
+        </div>
+        {controllers.map((c) => (
+          <div class="hub-row">
+            <span class="hub-cell hub-name">
+              <strong>{c.name}</strong>
+              <span class="hub-tag">{c.tag}</span>
+            </span>
+            {platforms.map((p) => (
+              <span class="hub-cell"><a class="hub-link" href={`/connect/${c.slug}/${p.slug}`}>Pair {p.name} →</a></span>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <div class="hub-cta card-base">
+        <div>
+          <h2 class="section-title">Already connected? Test the pad</h2>
+          <p class="hub-text">
+            A controller that connects isn't automatically healthy. Run the 2-minute diagnostic after pairing to confirm sticks, buttons, and triggers.
+          </p>
+        </div>
+        <div class="hub-cta-buttons">
+          <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Diagnostic</a>
+          <a href="/test/controller/polling-rate" class="btn-secondary">Polling Rate Check</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .connect-hub { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .hub-hero { margin-bottom: 2.5rem; max-width: 720px; }
+  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
+  .hub-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .hub-grid { padding: 1.5rem; margin-bottom: 2.5rem; overflow-x: auto; }
+  .hub-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 1rem; padding: 0.875rem 0; border-top: 1px solid var(--color-border-subtle); align-items: center; }
+  .hub-row-head { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 1rem; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; color: var(--color-text-tertiary); letter-spacing: 0.06em; text-transform: uppercase; padding-bottom: 0.875rem; }
+  .hub-cell { display: flex; flex-direction: column; gap: 0.25rem; }
+  .hub-name strong { color: var(--color-text-primary); font-size: 1rem; }
+  .hub-tag { font-family: var(--font-mono); font-size: 0.625rem; color: var(--color-text-tertiary); }
+  .hub-link { color: var(--color-accent); font-weight: 600; text-decoration: none; white-space: nowrap; }
+  .hub-link:hover { text-decoration: underline; }
+  .hub-cta { padding: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .hub-cta-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+  .section-title { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
+  @media (max-width: 720px) { .hub-grid { font-size: 0.875rem; } }
+  @media (max-width: 640px) { .hub-cta { flex-direction: column; align-items: flex-start; } }
+</style>

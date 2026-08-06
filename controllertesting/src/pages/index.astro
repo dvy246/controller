@@ -85,8 +85,8 @@ const tools = [
 ];
 
 const stats = [
-  { value: '54', label: 'Free tools', mono: true },
-  { value: '830+', label: 'Indexed pages', mono: true },
+  { value: '35+', label: 'Free tools', mono: true },
+  { value: '220+', label: 'Pages indexed', mono: true },
   { value: '<2s', label: 'Load time', mono: true },
   { value: '0', label: 'Sign-ups needed', mono: true },
 ];
@@ -141,6 +141,8 @@ function getToolIcon(icon: string) {
         SECTION 1: HERO — Asymmetric split (design-taste rule)
         ═══════════════════════════════════════════════════════ */}
     <section class="hero" aria-labelledby="hero-headline">
+      {/* Aurora ambient background — CSS-only, transform-composited (see global.css) */}
+      <div class="hero-aurora" aria-hidden="true"></div>
       <div class="hero-inner">
 
         {/* Left: Content */}
@@ -155,7 +157,7 @@ function getToolIcon(icon: string) {
             <span class="hero-headline-accent">Without the guesswork.</span>
           </h1>
           <p class="hero-subtext">
-            A free gamepad tester for Xbox, PS5, PS4, Switch, and PC. Check drift, buttons, triggers, polling rate, and rumble with zero downloads.
+            Test your whole setup — controller, mouse, and keyboard — in one free suite. Check drift, buttons, triggers, polling rate, CPS, DPI, and rumble with zero downloads.
           </p>
           <div class="hero-ctas">
             <a href="/test/controller/full-diagnostic" class="btn-primary hero-cta-primary">
@@ -208,6 +210,21 @@ function getToolIcon(icon: string) {
         No eyebrow here (section 1 had none, will use one at section 4)
         ═══════════════════════════════════════════════════════ */}
     <section class="stats-section" aria-label="Platform statistics">
+      {/* Telemetry stat card — CSS orbit dot + rAF count-up (progressive, no CLS) */}
+      <div class="stat-featured" data-reveal>
+        <div class="stat-featured-orbit" aria-hidden="true">
+          <span class="stat-featured-orbit-dot"></span>
+        </div>
+        <div class="stat-featured-content">
+          <span class="stat-featured-label">Live hardware telemetry</span>
+          <div class="stat-featured-value">
+            <span class="stat-count-value" id="telemetry-count" data-count="142850">142k+</span>
+            <span class="stat-featured-unit">samples</span>
+          </div>
+          <span class="stat-featured-desc">drift &amp; circularity measurements from real controller tests</span>
+        </div>
+      </div>
+
       <div class="stats-inner">
         {stats.map((stat) => (
           <div class="stat-block" data-reveal>
@@ -289,11 +306,30 @@ function getToolIcon(icon: string) {
 
         <div class="tools-see-all" data-reveal>
           <a href="/test/controller" class="btn-secondary">
-            View all 17 controller tests
+            View all 21 controller tests
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
           <a href="/test/mouse" class="btn-ghost">Mouse tests</a>
           <a href="/test/keyboard" class="btn-ghost">Keyboard tests</a>
+        </div>
+
+        {/* ── Whole-setup band: mouse + keyboard as first-class, not footnotes ── */}
+        <div class="setup-band card-base" data-reveal>
+          <div class="setup-band-head">
+            <span class="badge-tag">Full-Setup Testing</span>
+            <h3 class="setup-band-title">Your mouse and keyboard get the same treatment.</h3>
+            <p class="setup-band-desc">
+              CPS speed, true DPI, 8K polling, click latency, double-click faults, scroll-wheel health —
+              7 mouse tools. Plus a mechanical keyboard sandbox with NKRO matrix verification.
+            </p>
+          </div>
+          <div class="setup-band-links">
+            <a href="/test/mouse/cps" class="btn-secondary">CPS Test</a>
+            <a href="/test/mouse/dpi" class="btn-secondary">DPI Analyzer</a>
+            <a href="/test/mouse/polling-rate" class="btn-secondary">8K Polling Rate</a>
+            <a href="/test/mouse/double-click" class="btn-secondary">Double-Click Fault</a>
+            <a href="/keyboard-tester/full" class="btn-ghost">Keyboard Sandbox</a>
+          </div>
         </div>
       </div>
     </section>
@@ -348,8 +384,8 @@ function getToolIcon(icon: string) {
               <br />Then play with it.
             </h2>
             <p class="games-desc">
-              15 browser games built around your controller inputs. Earn points,
-              unlock achievements, climb the leaderboard. No gaming site has this.
+              5 browser games built around your controller inputs. Earn XP points,
+              level up, build a daily streak. No gaming site has this.
             </p>
             <div class="games-types">
               <div class="games-type">
@@ -371,7 +407,8 @@ function getToolIcon(icon: string) {
             </a>
           </div>
 
-          <div class="games-cards" aria-hidden="true" data-reveal>
+          <div class="games-cards-parallax" data-scroll-parallax aria-hidden="true">
+            <div class="games-cards" aria-hidden="true" data-reveal>
             <div class="game-preview-card">
               <div class="game-preview-top">
                 <span class="game-preview-label">STICK SNIPER</span>
@@ -417,6 +454,7 @@ function getToolIcon(icon: string) {
               </div>
             </div>
           </div>
+            </div>
         </div>
       </div>
     </section>
@@ -487,7 +525,7 @@ function getToolIcon(icon: string) {
               </li>
               <li class="compare-item good">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                15 games, rewards, achievements
+                5 games, XP rewards, daily streaks
               </li>
             </ul>
           </div>
@@ -577,6 +615,44 @@ function getToolIcon(icon: string) {
     );
     els.forEach((el) => io.observe(el));
   })();
+
+  // Telemetry count-up — rAF eased, one-shot, reduced-motion aware.
+  // Static value is already in markup (no CLS / no-JS fallback to 142k+).
+  (function () {
+    const el = document.getElementById('telemetry-count');
+    if (!el) return;
+    if (typeof IntersectionObserver === 'undefined') return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const target = parseInt(el.dataset.count || '0', 10);
+    if (!target) return;
+
+    let rafId: number | null = null;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          io.unobserve(entry.target);
+          const duration = 1400;
+          const start = performance.now();
+          const step = (now: number) => {
+            const p = Math.min(1, (now - start) / duration);
+            const eased = 1 - Math.pow(1 - p, 3);
+            const val = Math.round(target * eased);
+            el.textContent = val < 1000 ? String(val) : `${Math.floor(val / 1000)}k+`;
+            if (p < 1) rafId = requestAnimationFrame(step);
+          };
+          rafId = requestAnimationFrame(step);
+        });
+      },
+      { threshold: 0.4 }
+    );
+    io.observe(el);
+    // Ensure we never leave a running loop if the node unmounts.
+    window.addEventListener('beforeunload', () => {
+      if (rafId) cancelAnimationFrame(rafId);
+    });
+  })();
 </script>
 
 <style>
@@ -623,37 +699,8 @@ function getToolIcon(icon: string) {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    overflow: hidden;
     position: relative;
-    background:
-      radial-gradient(ellipse 65% 80% at 82% 42%, rgba(37, 99, 235, 0.08), transparent 68%),
-      radial-gradient(ellipse 42% 55% at 8% 0%, rgba(255, 255, 255, 0.035), transparent 72%),
-      var(--color-surface-0);
-  }
-
-  /* Ambient background shade — the image stage carries the visual focus. */
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: -20%;
-    right: -10%;
-    width: 60%;
-    height: 80%;
-    background: radial-gradient(ellipse at center, rgba(37, 99, 235, 0.09) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .hero::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.26;
-    background: linear-gradient(115deg, transparent 16%, rgba(255, 255, 255, 0.035) 48%, transparent 72%);
-    transform: translate3d(-12%, 0, 0);
-    animation: hero-shade-pass 14s var(--ease-smooth) infinite alternate;
+    background: var(--color-surface-0);
   }
 
   .hero-inner {
@@ -902,10 +949,6 @@ function getToolIcon(icon: string) {
     to { opacity: 0.34; transform: translate3d(12%, 0, 0); }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .hero::after { animation: none; }
-  }
-
   .compat-label {
     font-size: var(--text-micro);
     font-weight: 700;
@@ -945,6 +988,100 @@ function getToolIcon(icon: string) {
     border-bottom: 1px solid var(--color-border-subtle);
     background: var(--color-surface-1);
     padding: 3rem 1.5rem;
+  }
+
+  /* ── Telemetry stat featured card (orbit dot + count-up) ── */
+  .stat-featured {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    max-width: 1280px;
+    margin: 0 auto 1.5rem;
+    padding: 1.25rem 1.5rem;
+    background:
+      linear-gradient(160deg, var(--color-surface-3) 0%, var(--color-surface-2) 70%);
+    border: 1px solid rgba(37, 99, 235, 0.18);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+  }
+
+  .stat-featured-orbit {
+    position: relative;
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1px solid rgba(37, 99, 235, 0.4);
+    box-shadow: inset 0 0 14px rgba(37, 99, 235, 0.12);
+    animation-name: orbit-spin;
+    animation-duration: 3.2s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    will-change: transform; /* transform-only, compositor thread */
+  }
+
+  .stat-featured-orbit-dot {
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 10px var(--color-accent-glow);
+  }
+
+  .stat-featured-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .stat-featured-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .stat-featured-value {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .stat-count-value {
+    font-family: var(--font-mono);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--color-text-primary);
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-featured-unit {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+
+  .stat-featured-desc {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  /* Orbit spin — transform-only, compositor friendly */
+  @keyframes orbit-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
   }
 
   .stats-inner {
@@ -1234,6 +1371,44 @@ function getToolIcon(icon: string) {
     padding-top: 0.5rem;
   }
 
+  /* ── Whole-setup band (mouse + keyboard as first-class citizens) ── */
+  .setup-band {
+    margin-top: 2rem;
+    padding: 1.75rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .setup-band-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 46ch;
+  }
+
+  .setup-band-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    letter-spacing: -0.02em;
+  }
+
+  .setup-band-desc {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .setup-band-links {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
   /* ════════════════════════════════════════════════
      SECTION 4: JOURNEY
      ════════════════════════════════════════════════ */
@@ -1362,6 +1537,29 @@ function getToolIcon(icon: string) {
   }
 
   /* Game preview cards */
+  /* ── Scroll-driven parallax wrapper ──
+     Pure CSS `animation-timeline: view()`: transforms only, compositor thread.
+     Guarded with @supports + prefers-reduced-motion so unsupported/reduced
+     setups render the tree at rest (no CLS, no invisible content). */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .games-cards-parallax {
+        animation-name: games-cards-drift;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view();
+        animation-range: entry 5% cover 95%;
+        animation-duration: 1ms; /* Firefox requires non-zero duration */
+        will-change: transform;
+      }
+    }
+  }
+
+  @keyframes games-cards-drift {
+    from { transform: translate3d(0, -3%, 0); }
+    to   { transform: translate3d(0, 3%, 0); }
+  }
+
   .games-cards {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1816,5 +2014,14 @@ function getToolIcon(icon: string) {
     .stats-inner { grid-template-columns: 1fr 1fr; }
     .games-types { gap: 1rem; }
     .faq-item summary { font-size: 1rem; }
+  }
+
+  /* ── Reduced motion: halt decorative motion, keep content fully visible ── */
+  @media (prefers-reduced-motion: reduce) {
+    .stat-featured-orbit,
+    .games-cards-parallax {
+      animation: none;
+      will-change: auto;
+    }
   }
 </style>

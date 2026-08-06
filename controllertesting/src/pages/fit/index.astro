@@ -1,0 +1,241 @@
+---
+/**
+ * /fit — Controller Fit Blueprint hub
+ * Interactive hand-to-grip fit analyzer + model directory.
+ * Every dimension on this page traces to src/data/controllerFitData.json.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import FitBlueprint from '../../components/tools/fit/FitBlueprint.astro';
+import { getFitModels } from '../../lib/fit';
+import fitData from '../../data/controllerFitData.json';
+
+const models = Object.entries(getFitModels());
+const measuredCount = models.filter(([, m]) => m.widthMm !== null).length;
+
+const breadcrumbs = [{ name: 'Home', url: '/' }, { name: 'Controller Fit' }];
+
+const faqs = [
+  {
+    q: 'How do I use the Controller Fit Blueprint?',
+    a: 'Match your open hand to the silhouette slider (or use the credit-card reference for a physical calibration), pick your preferred stick layout, and the tool ranks controllers by published body width against your hand span. Recommendations are named picks with reasons — no numeric score.',
+  },
+  {
+    q: 'Which controller dimensions does the fit tool use?',
+    a: `Published manufacturer body dimensions only, for ${measuredCount} models with verified widths. Grip depth, thumb reach, and trigger distance require caliper measurement and are flagged as pending until collected — the tool never invents values.`,
+  },
+  {
+    q: 'What is the best controller for big hands?',
+    a: 'Controllers with deeper grips and a narrower body — the Xbox family (153.3 mm wide) and Switch Pro Controller (156 mm) generally fit large hands better than the wider DualSense (160 mm). Measure your own span with the fit tool for a named pick.',
+  },
+  {
+    q: 'What is the best controller for small hands?',
+    a: 'Compact or light controllers with shorter reach — the HORI Pad Mini is positioned for smaller hands, and lighter models like the DualShock 4 (210 g) reduce fatigue. The fit tool ranks by your actual calibrated span.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<BaseLayout
+  title="Controller Fit Blueprint — Hand-to-Grip Fit Analyzer | ControllerTesting.com"
+  description="Match your hand span against real controller body dimensions and get named, reason-backed picks for the controllers most likely to fit you. No ruler needed, no numeric score."
+  breadcrumbs={breadcrumbs}
+  schema={faqSchema}
+>
+  <Header />
+
+  <main id="main-content" class="fit-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <!-- Hero -->
+      <header class="fit-hero">
+        <span class="badge-tag">Controller Fit Blueprint</span>
+        <h1 class="fit-title">Which controller actually fits your hands?</h1>
+        <p class="fit-subtitle">
+          Every listicle tells you "big hands should try the Xbox controller." This tool shows you why —
+          by comparing your calibrated hand span against the published body width of every model we have
+          measured. No downloads, no numeric score, no affiliate bias: just named picks with reasons you
+          can check.
+        </p>
+        <div class="fit-hero-stats">
+          <div class="fit-stat">
+            <span class="fit-stat-value">{measuredCount}</span>
+            <span class="fit-stat-label">models with verified body widths</span>
+          </div>
+          <div class="fit-stat">
+            <span class="fit-stat-value">2</span>
+            <span class="fit-stat-label">calibration methods (slider / credit card)</span>
+          </div>
+          <div class="fit-stat">
+            <span class="fit-stat-value">0</span>
+            <span class="fit-stat-label">invented dimensions — nulls are labeled pending</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Interactive tool -->
+      <section class="fit-tool-section" aria-labelledby="fit-tool-title">
+        <h2 id="fit-tool-title" class="sr-only">Interactive fit analyzer</h2>
+        <FitBlueprint client:visible />
+      </section>
+
+      <!-- Hand-size guide -->
+      <section class="hand-guide" aria-labelledby="hand-guide-title">
+        <h2 id="hand-guide-title" class="section-title">Hand-size guides</h2>
+        <p class="section-desc">
+          Reference articles computed from the same dataset, for a fixed reference span so the picks are
+          checkable.
+        </p>
+        <div class="hand-grid">
+          <a href="/best-controller-for/small-hands" class="hand-card card-base card-hover">
+            <h3>Best controllers for small hands</h3>
+            <p>Light bodies and short reach — reference span 150 mm.</p>
+            <span class="hand-arrow">Read the guide &rarr;</span>
+          </a>
+          <a href="/best-controller-for/large-hands" class="hand-card card-base card-hover">
+            <h3>Best controllers for large hands</h3>
+            <p>Deep grips and narrow bodies — reference span 205 mm.</p>
+            <span class="hand-arrow">Read the guide &rarr;</span>
+          </a>
+          <a href="/best-controller-for/limited-grip-strength" class="hand-card card-base card-hover">
+            <h3>Best controllers for limited grip strength</h3>
+            <p>Lightweight picks (≤ 250 g) for long sessions and reduced hand fatigue.</p>
+            <span class="hand-arrow">Read the guide &rarr;</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Model directory -->
+      <section class="model-directory" aria-labelledby="model-dir-title">
+        <h2 id="model-dir-title" class="section-title">Model dimension directory</h2>
+        <p class="section-desc">
+          Published body dimensions by model, snapshot {fitData.updatedAt}. "Pending" = caliper measurement
+          still to be collected — we do not estimate.
+        </p>
+        <div class="model-grid">
+          {models.map(([slug, m]) => (
+            <a href={`/fit/${slug}`} class="model-card card-base card-hover">
+              <div class="model-card-top">
+                <h3 class="model-name">{m.name}</h3>
+                {m.widthMm !== null ? (
+                  <span class="model-badge ok">measured</span>
+                ) : (
+                  <span class="model-badge pend">pending</span>
+                )}
+              </div>
+              <div class="model-dims">
+                <div class="model-dim">
+                  <span class="dim-label">Body width</span>
+                  <span class="dim-value">{m.widthMm !== null ? `${m.widthMm} mm` : '—'}</span>
+                </div>
+                <div class="model-dim">
+                  <span class="dim-label">Weight</span>
+                  <span class="dim-value">{m.weightG !== null ? `${m.weightG} g` : '—'}</span>
+                </div>
+                <div class="model-dim">
+                  <span class="dim-label">Stick layout</span>
+                  <span class="dim-value dim-cap">{m.stickLayout}</span>
+                </div>
+              </div>
+              <span class="model-source">{m.source}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="fit-faq" aria-labelledby="fit-faq-title">
+        <h2 id="fit-faq-title" class="section-title">Controller fit questions</h2>
+        <div class="faq-list">
+          {faqs.map((f) => (
+            <div class="faq-item">
+              <h3 class="faq-q">{f.q}</h3>
+              <p class="faq-a">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .fit-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .container-site {
+    width: 100%; max-width: 1100px; margin-inline: auto; padding-inline: 1.5rem;
+    display: flex; flex-direction: column; gap: 3.5rem;
+  }
+  .badge-tag {
+    display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700;
+    text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1);
+    padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+  }
+  .fit-hero { max-width: 76ch; }
+  .fit-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+  .fit-subtitle { font-size: 1.0625rem; color: var(--color-text-secondary); line-height: 1.7; }
+  .fit-hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1rem; margin-top: 1.75rem; }
+  .fit-stat {
+    background: var(--color-surface-2); border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm); padding: 1rem 1.25rem; display: flex; flex-direction: column; gap: 0.25rem;
+  }
+  .fit-stat-value { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 800; color: var(--color-accent); }
+  .fit-stat-label { font-size: 0.6875rem; color: var(--color-text-tertiary); line-height: 1.5; }
+
+  .fit-tool-section { display: flex; flex-direction: column; gap: 1rem; }
+
+  .section-title { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; color: var(--color-text-primary); margin-bottom: 0.5rem; }
+  .section-desc { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; max-width: 64ch; margin-bottom: 1.25rem; }
+
+  .hand-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+  .hand-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.625rem; }
+  .hand-card h3 { font-size: 1.0625rem; font-weight: 800; color: var(--color-text-primary); }
+  .hand-card p { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; }
+  .hand-arrow { font-size: 0.8125rem; font-weight: 600; color: var(--color-accent); }
+
+  .model-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+  .model-card { padding: 1.25rem; display: flex; flex-direction: column; gap: 0.875rem; }
+  .model-card-top { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+  .model-name { font-size: 0.9375rem; font-weight: 800; color: var(--color-text-primary); }
+  .model-badge {
+    font-family: var(--font-mono); font-size: 0.5625rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; padding: 0.15em 0.55em; border-radius: 3px; white-space: nowrap;
+  }
+  .model-badge.ok { color: #10B981; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25); }
+  .model-badge.pend { color: var(--color-text-tertiary); background: var(--color-surface-3); border: 1px solid var(--color-border-subtle); }
+  .model-dims { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+  .model-dim { display: flex; flex-direction: column; gap: 0.15rem; }
+  .dim-label { font-family: var(--font-mono); font-size: 0.5625rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-tertiary); }
+  .dim-value { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 700; color: var(--color-text-primary); }
+  .dim-cap { text-transform: capitalize; }
+  .model-source { font-family: var(--font-mono); font-size: 0.5625rem; color: var(--color-text-tertiary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .fit-faq { display: flex; flex-direction: column; gap: 1rem; }
+  .faq-list { display: flex; flex-direction: column; gap: 1rem; }
+  .faq-item {
+    background: var(--color-surface-2); border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm); padding: 1.25rem 1.5rem;
+  }
+  .faq-q { font-size: 0.9375rem; font-weight: 700; color: var(--color-text-primary); margin-bottom: 0.375rem; }
+  .faq-a { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.65; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+</style>

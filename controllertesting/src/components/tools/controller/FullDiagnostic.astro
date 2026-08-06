@@ -162,11 +162,21 @@
 
 <script>
   import { parseGamepadState } from '../../../lib/gamepad';
+  import { addPoints } from '../../../lib/rewards';
+
+  let rewarded = false;
 
   document.addEventListener('DOMContentLoaded', () => {
     let currentStep = 1;
 
+    function awardCompletion(): void {
+      if (rewarded) return;
+      rewarded = true;
+      addPoints(50);
+    }
+
     function showStep(step: number) {
+      if (step === 5) awardCompletion();
       currentStep = step;
 
       // Update step nav headers

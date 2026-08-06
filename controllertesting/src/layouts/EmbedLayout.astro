@@ -12,7 +12,8 @@ interface Props {
 }
 
 const { title, toolSlug } = Astro.props;
-const canonicalUrl = `https://controllertesting.com/embed/${toolSlug}`;
+const cleanPath = Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '');
+const canonicalUrl = `https://controllertesting.com${cleanPath}`;
 ---
 
 <!DOCTYPE html>

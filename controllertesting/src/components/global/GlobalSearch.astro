@@ -1,7 +1,7 @@
 ---
 /**
  * GlobalSearch.astro — Cmd+K Instant Site-Wide Search Modal
- * Indexes 32 diagnostic tools, 15 arcade games, embed widgets, repair guides, and warranty tools.
+ * Indexes 32 diagnostic tools, 5 arcade games, embed widgets, repair guides, and warranty tools.
  * Accessible keyboard navigation (Up/Down/Enter/Esc), ARIA labels, zero-layout-shift modal overlay.
  */
 
@@ -52,9 +52,28 @@ const searchItems = [
   { title: 'Embeddable Widgets Hub', category: 'Widgets & Embeds', url: '/embeds', desc: 'Free <iframe> widget code snippets for website owners' },
   { title: 'Stick Drift Embed Widget', category: 'Widgets & Embeds', url: '/embed/drift', desc: 'Embeddable stick drift visualizer widget' },
   { title: 'Polling Rate Embed Widget', category: 'Widgets & Embeds', url: '/embed/polling', desc: 'Embeddable polling rate Hz widget' },
+  { title: 'Full Gamepad Embed Widget', category: 'Widgets & Embeds', url: '/embed/gamepad', desc: 'Embeddable 5-step full diagnostic wizard' },
+  { title: 'Health Score Embed Widget', category: 'Widgets & Embeds', url: '/embed/health', desc: 'Embeddable 0–100 health score generator' },
+  { title: 'Button Tester Embed Widget', category: 'Widgets & Embeds', url: '/embed/buttons', desc: 'Embeddable face button matrix tester' },
+  { title: 'Trigger Pressure Embed Widget', category: 'Widgets & Embeds', url: '/embed/triggers', desc: 'Embeddable L2/R2 pressure curve tester' },
+  { title: 'Vibration Embed Widget', category: 'Widgets & Embeds', url: '/embed/vibration', desc: 'Embeddable dual rumble motor tester' },
+  { title: 'Circularity Embed Widget', category: 'Widgets & Embeds', url: '/embed/circularity', desc: 'Embeddable 360° stick range tester' },
+  { title: 'Deadzone Embed Widget', category: 'Widgets & Embeds', url: '/embed/deadzone', desc: 'Embeddable deadzone threshold visualizer' },
+  { title: 'D-Pad Embed Widget', category: 'Widgets & Embeds', url: '/embed/dpad', desc: 'Embeddable 8-way D-pad precision tester' },
+  { title: 'Latency Embed Widget', category: 'Widgets & Embeds', url: '/embed/latency', desc: 'Embeddable input latency estimator' },
+  { title: 'Gyroscope Embed Widget', category: 'Widgets & Embeds', url: '/embed/gyroscope', desc: 'Embeddable 3-axis motion sensor tester' },
+  { title: 'Touchpad Embed Widget', category: 'Widgets & Embeds', url: '/embed/touchpad', desc: 'Embeddable PS5 touchpad tester' },
+  { title: 'Microphone Embed Widget', category: 'Widgets & Embeds', url: '/embed/microphone', desc: 'Embeddable mic + headset audio meter' },
+  { title: 'Mouse Scroll Embed Widget', category: 'Widgets & Embeds', url: '/embed/scroll', desc: 'Embeddable mouse scroll wheel tester (mouse widget)' },
 
   // Decision & Guides
   { title: 'Warranty Assistant', category: 'Decision Tools', url: '/warranty', desc: 'Check RMA claim eligibility & generate reports' },
+  { title: 'Reliability Dashboard', category: 'Decision Tools', url: '/reliability/dashboard', desc: '142,850-result aggregate drift & circularity dashboard' },
+  { title: 'Reliability Data Hub', category: 'Decision Tools', url: '/reliability', desc: 'Stick drift baselines by controller model' },
+  { title: 'Controller Fit Blueprint', category: 'Decision Tools', url: '/fit', desc: 'Hand-to-grip fit analyzer with named picks' },
+  { title: 'Best Controllers for Small Hands', category: 'Decision Tools', url: '/best-controller-for/small-hands', desc: 'Computed picks for a 150 mm reference span' },
+  { title: 'Best Controllers for Large Hands', category: 'Decision Tools', url: '/best-controller-for/large-hands', desc: 'Computed picks for a 205 mm reference span' },
+  { title: 'Best Controllers for Limited Grip Strength', category: 'Decision Tools', url: '/best-controller-for/limited-grip-strength', desc: 'Lightweight picks ranked by published weight' },
   { title: 'Fix vs Replace Calculator', category: 'Decision Tools', url: '/fix-or-replace', desc: 'Weigh repair cost vs replacement price' },
   { title: 'PS5 DualSense Repair Guide', category: 'Repair Guides', url: '/fix/stick-drift/ps5-dualsense', desc: 'Step-by-step stick drift repair guide' },
   { title: 'PS5 DualSense Hardware Profile', category: 'Hardware Profiles', url: '/controller/ps5-dualsense', desc: 'Teardown specs, latency & polling rate' },
