@@ -153,11 +153,10 @@ function getToolIcon(icon: string) {
             <span class="hero-kicker-meta">Browser / ready</span>
           </div>
           <h1 id="hero-headline" class="hero-headline">
-            Diagnose stick drift.
-            <span class="hero-headline-accent">Before you lose another match.</span>
+            Diagnose stick drift <span class="hero-headline-accent">before you lose.</span>
           </h1>
           <p class="hero-subtext">
-            Don't let hardware faults hold you back. Test your controller, mouse, and keyboard instantly to catch drift, latency, and button failures before your warranty expires.
+            Test your controller, mouse, and keyboard instantly. Catch drift, latency, and button failures before your warranty expires.
           </p>
           <div class="hero-ctas">
             <a href="/test/controller/full-diagnostic" class="btn-primary hero-cta-primary">
@@ -770,19 +769,7 @@ function getToolIcon(icon: string) {
   }
 
   .hero-headline-accent {
-    display: block;
-    color: var(--color-text-primary);
-  }
-
-  .hero-headline-accent::before {
-    content: '';
-    display: inline-block;
-    width: 0.45em;
-    height: 0.1em;
-    margin: 0 0.18em 0.14em 0;
-    border-radius: 99px;
-    background: var(--color-accent);
-    box-shadow: 0 0 18px rgba(37, 99, 235, 0.4);
+    color: var(--color-accent);
   }
 
   .hero-subtext {
