@@ -1,0 +1,146 @@
+---
+/**
+ * /test/controller/nintendo-switch — Nintendo Switch Controller Tester
+ * SEO Title: Nintendo Switch Controller Tester & Joy-Con Drift Repair Guide
+ * Target keyword: nintendo switch controller, nintendo switch controller repair
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import DriftTester from '../../../components/tools/controller/DriftTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Nintendo Switch Tester' },
+];
+
+const faqs = [
+  {
+    question: 'How do I connect my Nintendo Switch controller to PC or Mac?',
+    answer: 'For Joy-Cons, press and hold the small sync button on the rail until the lights flash, then pair via Bluetooth on your PC/Mac. For the Pro Controller, use a USB-C cable or hold the sync button on top to pair via Bluetooth.',
+  },
+  {
+    question: 'What is Joy-Con drift?',
+    answer: 'Joy-Con drift is a hardware defect where the analog stick registers movement even when you aren\'t touching it. It is caused by the carbon pads wearing down inside the potentiometer module over time.',
+  },
+  {
+    question: 'How can I fix Joy-Con drift permanently?',
+    answer: 'The only permanent fix is replacing the stock analog sticks with Hall-effect joystick modules. Hall-effect sensors use magnets instead of physical contacts, completely eliminating wear and tear that causes drift.',
+  },
+];
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Nintendo Switch Controller Tester",
+      "operatingSystem": "Web Browser",
+      "applicationCategory": "UtilitiesApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Free online diagnostic tool to test Nintendo Switch Joy-Cons and Pro Controllers for stick drift, latency, and button faults."
+    },
+    {
+      "@type": "HowTo",
+      "name": "How to Fix Nintendo Switch Controller Drift",
+      "description": "A step-by-step guide to diagnosing and fixing Joy-Con stick drift.",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "name": "Diagnose the Drift",
+          "text": "Connect your Joy-Con or Pro Controller to your PC via Bluetooth and use the ControllerTesting.com Nintendo Switch Tester. If the drift percentage is above 5% without touching the stick, you have hardware drift."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Clean with Contact Cleaner (Temporary Fix)",
+          "text": "Lift the rubber skirt under the analog stick with a toothpick and spray a small amount of electronic contact cleaner (or 99% isopropyl alcohol) inside. Rotate the stick to distribute the liquid, then let it dry."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Replace the Joystick Module (Permanent Fix)",
+          "text": "Open the controller using a Tri-wing screwdriver. Disconnect the ribbon cables, remove the faulty joystick, and install a new Hall-effect replacement joystick. This completely eliminates future drift."
+        }
+      ]
+    }
+  ]
+};
+---
+
+<ToolLayout
+  title="Nintendo Switch Controller Tester & Joy-Con Drift Repair Guide"
+  description="Test your Nintendo Switch Pro Controller and Joy-Cons for stick drift instantly in your browser. Plus, a complete guide on how to fix Joy-Con drift permanently."
+  toolName="Nintendo Switch Tester"
+  category="Nintendo Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+  </Fragment>
+
+  {/* ── Tool Interactive Island ── */}
+  <Fragment slot="tool">
+    <DriftTester />
+  </Fragment>
+
+  {/* ── Results Slot ── */}
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Joy-Con & Pro Controller Diagnostics</h2>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">0.0% – 2.0% (Healthy)</strong>
+          <p class="legend-text">Normal variance. Your controller is operating flawlessly.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">2.1% – 10.0% (Minor Drift)</strong>
+          <p class="legend-text">Slight potentiometer wear detected. Consider cleaning with isopropyl alcohol.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">> 10.0% (Severe Drift)</strong>
+          <p class="legend-text">Classic Joy-Con drift. Module replacement or warranty repair is highly recommended.</p>
+        </div>
+      </div>
+    </div>
+  </Fragment>
+
+  {/* ── SEO Repair Guide Section ── */}
+  <Fragment slot="export">
+    <div class="repair-guide" style="margin-top: 3rem; background: var(--color-surface-2); padding: 2rem; border-radius: var(--radius-card); border: 1px solid var(--color-border-subtle);">
+      <h2 style="margin-bottom: 1rem; font-size: 1.5rem; color: var(--color-text-primary);">Nintendo Switch Controller Repair Guide</h2>
+      <p style="margin-bottom: 1.5rem; color: var(--color-text-secondary); line-height: 1.6;">Joy-Con drift is the most common issue facing Nintendo Switch owners. Here is our recommended process for fixing it.</p>
+      
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div>
+          <h3 style="color: var(--color-accent); margin-bottom: 0.5rem;">Step 1: Diagnose the Severity</h3>
+          <p style="color: var(--color-text-secondary); line-height: 1.6;">Use the tester above. If your drift is under 10%, you can likely fix it without opening the shell.</p>
+        </div>
+        <div>
+          <h3 style="color: var(--color-accent); margin-bottom: 0.5rem;">Step 2: The Contact Cleaner Method (Temporary)</h3>
+          <p style="color: var(--color-text-secondary); line-height: 1.6;">Carefully lift the rubber skirt at the base of the thumbstick using tweezers. Spray a quick burst of fast-drying electronic contact cleaner. Rotate the stick vigorously for 30 seconds and let it dry for 5 minutes. Retest above.</p>
+        </div>
+        <div>
+          <h3 style="color: var(--color-accent); margin-bottom: 0.5rem;">Step 3: Hall-Effect Replacement (Permanent)</h3>
+          <p style="color: var(--color-text-secondary); line-height: 1.6;">If cleaning fails, the carbon track is destroyed. Purchase a Hall-effect replacement kit. You will need a Tri-wing screwdriver. Follow an iFixit teardown, carefully detach the ribbon cables, and swap the module. Hall-effect sticks use magnets, making them immune to physical drift.</p>
+        </div>
+      </div>
+    </div>
+  </Fragment>
+
+  {/* ── Related Tools Slot ── */}
+  <Fragment slot="related-tools">
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Universal Stick Drift Test</h3>
+      <p class="tool-desc">Test any controller across all major platforms.</p>
+    </a>
+    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Button Tester</h3>
+      <p class="tool-desc">Check for sticky or failing face buttons and triggers.</p>
+    </a>
+  </Fragment>
+</ToolLayout>

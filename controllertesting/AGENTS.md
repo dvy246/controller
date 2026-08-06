@@ -54,24 +54,25 @@ This document serves as the absolute source of truth for all AI agents, software
 2.  **Full Diagnostic Wizard** (`/test/controller/full-diagnostic`) — 5-step hardware checkup wizard (`FullDiagnostic.astro`).
 3.  **Controller Health Score™** (`/test/controller/health-score`) — 0-100 grade & printable PDF report card (`HealthScore.astro`).
 4.  **PS Controller WebHID Calibration** (`/test/controller/ps-calibration`) — Low-level WebHID zero-point sampling & firmware save (`PSCalibration.astro`).
-5.  **Steering Wheel & Pedals** (`/test/controller/steering-wheel`) — 900°/1080° rotation disc & Throttle/Brake/Clutch linearity (`SteeringWheelTester.astro`).
-6.  **Fight Stick & Hitbox** (`/test/controller/fight-stick`) — Vewlix 8-button layout & Capcom SOCD cleaner rule check (`FightStickTester.astro`).
-7.  **Flight Stick & HOTAS** (`/test/controller/flight-stick`) — Pitch/roll/yaw, 128+ buttons & throttle quadrant (`FlightStickTester.astro`).
-8.  **MIDI Keyboard & Controller** (`/test/midi`) — Web MIDI API note events, velocity (0-127) & CC messages (`MIDITester.astro`).
-9.  **Button Tester** (`/test/controller/buttons`) — Interactive face button matrix & ghosting detector (`ButtonTester.astro`).
-10. **Trigger Pressure Tester** (`/test/controller/triggers`) — Analog L2/R2 pressure curve analyzer (`TriggerTester.astro`).
-11. **Vibration Tester** (`/test/controller/vibration`) — Dual haptic rumble motor pulse tester (`VibrationTester.astro`).
-12. **Circularity Test** (`/test/controller/circularity`) — 360-degree stick range of motion & error (`CircularityTester.astro`).
-13. **Deadzone Visualizer** (`/test/controller/deadzone`) — Inner & outer deadzone threshold tuning (`DeadzoneTester.astro`).
-14. **Polling Rate Checker** (`/test/controller/polling-rate`) — Real-time Hz input report frequency (`PollingRateTester.astro`).
-15. **8-Way D-Pad Tester** (`/test/controller/dpad`) — Directional pad diagonal precision (`DpadTester.astro`).
-16. **Latency Estimator** (`/test/controller/latency`) — Input delay & reaction speed timer (`LatencyTester.astro`).
-17. **Multi-Controller Tester** (`/test/controller/multi`) — 4 gamepads simultaneous diagnostic (`MultiController.astro`).
-18. **Drift Timeline Tracker** (`/test/controller/timeline`) — LocalStorage hardware degradation tracker (`DriftTimeline.astro`).
-19. **Gyroscope Tester** (`/test/controller/gyroscope`) — 3-axis motion sensor calibration (`GyroscopeTester.astro`).
-20. **Touchpad Tester** (`/test/controller/touchpad`) — PS5 DualSense multi-touch trackpad (`TouchpadTester.astro`).
-21. **Microphone Tester** (`/test/controller/microphone`) — Built-in mic & 3.5mm headset audio meter (`MicrophoneTester.astro`).
-22. **Competitive Readiness** (`/test/controller/competitive-readiness`) — Esports tournament benchmark assessor (`CompetitiveReadiness.astro`).
+5.  **Nintendo Switch Tester & Repair Guide** (`/test/controller/nintendo-switch`) — Joy-Con drift tester and Hall-effect replacement guide.
+6.  **Steering Wheel & Pedals** (`/test/controller/steering-wheel`) — 900°/1080° rotation disc & Throttle/Brake/Clutch linearity (`SteeringWheelTester.astro`).
+7.  **Fight Stick & Hitbox** (`/test/controller/fight-stick`) — Vewlix 8-button layout & Capcom SOCD cleaner rule check (`FightStickTester.astro`).
+8.  **Flight Stick & HOTAS** (`/test/controller/flight-stick`) — Pitch/roll/yaw, 128+ buttons & throttle quadrant (`FlightStickTester.astro`).
+9.  **MIDI Keyboard & Controller** (`/test/midi`) — Web MIDI API note events, velocity (0-127) & CC messages (`MIDITester.astro`).
+10. **Button Tester** (`/test/controller/buttons`) — Interactive face button matrix & ghosting detector (`ButtonTester.astro`).
+11. **Trigger Pressure Tester** (`/test/controller/triggers`) — Analog L2/R2 pressure curve analyzer (`TriggerTester.astro`).
+12. **Vibration Tester** (`/test/controller/vibration`) — Dual haptic rumble motor pulse tester (`VibrationTester.astro`).
+13. **Circularity Test** (`/test/controller/circularity`) — 360-degree stick range of motion & error (`CircularityTester.astro`).
+14. **Deadzone Visualizer** (`/test/controller/deadzone`) — Inner & outer deadzone threshold tuning (`DeadzoneTester.astro`).
+15. **Polling Rate Checker** (`/test/controller/polling-rate`) — Real-time Hz input report frequency (`PollingRateTester.astro`).
+16. **8-Way D-Pad Tester** (`/test/controller/dpad`) — Directional pad diagonal precision (`DpadTester.astro`).
+17. **Latency Estimator** (`/test/controller/latency`) — Input delay & reaction speed timer (`LatencyTester.astro`).
+18. **Multi-Controller Tester** (`/test/controller/multi`) — 4 gamepads simultaneous diagnostic (`MultiController.astro`).
+19. **Drift Timeline Tracker** (`/test/controller/timeline`) — LocalStorage hardware degradation tracker (`DriftTimeline.astro`).
+20. **Gyroscope Tester** (`/test/controller/gyroscope`) — 3-axis motion sensor calibration (`GyroscopeTester.astro`).
+21. **Touchpad Tester** (`/test/controller/touchpad`) — PS5 DualSense multi-touch trackpad (`TouchpadTester.astro`).
+22. **Microphone Tester** (`/test/controller/microphone`) — Built-in mic & 3.5mm headset audio meter (`MicrophoneTester.astro`).
+23. **Competitive Readiness** (`/test/controller/competitive-readiness`) — Esports tournament benchmark assessor (`CompetitiveReadiness.astro`).
 
 ### Mouse Suite (10 Tools)
 1.  **CPS Test** (`/test/mouse/cps`) — Clicks per second speed tester (`CPSTester.astro`).
