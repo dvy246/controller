@@ -40,18 +40,15 @@ const { isRigid = false } = Astro.props;
       <span id="button-press-text" class="text-stone-900 dark:text-white font-bold tracking-widest uppercase font-mono text-[11px] sm:text-xs">No Input</span>
     </div>
 
-    <!-- Awaiting Connection Overlay -->
-    <div id="awaiting-connection-overlay" class="absolute inset-0 z-40 flex flex-col items-center justify-center p-6 pointer-events-none transition-opacity duration-500 opacity-100">
-      <div class="doppelrand-shell p-[0.375rem] rounded-full bg-blue-500/10 shadow-[0_0_40px_rgba(37,99,235,0.25)] animate-pulse mb-6">
-        <div class="doppelrand-core bg-surface-1/90 backdrop-blur-md border border-blue-500/30 rounded-full px-6 py-3 flex items-center gap-3 shadow-xl">
-          <div class="relative w-3 h-3 flex items-center justify-center">
-            <span class="absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75 animate-ping"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-          </div>
-          <span class="text-stone-900 dark:text-white font-bold text-sm tracking-wide">Waiting for Controller...</span>
+    <!-- Awaiting Connection Overlay (Sleek Floating Top-Left Status Pill) -->
+    <div id="awaiting-connection-overlay" class="absolute top-4 left-4 z-40 flex items-center gap-2 pointer-events-none transition-opacity duration-500 opacity-100">
+      <div class="bg-surface-0/90 dark:bg-surface-1/90 backdrop-blur-md border border-blue-500/30 rounded-full px-3.5 py-1.5 flex items-center gap-2.5 shadow-lg">
+        <div class="relative w-2.5 h-2.5 flex items-center justify-center">
+          <span class="absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75 animate-ping"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
         </div>
+        <span class="text-stone-900 dark:text-white font-bold text-xs tracking-wide font-mono">Awaiting Input...</span>
       </div>
-      <p class="text-stone-500 dark:text-stone-400 text-xs max-w-sm text-center font-mono bg-surface-1/80 backdrop-blur-md px-4 py-2 rounded-full border border-surface-3 shadow-md">Connect your DualSense or tap any button on screen</p>
     </div>
 
     <!-- Hardware Mismatch Error Overlay -->
@@ -71,7 +68,7 @@ const { isRigid = false } = Astro.props;
 
     <!-- 2D High-Definition SVG Controller Vector -->
     <div class="svg-container flex items-center justify-center w-full h-full p-2 sm:p-6 select-none">
-      <svg id="ps5-svg" viewBox="0 0 800 600" class="w-full max-w-[640px] max-h-[480px] select-none transition-transform duration-300 drop-shadow-2xl" xmlns="http://www.w3.org/2000/svg">
+      <svg id="ps5-svg" viewBox="0 0 800 520" class="w-full max-w-[620px] max-h-[440px] select-none transition-transform duration-300 drop-shadow-2xl" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <!-- Vivid High-Luminance Neon Glow Filters -->
           <filter id="glow-cross" x="-100%" y="-100%" width="300%" height="300%">
@@ -115,47 +112,47 @@ const { isRigid = false } = Astro.props;
           </linearGradient>
         </defs>
 
-        <!-- 1. Top Triggers & Bumpers -->
+        <!-- 1. Sleek Top Triggers & Bumpers (Symmetrical Shoulder Tabs) -->
         <g id="group-shoulders">
           <!-- L2 Trigger (Btn 6) -->
-          <path id="btn-l2" data-btn="6" d="M 215,85 C 220,40 260,30 285,38 L 275,115 C 245,110 220,102 215,85 Z" class="button-path cursor-pointer fill-stone-700 dark:fill-stone-800 stroke-stone-600 dark:stroke-stone-700 transition-all duration-100" stroke-width="2" />
+          <path id="btn-l2" data-btn="6" d="M 230,55 C 240,25 270,20 295,25 L 285,75 C 260,72 235,68 230,55 Z" class="button-path cursor-pointer fill-stone-700 dark:fill-stone-800 stroke-stone-600 dark:stroke-stone-700 transition-all duration-100" stroke-width="2" />
           <!-- R2 Trigger (Btn 7) -->
-          <path id="btn-r2" data-btn="7" d="M 585,85 C 580,40 540,30 515,38 L 525,115 C 555,110 580,102 585,85 Z" class="button-path cursor-pointer fill-stone-700 dark:fill-stone-800 stroke-stone-600 dark:stroke-stone-700 transition-all duration-100" stroke-width="2" />
+          <path id="btn-r2" data-btn="7" d="M 570,55 C 560,25 530,20 505,25 L 515,75 C 540,72 565,68 570,55 Z" class="button-path cursor-pointer fill-stone-700 dark:fill-stone-800 stroke-stone-600 dark:stroke-stone-700 transition-all duration-100" stroke-width="2" />
           
           <!-- L1 Bumper (Btn 4) -->
-          <path id="btn-l1" data-btn="4" d="M 205,108 C 210,95 255,88 285,95 L 280,128 C 245,122 210,122 205,108 Z" class="button-path cursor-pointer fill-stone-800 dark:fill-stone-900 stroke-stone-600 transition-all duration-100" stroke-width="2" />
+          <path id="btn-l1" data-btn="4" d="M 220,72 C 225,60 265,55 295,60 L 290,92 C 255,88 225,88 220,72 Z" class="button-path cursor-pointer fill-stone-800 dark:fill-stone-900 stroke-stone-600 transition-all duration-100" stroke-width="2" />
           <!-- R1 Bumper (Btn 5) -->
-          <path id="btn-r1" data-btn="5" d="M 595,108 C 590,95 545,88 515,95 L 520,128 C 555,122 590,122 595,108 Z" class="button-path cursor-pointer fill-stone-800 dark:fill-stone-900 stroke-stone-600 transition-all duration-100" stroke-width="2" />
+          <path id="btn-r1" data-btn="5" d="M 580,72 C 575,60 535,55 505,60 L 510,92 C 545,88 575,88 580,72 Z" class="button-path cursor-pointer fill-stone-800 dark:fill-stone-900 stroke-stone-600 transition-all duration-100" stroke-width="2" />
           
-          <text x="242" y="114" class="fill-stone-300 font-mono font-bold text-[12px] pointer-events-none select-none">L1</text>
-          <text x="548" y="114" class="fill-stone-300 font-mono font-bold text-[12px] pointer-events-none select-none">R1</text>
+          <text x="254" y="78" class="fill-stone-300 font-mono font-bold text-[11px] pointer-events-none select-none">L1</text>
+          <text x="536" y="78" class="fill-stone-300 font-mono font-bold text-[11px] pointer-events-none select-none">R1</text>
         </g>
 
-        <!-- 2. Authentic DualSense Main Body Contour -->
+        <!-- 2. Authentic DualSense Main Body Contour (Sleek Ergonomic Proportions) -->
         <g id="dualsense-body">
           <!-- Main White/Dark Ergonomic Outer Contour Shell -->
-          <path d="M 270,120 
-                   C 350,115 450,115 530,120 
-                   C 570,125 615,145 640,190 
-                   C 675,255 700,380 710,480 
-                   C 715,525 680,555 640,550 
-                   C 600,545 565,470 545,400 
-                   C 515,380 460,385 400,385 
-                   C 340,385 285,380 255,400 
-                   C 235,470 200,545 160,550 
-                   C 120,555 85,525 90,480 
-                   C 100,380 125,255 160,190 
-                   C 185,145 230,125 270,120 Z" 
+          <path d="M 280,85 
+                   C 350,80 450,80 520,85 
+                   C 560,90 605,110 628,150 
+                   C 655,205 675,310 685,400 
+                   C 690,445 658,472 622,468 
+                   C 585,462 550,395 532,335 
+                   C 505,320 455,325 400,325 
+                   C 345,325 295,320 268,335 
+                   C 250,395 215,462 178,468 
+                   C 142,472 110,445 115,400 
+                   C 125,310 145,205 172,150 
+                   C 195,110 240,90 280,85 Z" 
                 class="controller-shell stroke-stone-300 dark:stroke-stone-700/60" 
                 stroke-width="3" />
           
           <!-- Inner Black Accent Bridge -->
-          <path d="M 285,230 
-                   C 345,240 455,240 515,230 
-                   C 530,285 545,395 545,395 
-                   C 515,380 460,385 400,385 
-                   C 340,385 285,380 255,395 
-                   C 255,395 270,285 285,230 Z" 
+          <path d="M 292,190 
+                   C 345,200 455,200 508,190 
+                   C 520,240 532,340 532,340 
+                   C 505,325 455,330 400,330 
+                   C 345,330 295,325 268,340 
+                   C 268,340 280,240 292,190 Z" 
                 fill="url(#black-mid-grad)" 
                 class="stroke-stone-800" 
                 stroke-width="2" />
@@ -164,82 +161,82 @@ const { isRigid = false } = Astro.props;
         <!-- 3. DualSense Touchpad & Blue Lightbar -->
         <g id="touchpad-group" class="cursor-pointer" data-btn="17">
           <!-- Lightbar LED Border Line -->
-          <path id="ps-lightbar" d="M 292,135 L 508,135 L 498,245 L 302,245 Z" class="lightbar-glow fill-transparent stroke-blue-500/40 pointer-events-none" stroke-width="4" />
+          <path id="ps-lightbar" d="M 292,95 L 508,95 L 498,195 L 302,195 Z" class="lightbar-glow fill-transparent stroke-blue-500/40 pointer-events-none" stroke-width="4" />
           
           <!-- Touchpad Surface (Btn 17) -->
-          <rect id="btn-touchpad" data-btn="17" x="298" y="140" width="204" height="102" rx="10" class="button-path touchpad-surface stroke-stone-300 dark:stroke-stone-700 fill-stone-100 dark:fill-stone-900 transition-all duration-150 cursor-pointer" stroke-width="1.5" />
-          <text x="366" y="196" class="fill-stone-400 dark:fill-stone-500 font-mono font-semibold text-[11px] tracking-widest pointer-events-none select-none">TOUCHPAD</text>
+          <rect id="btn-touchpad" data-btn="17" x="298" y="100" width="204" height="92" rx="10" class="button-path touchpad-surface stroke-stone-300 dark:stroke-stone-700 fill-stone-100 dark:fill-stone-900 transition-all duration-150 cursor-pointer" stroke-width="1.5" />
+          <text x="366" y="152" class="fill-stone-400 dark:fill-stone-500 font-mono font-semibold text-[11px] tracking-widest pointer-events-none select-none">TOUCHPAD</text>
         </g>
 
         <!-- 4. D-PAD (Directional Buttons) -->
-        <g id="group-dpad" transform="translate(200, 245)">
-          <circle cx="0" cy="0" r="54" class="fill-stone-200 dark:fill-stone-950 stroke-stone-300 dark:stroke-stone-800 pointer-events-none" stroke-width="1.5" />
+        <g id="group-dpad" transform="translate(200, 205)">
+          <circle cx="0" cy="0" r="52" class="fill-stone-200 dark:fill-stone-950 stroke-stone-300 dark:stroke-stone-800 pointer-events-none" stroke-width="1.5" />
           
           <!-- Up (Btn 12) -->
-          <path id="btn-dpad-up" data-btn="12" d="M -14,-16 L 14,-16 L 14,-46 C 14,-50 8,-54 0,-54 C -8,-54 -14,-50 -14,-46 Z" class="dpad-btn button-path cursor-pointer" />
+          <path id="btn-dpad-up" data-btn="12" d="M -14,-16 L 14,-16 L 14,-44 C 14,-48 8,-52 0,-52 C -8,-52 -14,-48 -14,-44 Z" class="dpad-btn button-path cursor-pointer" />
           <!-- Down (Btn 13) -->
-          <path id="btn-dpad-down" data-btn="13" d="M -14,16 L 14,16 L 14,46 C 14,50 8,54 0,54 C -8,54 -14,50 -14,46 Z" class="dpad-btn button-path cursor-pointer" />
+          <path id="btn-dpad-down" data-btn="13" d="M -14,16 L 14,16 L 14,44 C 14,48 8,52 0,52 C -8,52 -14,48 -14,44 Z" class="dpad-btn button-path cursor-pointer" />
           <!-- Left (Btn 14) -->
-          <path id="btn-dpad-left" data-btn="14" d="M -16,-14 L -16,14 L -46,14 C -50,14 -54,8 -54,0 C -54,-8 -50,-14 -46,-14 Z" class="dpad-btn button-path cursor-pointer" />
+          <path id="btn-dpad-left" data-btn="14" d="M -16,-14 L -16,14 L -44,14 C -48,14 -52,8 -52,0 C -52,-8 -48,-14 -44,-14 Z" class="dpad-btn button-path cursor-pointer" />
           <!-- Right (Btn 15) -->
-          <path id="btn-dpad-right" data-btn="15" d="M 16,-14 L 16,14 L 46,14 C 50,14 54,8 54,0 C 54,-8 50,-14 46,-14 Z" class="dpad-btn button-path cursor-pointer" />
+          <path id="btn-dpad-right" data-btn="15" d="M 16,-14 L 16,14 L 44,14 C 48,14 52,8 52,0 C 52,-8 48,-14 44,-14 Z" class="dpad-btn button-path cursor-pointer" />
           
           <!-- Directional Arrow Icons -->
-          <path d="M 0,-40 L -6,-28 L 6,-28 Z" class="fill-stone-500 dark:fill-stone-400 pointer-events-none" />
-          <path d="M 0,40 L -6,28 L 6,28 Z" class="fill-stone-500 dark:fill-stone-400 pointer-events-none" />
-          <path d="M -40,0 L -28,-6 L -28,6 Z" class="fill-stone-500 dark:fill-stone-400 pointer-events-none" />
-          <path d="M 40,0 L 28,-6 L 28,6 Z" class="fill-stone-500 dark:fill-stone-400 pointer-events-none" />
+          <path d="M 0,-38 L -6,-26 L 6,-26 Z" class="fill-stone-500 dark:fill-stone-400 pointer-events-none" />
+          <path d="M 0,38 L -6,26 L 6,26 Z" class="fill-stone-500 dark:fill-stone-400 pointer-events-none" />
+          <path d="M -38,0 L -26,-6 L -26,6 Z" class="fill-stone-500 dark:fill-stone-400 pointer-events-none" />
+          <path d="M 38,0 L 26,-6 L 26,6 Z" class="fill-stone-500 dark:fill-stone-400 pointer-events-none" />
         </g>
 
         <!-- 5. Action Face Buttons (Vibrant PlayStation Glyphs) -->
-        <g id="group-action-buttons" transform="translate(600, 245)">
+        <g id="group-action-buttons" transform="translate(600, 205)">
           <!-- Base Bezel -->
-          <circle cx="0" cy="0" r="54" class="fill-stone-200 dark:fill-stone-950 stroke-stone-300 dark:stroke-stone-800 pointer-events-none" stroke-width="1.5" />
+          <circle cx="0" cy="0" r="52" class="fill-stone-200 dark:fill-stone-950 stroke-stone-300 dark:stroke-stone-800 pointer-events-none" stroke-width="1.5" />
           
           <!-- Triangle (Top - Btn 3) -->
           <g id="btn-triangle" data-btn="3" class="action-btn cursor-pointer">
-            <circle cx="0" cy="-34" r="16" class="button-path fill-stone-100 dark:fill-stone-900 stroke-stone-300 dark:stroke-stone-700" stroke-width="2" />
-            <path d="M 0,-42 L -7,-29 L 7,-29 Z" fill="none" stroke="#00ff88" stroke-width="3" stroke-linejoin="round" class="pointer-events-none" />
+            <circle cx="0" cy="-32" r="15" class="button-path fill-stone-100 dark:fill-stone-900 stroke-stone-300 dark:stroke-stone-700" stroke-width="2" />
+            <path d="M 0,-40 L -6,-27 L 6,-27 Z" fill="none" stroke="#00ff88" stroke-width="3" stroke-linejoin="round" class="pointer-events-none" />
           </g>
 
           <!-- Circle (Right - Btn 1) -->
           <g id="btn-circle" data-btn="1" class="action-btn cursor-pointer">
-            <circle cx="34" cy="0" r="16" class="button-path fill-stone-100 dark:fill-stone-900 stroke-stone-300 dark:stroke-stone-700" stroke-width="2" />
-            <circle cx="34" cy="0" r="7.5" fill="none" stroke="#ff3366" stroke-width="3" class="pointer-events-none" />
+            <circle cx="32" cy="0" r="15" class="button-path fill-stone-100 dark:fill-stone-900 stroke-stone-300 dark:stroke-stone-700" stroke-width="2" />
+            <circle cx="32" cy="0" r="7" fill="none" stroke="#ff3366" stroke-width="3" class="pointer-events-none" />
           </g>
 
           <!-- Cross (Bottom - Btn 0) -->
           <g id="btn-cross" data-btn="0" class="action-btn cursor-pointer">
-            <circle cx="0" cy="34" r="16" class="button-path fill-stone-100 dark:fill-stone-900 stroke-stone-300 dark:stroke-stone-700" stroke-width="2" />
-            <path d="M -6,28 L 6,40 M 6,28 L -6,40" fill="none" stroke="#0099ff" stroke-width="3" stroke-linecap="round" class="pointer-events-none" />
+            <circle cx="0" cy="32" r="15" class="button-path fill-stone-100 dark:fill-stone-900 stroke-stone-300 dark:stroke-stone-700" stroke-width="2" />
+            <path d="M -5,27 L 5,37 M 5,27 L -5,37" fill="none" stroke="#0099ff" stroke-width="3" stroke-linecap="round" class="pointer-events-none" />
           </g>
 
           <!-- Square (Left - Btn 2) -->
           <g id="btn-square" data-btn="2" class="action-btn cursor-pointer">
-            <circle cx="-34" cy="0" r="16" class="button-path fill-stone-100 dark:fill-stone-900 stroke-stone-300 dark:stroke-stone-700" stroke-width="2" />
-            <rect x="-40" y="-6" width="12" height="12" fill="none" stroke="#ff2d95" stroke-width="3" class="pointer-events-none" />
+            <circle cx="-32" cy="0" r="15" class="button-path fill-stone-100 dark:fill-stone-900 stroke-stone-300 dark:stroke-stone-700" stroke-width="2" />
+            <rect x="-37" y="-5" width="10" height="10" fill="none" stroke="#ff2d95" stroke-width="3" class="pointer-events-none" />
           </g>
         </g>
 
         <!-- 6. Left & Right Analog Sticks -->
         <!-- Left Stick Module (L3 - Btn 10) -->
-        <g id="group-left-stick" transform="translate(310, 380)">
-          <circle cx="0" cy="0" r="48" class="fill-stone-950 stroke-stone-700/80 pointer-events-none" stroke-width="2" />
+        <g id="group-left-stick" transform="translate(310, 320)">
+          <circle cx="0" cy="0" r="44" class="fill-stone-950 stroke-stone-700/80 pointer-events-none" stroke-width="2" />
           <g id="stick-l-cap" data-btn="10" class="button-path cursor-pointer stick-cap-node">
-            <circle cx="0" cy="0" r="38" fill="url(#stick-cap-grad)" class="stroke-stone-600" stroke-width="2" />
-            <circle cx="0" cy="0" r="30" class="fill-transparent stroke-stone-500/40" stroke-width="1.5" stroke-dasharray="4,4" />
-            <circle cx="0" cy="0" r="12" class="fill-stone-800 stroke-stone-600" stroke-width="1" />
+            <circle cx="0" cy="0" r="35" fill="url(#stick-cap-grad)" class="stroke-stone-600" stroke-width="2" />
+            <circle cx="0" cy="0" r="27" class="fill-transparent stroke-stone-500/40" stroke-width="1.5" stroke-dasharray="4,4" />
+            <circle cx="0" cy="0" r="11" class="fill-stone-800 stroke-stone-600" stroke-width="1" />
             <text x="-8" y="4" class="fill-stone-300 font-mono font-bold text-[10px] pointer-events-none select-none">L3</text>
           </g>
         </g>
 
         <!-- Right Stick Module (R3 - Btn 11) -->
-        <g id="group-right-stick" transform="translate(490, 380)">
-          <circle cx="0" cy="0" r="48" class="fill-stone-950 stroke-stone-700/80 pointer-events-none" stroke-width="2" />
+        <g id="group-right-stick" transform="translate(490, 320)">
+          <circle cx="0" cy="0" r="44" class="fill-stone-950 stroke-stone-700/80 pointer-events-none" stroke-width="2" />
           <g id="stick-r-cap" data-btn="11" class="button-path cursor-pointer stick-cap-node">
-            <circle cx="0" cy="0" r="38" fill="url(#stick-cap-grad)" class="stroke-stone-600" stroke-width="2" />
-            <circle cx="0" cy="0" r="30" class="fill-transparent stroke-stone-500/40" stroke-width="1.5" stroke-dasharray="4,4" />
-            <circle cx="0" cy="0" r="12" class="fill-stone-800 stroke-stone-600" stroke-width="1" />
+            <circle cx="0" cy="0" r="35" fill="url(#stick-cap-grad)" class="stroke-stone-600" stroke-width="2" />
+            <circle cx="0" cy="0" r="27" class="fill-transparent stroke-stone-500/40" stroke-width="1.5" stroke-dasharray="4,4" />
+            <circle cx="0" cy="0" r="11" class="fill-stone-800 stroke-stone-600" stroke-width="1" />
             <text x="-8" y="4" class="fill-stone-300 font-mono font-bold text-[10px] pointer-events-none select-none">R3</text>
           </g>
         </g>
@@ -248,41 +245,41 @@ const { isRigid = false } = Astro.props;
         <g id="group-meta-buttons">
           <!-- Create / Share (Btn 8) -->
           <g id="btn-create" data-btn="8" class="button-path cursor-pointer">
-            <ellipse cx="270" cy="170" rx="7" ry="12" transform="rotate(-20, 270, 170)" class="fill-stone-300 dark:fill-stone-700 stroke-stone-400 dark:stroke-stone-600" stroke-width="1" />
-            <line x1="266" y1="165" x2="266" y2="175" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
-            <line x1="270" y1="163" x2="270" y2="177" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
-            <line x1="274" y1="165" x2="274" y2="175" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
+            <ellipse cx="265" cy="130" rx="6" ry="10" transform="rotate(-20, 265, 130)" class="fill-stone-300 dark:fill-stone-700 stroke-stone-400 dark:stroke-stone-600" stroke-width="1" />
+            <line x1="262" y1="126" x2="262" y2="134" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
+            <line x1="265" y1="124" x2="265" y2="136" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
+            <line x1="268" y1="126" x2="268" y2="134" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
           </g>
 
           <!-- Options (Btn 9) -->
           <g id="btn-options" data-btn="9" class="button-path cursor-pointer">
-            <ellipse cx="530" cy="170" rx="7" ry="12" transform="rotate(20, 530, 170)" class="fill-stone-300 dark:fill-stone-700 stroke-stone-400 dark:stroke-stone-600" stroke-width="1" />
-            <line x1="525" y1="166" x2="535" y2="166" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
-            <line x1="525" y1="170" x2="535" y2="170" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
-            <line x1="525" y1="174" x2="535" y2="174" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
+            <ellipse cx="535" cy="130" rx="6" ry="10" transform="rotate(20, 535, 130)" class="fill-stone-300 dark:fill-stone-700 stroke-stone-400 dark:stroke-stone-600" stroke-width="1" />
+            <line x1="530" y1="127" x2="540" y2="127" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
+            <line x1="530" y1="130" x2="540" y2="130" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
+            <line x1="530" y1="133" x2="540" y2="133" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
           </g>
 
           <!-- PS Home Button (Btn 16) -->
           <g id="btn-ps" data-btn="16" class="button-path cursor-pointer">
-            <circle cx="400" cy="320" r="14" class="fill-stone-900 stroke-stone-600" stroke-width="1.5" />
-            <path d="M 397,313 C 397,313 403,313 403,318 C 403,323 397,322 397,327 M 394,324 L 406,324" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" class="pointer-events-none" />
+            <circle cx="400" cy="270" r="13" class="fill-stone-900 stroke-stone-600" stroke-width="1.5" />
+            <path d="M 397,264 C 397,264 403,264 403,269 C 403,274 397,273 397,278 M 394,275 L 406,275" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" class="pointer-events-none" />
           </g>
 
           <!-- Mute Button (Btn 17/Aux) -->
           <g id="btn-mute" data-btn="17" class="button-path cursor-pointer">
-            <rect x="393" y="350" width="14" height="7" rx="3" class="fill-stone-800 stroke-stone-600" stroke-width="1" />
-            <circle cx="400" cy="353.5" r="1.5" class="fill-amber-500 pointer-events-none" />
+            <rect x="394" y="296" width="12" height="6" rx="2.5" class="fill-stone-800 stroke-stone-600" stroke-width="1" />
+            <circle cx="400" cy="299" r="1.2" class="fill-amber-500 pointer-events-none" />
           </g>
 
           <!-- Speaker Grille Holes -->
           <g class="fill-stone-600/40 pointer-events-none">
-            <circle cx="396" cy="285" r="1.5"/>
-            <circle cx="400" cy="285" r="1.5"/>
-            <circle cx="404" cy="285" r="1.5"/>
-            <circle cx="394" cy="290" r="1.5"/>
-            <circle cx="398" cy="290" r="1.5"/>
-            <circle cx="402" cy="290" r="1.5"/>
-            <circle cx="406" cy="290" r="1.5"/>
+            <circle cx="396" cy="236" r="1.2"/>
+            <circle cx="400" cy="236" r="1.2"/>
+            <circle cx="404" cy="236" r="1.2"/>
+            <circle cx="394" cy="241" r="1.2"/>
+            <circle cx="398" cy="241" r="1.2"/>
+            <circle cx="402" cy="241" r="1.2"/>
+            <circle cx="406" cy="241" r="1.2"/>
           </g>
         </g>
       </svg>
