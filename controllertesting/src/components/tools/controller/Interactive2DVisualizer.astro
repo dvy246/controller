@@ -1,10 +1,10 @@
 ---
 /**
- * Interactive2DVisualizer.astro — Ultra-Aesthetic 2D Vector PS5 DualSense Visualizer
+ * Interactive2DVisualizer.astro — Ultra-Sleek Dark Wireframe Controller Visualizer
  *
- * Replaces heavy WebGL 3D canvas with an ultra-responsive, zero-latency vector
- * interface that features authentic PS5 DualSense geometry, vibrant high-luminance neon glow effects,
- * and dual gamepad + touch/click input responsiveness.
+ * Designed to completely surpass controllertest.io with a luxury dark minimalist vector UI,
+ * P1-P4 player indicators, tactile neon glows, fluid analog stick translation,
+ * and dual gamepad + mouse/touch interaction.
  */
 import PremiumStickCanvas from './PremiumStickCanvas.astro';
 import TriggerBars from './TriggerBars.astro';
@@ -17,38 +17,48 @@ const { isRigid = false } = Astro.props;
 ---
 <div class="controller-split-layout" id="hero-layout" data-is-rigid={isRigid ? "true" : "false"}>
   
-  <!-- Left Side: 2D Interactive Vector Controller -->
+  <!-- Left Side: Dark Minimalist Wireframe Visualizer Card -->
   <div class="controller-2d-wrapper" id="hero-container">
     
-    <!-- Ambient Dynamic Backlight Aura -->
-    <div class="backlight-aura" id="backlight-aura"></div>
-
-    <!-- Main Vibrate Controls (Floating Sleek Compact Pill) -->
-    <div id="main-vibrate-container" class="absolute top-4 right-4 z-50 flex items-center gap-2 backdrop-blur-md p-1.5 pl-3 rounded-full border border-stone-200/20 dark:border-white/10 shadow-xl hidden bg-surface-0/80 dark:bg-surface-1/90 select-none">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-500 animate-pulse"><path d="M4 12v.01"/><path d="M8 12v.01"/><path d="M12 12v.01"/><path d="M16 12v.01"/><path d="M20 12v.01"/></svg>
-      <span class="text-[10px] font-mono font-bold text-stone-400 dark:text-stone-400 uppercase tracking-wider hidden sm:inline">Rumble</span>
-      <input type="range" id="main-vibe-slider" min="0" max="100" value="100" class="w-14 accent-blue-500 h-1.5 bg-black/10 dark:bg-white/20 rounded-full appearance-none cursor-pointer" title="Vibration Intensity" />
-      <button id="main-vibrate-btn" class="px-2.5 py-1 rounded-full font-mono font-bold text-[10px] tracking-wide transition-all border flex items-center gap-1 text-white bg-blue-600 hover:bg-blue-500 border-blue-400 shadow-[0_0_10px_rgba(37,99,235,0.4)] cursor-pointer">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        TEST
-      </button>
-    </div>
-
-    <!-- Zero-Latency Button Press HUD (Bottom Center) -->
-    <div id="button-press-hud" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2.5 backdrop-blur-xl px-5 py-2 rounded-full border border-blue-500/40 shadow-[0_0_30px_rgba(37,99,235,0.4)] opacity-0 transition-all duration-75 scale-95 pointer-events-none bg-surface-0/90 dark:bg-surface-1/95">
-      <div class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_12px_rgba(37,99,235,1)]"></div>
-      <span id="button-press-text" class="text-stone-900 dark:text-white font-bold tracking-widest uppercase font-mono text-[11px] sm:text-xs">No Input</span>
-    </div>
-
-    <!-- Awaiting Connection Overlay (Sleek Floating Top-Left Status Pill) -->
-    <div id="awaiting-connection-overlay" class="absolute top-4 left-4 z-40 flex items-center gap-2 pointer-events-none transition-opacity duration-500 opacity-100">
-      <div class="bg-surface-0/90 dark:bg-surface-1/90 backdrop-blur-md border border-blue-500/30 rounded-full px-3.5 py-1.5 flex items-center gap-2.5 shadow-lg">
-        <div class="relative w-2.5 h-2.5 flex items-center justify-center">
-          <span class="absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75 animate-ping"></span>
-          <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+    <!-- Top Header Bar inside Visualizer Card -->
+    <div class="absolute top-5 inset-x-6 z-40 flex items-center justify-between pointer-events-none select-none">
+      <!-- Title & Connection Subtext -->
+      <div class="flex flex-col gap-0.5">
+        <div class="flex items-center gap-2">
+          <svg class="text-blue-500 w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/>
+            <circle cx="15" cy="13" r="1" fill="currentColor"/><circle cx="18" cy="11" r="1" fill="currentColor"/>
+            <rect x="2" y="6" width="20" height="12" rx="6"/>
+          </svg>
+          <h2 class="text-stone-900 dark:text-white font-bold text-base tracking-tight">Controller Visualizer</h2>
         </div>
-        <span class="text-stone-900 dark:text-white font-bold text-xs tracking-wide font-mono">Awaiting Input...</span>
+        <span id="connection-subtext" class="text-stone-500 dark:text-stone-400 font-mono text-xs">Press any button to connect</span>
       </div>
+
+      <!-- Player Indicators (P1, P2, P3, P4) + Vibrate Pill (Pointer events enabled for controls) -->
+      <div class="flex items-center gap-3 pointer-events-auto">
+        <!-- Rumble Test Pill -->
+        <div id="main-vibrate-container" class="hidden flex items-center gap-2 backdrop-blur-md px-2.5 py-1 rounded-full border border-stone-200/20 dark:border-white/10 bg-black/40">
+          <input type="range" id="main-vibe-slider" min="0" max="100" value="100" class="w-12 accent-blue-500 h-1 bg-white/20 rounded-full appearance-none cursor-pointer" title="Vibration Intensity" />
+          <button id="main-vibrate-btn" class="px-2 py-0.5 rounded-full font-mono font-bold text-[9px] tracking-wide border text-white bg-blue-600 hover:bg-blue-500 border-blue-400 shadow-[0_0_10px_rgba(37,99,235,0.4)] cursor-pointer">
+            VIBE
+          </button>
+        </div>
+
+        <!-- P1 - P4 Selector Pills -->
+        <div class="flex items-center p-1 rounded-full bg-black/40 backdrop-blur-md border border-white/10 font-mono text-[10px] font-bold text-stone-400">
+          <span id="player-p1" class="px-2.5 py-0.5 rounded-full transition-all text-white bg-white/20 border border-white/20 shadow-sm">P1 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block ml-0.5"></span></span>
+          <span id="player-p2" class="px-2 py-0.5 rounded-full transition-all opacity-50">P2</span>
+          <span id="player-p3" class="px-2 py-0.5 rounded-full transition-all opacity-50">P3</span>
+          <span id="player-p4" class="px-2 py-0.5 rounded-full transition-all opacity-50">P4</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Zero-Latency Button Press HUD (Bottom Left) -->
+    <div id="button-press-hud" class="absolute bottom-12 left-6 z-40 flex items-center gap-2 backdrop-blur-xl px-4 py-1.5 rounded-full border border-blue-500/40 shadow-[0_0_20px_rgba(37,99,235,0.3)] opacity-0 transition-all duration-75 scale-95 pointer-events-none bg-black/80">
+      <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_rgba(37,99,235,1)]"></div>
+      <span id="button-press-text" class="text-white font-bold tracking-widest uppercase font-mono text-[11px]">No Input</span>
     </div>
 
     <!-- Hardware Mismatch Error Overlay -->
@@ -66,223 +76,199 @@ const { isRigid = false } = Astro.props;
       </div>
     </div>
 
-    <!-- 2D High-Definition SVG Controller Vector -->
-    <div class="svg-container flex items-center justify-center w-full h-full p-2 sm:p-6 select-none">
-      <svg id="ps5-svg" viewBox="0 0 800 520" class="w-full max-w-[620px] max-h-[440px] select-none transition-transform duration-300 drop-shadow-2xl" xmlns="http://www.w3.org/2000/svg">
+    <!-- 2D Sleek Dark Wireframe SVG Controller Vector -->
+    <div class="svg-container flex items-center justify-center w-full h-full pt-16 pb-10 px-4 select-none">
+      <svg id="ps5-svg" viewBox="0 0 700 500" class="w-full max-w-[560px] max-h-[420px] select-none transition-transform duration-300 drop-shadow-xl" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <!-- Vivid High-Luminance Neon Glow Filters -->
-          <filter id="glow-cross" x="-100%" y="-100%" width="300%" height="300%">
-            <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#0099ff" flood-opacity="0.95" />
-            <feDropShadow dx="0" dy="0" stdDeviation="14" flood-color="#0066ff" flood-opacity="0.75" />
+          <!-- Glowing Drop Shadows -->
+          <filter id="glow-blue" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#3b82f6" flood-opacity="0.9" />
           </filter>
-
-          <filter id="glow-circle" x="-100%" y="-100%" width="300%" height="300%">
-            <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#ff3366" flood-opacity="0.95" />
-            <feDropShadow dx="0" dy="0" stdDeviation="14" flood-color="#ff0044" flood-opacity="0.75" />
+          <filter id="glow-red" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#ef4444" flood-opacity="0.9" />
           </filter>
-
-          <filter id="glow-triangle" x="-100%" y="-100%" width="300%" height="300%">
-            <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#00ff88" flood-opacity="0.95" />
-            <feDropShadow dx="0" dy="0" stdDeviation="14" flood-color="#00cc66" flood-opacity="0.75" />
+          <filter id="glow-green" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#10b981" flood-opacity="0.9" />
           </filter>
-
-          <filter id="glow-square" x="-100%" y="-100%" width="300%" height="300%">
-            <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#ff2d95" flood-opacity="0.95" />
-            <feDropShadow dx="0" dy="0" stdDeviation="14" flood-color="#e60073" flood-opacity="0.75" />
+          <filter id="glow-pink" x="-50%" y="-50%" width="200%" height="200%">
+            <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#ec4899" flood-opacity="0.9" />
           </filter>
-
-          <linearGradient id="body-white-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.98"/>
-            <stop offset="100%" stop-color="#cbd5e1" stop-opacity="0.95"/>
-          </linearGradient>
-
-          <linearGradient id="body-dark-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#1e293b" stop-opacity="0.98"/>
-            <stop offset="100%" stop-color="#0f172a" stop-opacity="0.98"/>
-          </linearGradient>
-
-          <linearGradient id="black-mid-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#18181b"/>
-            <stop offset="100%" stop-color="#09090b"/>
-          </linearGradient>
-
-          <linearGradient id="stick-cap-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#27272a"/>
-            <stop offset="100%" stop-color="#18181b"/>
-          </linearGradient>
         </defs>
 
-        <!-- 1. Sleek Top Triggers & Bumpers (Symmetrical Shoulder Tabs) -->
-        <g id="group-shoulders">
-          <!-- L2 Trigger (Btn 6) -->
-          <path id="btn-l2" data-btn="6" d="M 230,55 C 240,25 270,20 295,25 L 285,75 C 260,72 235,68 230,55 Z" class="button-path cursor-pointer fill-stone-700 dark:fill-stone-800 stroke-stone-600 dark:stroke-stone-700 transition-all duration-100" stroke-width="2" />
-          <!-- R2 Trigger (Btn 7) -->
-          <path id="btn-r2" data-btn="7" d="M 570,55 C 560,25 530,20 505,25 L 515,75 C 540,72 565,68 570,55 Z" class="button-path cursor-pointer fill-stone-700 dark:fill-stone-800 stroke-stone-600 dark:stroke-stone-700 transition-all duration-100" stroke-width="2" />
-          
-          <!-- L1 Bumper (Btn 4) -->
-          <path id="btn-l1" data-btn="4" d="M 220,72 C 225,60 265,55 295,60 L 290,92 C 255,88 225,88 220,72 Z" class="button-path cursor-pointer fill-stone-800 dark:fill-stone-900 stroke-stone-600 transition-all duration-100" stroke-width="2" />
-          <!-- R1 Bumper (Btn 5) -->
-          <path id="btn-r1" data-btn="5" d="M 580,72 C 575,60 535,55 505,60 L 510,92 C 545,88 575,88 580,72 Z" class="button-path cursor-pointer fill-stone-800 dark:fill-stone-900 stroke-stone-600 transition-all duration-100" stroke-width="2" />
-          
-          <text x="254" y="78" class="fill-stone-300 font-mono font-bold text-[11px] pointer-events-none select-none">L1</text>
-          <text x="536" y="78" class="fill-stone-300 font-mono font-bold text-[11px] pointer-events-none select-none">R1</text>
+        <!-- 1. Sleek Top Triggers (LT/L2 & RT/R2 Capsules) -->
+        <g id="group-triggers">
+          <!-- L2 Trigger Base Capsule (Btn 6) -->
+          <g id="btn-l2" data-btn="6" class="button-path cursor-pointer">
+            <rect x="250" y="20" width="44" height="60" rx="14" class="fill-[#222226] stroke-[#3a3a42] transition-colors duration-100" stroke-width="2" />
+            <rect id="l2-wire-fill" x="252" y="22" width="40" height="56" rx="12" fill="#3b82f6" class="opacity-0 transition-opacity duration-75" />
+          </g>
+          <!-- R2 Trigger Base Capsule (Btn 7) -->
+          <g id="btn-r2" data-btn="7" class="button-path cursor-pointer">
+            <rect x="406" y="20" width="44" height="60" rx="14" class="fill-[#222226] stroke-[#3a3a42] transition-colors duration-100" stroke-width="2" />
+            <rect id="r2-wire-fill" x="408" y="22" width="40" height="56" rx="12" fill="#3b82f6" class="opacity-0 transition-opacity duration-75" />
+          </g>
+
+          <!-- L1 Bumper Pill (Btn 4) -->
+          <g id="btn-l1" data-btn="4" class="button-path cursor-pointer">
+            <rect x="238" y="82" width="68" height="26" rx="10" class="fill-[#2a2a30] stroke-[#444450] transition-colors duration-100" stroke-width="2" />
+            <text x="272" y="99" class="fill-stone-300 font-mono font-bold text-[11px] text-anchor-middle text-center pointer-events-none select-none" text-anchor="middle">L1</text>
+          </g>
+
+          <!-- R1 Bumper Pill (Btn 5) -->
+          <g id="btn-r1" data-btn="5" class="button-path cursor-pointer">
+            <rect x="394" y="82" width="68" height="26" rx="10" class="fill-[#2a2a30] stroke-[#444450] transition-colors duration-100" stroke-width="2" />
+            <text x="428" y="99" class="fill-stone-300 font-mono font-bold text-[11px] text-anchor-middle text-center pointer-events-none select-none" text-anchor="middle">R1</text>
+          </g>
         </g>
 
-        <!-- 2. Authentic DualSense Main Body Contour (Sleek Ergonomic Proportions) -->
-        <g id="dualsense-body">
-          <!-- Main White/Dark Ergonomic Outer Contour Shell -->
-          <path d="M 280,85 
-                   C 350,80 450,80 520,85 
-                   C 560,90 605,110 628,150 
-                   C 655,205 675,310 685,400 
-                   C 690,445 658,472 622,468 
-                   C 585,462 550,395 532,335 
-                   C 505,320 455,325 400,325 
-                   C 345,325 295,320 268,335 
-                   C 250,395 215,462 178,468 
-                   C 142,472 110,445 115,400 
-                   C 125,310 145,205 172,150 
-                   C 195,110 240,90 280,85 Z" 
-                class="controller-shell stroke-stone-300 dark:stroke-stone-700/60" 
-                stroke-width="3" />
-          
-          <!-- Inner Black Accent Bridge -->
-          <path d="M 292,190 
-                   C 345,200 455,200 508,190 
-                   C 520,240 532,340 532,340 
-                   C 505,325 455,330 400,330 
-                   C 345,330 295,325 268,340 
-                   C 268,340 280,240 292,190 Z" 
-                fill="url(#black-mid-grad)" 
-                class="stroke-stone-800" 
-                stroke-width="2" />
+        <!-- 2. Dark Wireframe Body Silhouette & Grip Contour -->
+        <g id="dualsense-wireframe">
+          <!-- Main Outer Outline Contour -->
+          <path d="M 230,105 
+                   C 310,95 390,95 470,105 
+                   C 520,110 570,135 595,185 
+                   C 625,250 645,350 655,435 
+                   C 660,475 625,495 590,490 
+                   C 555,485 520,410 500,345 
+                   C 470,335 430,340 350,340 
+                   C 270,340 230,335 200,345 
+                   C 180,410 145,485 110,490 
+                   C 75,495 40,475 45,435 
+                   C 55,350 75,250 105,185 
+                   C 130,135 180,110 230,105 Z" 
+                class="fill-[#16161a] dark:fill-[#121215] stroke-[#3a3a42] dark:stroke-[#33333c]" 
+                stroke-width="2.5" />
+
+          <!-- Ergonomic Grip Dividers (Subtle Wireframe Inset Lines) -->
+          <path d="M 125,230 C 180,260 235,320 235,320 M 575,230 C 520,260 465,320 465,320" 
+                fill="none" 
+                stroke="#2a2a32" 
+                stroke-width="2" 
+                stroke-dasharray="4,4" />
         </g>
 
-        <!-- 3. DualSense Touchpad & Blue Lightbar -->
+        <!-- 3. Touchpad Surface & LED Lightbar Outline -->
         <g id="touchpad-group" class="cursor-pointer" data-btn="17">
-          <!-- Lightbar LED Border Line -->
-          <path id="ps-lightbar" d="M 292,95 L 508,95 L 498,195 L 302,195 Z" class="lightbar-glow fill-transparent stroke-blue-500/40 pointer-events-none" stroke-width="4" />
-          
-          <!-- Touchpad Surface (Btn 17) -->
-          <rect id="btn-touchpad" data-btn="17" x="298" y="100" width="204" height="92" rx="10" class="button-path touchpad-surface stroke-stone-300 dark:stroke-stone-700 fill-stone-100 dark:fill-stone-900 transition-all duration-150 cursor-pointer" stroke-width="1.5" />
-          <text x="366" y="152" class="fill-stone-400 dark:fill-stone-500 font-mono font-semibold text-[11px] tracking-widest pointer-events-none select-none">TOUCHPAD</text>
+          <rect id="btn-touchpad" data-btn="17" x="260" y="112" width="180" height="96" rx="12" class="button-path fill-[#1e1e24] stroke-[#3a3a44] transition-all duration-150 cursor-pointer" stroke-width="2" />
+          <path d="M 255,108 L 445,108" fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" class="opacity-60 pointer-events-none" />
+          <text x="350" y="165" class="fill-stone-400 font-mono font-semibold text-[11px] tracking-widest text-anchor-middle pointer-events-none select-none" text-anchor="middle">TOUCHPAD</text>
         </g>
 
-        <!-- 4. D-PAD (Directional Buttons) -->
-        <g id="group-dpad" transform="translate(200, 205)">
-          <circle cx="0" cy="0" r="52" class="fill-stone-200 dark:fill-stone-950 stroke-stone-300 dark:stroke-stone-800 pointer-events-none" stroke-width="1.5" />
+        <!-- 4. D-PAD (Directional Buttons Cross) -->
+        <g id="group-dpad" transform="translate(170, 240)">
+          <!-- Base Outer Bezel -->
+          <circle cx="0" cy="0" r="52" class="fill-[#1a1a20] stroke-[#363640] pointer-events-none" stroke-width="2" />
           
           <!-- Up (Btn 12) -->
-          <path id="btn-dpad-up" data-btn="12" d="M -14,-16 L 14,-16 L 14,-44 C 14,-48 8,-52 0,-52 C -8,-52 -14,-48 -14,-44 Z" class="dpad-btn button-path cursor-pointer" />
+          <path id="btn-dpad-up" data-btn="12" d="M -14,-16 L 14,-16 L 14,-44 C 14,-48 8,-52 0,-52 C -8,-52 -14,-48 -14,-44 Z" class="dpad-btn button-path cursor-pointer fill-[#282830] stroke-[#40404c] transition-all duration-75" stroke-width="1.5" />
           <!-- Down (Btn 13) -->
-          <path id="btn-dpad-down" data-btn="13" d="M -14,16 L 14,16 L 14,44 C 14,48 8,52 0,52 C -8,52 -14,48 -14,44 Z" class="dpad-btn button-path cursor-pointer" />
+          <path id="btn-dpad-down" data-btn="13" d="M -14,16 L 14,16 L 14,44 C 14,48 8,52 0,52 C -8,52 -14,48 -14,44 Z" class="dpad-btn button-path cursor-pointer fill-[#282830] stroke-[#40404c] transition-all duration-75" stroke-width="1.5" />
           <!-- Left (Btn 14) -->
-          <path id="btn-dpad-left" data-btn="14" d="M -16,-14 L -16,14 L -44,14 C -48,14 -52,8 -52,0 C -52,-8 -48,-14 -44,-14 Z" class="dpad-btn button-path cursor-pointer" />
+          <path id="btn-dpad-left" data-btn="14" d="M -16,-14 L -16,14 L -44,14 C -48,14 -52,8 -52,0 C -52,-8 -48,-14 -44,-14 Z" class="dpad-btn button-path cursor-pointer fill-[#282830] stroke-[#40404c] transition-all duration-75" stroke-width="1.5" />
           <!-- Right (Btn 15) -->
-          <path id="btn-dpad-right" data-btn="15" d="M 16,-14 L 16,14 L 44,14 C 48,14 52,8 52,0 C 52,-8 48,-14 44,-14 Z" class="dpad-btn button-path cursor-pointer" />
+          <path id="btn-dpad-right" data-btn="15" d="M 16,-14 L 16,14 L 44,14 C 48,14 52,8 52,0 C 52,-8 48,-14 46,-14 Z" class="dpad-btn button-path cursor-pointer fill-[#282830] stroke-[#40404c] transition-all duration-75" stroke-width="1.5" />
           
-          <!-- Directional Arrow Icons -->
-          <path d="M 0,-38 L -6,-26 L 6,-26 Z" class="fill-stone-500 dark:fill-stone-400 pointer-events-none" />
-          <path d="M 0,38 L -6,26 L 6,26 Z" class="fill-stone-500 dark:fill-stone-400 pointer-events-none" />
-          <path d="M -38,0 L -26,-6 L -26,6 Z" class="fill-stone-500 dark:fill-stone-400 pointer-events-none" />
-          <path d="M 38,0 L 26,-6 L 26,6 Z" class="fill-stone-500 dark:fill-stone-400 pointer-events-none" />
+          <!-- Arrows -->
+          <path d="M 0,-36 L -5,-26 L 5,-26 Z" class="fill-stone-400 pointer-events-none" />
+          <path d="M 0,36 L -5,26 L 5,26 Z" class="fill-stone-400 pointer-events-none" />
+          <path d="M -36,0 L -26,-5 L -26,5 Z" class="fill-stone-400 pointer-events-none" />
+          <path d="M 36,0 L 26,-5 L 26,5 Z" class="fill-stone-400 pointer-events-none" />
         </g>
 
-        <!-- 5. Action Face Buttons (Vibrant PlayStation Glyphs) -->
-        <g id="group-action-buttons" transform="translate(600, 205)">
-          <!-- Base Bezel -->
-          <circle cx="0" cy="0" r="52" class="fill-stone-200 dark:fill-stone-950 stroke-stone-300 dark:stroke-stone-800 pointer-events-none" stroke-width="1.5" />
+        <!-- 5. Action Face Buttons (Vibrant Symbols inside Dark Bezel) -->
+        <g id="group-action-buttons" transform="translate(530, 240)">
+          <!-- Outer Bezel Ring -->
+          <circle cx="0" cy="0" r="52" class="fill-[#1a1a20] stroke-[#363640] pointer-events-none" stroke-width="2" />
           
           <!-- Triangle (Top - Btn 3) -->
           <g id="btn-triangle" data-btn="3" class="action-btn cursor-pointer">
-            <circle cx="0" cy="-32" r="15" class="button-path fill-stone-100 dark:fill-stone-900 stroke-stone-300 dark:stroke-stone-700" stroke-width="2" />
-            <path d="M 0,-40 L -6,-27 L 6,-27 Z" fill="none" stroke="#00ff88" stroke-width="3" stroke-linejoin="round" class="pointer-events-none" />
+            <circle cx="0" cy="-32" r="16" class="button-path fill-[#282830] stroke-[#40404c] transition-all duration-75" stroke-width="1.5" />
+            <path d="M 0,-39 L -6,-27 L 6,-27 Z" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linejoin="round" class="pointer-events-none" />
           </g>
 
           <!-- Circle (Right - Btn 1) -->
           <g id="btn-circle" data-btn="1" class="action-btn cursor-pointer">
-            <circle cx="32" cy="0" r="15" class="button-path fill-stone-100 dark:fill-stone-900 stroke-stone-300 dark:stroke-stone-700" stroke-width="2" />
-            <circle cx="32" cy="0" r="7" fill="none" stroke="#ff3366" stroke-width="3" class="pointer-events-none" />
+            <circle cx="32" cy="0" r="16" class="button-path fill-[#282830] stroke-[#40404c] transition-all duration-75" stroke-width="1.5" />
+            <circle cx="32" cy="0" r="7" fill="none" stroke="#ef4444" stroke-width="2.5" class="pointer-events-none" />
           </g>
 
           <!-- Cross (Bottom - Btn 0) -->
           <g id="btn-cross" data-btn="0" class="action-btn cursor-pointer">
-            <circle cx="0" cy="32" r="15" class="button-path fill-stone-100 dark:fill-stone-900 stroke-stone-300 dark:stroke-stone-700" stroke-width="2" />
-            <path d="M -5,27 L 5,37 M 5,27 L -5,37" fill="none" stroke="#0099ff" stroke-width="3" stroke-linecap="round" class="pointer-events-none" />
+            <circle cx="0" cy="32" r="16" class="button-path fill-[#282830] stroke-[#40404c] transition-all duration-75" stroke-width="1.5" />
+            <path d="M -5,27 L 5,37 M 5,27 L -5,37" fill="none" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round" class="pointer-events-none" />
           </g>
 
           <!-- Square (Left - Btn 2) -->
           <g id="btn-square" data-btn="2" class="action-btn cursor-pointer">
-            <circle cx="-32" cy="0" r="15" class="button-path fill-stone-100 dark:fill-stone-900 stroke-stone-300 dark:stroke-stone-700" stroke-width="2" />
-            <rect x="-37" y="-5" width="10" height="10" fill="none" stroke="#ff2d95" stroke-width="3" class="pointer-events-none" />
+            <circle cx="-32" cy="0" r="16" class="button-path fill-[#282830] stroke-[#40404c] transition-all duration-75" stroke-width="1.5" />
+            <rect x="-37" y="-5" width="10" height="10" fill="none" stroke="#ec4899" stroke-width="2.5" class="pointer-events-none" />
           </g>
         </g>
 
         <!-- 6. Left & Right Analog Sticks -->
-        <!-- Left Stick Module (L3 - Btn 10) -->
-        <g id="group-left-stick" transform="translate(310, 320)">
-          <circle cx="0" cy="0" r="44" class="fill-stone-950 stroke-stone-700/80 pointer-events-none" stroke-width="2" />
+        <!-- Left Stick (L3 - Btn 10) -->
+        <g id="group-left-stick" transform="translate(265, 350)">
+          <circle cx="0" cy="0" r="42" class="fill-[#121215] stroke-[#363640] pointer-events-none" stroke-width="2" />
           <g id="stick-l-cap" data-btn="10" class="button-path cursor-pointer stick-cap-node">
-            <circle cx="0" cy="0" r="35" fill="url(#stick-cap-grad)" class="stroke-stone-600" stroke-width="2" />
-            <circle cx="0" cy="0" r="27" class="fill-transparent stroke-stone-500/40" stroke-width="1.5" stroke-dasharray="4,4" />
-            <circle cx="0" cy="0" r="11" class="fill-stone-800 stroke-stone-600" stroke-width="1" />
-            <text x="-8" y="4" class="fill-stone-300 font-mono font-bold text-[10px] pointer-events-none select-none">L3</text>
+            <circle cx="0" cy="0" r="33" fill="#24242a" class="stroke-[#484854]" stroke-width="2" />
+            <circle cx="0" cy="0" r="24" class="fill-transparent stroke-stone-500/30" stroke-width="1.5" stroke-dasharray="3,3" />
+            <circle cx="0" cy="0" r="10" class="fill-[#16161a] stroke-[#383840]" stroke-width="1" />
+            <text x="0" y="4" class="fill-stone-300 font-mono font-bold text-[10px] text-anchor-middle text-center pointer-events-none select-none" text-anchor="middle">L3</text>
           </g>
         </g>
 
-        <!-- Right Stick Module (R3 - Btn 11) -->
-        <g id="group-right-stick" transform="translate(490, 320)">
-          <circle cx="0" cy="0" r="44" class="fill-stone-950 stroke-stone-700/80 pointer-events-none" stroke-width="2" />
+        <!-- Right Stick (R3 - Btn 11) -->
+        <g id="group-right-stick" transform="translate(435, 350)">
+          <circle cx="0" cy="0" r="42" class="fill-[#121215] stroke-[#363640] pointer-events-none" stroke-width="2" />
           <g id="stick-r-cap" data-btn="11" class="button-path cursor-pointer stick-cap-node">
-            <circle cx="0" cy="0" r="35" fill="url(#stick-cap-grad)" class="stroke-stone-600" stroke-width="2" />
-            <circle cx="0" cy="0" r="27" class="fill-transparent stroke-stone-500/40" stroke-width="1.5" stroke-dasharray="4,4" />
-            <circle cx="0" cy="0" r="11" class="fill-stone-800 stroke-stone-600" stroke-width="1" />
-            <text x="-8" y="4" class="fill-stone-300 font-mono font-bold text-[10px] pointer-events-none select-none">R3</text>
+            <circle cx="0" cy="0" r="33" fill="#24242a" class="stroke-[#484854]" stroke-width="2" />
+            <circle cx="0" cy="0" r="24" class="fill-transparent stroke-stone-500/30" stroke-width="1.5" stroke-dasharray="3,3" />
+            <circle cx="0" cy="0" r="10" class="fill-[#16161a] stroke-[#383840]" stroke-width="1" />
+            <text x="0" y="4" class="fill-stone-300 font-mono font-bold text-[10px] text-anchor-middle text-center pointer-events-none select-none" text-anchor="middle">R3</text>
           </g>
         </g>
 
-        <!-- 7. Center Function Buttons -->
+        <!-- 7. Center Meta Buttons (Create, Options, PS Home, Mute) -->
         <g id="group-meta-buttons">
           <!-- Create / Share (Btn 8) -->
           <g id="btn-create" data-btn="8" class="button-path cursor-pointer">
-            <ellipse cx="265" cy="130" rx="6" ry="10" transform="rotate(-20, 265, 130)" class="fill-stone-300 dark:fill-stone-700 stroke-stone-400 dark:stroke-stone-600" stroke-width="1" />
-            <line x1="262" y1="126" x2="262" y2="134" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
-            <line x1="265" y1="124" x2="265" y2="136" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
-            <line x1="268" y1="126" x2="268" y2="134" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
+            <rect x="226" y="140" width="16" height="24" rx="6" class="fill-[#24242a] stroke-[#383842]" stroke-width="1.5" />
+            <circle cx="234" cy="152" r="2" class="fill-stone-400 pointer-events-none" />
           </g>
 
           <!-- Options (Btn 9) -->
           <g id="btn-options" data-btn="9" class="button-path cursor-pointer">
-            <ellipse cx="535" cy="130" rx="6" ry="10" transform="rotate(20, 535, 130)" class="fill-stone-300 dark:fill-stone-700 stroke-stone-400 dark:stroke-stone-600" stroke-width="1" />
-            <line x1="530" y1="127" x2="540" y2="127" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
-            <line x1="530" y1="130" x2="540" y2="130" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
-            <line x1="530" y1="133" x2="540" y2="133" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none"/>
+            <rect x="458" y="140" width="16" height="24" rx="6" class="fill-[#24242a] stroke-[#383842]" stroke-width="1.5" />
+            <line x1="462" y1="148" x2="470" y2="148" stroke="#a1a1aa" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none" />
+            <line x1="462" y1="152" x2="470" y2="152" stroke="#a1a1aa" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none" />
+            <line x1="462" y1="156" x2="470" y2="156" stroke="#a1a1aa" stroke-width="1.5" stroke-linecap="round" class="pointer-events-none" />
           </g>
 
           <!-- PS Home Button (Btn 16) -->
           <g id="btn-ps" data-btn="16" class="button-path cursor-pointer">
-            <circle cx="400" cy="270" r="13" class="fill-stone-900 stroke-stone-600" stroke-width="1.5" />
-            <path d="M 397,264 C 397,264 403,264 403,269 C 403,274 397,273 397,278 M 394,275 L 406,275" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" class="pointer-events-none" />
+            <circle cx="350" cy="275" r="14" class="fill-[#1e1e24] stroke-[#3a3a44]" stroke-width="1.5" />
+            <path d="M 347,269 C 347,269 353,269 353,274 C 353,279 347,278 347,283 M 344,280 L 356,280" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" class="pointer-events-none" />
           </g>
 
-          <!-- Mute Button (Btn 17/Aux) -->
+          <!-- Mute Button (Aux/Mic) -->
           <g id="btn-mute" data-btn="17" class="button-path cursor-pointer">
-            <rect x="394" y="296" width="12" height="6" rx="2.5" class="fill-stone-800 stroke-stone-600" stroke-width="1" />
-            <circle cx="400" cy="299" r="1.2" class="fill-amber-500 pointer-events-none" />
-          </g>
-
-          <!-- Speaker Grille Holes -->
-          <g class="fill-stone-600/40 pointer-events-none">
-            <circle cx="396" cy="236" r="1.2"/>
-            <circle cx="400" cy="236" r="1.2"/>
-            <circle cx="404" cy="236" r="1.2"/>
-            <circle cx="394" cy="241" r="1.2"/>
-            <circle cx="398" cy="241" r="1.2"/>
-            <circle cx="402" cy="241" r="1.2"/>
-            <circle cx="406" cy="241" r="1.2"/>
+            <rect x="343" y="300" width="14" height="7" rx="3" class="fill-[#1c1c20] stroke-[#33333c]" stroke-width="1" />
+            <circle cx="350" cy="303.5" r="1.2" class="fill-amber-500 pointer-events-none" />
           </g>
         </g>
       </svg>
+    </div>
+
+    <!-- Bottom Footer Legend inside Visualizer Card -->
+    <div class="absolute bottom-4 inset-x-0 z-40 flex items-center justify-center gap-6 font-mono text-xs text-stone-400 select-none pointer-events-none">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block shadow-[0_0_8px_rgba(59,130,246,0.8)]"></span>
+        <span>Button Pressed</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-stone-600 inline-block"></span>
+        <span>Waiting for Input</span>
+      </div>
     </div>
 
   </div>
@@ -421,35 +407,11 @@ const { isRigid = false } = Astro.props;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(circle at center, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
-  }
-
-  .backlight-aura {
-    position: absolute;
-    width: 380px;
-    height: 380px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(37, 99, 235, 0.25) 0%, rgba(99, 102, 241, 0.05) 50%, transparent 70%);
-    filter: blur(40px);
-    pointer-events: none;
-    transition: all 0.3s ease;
-    opacity: 0.8;
-  }
-
-  /* SVG Styling */
-  .controller-shell {
-    fill: url(#body-white-grad);
-  }
-  :global(.dark) .controller-shell {
-    fill: url(#body-dark-grad);
+    background: #121215;
   }
 
   .dpad-btn, .action-btn .button-path {
-    fill: #f1f5f9;
     transition: transform 0.06s cubic-bezier(0.16, 1, 0.3, 1), fill 0.08s ease, stroke 0.08s ease, filter 0.08s ease;
-  }
-  :global(.dark) .dpad-btn, :global(.dark) .action-btn .button-path {
-    fill: #0f172a;
   }
 
   .stick-cap-node {
@@ -463,33 +425,33 @@ const { isRigid = false } = Astro.props;
   }
   
   .btn-active-cross {
-    fill: #0099ff !important;
-    stroke: #66c2ff !important;
-    filter: url(#glow-cross) drop-shadow(0 0 14px rgba(0, 153, 255, 0.95)) !important;
+    fill: #3b82f6 !important;
+    stroke: #60a5fa !important;
+    filter: url(#glow-blue) !important;
   }
 
   .btn-active-circle {
-    fill: #ff3366 !important;
-    stroke: #ff99b3 !important;
-    filter: url(#glow-circle) drop-shadow(0 0 14px rgba(255, 51, 102, 0.95)) !important;
+    fill: #ef4444 !important;
+    stroke: #f87171 !important;
+    filter: url(#glow-red) !important;
   }
 
   .btn-active-square {
-    fill: #ff2d95 !important;
-    stroke: #ff99cf !important;
-    filter: url(#glow-square) drop-shadow(0 0 14px rgba(255, 45, 149, 0.95)) !important;
+    fill: #ec4899 !important;
+    stroke: #f472b6 !important;
+    filter: url(#glow-pink) !important;
   }
 
   .btn-active-triangle {
-    fill: #00ff88 !important;
-    stroke: #99ffd6 !important;
-    filter: url(#glow-triangle) drop-shadow(0 0 14px rgba(0, 255, 136, 0.95)) !important;
+    fill: #10b981 !important;
+    stroke: #34d399 !important;
+    filter: url(#glow-green) !important;
   }
 
   .btn-active-generic {
-    fill: #2563eb !important;
+    fill: #3b82f6 !important;
     stroke: #60a5fa !important;
-    filter: drop-shadow(0 0 14px rgba(37, 99, 235, 0.85)) !important;
+    filter: url(#glow-blue) !important;
   }
 
   /* Right sidebar styles */
@@ -600,12 +562,17 @@ const { isRigid = false } = Astro.props;
     const telemetryHz = document.getElementById('telemetry-hz');
     const mismatchOverlay = document.getElementById('mismatch-overlay');
     const mismatchDesc = document.getElementById('mismatch-desc');
-    const awaitingOverlay = document.getElementById('awaiting-connection-overlay');
+    const connectionSubtext = document.getElementById('connection-subtext');
     const mainVibeContainer = document.getElementById('main-vibrate-container');
     const gyroPitch = document.getElementById('gyro-pitch');
     const gyroRoll = document.getElementById('gyro-roll');
     const gyroYaw = document.getElementById('gyro-yaw');
     const btnMatrix = document.getElementById('button-matrix');
+    const l2WireFill = document.getElementById('l2-wire-fill');
+    const r2WireFill = document.getElementById('r2-wire-fill');
+
+    // Player indicator badges
+    const p1Badge = document.getElementById('player-p1');
 
     // Button Mapping Definitions for PS5
     const BUTTON_NAMES: Record<number, string> = {
@@ -690,12 +657,12 @@ const { isRigid = false } = Astro.props;
           if (hud && hudText && BUTTON_NAMES[btnIdx]) {
             hudText.innerText = `${BUTTON_NAMES[btnIdx]} PRESSED`;
             hud.style.opacity = '1';
-            hud.style.transform = 'translate(-50%, 0) scale(1)';
+            hud.style.transform = 'scale(1)';
             clearTimeout(hudTimeout);
             hudTimeout = setTimeout(() => {
               if (hud) {
                 hud.style.opacity = '0';
-                hud.style.transform = 'translate(-50%, 0) scale(0.95)';
+                hud.style.transform = 'scale(0.95)';
               }
             }, 600);
           }
@@ -725,8 +692,8 @@ const { isRigid = false } = Astro.props;
           manualPressedState[idx] = true;
           setButtonActive(idx, true);
           if (telemetryData) telemetryData.style.display = 'grid';
-          if (awaitingOverlay) awaitingOverlay.style.opacity = '0';
           if (mainVibeContainer) mainVibeContainer.classList.remove('hidden');
+          if (connectionSubtext) connectionSubtext.innerText = 'Input Detected';
         };
 
         const handlePressEnd = (e: Event) => {
@@ -834,8 +801,8 @@ const { isRigid = false } = Astro.props;
       if (activeGamepad || hasManualPress) {
         if (statusDot) statusDot.classList.add('connected');
         if (statusText) statusText.innerText = activeGamepad ? activeGamepad.id.substring(0, 24) : 'Screen Touch Active';
+        if (connectionSubtext) connectionSubtext.innerText = activeGamepad ? `Connected via ${activeGamepad.id.includes('Bluetooth') ? 'Bluetooth' : 'USB'}` : 'Screen Touch Active';
         if (telemetryData) telemetryData.style.display = 'grid';
-        if (awaitingOverlay) awaitingOverlay.style.opacity = '0';
         if (mainVibeContainer) mainVibeContainer.classList.remove('hidden');
 
         if (activeGamepad) {
@@ -866,6 +833,16 @@ const { isRigid = false } = Astro.props;
             stickRCap.style.transform = `translate(${rx * 14}px, ${ry * 14}px)`;
           }
 
+          // Triggers Fill
+          if (l2WireFill && activeGamepad.buttons[6]) {
+            const val = activeGamepad.buttons[6].value;
+            l2WireFill.style.opacity = `${val}`;
+          }
+          if (r2WireFill && activeGamepad.buttons[7]) {
+            const val = activeGamepad.buttons[7].value;
+            r2WireFill.style.opacity = `${val}`;
+          }
+
           // Buttons Telemetry Polling
           activeGamepad.buttons.forEach((btn, idx) => {
             const isPressed = btn.pressed || btn.value > 0.15 || manualPressedState[idx];
@@ -885,8 +862,8 @@ const { isRigid = false } = Astro.props;
       } else {
         if (statusDot) statusDot.classList.remove('connected');
         if (statusText) statusText.innerText = 'Awaiting Gamepad';
+        if (connectionSubtext) connectionSubtext.innerText = 'Press any button to connect';
         if (telemetryData) telemetryData.style.display = 'none';
-        if (awaitingOverlay) awaitingOverlay.style.opacity = '1';
         if (mainVibeContainer) mainVibeContainer.classList.add('hidden');
       }
 
@@ -896,4 +873,3 @@ const { isRigid = false } = Astro.props;
     requestAnimationFrame(updateLoop);
   });
 </script>
-
