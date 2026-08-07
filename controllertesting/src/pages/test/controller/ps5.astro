@@ -5,7 +5,7 @@
  */
 
 import ToolLayout from '../../../layouts/ToolLayout.astro';
-import Interactive3DVisualizer from '../../../components/tools/controller/Interactive3DVisualizer.astro';
+import Interactive2DVisualizer from '../../../components/tools/controller/Interactive2DVisualizer.astro';
 import DiagnosticResultsBento from '../../../components/seo/DiagnosticResultsBento.astro';
 import PremiumGuideCard from '../../../components/seo/PremiumGuideCard.astro';
 import PremiumFaqAccordion from '../../../components/seo/PremiumFaqAccordion.astro';
@@ -27,67 +27,6 @@ const faqs = [
   }
 ];
 
-const schemaData = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "SoftwareApplication",
-      "name": "PS5 DualSense Controller Tester & Stick Drift Check",
-      "operatingSystem": "Web Browser",
-      "applicationCategory": "UtilitiesApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "description": "Check your PS5 DualSense controller for stick drift, button responsiveness, and trigger issues with our advanced online diagnostic tool."
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://controllertesting.com/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Tests",
-          "item": "https://controllertesting.com/test/controller/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "PS5 DualSense Tester",
-          "item": "https://controllertesting.com/test/controller/ps5"
-        }
-      ]
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Does the PS5 DualSense get stick drift?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes, like all controllers using potentiometer joysticks, the PS5 DualSense can develop stick drift due to wear on internal carbon tracks over time."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How to reset a PS5 controller?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Locate the small reset button on the back of the controller next to the Sony logo. Use a paperclip to press and hold the button for 5 seconds."
-          }
-        }
-      ]
-    }
-  ]
-};
 ---
 
 <ToolLayout
@@ -99,9 +38,6 @@ const schemaData = {
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
-  <Fragment slot="head">
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(schemaData)} />
-  </Fragment>
 
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
@@ -117,7 +53,7 @@ const schemaData = {
       </div>
 
       <div class="doppelrand-core flex flex-col relative z-10" style="min-height: 500px; padding: 0;">
-        <Interactive3DVisualizer isRigid={true} />
+        <Interactive2DVisualizer isRigid={true} />
       </div>
     </div>
   </Fragment>
@@ -127,29 +63,56 @@ const schemaData = {
     <DiagnosticResultsBento />
   </Fragment>
 
+  {/* ── Semantic SEO Content Slot ── */}
+  <Fragment slot="content">
+    <section class="max-w-4xl mx-auto mt-16 px-6">
+      <h2 class="text-[var(--text-h2)] font-extrabold tracking-tight mb-6">Deep Diagnostics for the PS5 DualSense</h2>
+      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
+        The PlayStation 5 DualSense controller represents a massive leap in haptic feedback and adaptive trigger technology. However, like its predecessors, it relies on ALPS Alpine potentiometer joysticks which are susceptible to mechanical wear and carbon track degradation—commonly known as <strong>stick drift</strong>. Our hardware diagnostic engine connects directly via the Gamepad API to measure raw axis data from your DualSense, allowing you to quantify exactly how much drift is occurring down to the 0.01% threshold.
+      </p>
+      
+      <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Testing Adaptive Triggers and Polling Rates</h3>
+      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
+        Beyond stick drift, competitive players often need to verify the linearity of their L2 and R2 adaptive triggers and ensure they are hitting the standard 250Hz Bluetooth polling rate (or up to 1000Hz when overclocked). Using this interface, you can verify that both the left and right analog modules are reaching their perfect circular geometry and that every face button registers immediately without double-clicking or input ghosting.
+      </p>
+      
+      <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Hall Effect Joystick Upgrades</h3>
+      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed">
+        If you have recently soldered third-party Hall-effect electromagnetic sensors into your DualSense motherboard to permanently cure stick drift, you can use our <a href="/calibrate/dualsense/hall-effect" class="text-[var(--color-accent)] underline">WebHID Calibrator</a> tool to write the new zero-point hardware calibration directly to the controller's firmware, ensuring perfect recentering.
+      </p>
+    </section>
+  </Fragment>
+
   {/* ── SEO Repair Guide Section ── */}
   <Fragment slot="export">
     <PremiumGuideCard title="How do you test and fix PS5 DualSense stick drift?">
-      <p>To test for PS5 DualSense stick drift, use a web-based controller tester to measure analog stick centering precision. If drift exceeds five percent, try resetting the controller using the back pinhole. If the issue persists, the internal potentiometer requires replacement or a warranty claim.</p>
+      <p class="text-lg">To test for PS5 DualSense stick drift, use a web-based controller tester to measure analog stick centering precision. If drift exceeds five percent, try resetting the controller using the back pinhole. If the issue persists, the internal potentiometer requires replacement or a warranty claim.</p>
       
-      <h3 style="color: var(--color-accent); margin-bottom: 0.5rem; font-size: 1.2rem; font-weight: bold;">Recommended Actions</h3>
-      <p>Always begin by using our free <a href="/test/controller/drift">drift diagnostic tool</a> to identify the exact cause of any input inconsistencies before attempting repairs.</p>
+      <h3 class="text-blue-400 mt-12 mb-4 text-2xl font-extrabold tracking-tight">Recommended Actions</h3>
+      <p class="text-lg">Always begin by using our free <a href="/test/controller/drift">drift diagnostic tool</a> to identify the exact cause of any input inconsistencies before attempting repairs.</p>
     </PremiumGuideCard>
 
-    <div class="max-w-4xl mx-auto px-4">
+    <div class="max-w-4xl mx-auto mt-32 mb-20 px-6">
       <PremiumFaqAccordion faqs={faqs} title="PS5 DualSense FAQs" subtitle="Common issues and questions about Sony's DualSense controller." />
     </div>
   </Fragment>
 
   {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
-    <a href="/test/controller/drift" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Universal Stick Drift Test</h3>
-      <p class="tool-desc">Test any controller across all major platforms.</p>
+    <a href="/test/controller/touchpad" class="tool-hub-card card-hover card-base">
+      <div class="card-icon">👆</div>
+      <h3 class="card-tool-name">PS5 Touchpad Tester</h3>
+      <p class="card-tool-desc">Test DualSense multi-touch tracking and click gestures.</p>
     </a>
-    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Button Tester</h3>
-      <p class="tool-desc">Check for sticky or failing face buttons and triggers.</p>
+    <a href="/test/controller/gyroscope" class="tool-hub-card card-hover card-base">
+      <div class="card-icon">🧭</div>
+      <h3 class="card-tool-name">Gyroscope & Motion</h3>
+      <p class="card-tool-desc">Verify 6-axis motion sensors and tilt calibration.</p>
+    </a>
+    <a href="/test/controller/microphone" class="tool-hub-card card-hover card-base">
+      <div class="card-icon">🎤</div>
+      <h3 class="card-tool-name">DualSense Mic Test</h3>
+      <p class="card-tool-desc">Check the built-in controller microphone array input.</p>
     </a>
   </Fragment>
 </ToolLayout>
@@ -157,12 +120,8 @@ const schemaData = {
 <style>
   .ps5-brand-shell {
     --ambient-glow: #2563EB;
-    background: radial-gradient(circle at center, rgba(37, 99, 235, 0.25) 0%, transparent 60%),
-                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(37, 99, 235, 0.05) 10px, rgba(37, 99, 235, 0.05) 20px);
-    box-shadow: inset 0 0 40px rgba(37, 99, 235, 0.1), 0 0 60px rgba(37, 99, 235, 0.2);
-    border: 1px solid rgba(37, 99, 235, 0.3);
-    border-radius: 12px;
-    padding: 1rem;
+    box-shadow: 0 0 60px rgba(37, 99, 235, 0.15);
+    border-color: rgba(37, 99, 235, 0.3);
   }
   .ps-geometry-bg {
     position: absolute;

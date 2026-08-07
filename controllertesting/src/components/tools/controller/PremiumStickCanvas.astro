@@ -1,0 +1,145 @@
+---
+/**
+ * PremiumStickCanvas.astro
+ * High-performance Canvas2D visualizer for analog sticks.
+ * Uses a static SVG background for the grid and a transparent Canvas foreground for trails.
+ */
+---
+<div class="sticks-container relative w-full h-full flex items-center justify-center">
+  
+  <!-- Static Grid Background -->
+  <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+    <!-- Left Stick Grid -->
+    <g stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none">
+      <circle cx="100" cy="100" r="80" fill="rgba(255,255,255,0.04)" />
+      <circle cx="100" cy="100" r="8" stroke="rgba(245, 158, 11, 0.4)" stroke-width="1" /> <!-- Deadzone -->
+      <path d="M 100,20 L 100,180 M 20,100 L 180,100" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+    </g>
+
+    <!-- Right Stick Grid -->
+    <g stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none">
+      <circle cx="300" cy="100" r="80" fill="rgba(255,255,255,0.04)" />
+      <circle cx="300" cy="100" r="8" stroke="rgba(245, 158, 11, 0.4)" stroke-width="1" /> <!-- Deadzone -->
+      <path d="M 300,20 L 300,180 M 220,100 L 380,100" stroke="rgba(255,255,255,0.08)" stroke-width="1" />
+    </g>
+  </svg>
+
+  <!-- Dynamic Foreground Canvas -->
+  <canvas id="premium-sticks" width="400" height="200" class="w-full max-w-full relative z-10"></canvas>
+
+  <!-- Coordinate Displays -->
+  <div class="absolute bottom-2 inset-x-0 grid grid-cols-2 gap-2 px-2 pointer-events-none z-20">
+    <div class="flex justify-center">
+      <span class="font-mono text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap shadow-sm truncate" style="background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); color: #34d399;" id="stick-l-val">X: 0.000 Y: 0.000</span>
+    </div>
+    <div class="flex justify-center">
+      <span class="font-mono text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap shadow-sm truncate" style="background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); color: #60a5fa;" id="stick-r-val">X: 0.000 Y: 0.000</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { GamepadLoop } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('premium-sticks') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const W = canvas.width;
+    const H = canvas.height;
+    const R = 80;
+    const CX_L = W / 4;
+    const CY_L = H / 2;
+    const CX_R = (W / 4) * 3;
+    const CY_R = H / 2;
+
+    const TRAIL_LENGTH = 15;
+    
+    // Pre-allocate arrays for zero-allocation loop
+    const leftTrailX = new Float32Array(TRAIL_LENGTH);
+    const leftTrailY = new Float32Array(TRAIL_LENGTH);
+    const rightTrailX = new Float32Array(TRAIL_LENGTH);
+    const rightTrailY = new Float32Array(TRAIL_LENGTH);
+    let trailIdx = 0;
+    let trailCount = 0;
+
+    GamepadLoop.subscribe((state) => {
+      // Clear transparent canvas entirely
+      ctx.clearRect(0, 0, W, H);
+
+      if (!state || !state.connected) {
+        trailCount = 0;
+        return;
+      }
+
+      const curLx = CX_L + state.leftStick.x * R;
+      const curLy = CY_L + state.leftStick.y * R;
+      const curRx = CX_R + state.rightStick.x * R;
+      const curRy = CY_R + state.rightStick.y * R;
+
+      // Add to ring buffer
+      leftTrailX[trailIdx] = curLx;
+      leftTrailY[trailIdx] = curLy;
+      rightTrailX[trailIdx] = curRx;
+      rightTrailY[trailIdx] = curRy;
+      
+      trailIdx = (trailIdx + 1) % TRAIL_LENGTH;
+      if (trailCount < TRAIL_LENGTH) trailCount++;
+
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      // Draw Left Trail
+      ctx.beginPath();
+      for (let i = 0; i < trailCount; i++) {
+        // Calculate index starting from oldest to newest
+        const idx = (trailIdx - trailCount + i + TRAIL_LENGTH) % TRAIL_LENGTH;
+        const x = leftTrailX[idx];
+        const y = leftTrailY[idx];
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      // Fading gradient stroke based on length isn't trivial in canvas, so we use a solid stroke with opacity
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = 'rgba(16, 185, 129, 0.6)'; // Emerald
+      ctx.stroke();
+
+      // Draw Right Trail
+      ctx.beginPath();
+      for (let i = 0; i < trailCount; i++) {
+        const idx = (trailIdx - trailCount + i + TRAIL_LENGTH) % TRAIL_LENGTH;
+        const x = rightTrailX[idx];
+        const y = rightTrailY[idx];
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = 'rgba(37, 99, 235, 0.6)'; // Cobalt
+      ctx.stroke();
+
+      // Draw active head
+      ctx.fillStyle = '#fff';
+      
+      ctx.beginPath();
+      ctx.arc(curLx, curLy, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(curRx, curRy, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Update text values
+      const lText = document.getElementById('stick-l-val');
+      const rText = document.getElementById('stick-r-val');
+      if (lText) lText.textContent = `X: ${state.leftStick.x.toFixed(3)}  Y: ${state.leftStick.y.toFixed(3)}`;
+      if (rText) rText.textContent = `X: ${state.rightStick.x.toFixed(3)}  Y: ${state.rightStick.y.toFixed(3)}`;
+    });
+  });
+</script>
+
+<style>
+  .sticks-container {
+    background: transparent;
+  }
+</style>

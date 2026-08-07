@@ -1,0 +1,134 @@
+---
+/**
+ * InteractiveSilhouette.astro
+ * Premium 2D geometric SVG representing the gamepad. 
+ * Reacts to button presses with zero latency.
+ */
+---
+<div class="silhouette-container flex justify-center items-center h-full w-full">
+  <svg class="gamepad-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="gamepad-title">
+    <title id="gamepad-title">Interactive Gamepad Silhouette</title>
+    <!-- Outer Shell Glow -->
+    <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    
+    <!-- Base Shell -->
+    <path class="shell" d="M 60,100 C 60,80 100,50 150,50 L 250,50 C 300,50 340,80 340,100 C 340,150 320,250 280,250 C 250,250 220,180 200,180 C 180,180 150,250 120,250 C 80,250 60,150 60,100 Z" fill="#121218" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+    
+    <!-- D-Pad (Left side) -->
+    <g class="dpad" transform="translate(110, 110)">
+      <!-- Up: 12 -->
+      <path id="btn-12" class="btn-shape" d="M -10,-30 L 10,-30 L 10,-10 L -10,-10 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)"/>
+      <!-- Down: 13 -->
+      <path id="btn-13" class="btn-shape" d="M -10,10 L 10,10 L 10,30 L -10,30 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)"/>
+      <!-- Left: 14 -->
+      <path id="btn-14" class="btn-shape" d="M -30,-10 L -10,-10 L -10,10 L -30,10 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)"/>
+      <!-- Right: 15 -->
+      <path id="btn-15" class="btn-shape" d="M 10,-10 L 30,-10 L 30,10 L 10,10 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)"/>
+      <!-- Center node -->
+      <rect x="-10" y="-10" width="20" height="20" fill="rgba(255,255,255,0.1)"/>
+    </g>
+
+    <!-- Face Buttons (Right side) -->
+    <g class="face-buttons" transform="translate(290, 110)">
+      <!-- Triangle / Y : 3 -->
+      <circle id="btn-3" class="btn-shape" cx="0" cy="-22" r="10" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)"/>
+      <!-- Cross / A : 0 -->
+      <circle id="btn-0" class="btn-shape" cx="0" cy="22" r="10" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)"/>
+      <!-- Square / X : 2 -->
+      <circle id="btn-2" class="btn-shape" cx="-22" cy="0" r="10" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)"/>
+      <!-- Circle / B : 1 -->
+      <circle id="btn-1" class="btn-shape" cx="22" cy="0" r="10" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)"/>
+    </g>
+
+    <!-- Bumpers -->
+    <!-- L1 : 4 -->
+    <path id="btn-4" class="btn-shape" d="M 90,45 C 110,40 140,40 160,45 L 155,55 C 135,50 115,50 95,55 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)"/>
+    <!-- R1 : 5 -->
+    <path id="btn-5" class="btn-shape" d="M 240,45 C 260,40 290,40 310,45 L 305,55 C 285,50 265,50 245,55 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)"/>
+    
+    <!-- Menu/Options -->
+    <!-- Select : 8 -->
+    <rect id="btn-8" class="btn-shape" x="140" y="90" width="12" height="24" rx="6" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)"/>
+    <!-- Start : 9 -->
+    <rect id="btn-9" class="btn-shape" x="248" y="90" width="12" height="24" rx="6" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.2)"/>
+    
+    <!-- Stick Click (L3, R3) -->
+    <!-- L3 : 10 -->
+    <circle id="btn-10" class="btn-shape" cx="150" cy="180" r="28" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-dasharray="4 4"/>
+    <!-- R3 : 11 -->
+    <circle id="btn-11" class="btn-shape" cx="250" cy="180" r="28" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+  </svg>
+</div>
+
+<script>
+  import { GamepadLoop } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Pre-cache elements
+    const elements = new Array(20);
+    for (let i = 0; i < 20; i++) {
+      elements[i] = document.getElementById(`btn-${i}`);
+    }
+    
+    // Cache last state to avoid duplicate classList updates
+    const lastState = new Array(20).fill(false);
+
+    GamepadLoop.subscribe((state) => {
+      if (!state) return;
+      
+      const buttons = state.buttons;
+      for (let i = 0; i < buttons.length; i++) {
+        if (i < 20) {
+          const pressed = buttons[i].pressed;
+          if (pressed !== lastState[i]) {
+            const el = elements[i];
+            if (el) {
+              if (pressed) el.classList.add('active');
+              else el.classList.remove('active');
+            }
+            lastState[i] = pressed;
+          }
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  .silhouette-container {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .gamepad-svg {
+    width: 100%;
+    height: auto;
+    max-width: 400px;
+    filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
+  }
+  
+  .btn-shape {
+    transition: all 0.05s ease-out; /* Ultra fast transition for instant feel */
+    transform-origin: center;
+  }
+  
+  /* The "Pressed" state design token */
+  .btn-shape.active {
+    fill: #2563EB; /* Electric Cobalt */
+    stroke: #60A5FA;
+    filter: url(#neon-glow);
+    transform: scale(0.95);
+  }
+  
+  #btn-10.active, #btn-11.active {
+    fill: rgba(37, 99, 235, 0.3);
+    stroke: #60A5FA;
+  }
+</style>

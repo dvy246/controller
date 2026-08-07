@@ -1,0 +1,241 @@
+{
+  "changed_sources": [],
+  "failed_sources": [],
+  "previous_snapshot_error": null,
+  "retrieved_at_utc": "2026-08-07T11:50:58.363412+00:00",
+  "source_count": 15,
+  "sources": {
+    "G-ADS-CHANGELOG": {
+      "bytes": 1456465,
+      "final_url": "https://support.google.com/adsense/answer/9336650?hl=en",
+      "host_ok": true,
+      "ok": true,
+      "sha256": "dd443faf0c35ec2e49b46f0d6cb932dabb8e2f6250217ab05d04557ca1f4cfb5",
+      "status": 200,
+      "title": "AdSense policy change log - Google AdSense Help",
+      "update_signals": [
+        "updated to reflect the removal of Syria from the US Office of Foreign Asset Control sanctions list. (Posted August 2025) Update",
+        "updated to remove references to \"apps\". AdSense for Search (AFS) policies Google Search ads policy: Alternative Search Queries",
+        "updated to clarify that CSA may only be used on search results pages that were returned from clear user search intent coming fr",
+        "updated to include new requirements for Ad intents , Related search for Auto ads and Related search for content pages , and are",
+        "updated Policies will apply to AdSense, Ad Manager and AdMob video inventory monetized with Google ad code (\" Video Inventory \""
+      ],
+      "url": "https://support.google.com/adsense/answer/9336650?hl=en"
+    },
+    "G-ADS-CONSENT": {
+      "bytes": 1405651,
+      "final_url": "https://support.google.com/adsense/answer/10961068?hl=en",
+      "host_ok": true,
+      "ok": true,
+      "sha256": "2781cbc609107de259d1edacea07de814b3587e13a9f4446afe71d10b537a2dc",
+      "status": 200,
+      "title": "About European regulations messages - Google AdSense Help",
+      "update_signals": [
+        "updated to support the IAB TCF v2.3 specification . Google's Consent Mode allows other Google products you use (like Google Ads",
+        "updated\",\"Last updated: \"+(new Date(l.Bg.jq)).toDateString())}); if(l.Bg.Qi.length>0){var p=l.Bg.Qi.some(function(r){return r.i",
+        "updated successfully\"}),(f=a.Fa)==null||f.VQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
+        "updated\"});h.oa()})} n.vl=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
+        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function MQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt"
+      ],
+      "url": "https://support.google.com/adsense/answer/10961068?hl=en"
+    },
+    "G-ADS-IMPLEMENTATION": {
+      "bytes": 1407131,
+      "final_url": "https://support.google.com/adsense/answer/1346295?hl=en&visit_id=639217002817306515-3355188111&ref_topic=1271508&rd=1",
+      "host_ok": true,
+      "ok": true,
+      "sha256": "a85ae40882c5158bc0d435c3424c688566e27c3677f212f19168918af02afbce",
+      "status": 200,
+      "title": "Ad placement policies - Google AdSense Help",
+      "update_signals": [
+        "updated\",\"Last updated: \"+(new Date(l.Bg.jq)).toDateString())}); if(l.Bg.Qi.length>0){var p=l.Bg.Qi.some(function(r){return r.i",
+        "updated successfully\"}),(f=a.Fa)==null||f.VQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
+        "updated\"});h.oa()})} n.vl=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
+        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function MQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt",
+        "Last updated\",\"Edit appointments\",\"\",\"Create appointment\",\"Ask Google Help\",\"Terms of Service\",\"Enable Light Mode\",\"This page may co"
+      ],
+      "url": "https://support.google.com/adsense/topic/1271508?hl=en"
+    },
+    "G-ADS-POLICY": {
+      "bytes": 1445821,
+      "final_url": "https://support.google.com/adsense/answer/10502938?hl=en",
+      "host_ok": true,
+      "ok": true,
+      "sha256": "3defa64003a52e93a4fe7573dc5f0e25d7c9e55aee7616d687c9d7a269a028b6",
+      "status": 200,
+      "title": "Google Publisher Policies - Google AdSense Help",
+      "update_signals": [
+        "updated\",\"Last updated: \"+(new Date(l.Bg.jq)).toDateString())}); if(l.Bg.Qi.length>0){var p=l.Bg.Qi.some(function(r){return r.i",
+        "updated successfully\"}),(f=a.Fa)==null||f.VQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
+        "updated\"});h.oa()})} n.vl=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
+        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function MQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt",
+        "Last updated\",\"Edit appointments\",\"\",\"Create appointment\",\"Ask Google Help\",\"Terms of Service\",\"Enable Light Mode\",\"This page may co"
+      ],
+      "url": "https://support.google.com/adsense/answer/10502938?hl=en"
+    },
+    "G-ADS-PROGRAM": {
+      "bytes": 1416131,
+      "final_url": "https://support.google.com/adsense/answer/48182?hl=en",
+      "host_ok": true,
+      "ok": true,
+      "sha256": "0ba194f9498256e1ab68b83970486a410f41c4564b106e9653c5aedbe927ed00",
+      "status": 200,
+      "title": "AdSense Program policies - Google AdSense Help",
+      "update_signals": [
+        "Last updated: August 16, 2024 Next: Families Was this helpful? How can we improve it? Yes No Submit Need more help? Try these next s",
+        "updated\",\"Last updated: \"+(new Date(l.Bg.jq)).toDateString())}); if(l.Bg.Qi.length>0){var p=l.Bg.Qi.some(function(r){return r.i",
+        "updated successfully\"}),(f=a.Fa)==null||f.VQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
+        "updated\"});h.oa()})} n.vl=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
+        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function MQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt"
+      ],
+      "url": "https://support.google.com/adsense/answer/48182?hl=en"
+    },
+    "G-ADS-READY": {
+      "bytes": 1389571,
+      "final_url": "https://support.google.com/adsense/answer/7299563?hl=en",
+      "host_ok": true,
+      "ok": true,
+      "sha256": "8e83c601408e87711cfe7e45f8aff798a40398f2f8008cb180b50528a212b9d5",
+      "status": 200,
+      "title": "Make sure your site's pages are ready for AdSense - Google AdSense Help",
+      "update_signals": [
+        "updated\",\"Last updated: \"+(new Date(l.Bg.jq)).toDateString())}); if(l.Bg.Qi.length>0){var p=l.Bg.Qi.some(function(r){return r.i",
+        "updated successfully\"}),(f=a.Fa)==null||f.VQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
+        "updated\"});h.oa()})} n.vl=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
+        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function MQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt",
+        "Last updated\",\"Edit appointments\",\"\",\"Create appointment\",\"Ask Google Help\",\"Terms of Service\",\"Enable Light Mode\",\"This page may co"
+      ],
+      "url": "https://support.google.com/adsense/answer/7299563?hl=en"
+    },
+    "G-ADS-RESTRICTIONS": {
+      "bytes": 1426160,
+      "final_url": "https://support.google.com/adsense/answer/10437795?hl=en",
+      "host_ok": true,
+      "ok": true,
+      "sha256": "4062b51f9bcdc87546f1a86dd523d17f24b987a89c3296be8f1101bedae4d3e2",
+      "status": 200,
+      "title": "Google Publisher Restrictions - Google AdSense Help",
+      "update_signals": [
+        "updated\",\"Last updated: \"+(new Date(l.Bg.jq)).toDateString())}); if(l.Bg.Qi.length>0){var p=l.Bg.Qi.some(function(r){return r.i",
+        "updated successfully\"}),(f=a.Fa)==null||f.VQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
+        "updated\"});h.oa()})} n.vl=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
+        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function MQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt",
+        "Last updated\",\"Edit appointments\",\"\",\"Create appointment\",\"Ask Google Help\",\"Terms of Service\",\"Enable Light Mode\",\"This page may co"
+      ],
+      "url": "https://support.google.com/adsense/answer/10437795?hl=en"
+    },
+    "G-SEARCH-CWV": {
+      "bytes": 171916,
+      "final_url": "https://developers.google.com/search/docs/appearance/core-web-vitals",
+      "host_ok": true,
+      "ok": true,
+      "sha256": "cb3e848561ae8b8c1be793b0bcefb4cf516c48f7532d368bf0686cb0620f2de5",
+      "status": 200,
+      "title": "Understanding Core Web Vitals and Google search results | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
+      "update_signals": [
+        "Last updated 2025-12-10 UTC. Need to tell us more? [[[\"Easy to understand\",\"easyToUnderstand\",\"thumb-up\"],[\"Solved my problem\",\"solv",
+        "Last updated 2025-12-10 UTC.\"],[],[\"Core Web Vitals measure user experience in loading, interactivity, and visual stability. Site ow"
+      ],
+      "url": "https://developers.google.com/search/docs/appearance/core-web-vitals"
+    },
+    "G-SEARCH-ESSENTIALS": {
+      "bytes": 172174,
+      "final_url": "https://developers.google.com/search/docs/essentials",
+      "host_ok": true,
+      "ok": true,
+      "sha256": "7f3d3e69dc9bd270625b64a2e717d36f7e0a395a2470dcad2dcbf5f8f25967d6",
+      "status": 200,
+      "title": "Google Search Essentials (formerly Webmaster Guidelines) | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
+      "update_signals": [
+        "Last updated 2025-12-10 UTC. Need to tell us more? [[[\"Easy to understand\",\"easyToUnderstand\",\"thumb-up\"],[\"Solved my problem\",\"solv",
+        "Last updated 2025-12-10 UTC.\"],[],[\"Google Search Essentials outline how web content can appear and perform well in Google Search. K"
+      ],
+      "url": "https://developers.google.com/search/docs/essentials"
+    },
+    "G-SEARCH-GENAI": {
+      "bytes": 171983,
+      "final_url": "https://developers.google.com/search/docs/fundamentals/using-gen-ai-content",
+      "host_ok": true,
+      "ok": true,
+      "sha256": "d9e07ff4bdf242b131d6e4be42310becfb22d71c9c8b42f365a2935ba24f18d5",
+      "status": 200,
+      "title": "Google Search&apos;s Guidance on Generative AI Content on Your Website | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
+      "update_signals": [
+        "Last updated 2025-12-10 UTC. Need to tell us more? [[[\"Easy to understand\",\"easyToUnderstand\",\"thumb-up\"],[\"Solved my problem\",\"solv",
+        "Last updated 2025-12-10 UTC.\"],[],[]] LinkedIn Join us on LinkedIn YouTube Watch our videos Blog Subscribe to our RSS feed Podcast L"
+      ],
+      "url": "https://developers.google.com/search/docs/fundamentals/using-gen-ai-content"
+    },
+    "G-SEARCH-HELPFUL": {
+      "bytes": 183636,
+      "final_url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
+      "host_ok": true,
+      "ok": true,
+      "sha256": "5d63d5fc1bbf63c07f0ee0f07486da8572cf9c5ba2d7b0bb140aa406b829b14c",
+      "status": 200,
+      "title": "Creating Helpful, Reliable, People-First Content | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
+      "update_signals": [
+        "Last updated 2025-12-10 UTC. Need to tell us more? [[[\"Easy to understand\",\"easyToUnderstand\",\"thumb-up\"],[\"Solved my problem\",\"solv",
+        "Last updated 2025-12-10 UTC.\"],[],[\"Google's systems prioritize helpful, people-first content, not content designed solely for searc"
+      ],
+      "url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
+    },
+    "G-SEARCH-PAGE": {
+      "bytes": 174462,
+      "final_url": "https://developers.google.com/search/docs/appearance/page-experience",
+      "host_ok": true,
+      "ok": true,
+      "sha256": "61bdc0711d2a2f9267fe786b9741e73231c4be66a24c1b448c54606ed2f3d590",
+      "status": 200,
+      "title": "Understanding Google Page Experience | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
+      "update_signals": [
+        "Last updated 2025-12-10 UTC. Need to tell us more? [[[\"Easy to understand\",\"easyToUnderstand\",\"thumb-up\"],[\"Solved my problem\",\"solv",
+        "Last updated 2025-12-10 UTC.\"],[],[\"Google's core ranking systems reward content with a good page experience, considering multiple a"
+      ],
+      "url": "https://developers.google.com/search/docs/appearance/page-experience"
+    },
+    "G-SEARCH-ROBOTS": {
+      "bytes": 176816,
+      "final_url": "https://developers.google.com/search/docs/crawling-indexing/robots/intro",
+      "host_ok": true,
+      "ok": true,
+      "sha256": "8b3c2664be6bc263fc9dd8e71e1dc644adfa8298c2b1091f8522d5f735503aa5",
+      "status": 200,
+      "title": "Robots.txt Introduction and Guide | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
+      "update_signals": [
+        "Last updated 2025-12-10 UTC. Need to tell us more? [[[\"Easy to understand\",\"easyToUnderstand\",\"thumb-up\"],[\"Solved my problem\",\"solv",
+        "Last updated 2025-12-10 UTC.\"],[],[\"A robots.txt file manages search engine crawler access to URLs on a site, primarily to avoid ser"
+      ],
+      "url": "https://developers.google.com/search/docs/crawling-indexing/robots/intro"
+    },
+    "G-SEARCH-SPAM": {
+      "bytes": 197183,
+      "final_url": "https://developers.google.com/search/docs/essentials/spam-policies",
+      "host_ok": true,
+      "ok": true,
+      "sha256": "e77a3d091e502497931238d1d655a7307cae44bcd413a44185f78c194e068583",
+      "status": 200,
+      "title": "Spam Policies for Google Web Search | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
+      "update_signals": [
+        "Last updated 2026-05-15 UTC. Need to tell us more? [[[\"Easy to understand\",\"easyToUnderstand\",\"thumb-up\"],[\"Solved my problem\",\"solv",
+        "Last updated 2026-05-15 UTC.\"],[],[\"Google's web search spam policies aim to prevent deceptive content and ranking manipulation. Key"
+      ],
+      "url": "https://developers.google.com/search/docs/essentials/spam-policies"
+    },
+    "G-SEARCH-STRUCTURED": {
+      "bytes": 195065,
+      "final_url": "https://developers.google.com/search/docs/appearance/structured-data/sd-policies",
+      "host_ok": true,
+      "ok": true,
+      "sha256": "49b35aa26c3d2e8a90e66d3cb9f5dfbf2fbf2e85bbf399c0e15c86cf0c313aa9",
+      "status": 200,
+      "title": "General Structured Data Guidelines | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
+      "update_signals": [
+        "Last updated 2026-07-10 UTC. Need to tell us more? [[[\"Easy to understand\",\"easyToUnderstand\",\"thumb-up\"],[\"Solved my problem\",\"solv",
+        "Last updated 2026-07-10 UTC.\"],[],[\"Structured data must comply with Google's content and spam policies to be eligible for rich resu"
+      ],
+      "url": "https://developers.google.com/search/docs/appearance/structured-data/sd-policies"
+    }
+  },
+  "verification_status": "PASS"
+}

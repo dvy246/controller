@@ -72,6 +72,42 @@ const specializedTools = [
   { name: 'Sonic-Space Audio', url: '/audio-test', desc: 'Web Audio API 3D binaural radar & Bluetooth latency.', icon: '🔊' },
   { name: 'Mech-Matrix Keyboard', url: '/keyboard-tester', desc: '3D isometric keyboard visualizer with NKRO.', icon: '⌨️' },
 ];
+function getToolIconSvg(url: string) {
+  if (url.includes('/cps')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-cps" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#60A5FA"/></linearGradient></defs><rect x="6" y="3" width="12" height="18" rx="6" fill="url(#g-cps)" fill-opacity="0.2" stroke="url(#g-cps)" stroke-width="2"/><path d="M12 7v4" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/></svg>`;
+  if (url.includes('/dpi')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-dpi" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#EF4444"/></linearGradient></defs><circle cx="12" cy="12" r="9" stroke="url(#g-dpi)" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="#EF4444"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke="#F59E0B" stroke-width="1.5"/></svg>`;
+  if (url.includes('/click-latency')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-clat" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EC4899"/><stop offset="100%" stop-color="#8B5CF6"/></linearGradient></defs><path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z" fill="url(#g-clat)" fill-opacity="0.25" stroke="url(#g-clat)" stroke-width="2" stroke-linejoin="round"/></svg>`;
+  if (url.includes('/scroll')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-scroll" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#10B981"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs><path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4" stroke="url(#g-scroll)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  if (url.includes('/double-click')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-dc" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EF4444"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke="url(#g-dc)" stroke-width="2" stroke-linejoin="round"/></svg>`;
+  if (url.includes('/aim-trainer')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-aim" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00F2FE"/><stop offset="100%" stop-color="#4FACFE"/></linearGradient></defs><circle cx="12" cy="12" r="9" stroke="url(#g-aim)" stroke-width="2"/><circle cx="12" cy="12" r="5" stroke="#00F2FE" stroke-width="1.5"/><circle cx="12" cy="12" r="2" fill="#4FACFE"/></svg>`;
+  if (url.includes('/sensitivity-converter')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-sens" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#A855F7"/><stop offset="100%" stop-color="#EC4899"/></linearGradient></defs><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" stroke="url(#g-sens)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  if (url.includes('/hz-test')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-hzt" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#A855F7"/></linearGradient></defs><path d="M2 12h4l3-7 4 14 3-9 2 2h4" stroke="url(#g-hzt)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  if (url.includes('/audio-test')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-audio" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#10B981"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient></defs><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14" stroke="url(#g-audio)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  if (url.includes('/keyboard-tester')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-kb" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#38BDF8"/><stop offset="100%" stop-color="#818CF8"/></linearGradient></defs><rect x="2" y="6" width="20" height="12" rx="3" fill="url(#g-kb)" fill-opacity="0.2" stroke="url(#g-kb)" stroke-width="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M18 14h.01M9 14h6" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"/></svg>`;
+  if (url.includes('/quick-health')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-qh" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#06B6D4"/><stop offset="100%" stop-color="#10B981"/></linearGradient></defs><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="url(#g-qh)" fill-opacity="0.2" stroke="url(#g-qh)" stroke-width="2" stroke-linejoin="round"/><path d="M7 12h3l1.5-3 3 6 1.5-3h3" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  if (url.includes('/drift')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-drift" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#00F2FE"/></linearGradient></defs><circle cx="12" cy="12" r="9" stroke="url(#g-drift)" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="url(#g-drift)" fill-opacity="0.3" stroke="#00F2FE" stroke-width="1.5"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/></svg>`;
+  if (url.includes('/full-diagnostic')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-diag" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#A855F7"/></linearGradient></defs><rect x="3" y="4" width="18" height="16" rx="3" fill="url(#g-diag)" fill-opacity="0.2" stroke="url(#g-diag)" stroke-width="2"/><path d="M7 12h3l2-4 2 8 2-4h3" stroke="#C084FC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  if (url.includes('/health-score')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-score" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#10B981"/></linearGradient></defs><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="url(#g-score)" fill-opacity="0.25" stroke="url(#g-score)" stroke-width="2" stroke-linejoin="round"/></svg>`;
+  if (url.includes('/ps-calibration')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-hid" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#38BDF8"/><stop offset="100%" stop-color="#818CF8"/></linearGradient></defs><rect x="5" y="5" width="14" height="14" rx="3" fill="url(#g-hid)" fill-opacity="0.2" stroke="url(#g-hid)" stroke-width="2"/><rect x="9" y="9" width="6" height="6" fill="#38BDF8"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4" stroke="#818CF8" stroke-width="2" stroke-linecap="round"/></svg>`;
+  if (url.includes('/steering-wheel')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-wheel" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F97316"/><stop offset="100%" stop-color="#EF4444"/></linearGradient></defs><circle cx="12" cy="12" r="9" stroke="url(#g-wheel)" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="url(#g-wheel)" stroke="#EF4444" stroke-width="1.5"/><path d="M12 3v6M4.5 16.5l5.2-3M19.5 16.5l-5.2-3" stroke="#F97316" stroke-width="2" stroke-linecap="round"/></svg>`;
+  if (url.includes('/fight-stick')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-fight" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EC4899"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient></defs><rect x="2" y="6" width="20" height="12" rx="3" fill="url(#g-fight)" fill-opacity="0.2" stroke="url(#g-fight)" stroke-width="2"/><circle cx="7" cy="12" r="2.5" fill="#EF4444"/><circle cx="13" cy="9.5" r="1.5" fill="#3B82F6"/><circle cx="17" cy="9.5" r="1.5" fill="#10B981"/><circle cx="13" cy="14.5" r="1.5" fill="#F59E0B"/><circle cx="17" cy="14.5" r="1.5" fill="#EC4899"/></svg>`;
+  if (url.includes('/flight-stick')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-flight" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0EA5E9"/><stop offset="100%" stop-color="#2563EB"/></linearGradient></defs><path d="M12 2v10" stroke="url(#g-flight)" stroke-width="3" stroke-linecap="round"/><path d="M8 7h8" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"/><path d="M12 12l-5 8M12 12l5 8M4 20h16" stroke="url(#g-flight)" stroke-width="2" stroke-linecap="round"/></svg>`;
+  if (url.includes('/midi')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-midi" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#A855F7"/><stop offset="100%" stop-color="#EC4899"/></linearGradient></defs><rect x="2" y="5" width="20" height="14" rx="3" fill="url(#g-midi)" fill-opacity="0.2" stroke="url(#g-midi)" stroke-width="2"/><path d="M7 5v8M12 5v8M17 5v8" stroke="#C084FC" stroke-width="2"/><rect x="5.5" y="5" width="3" height="6" fill="#A855F7"/><rect x="10.5" y="5" width="3" height="6" fill="#EC4899"/><rect x="15.5" y="5" width="3" height="6" fill="#A855F7"/></svg>`;
+  if (url.includes('/buttons')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-btn" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#10B981"/></linearGradient></defs><rect x="2" y="6" width="20" height="12" rx="6" fill="url(#g-btn)" fill-opacity="0.2" stroke="url(#g-btn)" stroke-width="2"/><circle cx="16" cy="8.5" r="1.5" fill="#EF4444"/><circle cx="13.5" cy="12" r="1.5" fill="#3B82F6"/><circle cx="18.5" cy="12" r="1.5" fill="#10B981"/><circle cx="16" cy="15.5" r="1.5" fill="#F59E0B"/></svg>`;
+  if (url.includes('/triggers')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-trig" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#10B981"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs><rect x="4" y="3" width="6" height="18" rx="3" fill="url(#g-trig)" fill-opacity="0.2" stroke="url(#g-trig)" stroke-width="2"/><rect x="14" y="3" width="6" height="18" rx="3" fill="url(#g-trig)" fill-opacity="0.2" stroke="url(#g-trig)" stroke-width="2"/><rect x="4" y="10" width="6" height="11" rx="2" fill="#10B981"/><rect x="14" y="6" width="6" height="15" rx="2" fill="#06B6D4"/></svg>`;
+  if (url.includes('/vibration')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-vib" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#8B5CF6"/><stop offset="100%" stop-color="#EC4899"/></linearGradient></defs><rect x="9" y="6" width="6" height="12" rx="2" fill="url(#g-vib)" fill-opacity="0.3" stroke="url(#g-vib)" stroke-width="2"/><path d="M5 8c-1.5 2-1.5 6 0 8M19 8c1.5 2 1.5 6 0 8M2 5c-2.5 3.5-2.5 10.5 0 14M22 5c2.5 3.5 2.5 10.5 0 14" stroke="#EC4899" stroke-width="2" stroke-linecap="round"/></svg>`;
+  if (url.includes('/circularity')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-circ" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#38BDF8"/></linearGradient></defs><circle cx="12" cy="12" r="9" stroke="url(#g-circ)" stroke-width="2" stroke-dasharray="4 2"/><circle cx="12" cy="12" r="3" fill="#38BDF8"/><path d="M12 3v18M3 12h18" stroke="url(#g-circ)" stroke-width="1.5" stroke-opacity="0.5"/></svg>`;
+  if (url.includes('/deadzone')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-dz" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EF4444"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs><circle cx="12" cy="12" r="9" stroke="url(#g-dz)" stroke-width="2"/><circle cx="12" cy="12" r="5" fill="url(#g-dz)" fill-opacity="0.25" stroke="#EF4444" stroke-width="1.5"/><path d="M12 7v10M7 12h10" stroke="#F59E0B" stroke-width="1.5"/></svg>`;
+  if (url.includes('/polling-rate')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-hz" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00F2FE"/><stop offset="100%" stop-color="#4FACFE"/></linearGradient></defs><path d="M2 13h4l3-8 4 14 3-10 2 4h4" stroke="url(#g-hz)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  if (url.includes('/dpad')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-dpad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7V2z" fill="url(#g-dpad)" fill-opacity="0.2" stroke="url(#g-dpad)" stroke-width="2" stroke-linejoin="round"/><path d="M12 5v4M12 15v4M5 12h4M15 12h4" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/></svg>`;
+  if (url.includes('/latency')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-lat" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#EF4444"/></linearGradient></defs><circle cx="12" cy="13" r="8" stroke="url(#g-lat)" stroke-width="2"/><path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z" fill="url(#g-lat)" fill-opacity="0.3" stroke="#F59E0B" stroke-width="1.5" stroke-linejoin="round"/></svg>`;
+  if (url.includes('/multi')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-multi" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#A855F7"/></linearGradient></defs><rect x="2" y="3" width="9" height="8" rx="2" fill="url(#g-multi)" fill-opacity="0.2" stroke="url(#g-multi)" stroke-width="2"/><rect x="13" y="3" width="9" height="8" rx="2" fill="url(#g-multi)" fill-opacity="0.2" stroke="url(#g-multi)" stroke-width="2"/><rect x="2" y="13" width="9" height="8" rx="2" fill="url(#g-multi)" fill-opacity="0.2" stroke="url(#g-multi)" stroke-width="2"/><rect x="13" y="13" width="9" height="8" rx="2" fill="url(#g-multi)" fill-opacity="0.2" stroke="url(#g-multi)" stroke-width="2"/></svg>`;
+  if (url.includes('/timeline')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-tl" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#10B981"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient></defs><path d="M3 3v18h18" stroke="url(#g-tl)" stroke-width="2" stroke-linecap="round"/><path d="M7 16l4-4 4 2 5-7" stroke="#3B82F6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="16" r="2" fill="#10B981"/><circle cx="11" cy="12" r="2" fill="#10B981"/><circle cx="15" cy="14" r="2" fill="#3B82F6"/><circle cx="20" cy="7" r="2" fill="#3B82F6"/></svg>`;
+  if (url.includes('/gyroscope')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-gyro" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#38BDF8"/><stop offset="100%" stop-color="#C084FC"/></linearGradient></defs><circle cx="12" cy="12" r="9" stroke="url(#g-gyro)" stroke-width="2"/><ellipse cx="12" cy="12" rx="9" ry="3" stroke="#38BDF8" stroke-width="1.5" transform="rotate(45 12 12)"/><circle cx="12" cy="12" r="3" fill="#C084FC"/></svg>`;
+  if (url.includes('/touchpad')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-touch" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#38BDF8"/></linearGradient></defs><rect x="3" y="5" width="18" height="14" rx="3" fill="url(#g-touch)" fill-opacity="0.2" stroke="url(#g-touch)" stroke-width="2"/><circle cx="9" cy="12" r="2" fill="#38BDF8"/><circle cx="15" cy="12" r="2" fill="#60A5FA"/></svg>`;
+  if (url.includes('/microphone')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-mic" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EC4899"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs><rect x="9" y="3" width="6" height="11" rx="3" fill="url(#g-mic)" fill-opacity="0.2" stroke="url(#g-mic)" stroke-width="2"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M8 22h8" stroke="#EC4899" stroke-width="2" stroke-linecap="round"/></svg>`;
+  if (url.includes('/competitive-readiness')) return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-esports" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#FBBF24"/></linearGradient></defs><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34M18 4H6v7a6 6 0 0 0 12 0V4z" fill="url(#g-esports)" fill-opacity="0.2" stroke="url(#g-esports)" stroke-width="2" stroke-linejoin="round"/></svg>`;
+  return `<svg width="26" height="26" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-def" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#60A5FA"/></linearGradient></defs><rect x="2" y="6" width="20" height="12" rx="6" fill="url(#g-def)" fill-opacity="0.2" stroke="url(#g-def)" stroke-width="2"/></svg>`;
+}
 ---
 <BaseLayout 
   title="Testing Toolkit | 32+ Diagnostic Tools for Controller & Mouse"
@@ -88,13 +124,13 @@ const specializedTools = [
     <div class="absolute top-[20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-purple-600/10 blur-[120px] pointer-events-none mix-blend-screen"></div>
     <div class="absolute top-[40%] right-[-10%] w-[600px] h-[600px] rounded-full bg-blue-600/10 blur-[150px] pointer-events-none mix-blend-screen"></div>
 
-    <div class="container-site relative z-10 pt-32 pb-24">
-      <div class="mb-12">
+    <div class="container-site toolkit-container relative z-10">
+      <div class="toolkit-breadcrumbs">
         <Breadcrumbs items={breadcrumbs} />
       </div>
       
-      <header class="toolkit-hero mb-20 max-w-3xl">
-        <div class="telemetry-badge inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-[var(--color-surface-2)] border border-[var(--color-border-default)] mb-8 shadow-sm">
+      <header class="toolkit-hero max-w-3xl">
+        <div class="telemetry-badge inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-[var(--color-surface-2)] border border-[var(--color-border-default)] shadow-sm mb-8">
           <span class="relative flex h-2 w-2">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-75"></span>
             <span class="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-accent)]"></span>
@@ -102,36 +138,34 @@ const specializedTools = [
           <span class="text-xs font-bold tracking-widest uppercase text-[var(--color-text-secondary)]">142,850+ Controllers Tested Globally</span>
         </div>
         
-        <h1 class="text-5xl lg:text-7xl font-black tracking-tighter text-[var(--color-text-primary)] mb-6 drop-shadow-sm">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter text-[var(--color-text-primary)] drop-shadow-sm mb-6">
           Diagnostic<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-accent)] to-[#60A5FA]">Testing Toolkit</span>
         </h1>
-        <p class="text-lg lg:text-xl text-[var(--color-text-secondary)] leading-relaxed max-w-2xl font-medium">
+        <p class="text-base sm:text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-2xl font-medium">
           The most comprehensive, privacy-first diagnostic suite available in the browser. 
           No downloads required. Hardware telemetry powers our empirical reliability database.
         </p>
       </header>
 
-      <div class="space-y-32">
+      <div class="toolkit-sections-wrapper">
         {/* Controller Suite */}
         <section class="toolkit-section">
-          <div class="section-header mb-10 border-b border-[var(--color-border-subtle)] pb-6">
-            <h2 class="text-3xl font-bold tracking-tight text-[var(--color-text-primary)] mb-3">Controller & Peripheral Suite</h2>
-            <p class="text-[var(--color-text-secondary)] text-lg font-medium">The definitive 22-tool suite for gamepads, flight sticks, racing wheels, and MIDI.</p>
+          <div class="section-header border-b border-[var(--color-border-subtle)] pb-6 mb-8">
+            <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text-primary)] mb-2">Controller & Peripheral Suite</h2>
+            <p class="text-[var(--color-text-secondary)] text-base font-medium">The definitive suite for gamepads, flight sticks, racing wheels, and MIDI.</p>
           </div>
           <div class="grid-tools">
             {controllerTools.map(tool => (
               <a href={tool.url} class={`tool-hub-card card-hover ${tool.badge === 'Flagship' ? 'card-gradient' : 'card-base'}`}>
                 <div class="card-top-bar">
-                  <div class="card-icon">
-                    <span class="text-xl" aria-hidden="true">{tool.icon}</span>
-                  </div>
+                  <div class="card-icon" set:html={getToolIconSvg(tool.url)} />
                   {tool.badge && <span class="badge-tag">{tool.badge}</span>}
                 </div>
                 <h3 class="card-tool-name">{tool.name}</h3>
                 <p class="card-tool-desc">{tool.desc}</p>
                 <span class="card-action-link">
                   Run test
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  <span class="btn-icon-wrap" style="width: 1.5rem; height: 1.5rem;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
                 </span>
               </a>
             ))}
@@ -140,7 +174,7 @@ const specializedTools = [
 
         {/* Mouse Suite */}
         <section class="toolkit-section">
-          <div class="section-header mb-10 border-b border-[var(--color-border-subtle)] pb-6">
+          <div class="section-header border-b border-[var(--color-border-subtle)] pb-6">
             <h2 class="text-3xl font-bold tracking-tight text-[var(--color-text-primary)] mb-3">Mouse & Keyboard Suite</h2>
             <p class="text-[var(--color-text-secondary)] text-lg font-medium">High-precision polling rate and latency checkers for competitive peripherals.</p>
           </div>
@@ -148,15 +182,13 @@ const specializedTools = [
             {mouseTools.map(tool => (
               <a href={tool.url} class="tool-hub-card card-hover card-base">
                 <div class="card-top-bar">
-                  <div class="card-icon">
-                    <span class="text-xl" aria-hidden="true">{tool.icon}</span>
-                  </div>
+                  <div class="card-icon" set:html={getToolIconSvg(tool.url)} />
                 </div>
                 <h3 class="card-tool-name">{tool.name}</h3>
                 <p class="card-tool-desc">{tool.desc}</p>
                 <span class="card-action-link">
                   Run test
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  <span class="btn-icon-wrap w-6 h-6"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
                 </span>
               </a>
             ))}
@@ -165,7 +197,7 @@ const specializedTools = [
 
         {/* Specialized Suite */}
         <section class="toolkit-section">
-          <div class="section-header mb-10 border-b border-[var(--color-border-subtle)] pb-6">
+          <div class="section-header border-b border-[var(--color-border-subtle)] pb-6">
             <h2 class="text-3xl font-bold tracking-tight text-[var(--color-text-primary)] mb-3">High-SEA Programmatic Suite</h2>
             <p class="text-[var(--color-text-secondary)] text-lg font-medium">Advanced physics, spatial audio, and aim-training sandbox engines.</p>
           </div>
@@ -173,15 +205,13 @@ const specializedTools = [
             {specializedTools.map(tool => (
               <a href={tool.url} class="tool-hub-card card-hover card-base">
                 <div class="card-top-bar">
-                  <div class="card-icon">
-                    <span class="text-xl" aria-hidden="true">{tool.icon}</span>
-                  </div>
+                  <div class="card-icon" set:html={getToolIconSvg(tool.url)} />
                 </div>
                 <h3 class="card-tool-name">{tool.name}</h3>
                 <p class="card-tool-desc">{tool.desc}</p>
                 <span class="card-action-link">
                   Run test
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  <span class="btn-icon-wrap w-6 h-6"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
                 </span>
               </a>
             ))}
@@ -189,18 +219,24 @@ const specializedTools = [
         </section>
       </div>
 
-      <section class="mt-32 pt-16 border-t border-[var(--color-border-subtle)] grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="relative bg-[var(--color-surface-1)] border border-[var(--color-border-default)] rounded-[2rem] p-10 overflow-hidden group shadow-sm">
+      <section class="toolkit-footer border-t border-[var(--color-border-subtle)]">
+        <div class="toolkit-footer-card bg-[var(--color-surface-1)] border border-[var(--color-border-default)] group shadow-sm">
           <div class="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay"></div>
-          <h3 class="text-2xl font-bold text-[var(--color-text-primary)] mb-4 relative z-10">Embed these tools</h3>
-          <p class="text-[var(--color-text-secondary)] mb-8 relative z-10 text-lg font-medium">Get free gamepad testing widgets for your website. Easy to integrate, fully responsive, and zero dependencies.</p>
-          <a href="/embeds" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[var(--color-accent)] text-white font-bold hover:bg-[var(--color-accent-hover)] transition-colors relative z-10 shadow-md">Explore Widgets</a>
+          <h3 class="text-2xl font-bold text-[var(--color-text-primary)] relative z-10 mb-4">Embed these tools</h3>
+          <p class="text-[var(--color-text-secondary)] relative z-10 text-lg font-medium mb-8">Get free gamepad testing widgets for your website. Easy to integrate, fully responsive, and zero dependencies.</p>
+          <a href="/embeds" class="btn-primary relative z-10 shadow-md">
+            Explore Widgets
+            <span class="btn-icon-wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </a>
         </div>
         
-        <div class="relative bg-[var(--color-surface-2)] border border-[var(--color-border-default)] rounded-[2rem] p-10 overflow-hidden group shadow-sm">
-          <h3 class="text-2xl font-bold text-[var(--color-text-primary)] mb-4 relative z-10">Need a New Tool?</h3>
-          <p class="text-[var(--color-text-secondary)] mb-8 relative z-10 text-lg font-medium">We're constantly expanding our dataset and toolkit. If you need a specific tool, let us know.</p>
-          <a href="/contact" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[var(--color-surface-3)] text-[var(--color-text-primary)] font-bold hover:bg-[var(--color-surface-4)] border border-[var(--color-border-default)] transition-colors relative z-10">Submit Feedback</a>
+        <div class="toolkit-footer-card bg-[var(--color-surface-2)] border border-[var(--color-border-default)] group shadow-sm">
+          <h3 class="text-2xl font-bold text-[var(--color-text-primary)] relative z-10 mb-4">Need a New Tool?</h3>
+          <p class="text-[var(--color-text-secondary)] relative z-10 text-lg font-medium mb-8">We're constantly expanding our dataset and toolkit. If you need a specific tool, let us know.</p>
+          <a href="/contact" class="btn-secondary relative z-10">
+            Submit Feedback
+            <span class="btn-icon-wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+          </a>
         </div>
       </section>
     </div>
@@ -209,11 +245,46 @@ const specializedTools = [
 </BaseLayout>
 
 <style>
+  .toolkit-page {
+    padding-top: 120px;
+    padding-bottom: 80px;
+  }
+  .toolkit-container {
+    padding-top: 2rem;
+    padding-bottom: 6rem;
+  }
+  .toolkit-hero {
+    margin-bottom: 5rem;
+  }
+  .toolkit-breadcrumbs {
+    margin-bottom: 3rem;
+  }
+  .toolkit-sections-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6rem;
+  }
+  .section-header {
+    margin-bottom: 3rem;
+  }
+  .toolkit-footer {
+    margin-top: 8rem;
+    padding-top: 4rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+  }
+  .toolkit-footer-card {
+    position: relative;
+    border-radius: 2rem;
+    padding: 2.5rem;
+    overflow: hidden;
+  }
   /* Local styling rules in case some CSS global classes were missing. We strictly use container-site. */
   .grid-tools {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
     width: 100%;
   }
 

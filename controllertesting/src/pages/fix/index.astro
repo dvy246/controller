@@ -34,12 +34,33 @@ const guides = [
   { slug: 'gamecube', name: 'GameCube Controller' },
   { slug: 'logitech-f310', name: 'Logitech F310 / F710' },
 ];
+
+const schemaData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Controller Repair Guides — Fix Stick Drift Step by Step',
+    description: 'Free step-by-step stick drift repair guides for PS5, Xbox, Switch, Steam Deck and more: diagnose with our test, clean or replace, then verify the fix.',
+    url: 'https://controllertesting.com/fix/'
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: guides.map((g, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: `How to fix ${g.name} stick drift`,
+      url: `https://controllertesting.com/fix/stick-drift/${g.slug}`
+    }))
+  }
+];
 ---
 
 <BaseLayout
   title="Controller Repair Guides — Fix Stick Drift Step by Step | ControllerTesting.com"
   description="Free step-by-step stick drift repair guides for PS5, Xbox, Switch, Steam Deck and more: diagnose with our test, clean or replace, then verify the fix."
   breadcrumbs={breadcrumbs}
+  schema={schemaData}
 >
   <Header />
 

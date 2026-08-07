@@ -45,20 +45,37 @@ const faqs = [
 
   {/* ── Results Slot ── */}
   <Fragment slot="results">
-    <div class="results-summary space-y-4">
-      <h2 class="section-title text-xl font-bold">Understanding Express Health Verdicts</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div class="card-base p-4 rounded-xl border border-emerald/30 bg-emerald/10">
-          <strong class="text-emerald font-mono block mb-1">Grade A+ (90–100)</strong>
-          <p class="text-xs text-secondary">Zero measurable drift, 100% button actuation, perfect trigger linearity.</p>
+    <div class="results-summary">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="w-3 h-3 rounded-full bg-accent animate-pulse"></span>
+        <h2 class="text-2xl font-bold tracking-tight text-primary">Understanding Express Health Verdicts</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="card-gradient p-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 hover:border-emerald-500/50 transition-all">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mb-4">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <span class="badge-pass font-mono text-xs px-2.5 py-1 rounded-md font-bold inline-block mb-3">Grade A+ (90–100)</span>
+          <h3 class="text-lg font-bold text-primary mb-2">Esports Ready</h3>
+          <p class="text-sm text-secondary leading-relaxed">Zero measurable drift, 100% button actuation, and perfect analog trigger linearity.</p>
         </div>
-        <div class="card-base p-4 rounded-xl border border-warning/30 bg-warning/10">
-          <strong class="text-warning font-mono block mb-1">Grade B (70–89)</strong>
-          <p class="text-xs text-secondary">Minor stick drift (2-5%) or minor button wear. Deadzone adjustment recommended.</p>
+
+        <div class="card-gradient p-6 rounded-2xl border border-amber-500/30 bg-amber-500/5 hover:border-amber-500/50 transition-all">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mb-4">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <span class="badge-warning font-mono text-xs px-2.5 py-1 rounded-md font-bold inline-block mb-3">Grade B (70–89)</span>
+          <h3 class="text-lg font-bold text-primary mb-2">Minor Wear</h3>
+          <p class="text-sm text-secondary leading-relaxed">Minor stick drift (2-5%) or button wear. Deadzone adjustment recommended.</p>
         </div>
-        <div class="card-base p-4 rounded-xl border border-fail/30 bg-fail/10">
-          <strong class="text-fail font-mono block mb-1">Grade C (&lt;70)</strong>
-          <p class="text-xs text-secondary">Significant drift (&gt;5%) or sticky buttons. Module cleaning or replacement required.</p>
+
+        <div class="card-gradient p-6 rounded-2xl border border-red-500/30 bg-red-500/5 hover:border-red-500/50 transition-all">
+          <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-center mb-4">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          </div>
+          <span class="badge-fail font-mono text-xs px-2.5 py-1 rounded-md font-bold inline-block mb-3">Grade C (&lt;70)</span>
+          <h3 class="text-lg font-bold text-primary mb-2">Module Fault</h3>
+          <p class="text-sm text-secondary leading-relaxed">Significant drift (&gt;5%) or sticky buttons. Module cleaning or replacement required.</p>
         </div>
       </div>
     </div>
@@ -72,8 +89,8 @@ const faqs = [
         <p class="export-desc text-xs text-secondary">Run our 2-minute Flagship Full Diagnostic Wizard for detailed rumble and circularity testing.</p>
       </div>
       <div class="export-buttons flex gap-3">
-        <a href="/test/controller/full-diagnostic" class="btn-primary py-2.5 px-4 rounded-xl text-xs font-bold">Full Diagnostic Wizard</a>
-        <a href="/passport" class="btn-secondary py-2.5 px-4 rounded-xl text-xs font-bold">View Resale Passport</a>
+        <a href="/test/controller/full-diagnostic" class="btn-primary">Full Diagnostic Wizard</a>
+        <a href="/passport" class="btn-secondary">View Resale Passport</a>
       </div>
     </div>
   </Fragment>

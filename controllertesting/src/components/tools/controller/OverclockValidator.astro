@@ -64,7 +64,7 @@
         <span class="text-sm font-medium text-surface-content-muted" id="connection-text">No Controller Detected</span>
       </div>
       
-      <button id="reset-stats" class="px-4 py-2 bg-surface-3 hover:bg-surface-4 text-white text-sm font-medium rounded-lg transition-colors border border-surface-4 hover:border-surface-content-muted active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <button id="reset-stats" class="btn-secondary text-sm">
         Reset Telemetry
       </button>
     </div>
@@ -74,9 +74,30 @@
 <script>
   // High-performance vanilla JS telemetry logic
   class OverclockValidator {
+    canvas: HTMLCanvasElement | null;
+    ctx: CanvasRenderingContext2D | null;
+    hzDisplay: HTMLElement | null;
+    avgHzDisplay: HTMLElement | null;
+    jitterDisplay: HTMLElement | null;
+    statusDot: HTMLElement | null;
+    statusText: HTMLElement | null;
+    waitingOverlay: HTMLElement | null;
+    resetBtn: HTMLElement | null;
+    lastTimestamp: number;
+    deltas: number[];
+    MAX_SAMPLES: number;
+    recentHz: number[];
+    isPolling: boolean;
+    gamepadIndex: number | null;
+    lastAxes: any[];
+    lastButtons: any[];
+    lastInputTime: number;
+    canvasWidth: number = 0;
+    canvasHeight: number = 0;
+
     constructor() {
-      this.canvas = document.getElementById('pacing-canvas');
-      this.ctx = this.canvas.getContext('2d', { alpha: false });
+      this.canvas = document.getElementById('pacing-canvas') as HTMLCanvasElement;
+      this.ctx = this.canvas ? this.canvas.getContext('2d', { alpha: false }) : null;
       
       this.hzDisplay = document.getElementById('current-hz');
       this.avgHzDisplay = document.getElementById('avg-hz');
@@ -104,10 +125,10 @@
       
       // Init
       window.addEventListener('resize', () => this.setupCanvas());
-      window.addEventListener('gamepadconnected', (e) => this.onConnect(e));
-      window.addEventListener('gamepaddisconnected', (e) => this.onDisconnect(e));
+      window.addEventListener('gamepadconnected', (e: any) => this.onConnect(e));
+      window.addEventListener('gamepaddisconnected', (e: any) => this.onDisconnect(e));
       
-      this.resetBtn.addEventListener('click', () => this.resetStats());
+      this.resetBtn?.addEventListener('click', () => this.resetStats());
       
       // Check existing
       const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
@@ -119,6 +140,7 @@
     }
     
     setupCanvas() {
+      if (!this.canvas || !this.ctx) return;
       // High-DPI canvas
       const dpr = window.devicePixelRatio || 1;
       const rect = this.canvas.getBoundingClientRect();
@@ -130,39 +152,49 @@
       this.drawCanvasBackground();
     }
     
-    onConnect(e) {
-      if (this.gamepadIndex === null) {
+    onConnect(e: any) {
+      if (this.gamepadIndex === null && e.gamepad) {
         this.gamepadIndex = e.gamepad.index;
-        this.statusDot.classList.replace('bg-red-500', 'bg-emerald-500');
-        this.statusDot.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.6)';
-        this.statusText.textContent = e.gamepad.id.split('(')[0].trim() || 'Controller Connected';
-        this.statusText.classList.replace('text-surface-content-muted', 'text-white');
+        if (this.statusDot) {
+          this.statusDot.classList.replace('bg-red-500', 'bg-emerald-500');
+          this.statusDot.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.6)';
+        }
+        if (this.statusText) {
+          this.statusText.textContent = e.gamepad.id.split('(')[0].trim() || 'Controller Connected';
+          this.statusText.classList.replace('text-surface-content-muted', 'text-white');
+        }
         this.isPolling = true;
       }
     }
     
-    onDisconnect(e) {
-      if (e.gamepad.index === this.gamepadIndex) {
+    onDisconnect(e: any) {
+      if (e.gamepad && e.gamepad.index === this.gamepadIndex) {
         this.gamepadIndex = null;
-        this.statusDot.classList.replace('bg-emerald-500', 'bg-red-500');
-        this.statusDot.style.boxShadow = '0 0 10px rgba(239, 68, 68, 0.6)';
-        this.statusText.textContent = 'No Controller Detected';
-        this.statusText.classList.replace('text-white', 'text-surface-content-muted');
+        if (this.statusDot) {
+          this.statusDot.classList.replace('bg-emerald-500', 'bg-red-500');
+          this.statusDot.style.boxShadow = '0 0 10px rgba(239, 68, 68, 0.6)';
+        }
+        if (this.statusText) {
+          this.statusText.textContent = 'No Controller Detected';
+          this.statusText.classList.replace('text-white', 'text-surface-content-muted');
+        }
         this.isPolling = false;
-        this.waitingOverlay.style.display = 'flex';
+        if (this.waitingOverlay) {
+          this.waitingOverlay.style.display = 'flex';
+        }
       }
     }
     
     resetStats() {
       this.deltas = [];
       this.recentHz = [];
-      this.hzDisplay.textContent = '0';
-      this.avgHzDisplay.textContent = '0';
-      this.jitterDisplay.textContent = '0.00';
+      if (this.hzDisplay) this.hzDisplay.textContent = '0';
+      if (this.avgHzDisplay) this.avgHzDisplay.textContent = '0';
+      if (this.jitterDisplay) this.jitterDisplay.textContent = '0.00';
       this.drawCanvasBackground();
     }
     
-    hasStateChanged(gamepad) {
+    hasStateChanged(gamepad: any) {
       if (!gamepad) return false;
       let changed = false;
       
@@ -181,7 +213,7 @@
       
       // Check buttons
       if (this.lastButtons.length !== gamepad.buttons.length) {
-        this.lastButtons = Array.from(gamepad.buttons, b => b.value);
+        this.lastButtons = Array.from(gamepad.buttons, (b: any) => b.value);
         changed = true;
       } else {
         for (let i = 0; i < gamepad.buttons.length; i++) {
@@ -196,6 +228,7 @@
     }
     
     drawCanvasBackground() {
+      if (!this.ctx) return;
       this.ctx.fillStyle = '#0f172a'; // Tailwind slate-900 (surface-0 equivalent)
       this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
       
@@ -209,8 +242,8 @@
       
       targets.forEach(t => {
         const y = this.canvasHeight - (t / maxDelta) * this.canvasHeight;
-        this.ctx.moveTo(0, y);
-        this.ctx.lineTo(this.canvasWidth, y);
+        this.ctx!.moveTo(0, y);
+        this.ctx!.lineTo(this.canvasWidth, y);
       });
       this.ctx.stroke();
       
@@ -219,11 +252,12 @@
       this.ctx.font = '10px monospace';
       targets.forEach(t => {
         const y = this.canvasHeight - (t / maxDelta) * this.canvasHeight;
-        this.ctx.fillText(`${t}ms (${Math.round(1000/t)}Hz)`, 5, Math.max(10, y - 4));
+        this.ctx!.fillText(`${t}ms (${Math.round(1000/t)}Hz)`, 5, Math.max(10, y - 4));
       });
     }
     
     drawGraph() {
+      if (!this.ctx) return;
       this.drawCanvasBackground();
       
       if (this.deltas.length < 2) return;
@@ -271,36 +305,40 @@
       const avgRecentDelta = recentDeltas.reduce((a, b) => a + b, 0) / recentDeltas.length;
       const currentHz = avgRecentDelta > 0 ? Math.round(1000 / avgRecentDelta) : 0;
       
-      this.hzDisplay.textContent = currentHz;
+      if (this.hzDisplay) this.hzDisplay.textContent = String(currentHz);
       
       this.recentHz.push(currentHz);
       if (this.recentHz.length > 100) this.recentHz.shift(); // rolling avg over ~1s of active movement
       
       // Calculate Average Hz
       const avgHz = Math.round(this.recentHz.reduce((a, b) => a + b, 0) / this.recentHz.length);
-      this.avgHzDisplay.textContent = avgHz;
+      if (this.avgHzDisplay) this.avgHzDisplay.textContent = String(avgHz);
       
       // Calculate Jitter (StdDev of recent deltas)
       const variance = recentDeltas.reduce((acc, val) => acc + Math.pow(val - avgRecentDelta, 2), 0) / recentDeltas.length;
       const stdDev = Math.sqrt(variance);
       
-      this.jitterDisplay.textContent = stdDev.toFixed(2);
+      if (this.jitterDisplay) this.jitterDisplay.textContent = stdDev.toFixed(2);
       
       // UI Colors based on performance
-      if (avgHz >= 900) {
-        this.avgHzDisplay.className = "text-4xl font-bold text-blue-400 font-mono tracking-tighter tabular-nums";
-      } else if (avgHz >= 450) {
-        this.avgHzDisplay.className = "text-4xl font-bold text-emerald-400 font-mono tracking-tighter tabular-nums";
-      } else {
-        this.avgHzDisplay.className = "text-4xl font-bold text-white font-mono tracking-tighter tabular-nums";
+      if (this.avgHzDisplay) {
+        if (avgHz >= 900) {
+          this.avgHzDisplay.className = "text-4xl font-bold text-blue-400 font-mono tracking-tighter tabular-nums";
+        } else if (avgHz >= 450) {
+          this.avgHzDisplay.className = "text-4xl font-bold text-emerald-400 font-mono tracking-tighter tabular-nums";
+        } else {
+          this.avgHzDisplay.className = "text-4xl font-bold text-white font-mono tracking-tighter tabular-nums";
+        }
       }
       
-      if (stdDev < 1) {
-        this.jitterDisplay.className = "text-4xl font-bold text-emerald-400 font-mono tracking-tighter tabular-nums";
-      } else if (stdDev > 2) {
-        this.jitterDisplay.className = "text-4xl font-bold text-amber-500 font-mono tracking-tighter tabular-nums";
-      } else {
-        this.jitterDisplay.className = "text-4xl font-bold text-white font-mono tracking-tighter tabular-nums";
+      if (this.jitterDisplay) {
+        if (stdDev < 1) {
+          this.jitterDisplay.className = "text-4xl font-bold text-emerald-400 font-mono tracking-tighter tabular-nums";
+        } else if (stdDev > 2) {
+          this.jitterDisplay.className = "text-4xl font-bold text-amber-500 font-mono tracking-tighter tabular-nums";
+        } else {
+          this.jitterDisplay.className = "text-4xl font-bold text-white font-mono tracking-tighter tabular-nums";
+        }
       }
     }
     
@@ -313,7 +351,7 @@
           const now = performance.now();
           if (this.hasStateChanged(gamepad)) {
             
-            if (this.waitingOverlay.style.display !== 'none') {
+            if (this.waitingOverlay && this.waitingOverlay.style.display !== 'none') {
               this.waitingOverlay.style.display = 'none';
             }
             

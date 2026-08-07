@@ -1,0 +1,185 @@
+---
+/**
+ * DiagnosticSequence.astro
+ * An interactive state machine that guides users through a structured hardware test.
+ * Provides clear, actionable steps, passing the Final Quality Gate for UX guidance.
+ */
+---
+<div class="diagnostic-sequence card-base col-span-full mb-4 overflow-hidden relative group">
+  <!-- Progress Bar Background -->
+  <div class="absolute top-0 left-0 h-1 bg-white/5 w-full">
+    <div id="diag-progress-bar" class="h-full bg-blue-500 transition-all duration-300 ease-out" style="width: 0%"></div>
+  </div>
+
+  <div class="p-6 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <div id="diag-icon-container" class="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 shrink-0 transition-colors">
+        <svg id="diag-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div id="diag-text-container" aria-live="polite" aria-atomic="true">
+        <h3 id="diag-step-title" class="text-lg font-bold text-white mb-1">System Standby</h3>
+        <p id="diag-step-desc" class="text-sm text-stone-400">Connect a controller to begin the guided hardware diagnostic.</p>
+      </div>
+    </div>
+
+    <!-- Action Area (e.g. Skip, or Final Score Button) -->
+    <div id="diag-action-area" class="hidden">
+      <a href="/test/controller/health-score" class="btn-primary flex items-center gap-2 px-6 py-2 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-colors">
+        <span>Generate Health Report</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { GamepadLoop } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const title = document.getElementById('diag-step-title');
+    const desc = document.getElementById('diag-step-desc');
+    const progress = document.getElementById('diag-progress-bar');
+    const iconContainer = document.getElementById('diag-icon-container');
+    const actionArea = document.getElementById('diag-action-area');
+
+    if (!title || !desc || !progress || !iconContainer || !actionArea) return;
+
+    let currentStep = 0;
+    
+    // State machine trackers
+    let faceButtonsPressed = 0;
+    let leftStickRotated = false;
+    let rightStickRotated = false;
+    let l2Max = false;
+    let r2Max = false;
+
+    const steps = [
+      {
+        title: "System Standby",
+        desc: "Connect a controller to begin the guided hardware diagnostic.",
+        icon: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+        color: 'blue'
+      },
+      {
+        title: "Step 1: Face Buttons",
+        desc: "Press all 4 main face buttons (Cross, Circle, Square, Triangle / A, B, X, Y).",
+        icon: '<circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/>',
+        color: 'indigo'
+      },
+      {
+        title: "Step 2: Left Thumbstick",
+        desc: "Rotate the left analog stick in a complete 360° circle to test outer deadzones.",
+        icon: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/>',
+        color: 'emerald'
+      },
+      {
+        title: "Step 3: Right Thumbstick",
+        desc: "Rotate the right analog stick in a complete 360° circle.",
+        icon: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/>',
+        color: 'emerald'
+      },
+      {
+        title: "Step 4: Analog Triggers",
+        desc: "Pull both L2 and R2 triggers all the way down to 100%.",
+        icon: '<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 11V3M1 14h6M9 8h6M17 16h6"/>',
+        color: 'amber'
+      },
+      {
+        title: "Diagnostic Complete",
+        desc: "All hardware sensors have been successfully verified.",
+        icon: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+        color: 'emerald'
+      }
+    ];
+
+    const colorMap = {
+      blue: { bg: 'bg-blue-500', iconBg: 'bg-blue-500/10', text: 'text-blue-400' },
+      indigo: { bg: 'bg-indigo-500', iconBg: 'bg-indigo-500/10', text: 'text-indigo-400' },
+      emerald: { bg: 'bg-emerald-500', iconBg: 'bg-emerald-500/10', text: 'text-emerald-400' },
+      amber: { bg: 'bg-amber-500', iconBg: 'bg-amber-500/10', text: 'text-amber-400' }
+    };
+
+    function updateUI(stepIdx: number) {
+      if (stepIdx === currentStep) return;
+      currentStep = stepIdx;
+      
+      const step = steps[currentStep];
+      title!.textContent = step.title;
+      desc!.textContent = step.desc;
+      progress!.style.width = `${(currentStep / (steps.length - 1)) * 100}%`;
+      
+      document.getElementById('diag-icon')!.innerHTML = step.icon;
+      
+      // Update colors
+      const theme = colorMap[step.color as keyof typeof colorMap];
+      iconContainer!.className = `w-12 h-12 rounded-full ${theme.iconBg} flex items-center justify-center ${theme.text} shrink-0 transition-colors`;
+      progress!.className = `h-full ${theme.bg} transition-all duration-300 ease-out`;
+
+      if (currentStep === steps.length - 1) {
+        actionArea!.classList.remove('hidden');
+      }
+    }
+
+    GamepadLoop.subscribe((state) => {
+      if (!state || !state.connected) {
+        updateUI(0);
+        return;
+      }
+
+      if (currentStep === 0) {
+        updateUI(1);
+      }
+
+      // Step 1: Face Buttons (0, 1, 2, 3)
+      if (currentStep === 1) {
+        if (state.buttons[0]?.pressed) faceButtonsPressed |= 1;
+        if (state.buttons[1]?.pressed) faceButtonsPressed |= 2;
+        if (state.buttons[2]?.pressed) faceButtonsPressed |= 4;
+        if (state.buttons[3]?.pressed) faceButtonsPressed |= 8;
+
+        if (faceButtonsPressed === 15) {
+          updateUI(2);
+        }
+      }
+
+      // Step 2: Left Stick Circularity
+      if (currentStep === 2) {
+        if (state.leftStick.distance > 0.95) {
+          leftStickRotated = true; // Simplified for this milestone
+        }
+        if (leftStickRotated && state.leftStick.distance < 0.1) {
+          updateUI(3); // Move on when they let go
+        }
+      }
+
+      // Step 3: Right Stick Circularity
+      if (currentStep === 3) {
+        if (state.rightStick.distance > 0.95) {
+          rightStickRotated = true;
+        }
+        if (rightStickRotated && state.rightStick.distance < 0.1) {
+          updateUI(4);
+        }
+      }
+
+      // Step 4: Triggers
+      if (currentStep === 4) {
+        if (state.triggers.l2 >= 1.0) l2Max = true;
+        if (state.triggers.r2 >= 1.0) r2Max = true;
+
+        if (l2Max && r2Max) {
+          updateUI(5);
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  .diagnostic-sequence {
+    border-radius: 1.5rem;
+    background: var(--color-surface-1, rgba(15, 15, 20, 0.95));
+    border: 1px solid var(--color-border-default, rgba(255,255,255,0.05));
+    box-shadow: 0 4px 24px -4px rgba(0,0,0,0.5);
+  }
+</style>

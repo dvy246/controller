@@ -5,12 +5,12 @@
  */
 
 import ToolLayout from '../../../layouts/ToolLayout.astro';
-import FullDiagnostic from '../../../components/tools/controller/FullDiagnostic.astro';
+import DashboardBento from '../../../components/tools/controller/DashboardBento.astro';
 
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
   { name: 'Controller Tests', url: '/test/controller' },
-  { name: 'Full Diagnostic Wizard' },
+  { name: 'Unified Diagnostic Dashboard' },
 ];
 
 const faqs = [
@@ -30,9 +30,9 @@ const faqs = [
 ---
 
 <ToolLayout
-  title="Full Controller Diagnostic Wizard — Complete Gamepad Health Test | ControllerTesting.com"
-  description="Run a 2-minute diagnostic checkup on your PS5, Xbox, or Switch controller. Test stick drift, buttons, triggers, and rumble in one place. Free and instant."
-  toolName="Full Diagnostic Wizard"
+  title="Unified Controller Diagnostic Dashboard | ControllerTesting.com"
+  description="Run a complete diagnostic checkup on your PS5, Xbox, or Switch controller. Test stick drift, buttons, triggers, and rumble in one unified dashboard."
+  toolName="Diagnostic Dashboard"
   category="Flagship Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
@@ -40,17 +40,7 @@ const faqs = [
 >
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
-    <FullDiagnostic />
-  </Fragment>
-
-  {/* ── Results Slot ── */}
-  <Fragment slot="results">
-    <div class="results-summary">
-      <h2 class="section-title">Diagnostic Scoring System</h2>
-      <p class="results-text">
-        Our diagnostic combines 6 hardware metrics into a single 0-100 score. Grade A+ (95-100) indicates competition-grade performance. Grade C or lower indicates wear requiring deadzone adjustments or thumbstick module replacement.
-      </p>
-    </div>
+    <DashboardBento />
   </Fragment>
 
   {/* ── Export Slot ── */}
@@ -94,7 +84,7 @@ const faqs = [
       running a full diagnostic is the fastest way to pin down hardware faults before buying a replacement controller.
     </p>
 
-    <h3>What We Check in the 5-Step Wizard</h3>
+    <h3>What We Check in the Unified Dashboard</h3>
     <ul>
       <li><strong>Analog Stick Center Offset:</strong> Detects microscopic voltage variance in resting thumbstick potentiometers.</li>
       <li><strong>Circularity Range Error:</strong> Verifies whether your thumbsticks reach 100% full diagonal displacement.</li>
@@ -106,18 +96,6 @@ const faqs = [
 </ToolLayout>
 
 <style>
-  .results-summary {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .results-text {
-    font-size: 1rem;
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-  }
-
   .export-banner {
     display: flex;
     align-items: center;

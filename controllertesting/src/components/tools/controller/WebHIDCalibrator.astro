@@ -238,13 +238,13 @@
 
 <script>
   // Vanilla JS logic for dummy WebHID
-  const btnConnect = document.getElementById('btn-connect');
+  const btnConnect = document.getElementById('btn-connect') as HTMLButtonElement | null;
   const stepsContainer = document.getElementById('calibration-steps');
   const successState = document.getElementById('success-state');
   const canvas = document.getElementById('calibration-canvas') as HTMLCanvasElement;
   const ctx = canvas?.getContext('2d');
   
-  let animationId;
+  let animationId: number;
   let pointX = 200;
   let pointY = 200;
   let isCalibrating = false;
@@ -302,12 +302,13 @@
   if (btnConnect) {
     btnConnect.addEventListener('click', async () => {
       try {
-        if (!navigator.hid) {
+        const nav = navigator as any;
+        if (!nav.hid) {
           alert("WebHID API not supported in this browser. Please use Chrome/Edge.");
           return;
         }
 
-        const devices = await navigator.hid.requestDevice({
+        const devices = await nav.hid.requestDevice({
           filters: [{ vendorId: 0x054c }] // Sony Vendor ID
         });
 
@@ -327,42 +328,39 @@
     btnConnect.innerHTML = 'Calibrating...';
     stepsContainer.classList.remove('hidden');
     
-    const steps = [
-      document.getElementById('step-read'),
-      document.getElementById('step-zero'),
-      document.getElementById('step-flash')
-    ];
-    if(!steps[0] || !steps[1] || !steps[2]) return;
+    const s0 = document.getElementById('step-read');
+    const s1 = document.getElementById('step-zero');
+    const s2 = document.getElementById('step-flash');
+    if (!s0 || !s1 || !s2) return;
     
     // Step 1: Read
-    steps[0].classList.add('active');
+    s0.classList.add('active');
     
     setTimeout(() => {
-      steps[0].classList.remove('active');
-      steps[0].classList.add('completed');
-      steps[1].classList.add('active');
+      s0.classList.remove('active');
+      s0.classList.add('completed');
+      s1.classList.add('active');
       
       // Step 2: Calculate Zero
       setTimeout(() => {
         isCalibrating = true;
-        steps[1].classList.remove('active');
-        steps[1].classList.add('completed');
-        steps[2].classList.add('active');
+        s1.classList.remove('active');
+        s1.classList.add('completed');
+        s2.classList.add('active');
         
         // Step 3: Flash
         setTimeout(() => {
-          steps[2].classList.remove('active');
-          steps[2].classList.add('completed');
+          s2.classList.remove('active');
+          s2.classList.add('completed');
           
           // Finish
           setTimeout(() => {
             stepsContainer.classList.add('hidden');
             btnConnect.classList.add('hidden');
             successState.classList.remove('hidden');
-          }, 500);
-          
-        }, 1500);
-      }, 1500);
-    }, 1500);
+          }, 600);
+        }, 1200);
+      }, 1000);
+    }, 800);
   }
 </script>

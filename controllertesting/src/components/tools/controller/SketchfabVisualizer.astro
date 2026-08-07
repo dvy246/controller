@@ -16,15 +16,8 @@ const { embedSrc } = Astro.props;
   <!-- Sketchfab iframe -->
   <iframe 
     title="3D Controller Model" 
-    frameborder="0" 
-    allowfullscreen 
-    mozallowfullscreen="true" 
-    webkitallowfullscreen="true" 
-    allow="autoplay; fullscreen; xr-spatial-tracking" 
-    xr-spatial-tracking 
-    execution-while-out-of-viewport 
-    execution-while-not-rendered 
-    web-share 
+    allow="autoplay; fullscreen; xr-spatial-tracking; execution-while-out-of-viewport; execution-while-not-rendered; web-share" 
+    allowfullscreen
     src={embedSrc}
     class="sketchfab-iframe"
   ></iframe>

@@ -27,67 +27,6 @@ const faqs = [
   }
 ];
 
-const schemaData = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "SoftwareApplication",
-      "name": "Xbox Controller Tester & Drift Diagnostics",
-      "operatingSystem": "Web Browser",
-      "applicationCategory": "UtilitiesApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "description": "Diagnose Xbox Series X|S and Xbox One controllers for input lag, stick drift, and faulty buttons. Fast, free, and accurate."
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://controllertesting.com/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Tests",
-          "item": "https://controllertesting.com/test/controller/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "Xbox Controller Tester",
-          "item": "https://controllertesting.com/test/controller/xbox"
-        }
-      ]
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Why is my Xbox controller drifting?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Xbox controller drift is typically caused by debris accumulating inside the joystick module or normal wear of the potentiometer sensor components after prolonged use."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can Xbox stick drift be fixed without taking it apart?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Sometimes compressed air or contact cleaner can temporarily dislodge debris causing drift, but severe cases require soldering a new joystick module."
-          }
-        }
-      ]
-    }
-  ]
-};
 ---
 
 <ToolLayout
@@ -99,9 +38,7 @@ const schemaData = {
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
-  <Fragment slot="head">
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(schemaData)} />
-  </Fragment>
+
 
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
@@ -111,12 +48,8 @@ const schemaData = {
     <style>
       .xbox-brand-shell {
         --ambient-glow: #107C10;
-        background: radial-gradient(circle at center, rgba(16, 124, 16, 0.25) 0%, transparent 70%),
-                    repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(16, 124, 16, 0.05) 10px, rgba(16, 124, 16, 0.05) 20px);
-        box-shadow: inset 0 0 40px rgba(16, 124, 16, 0.1), 0 0 60px rgba(16, 124, 16, 0.2);
-        border: 1px solid rgba(16, 124, 16, 0.3);
-        border-radius: 12px;
-        padding: 1rem;
+        box-shadow: 0 0 60px rgba(16, 124, 16, 0.15);
+        border-color: rgba(16, 124, 16, 0.3);
       }
     </style>
   </Fragment>
@@ -126,29 +59,56 @@ const schemaData = {
     <DiagnosticResultsBento />
   </Fragment>
 
+  {/* ── Semantic SEO Content Slot ── */}
+  <Fragment slot="content">
+    <section class="max-w-4xl mx-auto mt-16 px-6">
+      <h2 class="text-[var(--text-h2)] font-extrabold tracking-tight mb-6">Advanced Xbox Controller Diagnostics</h2>
+      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
+        The Microsoft Xbox Series X|S and Xbox Elite Series 2 controllers are renowned for their ergonomic design and asymmetrical thumbstick layout. However, they utilize standard ALPS potentiometer modules which are highly prone to mechanical wear over time. This wear manifests as <strong>stick drift</strong>, where the controller registers movement even when the thumbstick is physically centered. Our web-based diagnostic engine taps into the native Gamepad API to stream raw telemetry data directly from your Xbox controller, giving you sub-percent precision readings on axial offsets.
+      </p>
+      
+      <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Testing Impulse Triggers and Face Buttons</h3>
+      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
+        Unique to the Xbox ecosystem are the localized "Impulse Triggers" which house independent rumble motors in the L2 and R2 triggers. Using our specialized haptic test suite, you can verify that both the primary asymmetrical rumble motors in the grips and the precise impulse motors in the triggers are firing correctly. Furthermore, this tool allows you to map the exact pressure curve of the Hall-effect analog triggers to ensure linear actuation from 0.0 to 1.0 without dead zones.
+      </p>
+      
+      <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Xbox Elite Series 2 Polling Rate Analysis</h3>
+      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed">
+        For competitive players using the Elite Series 2, maintaining a consistent polling rate is critical for input latency. While standard Xbox controllers typically poll at 125Hz (8ms latency) over Bluetooth, wired connections can yield different results. Our real-time Hz tracker continuously monitors the USB or Bluetooth report frequency to ensure your controller isn't dropping packets or experiencing aggressive jitter.
+      </p>
+    </section>
+  </Fragment>
+
   {/* ── SEO Repair Guide Section ── */}
   <Fragment slot="export">
     <PremiumGuideCard title="How can I check my Xbox controller for stick drift?">
-      <p>You can check your Xbox controller for stick drift by connecting it to a PC or Mac and using a browser-based gamepad tester. The tool will display the exact axial offset of your analog sticks. Any constant input registering above five percent without touch indicates hardware drift.</p>
+      <p class="text-lg">You can check your Xbox controller for stick drift by connecting it to a PC or Mac and using a browser-based gamepad tester. The tool will display the exact axial offset of your analog sticks. Any constant input registering above five percent without touch indicates hardware drift.</p>
       
-      <h3 style="color: var(--color-accent); margin-bottom: 0.5rem; font-size: 1.2rem; font-weight: bold;">Recommended Actions</h3>
-      <p>Always begin by using our free <a href="/test/controller/drift">drift diagnostic tool</a> to identify the exact cause of any input inconsistencies before attempting repairs.</p>
+      <h3 class="text-blue-400 mt-12 mb-4 text-2xl font-extrabold tracking-tight">Recommended Actions</h3>
+      <p class="text-lg">Always begin by using our free <a href="/test/controller/drift">drift diagnostic tool</a> to identify the exact cause of any input inconsistencies before attempting repairs.</p>
     </PremiumGuideCard>
 
-    <div class="max-w-4xl mx-auto px-4">
+    <div class="max-w-4xl mx-auto mt-32 mb-20 px-6">
       <PremiumFaqAccordion faqs={faqs} title="Xbox Controller FAQs" subtitle="Common issues and questions about Microsoft's Xbox controllers." />
     </div>
   </Fragment>
 
   {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
-    <a href="/test/controller/drift" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Universal Stick Drift Test</h3>
-      <p class="tool-desc">Test any controller across all major platforms.</p>
+    <a href="/test/controller/vibration" class="tool-hub-card card-hover card-base">
+      <div class="card-icon">📳</div>
+      <h3 class="card-tool-name">Xbox Impulse Triggers</h3>
+      <p class="card-tool-desc">Test the 4 independent rumble motors in your Xbox gamepad.</p>
     </a>
-    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Button Tester</h3>
-      <p class="tool-desc">Check for sticky or failing face buttons and triggers.</p>
+    <a href="/test/controller/triggers" class="tool-hub-card card-hover card-base">
+      <div class="card-icon">🕹️</div>
+      <h3 class="card-tool-name">Analog Trigger Curves</h3>
+      <p class="card-tool-desc">Check the Hall-effect LT/RT magnetic sensor linearity.</p>
+    </a>
+    <a href="/test/controller/deadzone" class="tool-hub-card card-hover card-base">
+      <div class="card-icon">⚫</div>
+      <h3 class="card-tool-name">Deadzone Calculator</h3>
+      <p class="card-tool-desc">Calculate perfect deadzones for Halo, CoD, and Apex.</p>
     </a>
   </Fragment>
 </ToolLayout>

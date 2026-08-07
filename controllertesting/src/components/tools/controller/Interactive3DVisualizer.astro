@@ -1,9 +1,11 @@
 ---
 /**
- * ControllerHero.astro — 3D Three.js Realistic Controller Hero
- * 
- * Premium floating 3D controller implementation for the right column of the hero.
+ * Interactive3DVisualizer.astro — 3D Three.js Realistic Controller Visualizer
+ *
+ * Upgraded to feature a side-by-side layout with a premium 2x2 Bento Grid dashboard.
  */
+import PremiumStickCanvas from './PremiumStickCanvas.astro';
+import TriggerBars from './TriggerBars.astro';
 
 export interface Props {
   modelUrl?: string;
@@ -12,108 +14,267 @@ export interface Props {
 
 const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
 ---
-<div class="controller-3d-wrapper" id="hero-container" data-model-url={modelUrl} data-is-rigid={isRigid ? "true" : "false"}>
+<div class="controller-split-layout" id="hero-layout" data-model-url={modelUrl} data-is-rigid={isRigid ? "true" : "false"}>
   
-  <!-- Loading State -->
-  <div class="loading-spinner" id="loading-spinner">
-    <div class="spinner-ring"></div>
-    <span class="loading-text">INITIALIZING 3D ENGINE...</span>
+  <!-- Left Side: 3D Engine -->
+  <div class="controller-3d-wrapper" id="hero-container">
+    <!-- Loading State -->
+    <div class="loading-spinner" id="loading-spinner">
+      <div class="spinner-ring"></div>
+      <span class="loading-text">INITIALIZING 3D ENGINE...</span>
+    </div>
+
+    <!-- 3D Canvas -->
+    <canvas id="webgl-canvas" class="webgl-canvas"></canvas>
+
+    <!-- Main Vibrate Controls -->
+    <div id="main-vibrate-container" class="absolute top-4 right-4 z-50 flex items-center gap-2 backdrop-blur-md p-1.5 pl-2 rounded-full border border-black/10 dark:border-white/10 shadow-xl hidden bg-surface-0/80 dark:bg-surface-1/90">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-stone-500 dark:text-stone-400 ml-1"><path d="M4 12v.01"/><path d="M8 12v.01"/><path d="M12 12v.01"/><path d="M16 12v.01"/><path d="M20 12v.01"/></svg>
+      <input type="range" id="main-vibe-slider" min="0" max="100" value="100" class="w-12 accent-amber-500 h-1 bg-black/10 dark:bg-white/20 rounded-full appearance-none cursor-pointer" />
+      <button id="main-vibrate-btn" class="px-2.5 py-1 rounded-full font-bold text-[10px] tracking-wide transition-colors border flex items-center gap-1 text-black dark:text-white cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 bg-black/5 dark:bg-white/10 border-black/5 dark:border-white/10">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-500"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        TEST
+      </button>
+    </div>
+
+    <!-- Zero-Latency Button Press HUD -->
+    <div id="button-press-hud" class="absolute bottom-8 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 backdrop-blur-md px-4 py-2 rounded-full border border-accent/40 shadow-[0_0_20px_rgba(37,99,235,0.4)] opacity-0 transition-opacity duration-75 scale-95 pointer-events-none" style="background: rgba(0,0,0,0.85);">
+      <div class="w-2 h-2 rounded-full bg-accent animate-pulse shadow-[0_0_10px_rgba(37,99,235,1)]"></div>
+      <span id="button-press-text" class="text-white font-bold tracking-widest uppercase font-mono text-[11px] shadow-black drop-shadow-md">No Input</span>
+    </div>
+
+    <!-- Awaiting Connection Overlay -->
+    <div id="awaiting-connection-overlay" class="absolute inset-0 z-40 flex flex-col items-center justify-center p-6 pointer-events-none transition-opacity duration-500 opacity-100">
+      <div class="doppelrand-shell p-[0.375rem] rounded-full bg-accent/10 shadow-[0_0_40px_rgba(37,99,235,0.25)] animate-pulse mb-6">
+        <div class="doppelrand-core bg-surface-1/90 backdrop-blur-md border border-accent/30 rounded-full px-6 py-3 flex items-center gap-3 shadow-xl">
+          <div class="relative w-3 h-3 flex items-center justify-center">
+            <span class="absolute inline-flex h-full w-full rounded-full bg-accent opacity-75 animate-ping"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+          </div>
+          <span class="text-primary font-bold text-sm tracking-wide">Waiting for Controller...</span>
+        </div>
+      </div>
+      <p class="text-secondary text-xs max-w-sm text-center font-mono bg-surface-1/80 backdrop-blur-md px-4 py-2 rounded-full border border-surface-3 shadow-md">Connect your controller via USB or Bluetooth & press any button</p>
+    </div>
+
+    <!-- Hardware Mismatch Error Overlay -->
+    <div id="mismatch-overlay" class="absolute inset-0 z-50 flex items-center justify-center p-6 bg-surface-0/90 backdrop-blur-md" style="display: none;">
+      <div class="relative text-center p-8 rounded-2xl bg-surface-1 border border-red-500/30 shadow-2xl max-w-md w-full flex flex-col items-center">
+        
+        <div class="w-16 h-16 shrink-0 bg-red-500/10 rounded-full flex items-center justify-center mb-6 border border-red-500/20 text-red-500">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+        </div>
+        
+        <h3 class="text-2xl font-bold text-white mb-3">Hardware Mismatch</h3>
+        <p class="text-secondary text-base mb-8 leading-relaxed" id="mismatch-desc">We expected a PlayStation controller, but detected an Xbox controller.</p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 w-full justify-center">
+          <a href="/test/controller" class="btn-secondary flex-1 justify-center text-sm py-3 !px-4 whitespace-nowrap">View All Testers</a>
+          <a href="/test/controller/drift" class="btn-primary flex-1 justify-center text-sm py-3 !px-4 whitespace-nowrap !bg-red-600 hover:!bg-red-500 !text-white border-transparent shadow-[0_4px_12px_rgba(220,38,38,0.3)]">Universal Tester</a>
+        </div>
+        
+      </div>
+    </div>
   </div>
 
-  <!-- 3D Canvas -->
-  <canvas id="webgl-canvas" class="webgl-canvas"></canvas>
-  
-  <!-- Subtle Tech Overlay / Badge -->
-  <div class="telemetry-hud" id="telemetry-hud">
-    <div class="status-indicator">
-      <span class="status-dot" id="status-dot"></span>
-      <span id="status-text">Awaiting Gamepad</span>
+  <!-- Right Side: Telemetry Sidebar -->
+  <div class="telemetry-sidebar" id="telemetry-hud">
+    <div class="status-indicator mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span class="status-dot" id="status-dot"></span>
+        <span id="status-text">Awaiting Gamepad</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="bg-black/20 border border-white/5 rounded px-3 py-1.5 flex items-center gap-2">
+          <span class="text-stone-500 font-mono text-[10px] uppercase tracking-widest">Rate</span>
+          <span id="telemetry-hz" class="text-white font-mono text-sm font-bold">-- Hz</span>
+        </div>
+      </div>
     </div>
-    <div class="telemetry-dashboard" id="telemetry-data" style="display: none;">
+    
+    <div class="bento-grid" id="telemetry-data" style="display: none;">
       
-      <!-- Sticks -->
-      <div class="telemetry-section">
-        <div class="telemetry-label">ANALOG STICKS</div>
-        <div class="telemetry-row">
-          <span class="telemetry-key">LS</span>
-          <span class="telemetry-val" id="ls-val">0.00, 0.00</span>
+      <!-- 1. Analog Sticks (Imported Component) -->
+      <div class="bento-cell flex flex-col min-h-[220px]">
+        <div class="cell-header shrink-0 mb-2">
+          <div class="flex items-center gap-2">
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+            <h3 class="cell-title">Analog Sticks</h3>
+          </div>
+          <span class="cell-subtitle">DRIFT & CIRCULARITY</span>
         </div>
-        <div class="telemetry-row">
-          <span class="telemetry-key">RS</span>
-          <span class="telemetry-val" id="rs-val">0.00, 0.00</span>
-        </div>
-      </div>
-      
-      <div class="telemetry-divider"></div>
-
-      <!-- Triggers -->
-      <div class="telemetry-section">
-        <div class="telemetry-label">ANALOG TRIGGERS</div>
-        <div class="telemetry-row">
-          <span class="telemetry-key">LT</span>
-          <div class="telemetry-bar-bg"><div class="telemetry-bar-fill" id="lt-val" style="width: 0%"></div></div>
-        </div>
-        <div class="telemetry-row">
-          <span class="telemetry-key">RT</span>
-          <div class="telemetry-bar-bg"><div class="telemetry-bar-fill" id="rt-val" style="width: 0%"></div></div>
+        <div class="flex-1 relative flex items-center justify-center min-h-0 w-full">
+          <PremiumStickCanvas />
         </div>
       </div>
 
-      <div class="telemetry-divider"></div>
-
-      <!-- Active Buttons -->
-      <div class="telemetry-section">
-        <div class="telemetry-label">ACTIVE INPUTS</div>
-        <div class="telemetry-buttons" id="active-buttons">
-          <span class="telemetry-empty">None</span>
+      <!-- 2. Triggers (Imported Component) -->
+      <div class="bento-cell flex flex-col min-h-[220px]">
+        <div class="cell-header shrink-0 mb-2">
+          <div class="flex items-center gap-2">
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-indigo-400"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 11V3M1 14h6M9 8h6M17 16h6"/></svg>
+            <h3 class="cell-title">Triggers</h3>
+          </div>
+          <span class="cell-subtitle">ANALOG PRESSURE (0-1)</span>
+        </div>
+        <div class="flex-1 relative flex items-center justify-center min-h-0 w-full">
+          <TriggerBars />
         </div>
       </div>
+
+      <!-- 3. Raw Data & Gyro -->
+      <div class="bento-cell flex flex-col min-h-[220px]">
+        <div class="cell-header shrink-0 mb-4">
+          <div class="flex items-center gap-2">
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            <h3 class="cell-title">Raw Data</h3>
+          </div>
+          <span class="cell-subtitle">SENSORS & BUTTONS</span>
+        </div>
+        <div class="flex-1 flex flex-col gap-4">
+          <!-- Gyro row -->
+          <div class="flex justify-between font-mono text-[11px] sm:text-xs text-stone-400 bg-black/20 p-2 rounded-lg border border-white/5">
+            <div><span class="text-stone-600 font-semibold mr-1">P</span> <span id="gyro-pitch" class="text-blue-400 font-bold w-12 inline-block">0.0°</span></div>
+            <div><span class="text-stone-600 font-semibold mr-1">R</span> <span id="gyro-roll" class="text-blue-400 font-bold w-12 inline-block">0.0°</span></div>
+            <div><span class="text-stone-600 font-semibold mr-1">Y</span> <span id="gyro-yaw" class="text-blue-400 font-bold w-12 inline-block">0.0°</span></div>
+          </div>
+          <!-- Button Matrix -->
+          <div class="button-matrix flex flex-wrap gap-2 justify-center" id="button-matrix">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Vibration Test -->
+      <div class="bento-cell flex flex-col min-h-[220px]">
+        <div class="cell-header mb-2">
+          <div class="flex items-center gap-2">
+            <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-400"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <h3 class="cell-title text-amber-400">Vibration Test</h3>
+          </div>
+          <span class="cell-subtitle">Dual Motor Setup</span>
+        </div>
+        <div class="flex-1 flex flex-col items-center justify-center gap-4">
+           <!-- Center Rumble Icon -->
+           <div class="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-stone-400"><path d="M4 12v.01"/><path d="M8 12v.01"/><path d="M12 12v.01"/><path d="M16 12v.01"/><path d="M20 12v.01"/><path d="m2 8 20-4"/><path d="m2 16 20 4"/></svg>
+           </div>
+           <!-- Controls -->
+           <div class="grid grid-cols-2 gap-2 w-full">
+             <button class="vibe-btn glass-panel text-[0.65rem] font-bold uppercase tracking-wider py-2 rounded border border-white/5 hover:bg-white/10 transition-colors" data-vibe="heavy">
+               Heavy <div class="w-4 h-1 bg-amber-500 rounded-full mx-auto mt-1"></div>
+             </button>
+             <button class="vibe-btn glass-panel text-[0.65rem] font-bold uppercase tracking-wider py-2 rounded border border-white/5 hover:bg-white/10 transition-colors" data-vibe="light">
+               Light <div class="w-4 h-1 bg-blue-500 rounded-full mx-auto mt-1"></div>
+             </button>
+             <button class="vibe-btn glass-panel text-[0.65rem] font-bold uppercase tracking-wider py-2 rounded border border-white/5 hover:bg-white/10 transition-colors" data-vibe="burst">
+               Burst <div class="w-4 h-1 bg-purple-500 rounded-full mx-auto mt-1"></div>
+             </button>
+             <button class="vibe-btn glass-panel text-[0.65rem] font-bold uppercase tracking-wider py-2 rounded border border-white/5 hover:bg-white/10 transition-colors" data-vibe="pulse">
+               Pulse <div class="w-4 h-1 bg-rose-500 rounded-full mx-auto mt-1"></div>
+             </button>
+           </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- Awaiting Connection Overlay -->
-  <div id="awaiting-connection-overlay" class="absolute inset-0 z-40 flex flex-col items-center justify-center p-6 bg-surface-0/60 backdrop-blur-sm transition-opacity duration-500 pointer-events-none opacity-100">
-    <div class="doppelrand-shell p-[0.375rem] rounded-full bg-accent/10 shadow-[0_0_40px_rgba(37,99,235,0.2)] animate-pulse">
-      <div class="doppelrand-core bg-surface-1 border border-accent/30 rounded-full px-8 py-4 flex items-center gap-4 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
-        <div class="relative w-4 h-4 flex items-center justify-center">
-          <span class="absolute inline-flex h-full w-full rounded-full bg-accent opacity-75 animate-ping"></span>
-          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent"></span>
-        </div>
-        <span class="text-primary font-bold tracking-wide">Waiting for Controller...</span>
-      </div>
-    </div>
-    <p class="text-secondary text-sm mt-6 max-w-sm text-center font-mono">Connect your controller via USB or Bluetooth and press any button to begin.</p>
-  </div>
-
-  <!-- Hardware Mismatch Error Overlay -->
-  <div id="mismatch-overlay" class="absolute inset-0 z-50 flex items-center justify-center p-6 bg-surface-0/90 backdrop-blur-md" style="display: none;">
-    <div class="text-center p-8 rounded-2xl bg-surface-1 border border-red-500/50 shadow-[0_0_50px_rgba(239,68,68,0.2)] max-w-md">
-      <div class="w-16 h-16 mx-auto bg-red-500/10 rounded-full flex items-center justify-center mb-4 border border-red-500/20">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-        </svg>
-      </div>
-      <h3 class="text-xl font-bold text-white mb-2">Hardware Mismatch</h3>
-      <p class="text-secondary text-sm mb-6" id="mismatch-desc">We expected a PlayStation controller, but detected an Xbox controller.</p>
-      <div class="flex gap-3 justify-center">
-        <a href="/test/controller" class="btn-secondary text-xs">View All Testers</a>
-        <a href="/test/controller/drift" class="btn-primary text-xs">Use Universal Tester</a>
-      </div>
-    </div>
-  </div>
 </div>
 
 <style>
+  .controller-split-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    width: 100%;
+    min-height: 550px;
+    position: relative;
+    z-index: 10;
+    border-radius: var(--radius-lg);
+    background: rgba(6, 6, 11, 0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+    overflow: hidden;
+  }
+
+  @media (min-width: 1280px) {
+    .controller-split-layout {
+      grid-template-columns: 60% 40%;
+      align-items: stretch;
+    }
+  }
+
   .controller-3d-wrapper {
     position: relative;
     width: 100%;
-    height: 100%;
     min-height: 500px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
+  /* Right sidebar styles */
+  .telemetry-sidebar {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    background: rgba(10, 10, 15, 0.7);
+    backdrop-filter: blur(24px);
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  
+  @media (min-width: 1280px) {
+    .telemetry-sidebar {
+      border-top: none;
+      border-left: 1px solid rgba(255,255,255,0.05);
+      padding: 2rem;
+    }
+  }
+
+  /* Bento Grid System */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .bento-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .bento-cell {
+    background: rgba(18, 18, 24, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cell-header {
+    margin-bottom: 0.5rem;
+  }
+
+  .cell-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+  }
+
+  .cell-subtitle {
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.4);
+    font-family: var(--font-mono, monospace);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Shared Visualizer Loading Overlays */
   .loading-spinner {
     position: absolute;
     z-index: 5;
@@ -125,11 +286,8 @@ const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
     opacity: 0;
     pointer-events: none;
   }
-
-  .loading-spinner.active {
-    opacity: 1;
-  }
-
+  .loading-spinner.active { opacity: 1; }
+  
   .spinner-ring {
     width: 32px;
     height: 32px;
@@ -139,7 +297,6 @@ const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
     animation: spin 1s linear infinite;
     margin-bottom: 12px;
   }
-
   .loading-text {
     font-family: var(--font-mono, monospace);
     font-size: 0.7rem;
@@ -147,9 +304,7 @@ const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
     letter-spacing: 0.15em;
   }
 
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   .webgl-canvas {
     position: absolute;
@@ -161,52 +316,29 @@ const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
     opacity: 0;
     transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
-
-  .webgl-canvas.loaded {
-    opacity: 1;
-    z-index: 2;
-  }
-
-  .telemetry-hud {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    pointer-events: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    opacity: 0;
-    transition: opacity 1s ease 0.5s;
-  }
-  
-  .webgl-canvas.loaded ~ .telemetry-hud {
-    opacity: 1;
-  }
+  .webgl-canvas.loaded { opacity: 1; z-index: 2; }
 
   .status-indicator {
     background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 8px 16px;
+    padding: 10px 20px;
     border-radius: 24px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: rgba(255, 255, 255, 0.8);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    align-self: flex-start;
   }
 
   .status-dot {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: rgba(255,255,255,0.2);
     transition: all 0.3s ease;
@@ -214,101 +346,6 @@ const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
   .status-dot.connected { 
     background: var(--color-pass, #10b981); 
     box-shadow: 0 0 12px rgba(16, 185, 129, 0.8); 
-  }
-
-  .telemetry-dashboard {
-    background: rgba(6, 6, 11, 0.6);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    padding: 16px 20px;
-    display: flex;
-    gap: 24px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-  }
-
-  .telemetry-section {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-width: 100px;
-  }
-
-  .telemetry-divider {
-    width: 1px;
-    background: rgba(255,255,255,0.1);
-    align-self: stretch;
-  }
-
-  .telemetry-label {
-    font-family: var(--font-sans, sans-serif);
-    font-size: 0.65rem;
-    font-weight: 800;
-    color: rgba(255, 255, 255, 0.4);
-    letter-spacing: 0.1em;
-    margin-bottom: 4px;
-  }
-
-  .telemetry-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
-  }
-
-  .telemetry-key {
-    color: rgba(255,255,255,0.5);
-    font-weight: 600;
-    width: 20px;
-  }
-
-  .telemetry-val {
-    color: #3b82f6;
-    font-weight: 700;
-  }
-
-  .telemetry-bar-bg {
-    flex: 1;
-    height: 6px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 3px;
-    overflow: hidden;
-    width: 60px;
-  }
-
-  .telemetry-bar-fill {
-    height: 100%;
-    background: #3b82f6;
-    border-radius: 3px;
-    box-shadow: 0 0 8px rgba(59,130,246,0.6);
-    transition: width 0.05s linear;
-  }
-
-  .telemetry-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    max-width: 120px;
-  }
-
-  .active-btn {
-    background: rgba(59,130,246,0.2);
-    border: 1px solid rgba(59,130,246,0.5);
-    color: #60a5fa;
-    font-family: var(--font-mono, monospace);
-    font-size: 0.65rem;
-    font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 4px;
-    box-shadow: 0 0 8px rgba(59,130,246,0.3);
-  }
-
-  .telemetry-empty {
-    font-family: var(--font-mono, monospace);
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.2);
-    font-style: italic;
   }
 </style>
 
@@ -324,21 +361,143 @@ const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
   import { parseGamepadState } from '../../../lib/gamepad.ts';
 
   document.addEventListener('DOMContentLoaded', () => {
+    const layoutWrapper = document.getElementById('hero-layout') as HTMLElement | null;
     const container = document.getElementById('hero-container') as HTMLElement | null;
     const canvas = document.getElementById('webgl-canvas') as HTMLCanvasElement | null;
     const spinner = document.getElementById('loading-spinner') as HTMLElement | null;
     const maxRotation = 0.5;
     
-    if (!container || !canvas) return;
-
-    // Wait for DOM layout
-    setTimeout(initThreeJS, 100); 
+    if (!layoutWrapper || !container || !canvas) return;
 
     let scene: any, camera: any, renderer: any, controls: any;
     let controllerModel: any;
     let leftStickNode: any = null;
     let rightStickNode: any = null;
     let isInteracting = false;
+    let isInitialized = false;
+    let isLoopRunning = false;
+    let targetQuaternion = new THREE.Quaternion();
+
+    // Cache DOM Elements
+    const statusDot = document.getElementById('status-dot') as HTMLElement | null;
+    const statusText = document.getElementById('status-text') as HTMLElement | null;
+    const telemetryData = document.getElementById('telemetry-data') as HTMLElement | null;
+    const mismatchOverlay = document.getElementById('mismatch-overlay') as HTMLElement | null;
+    const mismatchDesc = document.getElementById('mismatch-desc') as HTMLElement | null;
+    const awaitingOverlay = document.getElementById('awaiting-connection-overlay') as HTMLElement | null;
+    const gyroPitch = document.getElementById('gyro-pitch') as HTMLElement | null;
+    const gyroRoll = document.getElementById('gyro-roll') as HTMLElement | null;
+    const gyroYaw = document.getElementById('gyro-yaw') as HTMLElement | null;
+    const btnMatrix = document.getElementById('button-matrix') as HTMLElement | null;
+
+    // Initialize Button Matrix HTML once
+    const btnElements: HTMLElement[] = [];
+    if (btnMatrix) {
+      let html = '';
+      for (let i = 0; i < 18; i++) {
+        html += `<div id="btn-visual-${i}" class="w-[28px] h-[28px] flex items-center justify-center text-[0.65rem] font-bold font-mono rounded border transition-all duration-75 bg-white/5 text-stone-500 border-white/5">${i}</div>`;
+      }
+      btnMatrix.innerHTML = html;
+      for (let i = 0; i < 18; i++) {
+        const el = document.getElementById(`btn-visual-${i}`);
+        if (el) btnElements.push(el);
+      }
+    }
+
+    // Attach Vibration Listeners
+    const vibeBtns = document.querySelectorAll('.vibe-btn');
+    vibeBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const type = (e.currentTarget as HTMLElement).getAttribute('data-vibe');
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        let activeGp: any = null;
+        for (let i = 0; i < gamepads.length; i++) {
+          if (gamepads[i]?.connected) { activeGp = gamepads[i]; break; }
+        }
+        if (activeGp && activeGp.vibrationActuator) {
+          let duration = 200, strong = 0, weak = 0;
+          if (type === 'heavy') { strong = 1.0; weak = 0.2; duration = 400; }
+          if (type === 'light') { strong = 0.1; weak = 0.8; duration = 300; }
+          if (type === 'burst') { strong = 1.0; weak = 1.0; duration = 100; }
+          if (type === 'pulse') { strong = 0.5; weak = 0.5; duration = 500; }
+          
+          try {
+            activeGp.vibrationActuator.playEffect("dual-rumble", {
+              startDelay: 0,
+              duration: duration,
+              weakMagnitude: weak,
+              strongMagnitude: strong
+            });
+          } catch (err) {
+            console.warn("Vibration API failed", err);
+          }
+        } else {
+          // Visual feedback if unsupported
+          const originalText = (e.currentTarget as HTMLElement).innerHTML;
+          (e.currentTarget as HTMLElement).innerHTML = `<span class="text-red-400">Unsupported</span>`;
+          setTimeout(() => {
+            (e.currentTarget as HTMLElement).innerHTML = originalText;
+          }, 1500);
+        }
+      });
+      // Main Vibrate Button Listener
+      const mainVibeBtn = document.getElementById('main-vibrate-btn');
+      const mainVibeSlider = document.getElementById('main-vibe-slider') as HTMLInputElement;
+      if (mainVibeBtn) {
+        mainVibeBtn.addEventListener('click', (e) => {
+          const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+          let activeGp: any = null;
+          for (let i = 0; i < gamepads.length; i++) {
+            if (gamepads[i]?.connected) { activeGp = gamepads[i]; break; }
+          }
+          if (activeGp && activeGp.vibrationActuator) {
+            const intensity = mainVibeSlider ? parseInt(mainVibeSlider.value, 10) / 100 : 1.0;
+            try {
+              activeGp.vibrationActuator.playEffect("dual-rumble", {
+                startDelay: 0,
+                duration: 600,
+                weakMagnitude: intensity,
+                strongMagnitude: intensity
+              });
+            } catch (err) {
+              console.warn("Vibration API failed", err);
+            }
+          } else {
+            const originalText = (e.currentTarget as HTMLElement).innerHTML;
+            (e.currentTarget as HTMLElement).innerHTML = `<span class="text-red-400">Unsupported</span>`;
+            setTimeout(() => {
+              (e.currentTarget as HTMLElement).innerHTML = originalText;
+            }, 1500);
+          }
+        });
+      }
+
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          if (!isInitialized) {
+            isInitialized = true;
+            if ('requestIdleCallback' in window) {
+              requestIdleCallback(() => initThreeJS());
+            } else {
+              setTimeout(initThreeJS, 150);
+            }
+          } else if (renderer && !isLoopRunning) {
+            isLoopRunning = true;
+            renderer.setAnimationLoop(animate);
+          }
+        } else {
+          if (renderer && isLoopRunning) {
+            isLoopRunning = false;
+            renderer.setAnimationLoop(null);
+          }
+        }
+      });
+    }, { threshold: 0.05 });
+
+    observer.observe(layoutWrapper);
     
     function initThreeJS() {
       if (!container || !canvas || !spinner) return;
@@ -346,33 +505,34 @@ const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
 
       scene = new THREE.Scene();
       
-      // Premium camera setup (tighter FOV for product shots)
       camera = new THREE.PerspectiveCamera(35, container.clientWidth / container.clientHeight, 0.1, 100);
       camera.position.set(0, 1.2, 4);
 
-      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer = new THREE.WebGLRenderer({ 
+        canvas, 
+        alpha: true, 
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
       renderer.setSize(container.clientWidth, container.clientHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // High-res for premium feel
       
-      // Premium lighting setup
-      // Use tone mapping for cinematic look
+      const maxDpr = window.innerWidth < 768 ? 1.25 : 1.5;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxDpr));
+      
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
       renderer.toneMappingExposure = 1.2;
 
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
       scene.add(ambientLight);
 
-      // Key light
       const keyLight = new THREE.DirectionalLight(0xffffff, 2);
       keyLight.position.set(5, 5, 2);
       scene.add(keyLight);
 
-      // Fill light (subtle blue/purple tint from left)
       const fillLight = new THREE.DirectionalLight(0x8b5cf6, 1.5);
       fillLight.position.set(-5, 0, 5);
       scene.add(fillLight);
       
-      // Rim light (sharp highlight from behind)
       const rimLight = new THREE.DirectionalLight(0xffffff, 1.5);
       rimLight.position.set(0, 5, -5);
       scene.add(rimLight);
@@ -381,7 +541,7 @@ const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
       controls.enableDamping = true;
       controls.dampingFactor = 0.04;
       controls.enablePan = false;
-      controls.enableZoom = false; // Prevent zooming which breaks layout
+      controls.enableZoom = false; 
       controls.target.set(0, 0, 0);
 
       controls.addEventListener('start', () => isInteracting = true);
@@ -389,6 +549,7 @@ const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
 
       loadControllerModel();
       window.addEventListener('resize', onWindowResize);
+      isLoopRunning = true;
       renderer.setAnimationLoop(animate);
     }
 
@@ -398,25 +559,21 @@ const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
       dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
       loader.setDRACOLoader(dracoLoader);
 
-      const modelUrl = container?.getAttribute('data-model-url') || '/models/controller.glb';
+      const modelUrl = layoutWrapper?.getAttribute('data-model-url') || '/models/controller.glb';
       
-      // Load the actual controller GLB
       loader.load(
         modelUrl, 
         (gltf: any) => {
           controllerModel = gltf.scene;
           
-          // Ensure materials look premium and find stick nodes
           controllerModel.traverse((child: any) => {
             if (child.isMesh && child.material) {
-              // Boost environmental reflection if it's a standard material
               if (child.material.isMeshStandardMaterial) {
                 child.material.envMapIntensity = 1.5;
                 child.material.needsUpdate = true;
               }
             }
             
-            // Try to find thumbstick nodes for live telemetry binding
             const name = child.name.toLowerCase();
             if ((name.includes('left') || name.includes('l3')) && (name.includes('stick') || name.includes('thumb'))) {
                leftStickNode = child;
@@ -426,29 +583,22 @@ const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
             }
           });
 
-          // Center and scale model properly
           const box = new THREE.Box3().setFromObject(controllerModel);
           const center = box.getCenter(new THREE.Vector3());
           const size = box.getSize(new THREE.Vector3());
           
-          // Normalize scale so it always fits perfectly regardless of original GLB scale
           const maxDim = Math.max(size.x, size.y, size.z);
-          const scale = 2.0 / maxDim; // Target size of ~2 units
+          const scale = 2.0 / maxDim; 
           controllerModel.scale.set(scale, scale, scale);
-          
           controllerModel.position.sub(center.multiplyScalar(scale));
           
-          const isRigid = container?.getAttribute('data-is-rigid') === 'true';
+          const isRigid = layoutWrapper?.getAttribute('data-is-rigid') === 'true';
           if (!isRigid) {
-            // Rotate it slightly for a better hero angle if floating
             controllerModel.rotation.x = 0.2;
             controllerModel.rotation.y = -0.3;
-          } else {
-            // Perfectly centered and straight for rigid diagnostic view
-            controllerModel.rotation.x = 0;
-            controllerModel.rotation.y = 0;
           }
 
+          targetQuaternion.copy(controllerModel.quaternion);
           scene.add(controllerModel);
 
           if(spinner) spinner.classList.remove('active');
@@ -463,74 +613,116 @@ const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
     }
 
     const clock = new THREE.Clock();
+    // Cache last state to avoid redundant DOM updates
+    let lastPitch = -999, lastRoll = -999, lastYaw = -999;
+    let lastButtons = new Array(18).fill(false);
+    let wasConnected = false;
+    let lastTimestamp = 0;
+    let updateCount = 0;
+    let lastSecond = performance.now();
+    let hzEl = document.getElementById('telemetry-hz');
 
     function animate() {
       clock.getDelta();
       controls.update();
+      const isRigid = layoutWrapper?.getAttribute("data-is-rigid") === "true";
 
-      const isRigid = container?.getAttribute('data-is-rigid') === 'true';
+      if (!renderer || !scene || !camera) return;
 
-      if (controllerModel && !isInteracting && !isRigid) {
-        // Very slow premium rotation
-        controllerModel.rotation.y += 0.002;
-        // Floating hover effect
-        controllerModel.position.y = Math.sin(clock.getElapsedTime()) * 0.03;
-      }
-
-      // Telemetry hook
       const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-      let activeGp = null;
+      let activeGp: any = null;
       for (let i = 0; i < gamepads.length; i++) {
         if (gamepads[i]?.connected) { activeGp = gamepads[i]; break; }
       }
-
-      const statusDot = document.getElementById('status-dot') as HTMLElement | null;
-      const statusText = document.getElementById('status-text') as HTMLElement | null;
-      const telemetryData = document.getElementById('telemetry-data') as HTMLElement | null;
-      const mismatchOverlay = document.getElementById('mismatch-overlay') as HTMLElement | null;
-      const mismatchDesc = document.getElementById('mismatch-desc') as HTMLElement | null;
       
       if (activeGp && statusDot && statusText && telemetryData && mismatchOverlay && mismatchDesc && canvas && container) {
         const state = parseGamepadState(activeGp);
-        const pageModel = container.getAttribute('data-model') || '';
-        const detectedLower = (state.detectedModel || '').toLowerCase();
         
+        // Update Hz
+        if (state.timestamp !== lastTimestamp) {
+          lastTimestamp = state.timestamp;
+          updateCount++;
+        }
+        const now = performance.now();
+        if (now - lastSecond > 1000) {
+          const hz = Math.round((updateCount * 1000) / (now - lastSecond));
+          if (!hzEl) hzEl = document.getElementById('telemetry-hz');
+          if (hzEl) hzEl.textContent = `${hz} Hz`;
+          updateCount = 0;
+          lastSecond = now;
+        }
+        
+        const detectedLower = (state.detectedModel || '').toLowerCase();
         let expectedStr = "";
         let isMismatch = false;
 
-        // Strict Hardware verification
-        if (pageModel === 'playstation' && !detectedLower.includes('playstation') && !detectedLower.includes('dual')) {
+        const currentPath = window.location.pathname;
+        if (currentPath.includes('/test/controller/ps5') && !detectedLower.includes('playstation') && !detectedLower.includes('dual')) {
           isMismatch = true;
           expectedStr = "PlayStation";
-        } else if (pageModel === 'xbox' && !detectedLower.includes('xbox')) {
+        } else if (currentPath.includes('/test/controller/xbox') && !detectedLower.includes('xbox')) {
           isMismatch = true;
           expectedStr = "Xbox";
-        } else if (pageModel === 'switch' && !detectedLower.includes('nintendo') && !detectedLower.includes('joy-con')) {
+        } else if (currentPath.includes('/test/controller/nintendo-switch') && !detectedLower.includes('nintendo') && !detectedLower.includes('joy-con') && !detectedLower.includes('pro controller')) {
           isMismatch = true;
           expectedStr = "Nintendo Switch";
         }
 
         if (isMismatch) {
-          mismatchOverlay.style.display = 'flex';
-          mismatchDesc.textContent = `You are on the ${expectedStr} tester page, but a ${state.detectedModel || 'different gamepad'} was detected. Please switch to the correct testing tool.`;
-          statusText.textContent = 'Hardware Mismatch';
-          statusDot.classList.remove('connected');
-          telemetryData.style.display = 'none';
-          canvas.style.filter = 'blur(10px) grayscale(50%)';
-          
-          const awaitingOverlay = document.getElementById('awaiting-connection-overlay');
-          if (awaitingOverlay) awaitingOverlay.style.opacity = '0';
+          if (mismatchOverlay.style.display !== 'flex') {
+            mismatchOverlay.style.display = 'flex';
+            mismatchDesc.textContent = `You are on the ${expectedStr} tester page, but a ${state.detectedModel || 'different gamepad'} was detected. Please switch to the correct testing tool.`;
+            statusText.textContent = 'Hardware Mismatch';
+            statusDot.classList.remove('connected');
+            telemetryData.style.display = 'none';
+            canvas.style.filter = 'blur(10px) grayscale(50%)';
+            if (awaitingOverlay) awaitingOverlay.style.opacity = '0';
+            wasConnected = false;
+          }
         } else {
-          mismatchOverlay.style.display = 'none';
-          canvas.style.filter = 'none';
-
-          const awaitingOverlay = document.getElementById('awaiting-connection-overlay');
-          if (awaitingOverlay) awaitingOverlay.style.opacity = '0';
-
-          statusDot.classList.add('connected');
-          statusText.textContent = state.detectedModel || 'Controller Connected';
-          telemetryData.style.display = 'flex';
+          if (!wasConnected) {
+            mismatchOverlay.style.display = 'none';
+            canvas.style.filter = 'none';
+            if (awaitingOverlay) awaitingOverlay.style.opacity = '0';
+            statusDot.classList.add('connected');
+            statusText.textContent = state.detectedModel || 'Controller Connected';
+            telemetryData.style.display = 'grid'; // Bento Grid display
+            
+            const mainVib = document.getElementById('main-vibrate-container');
+            if (mainVib) mainVib.style.display = 'flex';
+            
+            wasConnected = true;
+          }
           
+          // Zero-Latency HUD Button Display
+          const hudBtn = document.getElementById('button-press-hud');
+          const hudText = document.getElementById('button-press-text');
+          
+          if (hudBtn && hudText) {
+            const btnNames = [
+              "Cross (X)", "Circle (O)", "Square (□)", "Triangle (△)",
+              "L1", "R1", "L2", "R2", "Share", "Options", "L3", "R3",
+              "D-Up", "D-Down", "D-Left", "D-Right", "PS", "Touchpad"
+            ];
+            
+            let activeBtns = [];
+            for (let i = 0; i < state.buttons.length; i++) {
+              if (state.buttons[i]?.pressed) {
+                activeBtns.push(btnNames[i] || `B${i}`);
+              }
+            }
+            
+            if (activeBtns.length > 0) {
+              hudText.textContent = activeBtns.join(' + ') + ' PRESSED';
+              hudBtn.style.opacity = '1';
+              hudBtn.style.transform = 'translateX(-50%) scale(1)';
+            } else {
+              hudBtn.style.opacity = '0';
+              hudBtn.style.transform = 'translateX(-50%) scale(0.95)';
+            }
+          }
+          
+          // Apply Stick Rotations
           if (leftStickNode) {
             leftStickNode.rotation.x = state.leftStick.y * maxRotation;
             leftStickNode.rotation.z = -state.leftStick.x * maxRotation;
@@ -540,6 +732,7 @@ const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
             rightStickNode.rotation.z = -state.rightStick.x * maxRotation;
           }
           
+          // Apply Trigger Lighting
           if (state.triggers.l2 > 0.1 || state.triggers.r2 > 0.1) {
             const avgTrigger = (state.triggers.l2 + state.triggers.r2) / 2;
             scene.children.forEach((child: any) => {
@@ -549,49 +742,86 @@ const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
             });
           }
 
-          // 1. Triggers
-          const ltVal = document.getElementById('lt-val');
-          if (ltVal) ltVal.style.width = `${state.triggers.l2 * 100}%`;
-          const rtVal = document.getElementById('rt-val');
-          if (rtVal) rtVal.style.width = `${state.triggers.r2 * 100}%`;
+          // MOTION TRACKING (Gyro / Simulated)
+          let pitchDeg = 0, rollDeg = 0, yawDeg = 0;
+          const dt = clock.getDelta();
+          // 25 = very fast snap, feels instant but retains microscopic smoothness
+          const slerpFactor = 1.0 - Math.exp(-25 * dt);
 
-        // 2. Buttons
-        const activeBtnsNode = document.getElementById('active-buttons');
-        if (activeBtnsNode) {
-          // Standard Gamepad API Mapping
-          const BTN_MAP = ["A/×", "B/○", "X/□", "Y/△", "L1", "R1", "L2", "R2", "Share", "Menu", "L3", "R3", "Up", "Down", "Left", "Right", "Home"];
-          const activeHtml: string[] = [];
-          
-          state.buttons.forEach((btn, idx) => {
-            if (btn.pressed) {
-              const name = BTN_MAP[idx] || `B${idx}`;
-              activeHtml.push(`<span class="active-btn">${name}</span>`);
+          if (controllerModel && !isInteracting) {
+            if (state.pose && state.pose.orientation) {
+              const [x, y, z, w] = state.pose.orientation;
+              targetQuaternion.set(x, y, z, w);
+              controllerModel.quaternion.slerp(targetQuaternion, slerpFactor);
+
+              const euler = new THREE.Euler().setFromQuaternion(targetQuaternion, 'YXZ');
+              pitchDeg = THREE.MathUtils.radToDeg(euler.x);
+              yawDeg = THREE.MathUtils.radToDeg(euler.y);
+              rollDeg = THREE.MathUtils.radToDeg(euler.z);
+            } else {
+              const pitchRad = state.leftStick.y * (Math.PI / 4);
+              const rollRad = state.leftStick.x * (Math.PI / 4);
+              const yawRad = -state.rightStick.x * (Math.PI / 4);
+              
+              const euler = new THREE.Euler(pitchRad, yawRad, -rollRad, 'YXZ');
+              targetQuaternion.setFromEuler(euler);
+              controllerModel.quaternion.slerp(targetQuaternion, slerpFactor);
+
+              pitchDeg = THREE.MathUtils.radToDeg(pitchRad);
+              rollDeg = THREE.MathUtils.radToDeg(-rollRad);
+              yawDeg = THREE.MathUtils.radToDeg(yawRad);
             }
-          });
+          }
 
-          if (activeHtml.length > 0) {
-            activeBtnsNode.innerHTML = activeHtml.join('');
-          } else {
-            activeBtnsNode.innerHTML = '<span class="telemetry-empty">None</span>';
+          // Update Gyro UI (only if changed by at least 0.1 to prevent constant re-rendering)
+          if (gyroPitch && Math.abs(pitchDeg - lastPitch) > 0.1) {
+            gyroPitch.textContent = `${pitchDeg.toFixed(1)}°`;
+            lastPitch = pitchDeg;
+          }
+          if (gyroRoll && Math.abs(rollDeg - lastRoll) > 0.1) {
+            gyroRoll.textContent = `${rollDeg.toFixed(1)}°`;
+            lastRoll = rollDeg;
+          }
+          if (gyroYaw && Math.abs(yawDeg - lastYaw) > 0.1) {
+            gyroYaw.textContent = `${yawDeg.toFixed(1)}°`;
+            lastYaw = yawDeg;
+          }
+
+          // Update Button Matrix Classes
+          for(let i = 0; i < 18; i++) {
+             const pressed = state.buttons[i]?.pressed;
+             if (pressed !== lastButtons[i] && btnElements[i]) {
+               if (pressed) {
+                 btnElements[i].className = "w-[28px] h-[28px] flex items-center justify-center text-[0.65rem] font-bold font-mono rounded border transition-all duration-75 bg-blue-500 text-white border-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.8)] scale-105";
+               } else {
+                 btnElements[i].className = "w-[28px] h-[28px] flex items-center justify-center text-[0.65rem] font-bold font-mono rounded border transition-all duration-75 bg-white/5 text-stone-500 border-white/5";
+               }
+               lastButtons[i] = pressed;
+             }
           }
         }
-
-        }
       } else {
-        if (statusDot) statusDot.classList.remove('connected');
-        if (statusText) {
-          statusText.style.color = 'rgba(255,255,255,0.6)';
-          statusText.textContent = 'Awaiting Gamepad';
+        if (controllerModel && !isInteracting && !isRigid) {
+          controllerModel.rotation.y += 0.002;
+          controllerModel.position.y = Math.sin(clock.getElapsedTime()) * 0.03;
         }
-        if (telemetryData) telemetryData.style.display = 'none';
-        if (mismatchOverlay) mismatchOverlay.style.display = 'none';
-        
-        const awaitingOverlay = document.getElementById('awaiting-connection-overlay');
-        if (awaitingOverlay) awaitingOverlay.style.opacity = '1';
+
+        if (wasConnected) {
+          if (statusDot) statusDot.classList.remove('connected');
+          if (statusText) {
+            statusText.style.color = 'rgba(255,255,255,0.6)';
+            statusText.textContent = 'Awaiting Gamepad';
+          }
+          if (telemetryData) telemetryData.style.display = 'none';
+          if (mismatchOverlay) mismatchOverlay.style.display = 'none';
+          if (awaitingOverlay) awaitingOverlay.style.opacity = '1';
+          wasConnected = false;
+        }
       }
 
       renderer.render(scene, camera);
-      requestAnimationFrame(animate);
+      // REMOVED: requestAnimationFrame(animate); 
+      // renderer.setAnimationLoop(animate) already calls this, preventing the exponential/double call loop.
     }
 
     function onWindowResize() {

@@ -29,6 +29,10 @@ export interface GamepadState {
     distance: number;
   };
   triggers: { l2: number; r2: number };
+  pose?: {
+    hasOrientation: boolean;
+    orientation: readonly [number, number, number, number] | null;
+  };
   detectedModel: string;
 }
 
@@ -116,6 +120,15 @@ export function parseGamepadState(gp: Gamepad): GamepadState {
   const l2 = buttons[6]?.value ?? 0;
   const r2 = buttons[7]?.value ?? 0;
 
+  // Extract WebVR/XR pose if present
+  let pose = undefined;
+  if ((gp as any).pose) {
+    pose = {
+      hasOrientation: !!(gp as any).pose.hasOrientation,
+      orientation: (gp as any).pose.orientation || null,
+    };
+  }
+
   return {
     index: gp.index,
     id: gp.id,
@@ -141,6 +154,73 @@ export function parseGamepadState(gp: Gamepad): GamepadState {
       distance: Math.hypot(rx, ry),
     },
     triggers: { l2, r2 },
+    pose,
     detectedModel: identifyController(gp.id),
   };
 }
+
+export type GamepadCallback = (state: GamepadState | null) => void;
+
+class GamepadEngine {
+  private active: boolean = false;
+  private animId: number | null = null;
+  private subscribers: Set<GamepadCallback> = new Set();
+  private lastState: GamepadState | null = null;
+
+  public subscribe(callback: GamepadCallback): () => void {
+    this.subscribers.add(callback);
+    // Immediately invoke with current state
+    callback(this.lastState);
+    if (!this.active && this.subscribers.size > 0) {
+      this.start();
+    }
+    return () => {
+      this.subscribers.delete(callback);
+      if (this.subscribers.size === 0) {
+        this.stop();
+      }
+    };
+  }
+
+  private start() {
+    if (this.active) return;
+    this.active = true;
+    this.poll();
+  }
+
+  private stop() {
+    this.active = false;
+    if (this.animId !== null) {
+      cancelAnimationFrame(this.animId);
+      this.animId = null;
+    }
+  }
+
+  private poll = () => {
+    if (!this.active) return;
+    
+    let activeGp: Gamepad | null = null;
+    if (navigator.getGamepads) {
+      const gamepads = navigator.getGamepads();
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i]?.connected) {
+          activeGp = gamepads[i];
+          break; // Grab the first connected gamepad for the dashboard
+        }
+      }
+    }
+
+    const state = activeGp ? parseGamepadState(activeGp) : null;
+    this.lastState = state;
+
+    // Notify all subscribers
+    for (const callback of this.subscribers) {
+      callback(state);
+    }
+
+    this.animId = requestAnimationFrame(this.poll);
+  };
+}
+
+export const GamepadLoop = new GamepadEngine();
+

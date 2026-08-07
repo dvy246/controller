@@ -40,7 +40,7 @@
     </div>
     
     <div class="mt-4">
-      <button id="cr-run-test-btn" class="btn-primary py-3 px-8 rounded-xl font-bold text-sm mx-auto transition-colors">Run 10s Benchmark</button>
+      <button id="cr-run-test-btn" class="btn-primary text-sm mx-auto transition-colors">Run 10s Benchmark</button>
     </div>
   </div>
 </div>
@@ -90,8 +90,8 @@
                if (subText) subText.textContent = `Failed metrics: ${hz.toFixed(0)}Hz, ${circ.toFixed(1)}% circ, ${drift.toFixed(1)}% dz.`;
             }
             
-            function updateBadge(badge, condition) {
-                if (!badge) return;
+            function updateBadge(badge: HTMLElement | null, condition: boolean) {
+                 if (!badge) return;
                 badge.textContent = condition ? 'PASSED' : 'FAILED';
                 badge.className = condition 
                   ? 'font-mono text-[10px] md:text-xs font-bold py-1 px-3 rounded-full bg-emerald/15 border border-emerald/30 text-emerald'

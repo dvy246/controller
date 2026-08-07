@@ -139,7 +139,7 @@ const allSchemas = [
       </section>
 
       {/* ── 6. Export Card (Slot) ── */}
-      <section class="tool-export-card card-base">
+      <section class="tool-export-card">
         <slot name="export" />
       </section>
 
@@ -158,7 +158,7 @@ const allSchemas = [
 
       {/* ── 9. FAQ Card ── */}
       {faqs.length > 0 && (
-        <section class="tool-faq-section card-base" aria-label="Frequently Asked Questions">
+        <section class="tool-faq-section" aria-label="Frequently Asked Questions">
           <h2 class="section-title">Frequently Asked Questions</h2>
           <div class="faq-accordion">
             {faqs.map((faq) => (
@@ -262,12 +262,23 @@ const allSchemas = [
   }
 
   .tool-interactive-card {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2.5rem;
     min-height: 350px;
   }
 
+  .tool-interactive-card.card-tool:has(.doppelrand-shell) {
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
   .tool-results-card {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
   }
 
   .section-title {
@@ -277,13 +288,15 @@ const allSchemas = [
     letter-spacing: -0.02em;
   }
 
+  .tool-interactive-card,
+  .tool-results-card,
   .tool-actions-section,
   .related-tools-section,
   .tool-content-section,
   .tool-faq-section,
   .tool-export-card,
   .tool-limits-card {
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-12, 3rem);
   }
 
   /* Methodology & limits */
@@ -365,35 +378,70 @@ const allSchemas = [
     flex-grow: 1;
   }
 
-  /* FAQ Accordion */
+  /* Ultra-Premium FAQ Accordion */
   .faq-accordion {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
+    margin-top: 1rem;
   }
 
   .faq-item {
-    border-bottom: 1px solid var(--color-border-subtle);
-    padding-bottom: 0.75rem;
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 1rem;
+    padding: 1.25rem 1.5rem;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .faq-item:hover {
+    border-color: rgba(59, 130, 246, 0.3);
+    background: var(--color-surface-2);
+  }
+
+  .faq-item[open] {
+    border-color: rgba(59, 130, 246, 0.4);
+    background: var(--color-surface-2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   }
 
   .faq-question {
-    font-weight: 600;
-    font-size: 1rem;
+    font-weight: 700;
+    font-size: 1.0625rem;
     color: var(--color-text-primary);
     cursor: pointer;
-    padding: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+    user-select: none;
   }
 
-  .faq-question:hover {
+  .faq-question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-question::after {
+    content: "＋";
+    font-family: var(--font-mono);
+    font-size: 1.125rem;
+    font-weight: 700;
     color: var(--color-accent);
+    transition: transform 0.25s ease;
+  }
+
+  .faq-item[open] .faq-question::after {
+    content: "−";
+    transform: rotate(180deg);
   }
 
   .faq-answer {
     font-size: 0.9375rem;
     color: var(--color-text-secondary);
-    line-height: 1.6;
-    padding-top: 0.5rem;
+    line-height: 1.7;
+    margin-top: 0.875rem;
+    padding-top: 0.875rem;
+    border-top: 1px solid var(--color-border-subtle);
   }
 
   /* Trust grid */

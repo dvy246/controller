@@ -14,12 +14,33 @@ import reliabilityData from '../../data/reliabilityData.json';
 const models = Object.entries(reliabilityData.models as Record<string, any>);
 
 const breadcrumbs = [{ name: 'Home', url: '/' }, { name: 'Reliability Data' }];
+
+const schemaData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Controller Reliability Data — Stick Drift Baselines by Model',
+    description: `Baseline stick drift and sensor reliability figures for 5 controller models, compiled from ${reliabilityData.totalSamplesMeasured.toLocaleString()} documented test results (snapshot ${reliabilityData.updatedAt}).`,
+    url: 'https://controllertesting.com/reliability/'
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: models.map(([slug, m], index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: m.name,
+      url: `https://controllertesting.com/reliability/${slug}`
+    }))
+  }
+];
 ---
 
 <BaseLayout
   title="Controller Reliability Data — Stick Drift Baselines by Model | ControllerTesting.com"
   description={`Baseline stick drift and sensor reliability figures for 5 controller models, compiled from ${reliabilityData.totalSamplesMeasured.toLocaleString()} documented test results (snapshot ${reliabilityData.updatedAt}).`}
   breadcrumbs={breadcrumbs}
+  schema={schemaData}
 >
   <Header />
 
@@ -69,7 +90,7 @@ const breadcrumbs = [{ name: 'Home', url: '/' }, { name: 'Reliability Data' }];
           makes the baselines sharper. See our <a href="/test/methodology" class="hub-link">methodology</a> for what this can
           and cannot tell you.
         </p>
-        <p class="hub-text" style="margin-top: 0.75rem;">
+        <p class="hub-text mt-3">
           <a href="/reliability/dashboard" class="hub-link">Open the aggregate reliability dashboard &rarr;</a>
           &nbsp;&middot;&nbsp;
           <a href="/reliability/report" class="hub-link">Read the monthly dataset report &rarr;</a>
