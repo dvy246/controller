@@ -19,6 +19,9 @@ export function calculateCPS(clicks: number[], timeWindowMs = 10000): number {
   return parseFloat(cps.toFixed(1));
 }
 
-export function detectDoubleClickFault(intervalsMs: number[], thresholdMs = 80): boolean {
+export function detectDoubleClickFault(
+  intervalsMs: number[],
+  thresholdMs = 80,
+): boolean {
   return intervalsMs.some((ms) => ms > 0 && ms < thresholdMs);
 }

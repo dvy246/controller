@@ -1,0 +1,133 @@
+---
+/**
+ * AntiDeadzoneGenerator.astro
+ * Calculates and generates a downloadable Steam Input .vdf or DS4Windows .xml anti-deadzone config.
+ */
+---
+<div class="p-6 md:p-8 rounded-2xl mb-8 relative overflow-hidden bg-surface-1 border border-surface-3">
+  <div class="relative z-10">
+    <h2 class="text-2xl font-bold text-primary mb-2">Anti-Deadzone Config Generator</h2>
+    <p class="text-secondary mb-6 text-sm">
+      Calculate the exact anti-deadzone required to bypass your game's baked-in deadzone, allowing for linear, instant micro-adjustments. 
+      Download the config for Steam Input or DS4Windows.
+    </p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-bold text-secondary mb-1">Target Game's Built-in Deadzone (%)</label>
+          <input type="range" id="game-deadzone-slider" min="0" max="30" step="1" value="15" class="w-full accent-primary" />
+          <div class="text-right font-mono text-sm font-bold text-primary"><span id="game-deadzone-val">15</span>%</div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-secondary mb-1">Controller's Hardware Drift (%)</label>
+          <input type="range" id="hw-drift-slider" min="0" max="15" step="0.5" value="2" class="w-full accent-warning" />
+          <div class="text-right font-mono text-sm font-bold text-warning"><span id="hw-drift-val">2.0</span>%</div>
+        </div>
+      </div>
+
+      <div class="bg-surface-0 border border-surface-3 rounded-xl p-5 flex flex-col justify-center items-center text-center space-y-3">
+        <span class="text-xs font-bold text-secondary uppercase tracking-wider">Recommended Anti-Deadzone</span>
+        <span class="text-4xl font-black font-mono text-emerald" id="anti-deadzone-result">13.0%</span>
+        <p class="text-xs text-secondary max-w-[200px]">
+          Game Deadzone - HW Drift. This ensures instant response while preventing drift.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-4">
+      <button id="btn-download-steam" class="flex-1 bg-surface-2 hover:bg-surface-3 border border-surface-3 py-3 rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2 text-primary">
+        Steam Input (.vdf)
+      </button>
+      <button id="btn-download-ds4" class="flex-1 bg-[#1e40af] hover:bg-[#1e3a8a] text-white py-3 rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2">
+        DS4Windows (.xml)
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const gameSlider = document.getElementById('game-deadzone-slider') as HTMLInputElement;
+    const gameVal = document.getElementById('game-deadzone-val');
+    const hwSlider = document.getElementById('hw-drift-slider') as HTMLInputElement;
+    const hwVal = document.getElementById('hw-drift-val');
+    const resultVal = document.getElementById('anti-deadzone-result');
+    const btnSteam = document.getElementById('btn-download-steam');
+    const btnDs4 = document.getElementById('btn-download-ds4');
+
+    let currentResult = 13.0;
+
+    function calculate() {
+      if (!gameSlider || !hwSlider) return;
+      const g = parseFloat(gameSlider.value);
+      const h = parseFloat(hwSlider.value);
+      
+      if (gameVal) gameVal.textContent = g.toString();
+      if (hwVal) hwVal.textContent = h.toFixed(1);
+
+      // Anti-deadzone should cancel out the game's deadzone, minus a buffer for hardware drift
+      let res = g - h;
+      if (res < 0) res = 0;
+      currentResult = res;
+
+      if (resultVal) resultVal.textContent = res.toFixed(1) + '%';
+    }
+
+    if (gameSlider && hwSlider) {
+      gameSlider.addEventListener('input', calculate);
+      hwSlider.addEventListener('input', calculate);
+      calculate();
+    }
+
+    function downloadFile(filename: string, content: string) {
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+      element.setAttribute('download', filename);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    }
+
+    if (btnSteam) {
+      btnSteam.addEventListener('click', () => {
+        // Steam input scales 0-32767
+        const val = Math.round((currentResult / 100) * 32767);
+        const buffer = Math.round(((currentResult / 100) * 32767) * 0.85); // buffer is typically slightly less
+        
+        const vdfContent = `"ControllerProfile"
+{
+    "group"
+    {
+        "id" "0"
+        "mode" "joystick_move"
+        "settings"
+        {
+            "anti_deadzone" "${val}"
+            "anti_deadzone_buffer" "${buffer}"
+        }
+    }
+}`;
+        downloadFile('steam_antideadzone.vdf', vdfContent);
+      });
+    }
+
+    if (btnDs4) {
+      btnDs4.addEventListener('click', () => {
+        // DS4Windows scales 0-255 or 0.0-1.0 depending on the setting. Assuming 0-255 here.
+        const val = Math.round((currentResult / 100) * 255);
+        const xmlContent = `<?xml version="1.0" encoding="utf-8"?>
+<DS4Windows>
+  <Profile>
+    <AntiDeadZoneLS>${val}</AntiDeadZoneLS>
+    <AntiDeadZoneRS>${val}</AntiDeadZoneRS>
+    <Generator>ControllerTesting.com</Generator>
+  </Profile>
+</DS4Windows>`;
+        downloadFile('ds4windows_antideadzone.xml', xmlContent);
+      });
+    }
+  });
+</script>

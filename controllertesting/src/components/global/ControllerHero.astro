@@ -154,27 +154,32 @@
 </style>
 
 <script>
+  // @ts-ignore
   import * as THREE from 'https://esm.sh/three@0.160.0';
+  // @ts-ignore
   import { GLTFLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
+  // @ts-ignore
   import { DRACOLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/DRACOLoader.js';
+  // @ts-ignore
   import { OrbitControls } from 'https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js';
   import { parseGamepadState } from '../../lib/gamepad.ts';
 
   document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('hero-container');
-    const canvas = document.getElementById('webgl-canvas');
-    const spinner = document.getElementById('loading-spinner');
+    const container = document.getElementById('hero-container') as HTMLElement | null;
+    const canvas = document.getElementById('webgl-canvas') as HTMLCanvasElement | null;
+    const spinner = document.getElementById('loading-spinner') as HTMLElement | null;
     
     if (!container || !canvas) return;
 
     // Wait for DOM layout
     setTimeout(initThreeJS, 100); 
 
-    let scene, camera, renderer, controls;
-    let controllerModel;
+    let scene: any, camera: any, renderer: any, controls: any;
+    let controllerModel: any;
     let isInteracting = false;
     
     function initThreeJS() {
+      if (!container || !canvas || !spinner) return;
       spinner.classList.add('active');
 
       scene = new THREE.Scene();
@@ -234,11 +239,11 @@
       // Load the actual PS5 controller GLB we downloaded
       loader.load(
         '/models/controller.glb', 
-        (gltf) => {
+        (gltf: any) => {
           controllerModel = gltf.scene;
           
           // Ensure materials look premium
-          controllerModel.traverse((child) => {
+          controllerModel.traverse((child: any) => {
             if (child.isMesh && child.material) {
               // Boost environmental reflection if it's a standard material
               if (child.material.isMeshStandardMaterial) {
@@ -266,13 +271,13 @@
 
           scene.add(controllerModel);
 
-          spinner.classList.remove('active');
-          canvas.classList.add('loaded');
+          if(spinner) spinner.classList.remove('active');
+          if(canvas) canvas.classList.add('loaded');
         },
         undefined,
-        (error) => {
+        (error: any) => {
           console.error('Error loading 3D model:', error);
-          spinner.innerHTML = '<span style="color:#ef4444;">Failed to load model</span>';
+          if(spinner) spinner.innerHTML = '<span style="color:#ef4444;">Failed to load model</span>';
         }
       );
     }
@@ -280,6 +285,7 @@
     const clock = new THREE.Clock();
 
     function animate() {
+      // @ts-ignore
       const delta = clock.getDelta();
       controls.update();
 
@@ -297,23 +303,25 @@
         if (gamepads[i]?.connected) { activeGp = gamepads[i]; break; }
       }
 
-      const statusDot = document.getElementById('status-dot');
-      const statusText = document.getElementById('status-text');
-      const telemetryData = document.getElementById('telemetry-data');
+      const statusDot = document.getElementById('status-dot') as HTMLElement | null;
+      const statusText = document.getElementById('status-text') as HTMLElement | null;
+      const telemetryData = document.getElementById('telemetry-data') as HTMLElement | null;
       
-      if (activeGp) {
+      if (activeGp && statusDot && statusText && telemetryData) {
         const state = parseGamepadState(activeGp);
         statusDot.classList.add('connected');
         statusText.style.color = '#fff';
         statusText.textContent = `Connected: ${state.detectedModel || 'Gamepad'}`;
         
         telemetryData.style.display = 'flex';
-        document.getElementById('ls-val').textContent = `${state.leftStick.x.toFixed(2)}, ${state.leftStick.y.toFixed(2)}`;
-        document.getElementById('rs-val').textContent = `${state.rightStick.x.toFixed(2)}, ${state.rightStick.y.toFixed(2)}`;
+        const lsVal = document.getElementById('ls-val');
+        if (lsVal) lsVal.textContent = `${state.leftStick.x.toFixed(2)}, ${state.leftStick.y.toFixed(2)}`;
+        const rsVal = document.getElementById('rs-val');
+        if (rsVal) rsVal.textContent = `${state.rightStick.x.toFixed(2)}, ${state.rightStick.y.toFixed(2)}`;
 
         // If the GLB has named nodes for sticks, we could rotate them here.
         // Usually they are named 'Left_Stick' or similar depending on the specific model.
-      } else {
+      } else if (statusDot && statusText && telemetryData) {
         statusDot.classList.remove('connected');
         statusText.style.color = 'rgba(255,255,255,0.6)';
         statusText.textContent = 'Awaiting Gamepad';
@@ -324,7 +332,7 @@
     }
 
     function onWindowResize() {
-      if (!camera || !renderer) return;
+      if (!camera || !renderer || !container) return;
       camera.aspect = container.clientWidth / container.clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(container.clientWidth, container.clientHeight);

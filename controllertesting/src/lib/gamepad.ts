@@ -12,41 +12,77 @@ export interface GamepadState {
   mapping: string;
   axes: number[];
   buttons: { pressed: boolean; touched: boolean; value: number }[];
-  leftStick: { x: number; y: number; rawX: number; rawY: number; driftPct: number; distance: number };
-  rightStick: { x: number; y: number; rawX: number; rawY: number; driftPct: number; distance: number };
+  leftStick: {
+    x: number;
+    y: number;
+    rawX: number;
+    rawY: number;
+    driftPct: number;
+    distance: number;
+  };
+  rightStick: {
+    x: number;
+    y: number;
+    rawX: number;
+    rawY: number;
+    driftPct: number;
+    distance: number;
+  };
   triggers: { l2: number; r2: number };
   detectedModel: string;
 }
 
 export function identifyController(id: string): string {
   const lower = id.toLowerCase();
-  if (lower.includes('dualsense') || lower.includes('054c') || lower.includes('playstation 5')) {
-    return 'PlayStation 5 DualSense';
+  if (
+    lower.includes("dualsense") ||
+    lower.includes("054c") ||
+    lower.includes("playstation 5")
+  ) {
+    return "PlayStation 5 DualSense";
   }
-  if (lower.includes('dualshock') || lower.includes('ps4')) {
-    return 'PlayStation 4 DualShock 4';
+  if (lower.includes("dualshock") || lower.includes("ps4")) {
+    return "PlayStation 4 DualShock 4";
   }
-  if (lower.includes('xbox series') || lower.includes('045e') || lower.includes('xbox 360') || lower.includes('xinput')) {
-    return 'Xbox Wireless Controller';
+  if (
+    lower.includes("xbox series") ||
+    lower.includes("045e") ||
+    lower.includes("xbox 360") ||
+    lower.includes("xinput")
+  ) {
+    return "Xbox Wireless Controller";
   }
-  if (lower.includes('pro controller') || lower.includes('057e') || lower.includes('switch')) {
-    return 'Nintendo Switch Pro Controller';
+  if (
+    lower.includes("pro controller") ||
+    lower.includes("057e") ||
+    lower.includes("switch")
+  ) {
+    return "Nintendo Switch Pro Controller";
   }
-  if (lower.includes('joy-con')) {
-    return 'Nintendo Joy-Con';
+  if (lower.includes("joy-con")) {
+    return "Nintendo Joy-Con";
   }
-  return 'Standard Gamepad';
+  return "Standard Gamepad";
 }
 
-export function calculateStickDrift(x: number, y: number, deadzone = 0.05): number {
+export function calculateStickDrift(
+  x: number,
+  y: number,
+  deadzone = 0.05,
+): number {
   const dist = Math.hypot(x, y);
   if (dist <= deadzone) return 0;
   // Convert distance from center into a 0-100 percentage
-  const drift = Math.min(100, Math.max(0, ((dist - deadzone) / (1 - deadzone)) * 100));
+  const drift = Math.min(
+    100,
+    Math.max(0, ((dist - deadzone) / (1 - deadzone)) * 100),
+  );
   return parseFloat(drift.toFixed(2));
 }
 
-export function calculateCircularityError(points: { x: number; y: number }[]): number {
+export function calculateCircularityError(
+  points: { x: number; y: number }[],
+): number {
   if (points.length < 20) return 0;
   let totalDev = 0;
   for (const p of points) {

@@ -1,0 +1,349 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Controller Compatibility Intelligence' },
+];
+
+const title = "Controller Compatibility Intelligence | Gamepad API Support Matrix";
+const description = "Check if your controller is supported on your OS and browser. Real-world empirical data on Gamepad API support for PS5, Xbox, and Switch controllers.";
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Controller Compatibility Intelligence",
+  "applicationCategory": "Utility",
+  "operatingSystem": "Any",
+  "url": "https://controllertesting.com/compatibility",
+  "description": description
+};
+---
+
+<BaseLayout title={title} description={description} breadcrumbs={breadcrumbs} schema={schema}>
+  <Header />
+
+  <main class="compatibility-page container-site page-layout">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="comp-hero card-base card-gradient">
+      <div class="hero-content">
+        <span class="eyebrow badge-pass mb-4 inline-block">Support Matrix</span>
+        <h1 class="text-h1">Controller Compatibility Intelligence</h1>
+        <p class="text-lead text-secondary mt-4 max-w-prose">
+          The Gamepad API behaves differently across operating systems, browsers, and connection types. 
+          Use this matrix to verify if your specific setup is fully supported before diagnosing hardware issues.
+        </p>
+      </div>
+    </header>
+
+    <div class="comp-dashboard card-base mt-8">
+      
+      <div class="filter-bar">
+        <div class="filter-group">
+          <label for="filter-os" class="filter-label text-micro text-tertiary uppercase">Operating System</label>
+          <select id="filter-os" class="filter-select bg-surface-1">
+            <option value="all">All OS</option>
+            <option value="Windows">Windows</option>
+            <option value="macOS">macOS</option>
+            <option value="Linux">Linux</option>
+            <option value="iOS">iOS</option>
+            <option value="Android">Android</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label for="filter-browser" class="filter-label text-micro text-tertiary uppercase">Browser</label>
+          <select id="filter-browser" class="filter-select bg-surface-1">
+            <option value="all">All Browsers</option>
+            <option value="Chrome">Chrome / Chromium</option>
+            <option value="Edge">Edge</option>
+            <option value="Safari">Safari (WebKit)</option>
+            <option value="Firefox">Firefox</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="filter-connection" class="filter-label text-micro text-tertiary uppercase">Connection</label>
+          <select id="filter-connection" class="filter-select bg-surface-1">
+            <option value="all">Any Connection</option>
+            <option value="usb">Wired USB-C</option>
+            <option value="bluetooth">Bluetooth</option>
+            <option value="wireless_adapter">Wireless Adapter (2.4GHz)</option>
+          </select>
+        </div>
+        
+        <button id="btn-reset" class="btn-ghost btn-reset" title="Reset Filters">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="results-container mt-8" style="width: 100%; overflow-x: auto;">
+        <table class="matrix-table w-full text-left">
+          <thead>
+            <tr>
+              <th>Controller</th>
+              <th>Environment</th>
+              <th>Support Status</th>
+              <th>Haptics / Gyro</th>
+              <th>Implementation Notes</th>
+            </tr>
+          </thead>
+          <tbody id="matrix-body">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+        
+        <div id="no-results" class="no-results sr-only" aria-live="polite">
+          <p class="text-secondary text-center py-12">No data available for this exact combination.</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+  
+  <Footer />
+</BaseLayout>
+
+<script>
+  import compData from '../data/compatibilityData.json';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const filterOS = document.getElementById('filter-os') as HTMLSelectElement;
+    const filterBrowser = document.getElementById('filter-browser') as HTMLSelectElement;
+    const filterConnection = document.getElementById('filter-connection') as HTMLSelectElement;
+    const btnReset = document.getElementById('btn-reset');
+    const tbody = document.getElementById('matrix-body') as HTMLElement;
+    const noResults = document.getElementById('no-results') as HTMLElement;
+
+    if (!tbody || !noResults || !filterOS || !filterBrowser || !filterConnection) return;
+
+    function renderMatrix() {
+      const os = filterOS.value;
+      const browser = filterBrowser.value;
+      const connection = filterConnection.value;
+
+      const filtered = compData.matrix.filter((item) => {
+        if (os !== 'all' && item.os !== os) return false;
+        // Basic matching logic; in reality browsers report as generic engines
+        if (browser !== 'all' && !item.browser.includes(browser)) return false;
+        if (connection !== 'all' && item.connection !== connection) return false;
+        return true;
+      });
+
+      tbody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        noResults.classList.remove('sr-only');
+        return;
+      }
+      
+      noResults.classList.add('sr-only');
+
+      filtered.forEach(item => {
+        const tr = document.createElement('tr');
+        
+        // Status Badge
+        let statusBadge = '';
+        if (item.status === 'full') statusBadge = `<span class="badge-tag pass">Fully Supported</span>`;
+        else if (item.status === 'partial') statusBadge = `<span class="badge-tag warning">Partial Support</span>`;
+        else statusBadge = `<span class="badge-tag fail">Unsupported</span>`;
+
+        // Icons for connection
+        const connIcon = item.connection === 'usb' 
+          ? `<svg width="24" height="24" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31"></path><path d="M14 9.3V1.99"></path><path d="M8.5 2h7"></path><path d="M14 9.3a4 4 0 1 1-4 0"></path><path d="M9 22v-4"></path><path d="M15 22v-4"></path><path d="M12 18v-4"></path></svg>`
+          : `<svg width="24" height="24" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 7 10 10-5 5V2l5 5L7 17"></path></svg>`;
+
+        tr.innerHTML = `
+          <td class="font-semibold text-primary">${item.controllerName}</td>
+          <td>
+            <div class="flex items-center gap-2 text-small text-secondary">
+              <span>${item.os}</span>
+              <span class="text-tertiary">&bull;</span>
+              <span>${item.browser}</span>
+              <span class="text-tertiary">&bull;</span>
+              <span class="flex items-center gap-1 uppercase tracking-wider text-micro">${connIcon} ${item.connection}</span>
+            </div>
+          </td>
+          <td>${statusBadge}</td>
+          <td class="text-small text-secondary">
+            H: <span class="${item.haptics === 'full' ? 'text-pass' : 'text-tertiary'}">${item.haptics}</span><br>
+            G: <span class="${item.gyro === 'full' ? 'text-pass' : 'text-tertiary'}">${item.gyro}</span>
+          </td>
+          <td class="text-small text-secondary max-w-[280px]">${item.notes}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    [filterOS, filterBrowser, filterConnection].forEach(el => {
+      el.addEventListener('change', renderMatrix);
+    });
+
+    btnReset?.addEventListener('click', () => {
+      filterOS.value = 'all';
+      filterBrowser.value = 'all';
+      filterConnection.value = 'all';
+      renderMatrix();
+    });
+
+    // Initial render
+    renderMatrix();
+  });
+</script>
+
+<style>
+  .compatibility-page {
+    padding-top: 80px;
+    padding-bottom: var(--spacing-section-lg);
+  }
+
+  .comp-hero {
+    padding: 3rem 2rem;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.25em 0.75em;
+    border-radius: var(--radius-pill);
+  }
+
+  .badge-pass { background: rgba(16, 185, 129, 0.1); color: var(--color-pass); border: 1px solid rgba(16, 185, 129, 0.2); }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: var(--color-surface-2);
+    border-bottom: 1px solid var(--color-border-subtle);
+    border-top-left-radius: var(--radius-lg);
+    border-top-right-radius: var(--radius-lg);
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .filter-select {
+    appearance: none;
+    padding: 0.625rem 2.5rem 0.625rem 1rem;
+    font-size: 0.9375rem;
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-1);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px;
+    cursor: pointer;
+    min-width: 180px;
+    transition: border-color 0.2s var(--ease-smooth), outline 0.2s var(--ease-smooth);
+  }
+
+  /* SVG masking for proper theme color support on the chevron */
+  @supports (mask-image: url('')) or (-webkit-mask-image: url('')) {
+    .filter-select {
+      background-image: none;
+    }
+    .filter-group {
+      position: relative;
+    }
+    .filter-group::after {
+      content: '';
+      position: absolute;
+      right: 1rem;
+      bottom: 0.85rem;
+      width: 16px;
+      height: 16px;
+      background-color: var(--color-text-secondary);
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat center;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat center;
+      pointer-events: none;
+    }
+  }
+
+  .filter-select:hover, .filter-select:focus {
+    border-color: var(--color-accent);
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .btn-reset {
+    padding: 0.625rem;
+    border-radius: var(--radius-md);
+    color: var(--color-text-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s var(--ease-smooth), color 0.2s var(--ease-smooth);
+  }
+
+  .btn-reset:hover {
+    background-color: var(--color-surface-3);
+    color: var(--color-text-primary);
+  }
+
+  .matrix-table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .matrix-table th {
+    background: var(--color-surface-1);
+    padding: 1rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .matrix-table td {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+    vertical-align: top;
+  }
+
+  .matrix-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .matrix-table tr:hover td {
+    background-color: var(--color-surface-3);
+  }
+
+  .badge-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    border-radius: var(--radius-pill);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-tag.pass { background: rgba(16, 185, 129, 0.1); color: var(--color-pass); border: 1px solid rgba(16, 185, 129, 0.2); }
+  .badge-tag.warning { background: rgba(245, 158, 11, 0.1); color: var(--color-warning); border: 1px solid rgba(245, 158, 11, 0.2); }
+  .badge-tag.fail { background: rgba(239, 68, 68, 0.1); color: var(--color-fail); border: 1px solid rgba(239, 68, 68, 0.2); }
+
+  @media (max-width: 768px) {
+    .filter-bar { flex-direction: column; align-items: stretch; }
+    .filter-select { min-width: 100%; }
+    .btn-reset { align-self: flex-end; }
+  }
+</style>

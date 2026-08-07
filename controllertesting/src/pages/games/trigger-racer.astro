@@ -5,10 +5,11 @@
  */
 
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
 
 const breadcrumbs = [
-  { name: 'Home', url: '/' },
   { name: 'Games Arcade', url: '/games' },
   { name: 'Trigger Racer' },
 ];
@@ -19,6 +20,7 @@ const breadcrumbs = [
   description="Test your analog trigger control linearity in Trigger Racer. Modulate R2/L2 pressure to stay inside target speed zones."
   breadcrumbs={breadcrumbs}
 >
+  <Header />
   <div class="game-container">
     <div class="hero-card card-base">
       <Breadcrumbs items={breadcrumbs} />
@@ -43,6 +45,7 @@ const breadcrumbs = [
       </div>
     </div>
   </div>
+  <Footer />
 </BaseLayout>
 
 <script>
@@ -120,7 +123,7 @@ const breadcrumbs = [
 </script>
 
 <style>
-  .game-container { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
+  .game-container { max-width: 900px; padding-top: calc(var(--header-height, 64px) + 2rem); margin: 0 auto 2rem; padding-left: 1.5rem; padding-right: 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
   .hero-card { padding: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
   .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
   .hero-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.15; }

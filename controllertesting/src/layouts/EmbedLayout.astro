@@ -41,6 +41,32 @@ const canonicalUrl = `https://controllertesting.com${cleanPath}`;
   </body>
 </html>
 
+<script is:inline>
+  // PostMessage API Event Emitter for parent communication
+  window.addEventListener('load', () => {
+    if (window.parent !== window) {
+      window.parent.postMessage({
+        type: 'ct_embed_init',
+        source: 'controllertesting',
+        height: document.body.scrollHeight,
+        href: window.location.href
+      }, '*');
+    }
+  });
+
+  // Re-emit height on resize if the content height changes dynamically
+  const resizeObserver = new ResizeObserver(() => {
+    if (window.parent !== window) {
+      window.parent.postMessage({
+        type: 'ct_embed_resize',
+        source: 'controllertesting',
+        height: document.body.scrollHeight
+      }, '*');
+    }
+  });
+  resizeObserver.observe(document.body);
+</script>
+
 <style>
   html, body {
     margin: 0;

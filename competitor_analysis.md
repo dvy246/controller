@@ -3,6 +3,16 @@
 > [!CAUTION]
 > **Previous report contained inaccuracies** about controllertest.io and other competitors. This version has been corrected with verified data. All feature claims below are based on the most accurate available information.
 
+> [!IMPORTANT]
+> **DOSSIER SUPERSEDES (2026-08-02):** All claims about controllertest.io in
+> this file are superseded by the verified evidence dossier `controllertest.md`
+> (direct sitemap + HTML fetches): Astro v5.17.3 SSG, **400 URLs**, 24 unique
+> English pages, **10 full locales**, Chrome extension with JSON/CSV export,
+> WebHID calibration (DS4/DualSense), earned press (Ghacks, korben, coruzant).
+> Verified gaps they cannot answer quickly: repair guides, game settings,
+> comparisons, profiles, reliability data, scoring/retention, methodology/
+> trust positioning.
+
 ---
 
 ## Complete Competitor Map — 16+ Sites

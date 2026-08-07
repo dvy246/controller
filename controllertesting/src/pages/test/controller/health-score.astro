@@ -99,9 +99,9 @@ const faqs = [
 </ToolLayout>
 
 <style>
-  .results-summary { display: flex; flex-direction: column; gap: 1rem; }
-  .results-legend-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-  .legend-card { padding: 1rem; border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 0.375rem; }
+  .results-summary { display: flex; flex-direction: column; gap: var(--spacing-card-sm); }
+  .results-legend-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-card-sm); }
+  .legend-card { padding: var(--spacing-card-sm); border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 0.375rem; }
   .legend-pass { background: var(--color-pass-bg); border: 1px solid var(--color-pass); }
   .legend-pass .legend-title { color: var(--color-pass); }
   .legend-warning { background: var(--color-warning-bg); border: 1px solid var(--color-warning); }
@@ -110,7 +110,7 @@ const faqs = [
   .legend-fail .legend-title { color: var(--color-fail); }
   .legend-title { font-family: var(--font-mono); font-size: var(--text-small); }
   .legend-text { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.5; }
-  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-card); flex-wrap: wrap; }
   .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
   .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
   .prose { line-height: 1.7; color: var(--color-text-secondary); }

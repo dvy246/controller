@@ -1,0 +1,143 @@
+---
+/**
+ * /test/controller/joycon — Joy-Con Tester: Check Switch Controllers for Drift
+ * Target keyword: joycon controller tester
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import DriftTester from '../../../components/tools/controller/DriftTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Joy-Con Tester' },
+];
+
+const faqs = [
+  {
+    "question": "Will Nintendo fix my drifting Joy-Cons for free?",
+    "answer": "Yes, in many regions including North America and Europe, Nintendo offers free repair programs for Joy-Con drift regardless of warranty status."
+  }
+];
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Joy-Con Tester: Check Switch Controllers for Drift",
+      "operatingSystem": "Web Browser",
+      "applicationCategory": "UtilitiesApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Specifically designed testing tool for Nintendo Switch Joy-Cons. Verify input accuracy and diagnose the dreaded Joy-Con drift instantly."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://controllertesting.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Tests",
+          "item": "https://controllertesting.com/test/controller/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Joy-Con Tester",
+          "item": "https://controllertesting.com/test/controller/joycon"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Will Nintendo fix my drifting Joy-Cons for free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, in many regions including North America and Europe, Nintendo offers free repair programs for Joy-Con drift regardless of warranty status."
+          }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<ToolLayout
+  title="Joy-Con Tester: Check Switch Controllers for Drift"
+  description="Specifically designed testing tool for Nintendo Switch Joy-Cons. Verify input accuracy and diagnose the dreaded Joy-Con drift instantly."
+  toolName="Joy-Con Tester"
+  category="Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(schemaData)} />
+  </Fragment>
+
+  {/* ── Tool Interactive Island ── */}
+  <Fragment slot="tool">
+    <DriftTester />
+  </Fragment>
+
+  {/* ── Results Slot ── */}
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Diagnostics Results</h2>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">0.0% – 2.0% (Healthy)</strong>
+          <p class="legend-text">Normal variance. Your controller is operating flawlessly.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">2.1% – 10.0% (Minor Drift)</strong>
+          <p class="legend-text">Slight potentiometer wear detected.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">> 10.0% (Severe Drift)</strong>
+          <p class="legend-text">Severe drift detected. Repair is highly recommended.</p>
+        </div>
+      </div>
+    </div>
+  </Fragment>
+
+  {/* ── SEO Repair Guide Section ── */}
+  <Fragment slot="export">
+    <div class="repair-guide" style="margin-top: 3rem; background: var(--color-surface-2); padding: 2rem; border-radius: var(--radius-card); border: 1px solid var(--color-border-subtle);">
+      <h2 style="margin-bottom: 1rem; font-size: 1.5rem; color: var(--color-text-primary);">How do you accurately test a Joy-Con for drift?</h2>
+      <p style="margin-bottom: 1.5rem; color: var(--color-text-secondary); line-height: 1.6;"><strong>To accurately test a Joy-Con for drift, pair it via Bluetooth to a computer and launch an online gamepad diagnostic tool. Leave the thumbstick untouched. If the crosshair moves or shows an input value greater than two percent, your Joy-Con has a physical drift issue.</strong></p>
+      
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div>
+          <h3 style="color: var(--color-accent); margin-bottom: 0.5rem;">Recommended Actions</h3>
+          <p style="color: var(--color-text-secondary); line-height: 1.6;">Always begin by using our free <a href="/test/controller/drift">drift diagnostic tool</a> to identify the exact cause of any input inconsistencies before attempting repairs.</p>
+        </div>
+      </div>
+    </div>
+  </Fragment>
+
+  {/* ── Related Tools Slot ── */}
+  <Fragment slot="related-tools">
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Universal Stick Drift Test</h3>
+      <p class="tool-desc">Test any controller across all major platforms.</p>
+    </a>
+    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Button Tester</h3>
+      <p class="tool-desc">Check for sticky or failing face buttons and triggers.</p>
+    </a>
+  </Fragment>
+</ToolLayout>

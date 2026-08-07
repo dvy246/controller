@@ -5,62 +5,65 @@
  */
 ---
 
-<div class="circularity-tester" id="circ-tester-root">
-  <div class="tester-status-bar">
+<div class="circularity-tester group" id="circ-tester-root" data-model="none">
+  {/* Dynamic ambient glow based on controller type */}
+  <div class="ambient-glow" id="ambient-glow"></div>
+
+  <div class="tester-status-bar glass-panel relative z-10">
     <div class="status-indicator">
       <span class="status-dot" id="circ-status-dot"></span>
       <span class="status-text" id="circ-status-text">Rotate both thumbsticks 360 degrees to measure circularity...</span>
     </div>
-    <div class="controller-name" id="circ-model-name">No Controller Detected</div>
+    <div class="controller-name tracking-wider" id="circ-model-name">No Controller Detected</div>
   </div>
 
-  <div class="circ-grid">
+  <div class="circ-grid relative z-10">
 
     {/* Left Stick Canvas */}
-    <div class="circ-card">
+    <div class="circ-card glass-panel">
       <div class="circ-header">
-        <h3 class="circ-title">Left Stick Circularity</h3>
+        <h3 class="circ-title text-stone-100">Left Stick Circularity</h3>
         <span class="circ-err-val" id="left-circ-err">0.0% Error</span>
       </div>
-      <div class="canvas-wrap">
-        <canvas id="left-circ-canvas" width="280" height="280"></canvas>
+      <div class="canvas-wrap py-4">
+        <canvas id="left-circ-canvas" width="280" height="280" class="drop-shadow-2xl"></canvas>
       </div>
       <div class="circ-metrics">
         <div class="metric">
-          <span class="m-label">Points Samples</span>
-          <span class="m-val mono" id="left-pts-count">0</span>
+          <span class="m-label uppercase tracking-widest text-stone-400">Points Samples</span>
+          <span class="m-val mono text-stone-100" id="left-pts-count">0</span>
         </div>
         <div class="metric">
-          <span class="m-label">Avg Radius</span>
-          <span class="m-val mono" id="left-avg-rad">0.000</span>
+          <span class="m-label uppercase tracking-widest text-stone-400">Avg Radius</span>
+          <span class="m-val mono text-stone-100" id="left-avg-rad">0.000</span>
         </div>
         <div class="metric">
-          <span class="m-label">Outer Error</span>
+          <span class="m-label uppercase tracking-widest text-stone-400">Outer Error</span>
           <span class="m-val badge-pass" id="left-circ-badge">Perfect</span>
         </div>
       </div>
     </div>
 
     {/* Right Stick Canvas */}
-    <div class="circ-card">
+    <div class="circ-card glass-panel">
       <div class="circ-header">
-        <h3 class="circ-title">Right Stick Circularity</h3>
+        <h3 class="circ-title text-stone-100">Right Stick Circularity</h3>
         <span class="circ-err-val" id="right-circ-err">0.0% Error</span>
       </div>
-      <div class="canvas-wrap">
-        <canvas id="right-circ-canvas" width="280" height="280"></canvas>
+      <div class="canvas-wrap py-4">
+        <canvas id="right-circ-canvas" width="280" height="280" class="drop-shadow-2xl"></canvas>
       </div>
       <div class="circ-metrics">
         <div class="metric">
-          <span class="m-label">Points Samples</span>
-          <span class="m-val mono" id="right-pts-count">0</span>
+          <span class="m-label uppercase tracking-widest text-stone-400">Points Samples</span>
+          <span class="m-val mono text-stone-100" id="right-pts-count">0</span>
         </div>
         <div class="metric">
-          <span class="m-label">Avg Radius</span>
-          <span class="m-val mono" id="right-avg-rad">0.000</span>
+          <span class="m-label uppercase tracking-widest text-stone-400">Avg Radius</span>
+          <span class="m-val mono text-stone-100" id="right-avg-rad">0.000</span>
         </div>
         <div class="metric">
-          <span class="m-label">Outer Error</span>
+          <span class="m-label uppercase tracking-widest text-stone-400">Outer Error</span>
           <span class="m-val badge-pass" id="right-circ-badge">Perfect</span>
         </div>
       </div>
@@ -113,12 +116,22 @@
 
     const leftPoints: { x: number; y: number }[] = [];
     const rightPoints: { x: number; y: number }[] = [];
+    let currentBrand = 'none';
+
+    function getHardwareBrandColor(modelKey: string | null) {
+      if (!modelKey) return { hex: '255, 255, 255', brand: 'generic' }; 
+      if (modelKey.includes('ps5') || modelKey.includes('ps4')) return { hex: '37, 99, 235', brand: 'playstation' }; 
+      if (modelKey.includes('xbox')) return { hex: '16, 185, 129', brand: 'xbox' }; 
+      if (modelKey.includes('switch')) return { hex: '239, 68, 68', brand: 'switch' }; 
+      return { hex: '139, 92, 246', brand: 'generic' }; 
+    }
 
     function renderCircularity(
       ctx: CanvasRenderingContext2D | null,
       points: { x: number; y: number }[],
       currentX: number,
-      currentY: number
+      currentY: number,
+      brandColors: { hex: string; brand: string }
     ) {
       if (!ctx) return;
       const w = ctx.canvas.width;
@@ -129,12 +142,16 @@
 
       ctx.clearRect(0, 0, w, h);
 
+      // Background outer circle (premium glass effect)
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(12, 12, 20, 0.4)';
+      ctx.fill();
+
       // Ideal outer circle boundary
       ctx.beginPath();
       ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.fillStyle = '#0C0C14';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+      ctx.strokeStyle = `rgba(${brandColors.hex}, 0.4)`;
       ctx.lineWidth = 1.5;
       ctx.setLineDash([4, 4]);
       ctx.stroke();
@@ -150,21 +167,27 @@
           if (i === 0) ctx.moveTo(px, py);
           else ctx.lineTo(px, py);
         }
-        ctx.fillStyle = 'rgba(37, 99, 235, 0.15)';
+        ctx.fillStyle = `rgba(${brandColors.hex}, 0.15)`;
         ctx.fill();
-        ctx.strokeStyle = '#2563EB';
+        ctx.strokeStyle = `rgb(${brandColors.hex})`;
         ctx.lineWidth = 2;
         ctx.stroke();
       }
 
-      // Draw active stick position
+      // Draw active stick position with glow
       const px = cx + currentX * radius;
       const py = cy + currentY * radius;
+      
+      ctx.beginPath();
+      ctx.arc(px, py, 14, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${brandColors.hex}, 0.3)`;
+      ctx.fill();
+
       ctx.beginPath();
       ctx.arc(px, py, 5, 0, Math.PI * 2);
-      ctx.fillStyle = '#10B981';
+      ctx.fillStyle = '#FFFFFF';
       ctx.fill();
-      ctx.strokeStyle = '#FFFFFF';
+      ctx.strokeStyle = `rgb(${brandColors.hex})`;
       ctx.lineWidth = 1.5;
       ctx.stroke();
     }
@@ -188,6 +211,14 @@
         if (model) model.textContent = activeGp.id;
 
         const state = parseGamepadState(activeGp);
+        const modelKey = mapGamepadToModelKey(state.detectedModel);
+        const hardwareColors = getHardwareBrandColor(modelKey);
+
+        const rootEl = document.getElementById('circ-tester-root');
+        if (rootEl && currentBrand !== hardwareColors.brand) {
+          rootEl.setAttribute('data-model', hardwareColors.brand);
+          currentBrand = hardwareColors.brand;
+        }
 
         // Left stick
         const lDist = Math.hypot(state.leftStick.x, state.leftStick.y);
@@ -195,7 +226,7 @@
           leftPoints.push({ x: state.leftStick.x, y: state.leftStick.y });
           if (leftPoints.length > 300) leftPoints.shift();
         }
-        renderCircularity(leftCtx, leftPoints, state.leftStick.x, state.leftStick.y);
+        renderCircularity(leftCtx, leftPoints, state.leftStick.x, state.leftStick.y, hardwareColors);
 
         const lErr = calculateCircularityError(leftPoints);
         const lErrEl = document.getElementById('left-circ-err');
@@ -225,7 +256,7 @@
           rightPoints.push({ x: state.rightStick.x, y: state.rightStick.y });
           if (rightPoints.length > 300) rightPoints.shift();
         }
-        renderCircularity(rightCtx, rightPoints, state.rightStick.x, state.rightStick.y);
+        renderCircularity(rightCtx, rightPoints, state.rightStick.x, state.rightStick.y, hardwareColors);
 
         const rErr = calculateCircularityError(rightPoints);
         const rErrEl = document.getElementById('right-circ-err');
@@ -246,6 +277,22 @@
             rBadge.className = 'm-val badge-pass';
           }
         }
+      } else {
+        const dot = document.getElementById('circ-status-dot');
+        const text = document.getElementById('circ-status-text');
+        const model = document.getElementById('circ-model-name');
+        if (dot) dot.className = 'status-dot';
+        if (text) text.textContent = 'Connect a controller and press any button...';
+        if (model) model.textContent = 'No Controller Detected';
+        
+        const rootEl = document.getElementById('circ-tester-root');
+        if (rootEl) {
+          rootEl.setAttribute('data-model', 'none');
+          currentBrand = 'none';
+        }
+
+        renderCircularity(leftCtx, leftPoints, 0, 0, { hex: '255,255,255', brand: 'generic' });
+        renderCircularity(rightCtx, rightPoints, 0, 0, { hex: '255,255,255', brand: 'generic' });
       }
 
       requestAnimationFrame(pollCircularity);
@@ -265,16 +312,57 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    position: relative;
+    padding: 1rem;
+    border-radius: 1.5rem;
+    background: #000;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+  }
+
+  /* Ambient hardware glow underlay */
+  .ambient-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150%;
+    height: 150%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at center, rgba(37,99,235,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    transition: all 1s ease-in-out;
+    z-index: 0;
+  }
+
+  /* Hardware specific glowing themes */
+  .circularity-tester[data-model="playstation"] .ambient-glow {
+    background: radial-gradient(circle at center, rgba(37,99,235,0.15) 0%, transparent 70%);
+  }
+  .circularity-tester[data-model="xbox"] .ambient-glow {
+    background: radial-gradient(circle at center, rgba(16,185,129,0.12) 0%, transparent 70%);
+  }
+  .circularity-tester[data-model="switch"] .ambient-glow {
+    background: radial-gradient(circle at left, rgba(239,68,68,0.12) 0%, transparent 50%),
+                radial-gradient(circle at right, rgba(59,130,246,0.12) 0%, transparent 50%);
+  }
+
+  /* Glass Panels */
+  .glass-panel {
+    background: rgba(15, 15, 20, 0.4);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
 
   .tester-status-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.875rem 1.25rem;
-    background: var(--color-surface-2);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-sm);
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    position: relative;
+    z-index: 10;
   }
 
   .status-indicator {
@@ -300,11 +388,14 @@
   }
 
   .controller-name {
-    font-family: var(--font-mono);
-    font-size: var(--text-small);
-    font-weight: 600;
-    color: var(--color-accent);
+    font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+    font-size: 0.875rem;
+    color: #fff;
+    text-transform: uppercase;
   }
+  .circularity-tester[data-model="playstation"] .controller-name { color: #60A5FA; text-shadow: 0 0 10px rgba(96,165,250,0.5); }
+  .circularity-tester[data-model="xbox"] .controller-name { color: #34D399; text-shadow: 0 0 10px rgba(52,211,153,0.5); }
+  .circularity-tester[data-model="switch"] .controller-name { color: #F87171; text-shadow: 0 0 10px rgba(248,113,113,0.5); }
 
   .circ-grid {
     display: grid;
@@ -313,13 +404,16 @@
   }
 
   .circ-card {
-    background: var(--color-surface-2);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-card);
-    padding: 1.25rem;
+    border-radius: 1.25rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s;
+  }
+  .circ-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.15);
   }
 
   .circ-header {

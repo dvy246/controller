@@ -3,74 +3,78 @@
  * DriftTester.astro — Interactive Stick Drift Diagnostic Tool
  * Calculates stick position, drift percentage, live visual crosshair,
  * and deadzone threshold alerts using Web Gamepad API.
+ * 
+ * UPGRADED: High-energy premium UI & dynamic hardware simulator overlay.
  */
 ---
+<div class="drift-tester group" id="drift-tester-root" data-model="none">
+  {/* Dynamic ambient glow based on controller type */}
+  <div class="ambient-glow" id="ambient-glow"></div>
 
-<div class="drift-tester" id="drift-tester-root">
   {/* ── Status Bar ── */}
-  <div class="tester-status-bar">
+  <div class="tester-status-bar glass-panel">
     <div class="status-indicator">
       <span class="status-dot" id="gp-status-dot"></span>
-      <span class="status-text" id="gp-status-text">Connect a controller and press any button...</span>
+      <span class="status-text font-medium" id="gp-status-text">Connect a controller and press any button...</span>
     </div>
-    <div class="controller-name" id="gp-model-name">No Controller Detected</div>
+    <div class="controller-name tracking-wider" id="gp-model-name">NO DEVICE</div>
   </div>
 
   {/* ── Visualizers Grid (Left & Right Sticks) ── */}
-  <div class="sticks-grid">
+  <div class="sticks-grid relative z-10">
 
     {/* Left Analog Stick */}
-    <div class="stick-card">
+    <div class="stick-card glass-panel group/stick">
       <div class="stick-card-header">
-        <h3 class="stick-title">Left Analog Stick</h3>
-        <span class="drift-value" id="left-drift-val">0.0%</span>
+        <h3 class="stick-title text-stone-100 font-bold tracking-tight">Left Analog Stick</h3>
+        <span class="drift-value font-mono text-2xl" id="left-drift-val">0.0%</span>
       </div>
 
-      <div class="canvas-container">
-        <canvas id="left-stick-canvas" width="260" height="260"></canvas>
-        <div class="canvas-center-crosshair"></div>
+      <div class="canvas-container relative flex justify-center items-center py-6">
+        <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-full opacity-50 blur-xl pointer-events-none transition-opacity group-hover/stick:opacity-100"></div>
+        <canvas id="left-stick-canvas" width="280" height="280" class="relative z-10 drop-shadow-2xl"></canvas>
       </div>
 
       <div class="stick-metrics">
         <div class="metric">
-          <span class="m-label">X Axis</span>
-          <span class="m-val mono" id="left-x-val">0.0000</span>
+          <span class="m-label uppercase tracking-widest text-xs text-stone-400">X Axis</span>
+          <span class="m-val mono text-stone-100" id="left-x-val">0.0000</span>
         </div>
         <div class="metric">
-          <span class="m-label">Y Axis</span>
-          <span class="m-val mono" id="left-y-val">0.0000</span>
+          <span class="m-label uppercase tracking-widest text-xs text-stone-400">Y Axis</span>
+          <span class="m-val mono text-stone-100" id="left-y-val">0.0000</span>
         </div>
         <div class="metric">
-          <span class="m-label">Status</span>
-          <span class="m-val badge-pass" id="left-status-badge">Healthy</span>
+          <span class="m-label uppercase tracking-widest text-xs text-stone-400">Status</span>
+          <span class="m-val badge-pass inline-flex" id="left-status-badge">Healthy</span>
         </div>
       </div>
     </div>
 
     {/* Right Analog Stick */}
-    <div class="stick-card">
+    <div class="stick-card glass-panel group/stick">
       <div class="stick-card-header">
-        <h3 class="stick-title">Right Analog Stick</h3>
-        <span class="drift-value" id="right-drift-val">0.0%</span>
+        <h3 class="stick-title text-stone-100 font-bold tracking-tight">Right Analog Stick</h3>
+        <span class="drift-value font-mono text-2xl" id="right-drift-val">0.0%</span>
       </div>
 
-      <div class="canvas-container">
-        <canvas id="right-stick-canvas" width="260" height="260"></canvas>
-        <div class="canvas-center-crosshair"></div>
+      <div class="canvas-container relative flex justify-center items-center py-6">
+        <div class="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-full opacity-50 blur-xl pointer-events-none transition-opacity group-hover/stick:opacity-100"></div>
+        <canvas id="right-stick-canvas" width="280" height="280" class="relative z-10 drop-shadow-2xl"></canvas>
       </div>
 
       <div class="stick-metrics">
         <div class="metric">
-          <span class="m-label">X Axis</span>
-          <span class="m-val mono" id="right-x-val">0.0000</span>
+          <span class="m-label uppercase tracking-widest text-xs text-stone-400">X Axis</span>
+          <span class="m-val mono text-stone-100" id="right-x-val">0.0000</span>
         </div>
         <div class="metric">
-          <span class="m-label">Y Axis</span>
-          <span class="m-val mono" id="right-y-val">0.0000</span>
+          <span class="m-label uppercase tracking-widest text-xs text-stone-400">Y Axis</span>
+          <span class="m-val mono text-stone-100" id="right-y-val">0.0000</span>
         </div>
         <div class="metric">
-          <span class="m-label">Status</span>
-          <span class="m-val badge-pass" id="right-status-badge">Healthy</span>
+          <span class="m-label uppercase tracking-widest text-xs text-stone-400">Status</span>
+          <span class="m-val badge-pass inline-flex" id="right-status-badge">Healthy</span>
         </div>
       </div>
     </div>
@@ -78,9 +82,15 @@
   </div>
 
   {/* ── Controls & Calibration ── */}
-  <div class="tester-controls">
-    <button type="button" class="btn-primary" id="btn-calibrate">Calibrate Deadzone</button>
-    <button type="button" class="btn-secondary" id="btn-reset-history">Reset Canvas Trail</button>
+  <div class="tester-controls mt-4 relative z-10">
+    <button type="button" class="premium-btn btn-primary shadow-lg shadow-blue-500/20" id="btn-calibrate">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-crosshair"><circle cx="12" cy="12" r="10"/><line x1="22" x2="18" y1="12" y2="12"/><line x1="6" x2="2" y1="12" y2="12"/><line x1="12" x2="12" y1="6" y2="2"/><line x1="12" x2="12" y1="22" y2="18"/></svg>
+      Calibrate Deadzone
+    </button>
+    <button type="button" class="premium-btn btn-secondary glass-panel hover:bg-white/5" id="btn-reset-history">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      Reset Canvas Trail
+    </button>
   </div>
 </div>
 
@@ -113,7 +123,7 @@
     awardFirstMeasurement();
     const stick = driftingLeft ? state.leftStick : state.rightStick;
     try {
-      localStorage.setItem('ct_last_drift', JSON.stringify({
+      const entry = {
         model: state.detectedModel,
         modelKey: mapGamepadToModelKey(state.detectedModel),
         drift: Math.round(drift * 100) / 100,
@@ -121,7 +131,16 @@
         driftY: Math.round(stick.y * 10000) / 10000,
         side: driftingLeft ? 'left' : 'right',
         date: now,
-      }));
+      };
+      const historyStr = localStorage.getItem('ct_drift_history');
+      let history = [];
+      if (historyStr) {
+        try { history = JSON.parse(historyStr); } catch(e) {}
+      }
+      history.push(entry);
+      if (history.length > 100) history = history.slice(-100);
+      localStorage.setItem('ct_drift_history', JSON.stringify(history));
+      localStorage.setItem('ct_last_drift', JSON.stringify(entry));
     } catch {
       /* storage unavailable — ignore */
     }
@@ -146,6 +165,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    const rootEl = document.getElementById('drift-tester-root');
     const statusDot = document.getElementById('gp-status-dot');
     const statusText = document.getElementById('gp-status-text');
     const modelName = document.getElementById('gp-model-name');
@@ -171,37 +191,52 @@
     const rightTrail: { x: number; y: number }[] = [];
 
     let animId: number | null = null;
+    let currentBrand = 'none';
+
+    // Premium styling colors based on hardware model
+    function getHardwareBrandColor(modelKey: string | null) {
+      if (!modelKey) return { hex: '255, 255, 255', brand: 'generic' }; 
+      if (modelKey.includes('ps5') || modelKey.includes('ps4')) return { hex: '37, 99, 235', brand: 'playstation' }; // PlayStation Blue
+      if (modelKey.includes('xbox')) return { hex: '16, 185, 129', brand: 'xbox' }; // Xbox Green
+      if (modelKey.includes('switch')) return { hex: '239, 68, 68', brand: 'switch' }; // Switch Red
+      return { hex: '139, 92, 246', brand: 'generic' }; // Generic Violet
+    }
 
     function renderStick(
       ctx: CanvasRenderingContext2D | null,
       x: number,
       y: number,
-      trail: { x: number; y: number }[]
+      trail: { x: number; y: number }[],
+      brandColors: { hex: string; brand?: string }
     ) {
       if (!ctx) return;
       const w = ctx.canvas.width;
       const h = ctx.canvas.height;
       const cx = w / 2;
       const cy = h / 2;
-      const radius = (w / 2) - 20;
+      const radius = (w / 2) - 25; // padding
 
       ctx.clearRect(0, 0, w, h);
 
-      // Background outer circle
+      // Background outer circle (premium glass effect)
       ctx.beginPath();
       ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.fillStyle = '#0C0C14';
+      ctx.fillStyle = 'rgba(12, 12, 20, 0.4)'; // glass dark
       ctx.fill();
-      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+      
+      const grad = ctx.createLinearGradient(0, 0, 0, h);
+      grad.addColorStop(0, 'rgba(255,255,255,0.15)');
+      grad.addColorStop(1, 'rgba(255,255,255,0.02)');
+      ctx.strokeStyle = grad;
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
       // Deadzone threshold circle (5%)
       ctx.beginPath();
       ctx.arc(cx, cy, radius * 0.05, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(245, 158, 11, 0.4)';
-      ctx.lineWidth = 1;
-      ctx.setLineDash([3, 3]);
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]);
       ctx.stroke();
       ctx.setLineDash([]);
 
@@ -211,31 +246,42 @@
       ctx.lineTo(cx + radius, cy);
       ctx.moveTo(cx, cy - radius);
       ctx.lineTo(cx, cy + radius);
-      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.lineWidth = 1;
       ctx.stroke();
 
-      // Draw stick position trail
+      // Draw stick position trail (hardware colored)
       const px = cx + x * radius;
       const py = cy + y * radius;
       trail.push({ x: px, y: py });
-      if (trail.length > 100) trail.shift();
+      if (trail.length > 80) trail.shift();
 
       for (let i = 0; i < trail.length; i++) {
         const pt = trail[i];
-        const alpha = (i / trail.length) * 0.4;
+        const alpha = (i / trail.length) * 0.5;
         ctx.beginPath();
         ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(37, 99, 235, ${alpha})`;
+        ctx.fillStyle = `rgba(${brandColors.hex}, ${alpha})`;
         ctx.fill();
       }
 
-      // Draw current stick position dot
+      // Draw current stick position dot with premium glow
+      const isDrifting = Math.hypot(x, y) > 0.05;
+      
+      // Outer glow
+      ctx.beginPath();
+      ctx.arc(px, py, 14, 0, Math.PI * 2);
+      ctx.fillStyle = isDrifting ? 'rgba(239, 68, 68, 0.2)' : `rgba(${brandColors.hex}, 0.3)`;
+      ctx.fill();
+
+      // Inner dot
       ctx.beginPath();
       ctx.arc(px, py, 6, 0, Math.PI * 2);
-      const isDrifting = Math.hypot(x, y) > 0.05;
-      ctx.fillStyle = isDrifting ? '#EF4444' : '#10B981';
+      ctx.fillStyle = isDrifting ? '#EF4444' : '#FFFFFF';
       ctx.fill();
-      ctx.strokeStyle = '#FFFFFF';
+      
+      // Dot border
+      ctx.strokeStyle = isDrifting ? '#FECACA' : `rgb(${brandColors.hex})`;
       ctx.lineWidth = 2;
       ctx.stroke();
     }
@@ -261,51 +307,70 @@
         maybeRecordDriftSample(state);
         persistLastDrift(state);
 
+        const modelKey = mapGamepadToModelKey(state.detectedModel);
+        const hardwareColors = getHardwareBrandColor(modelKey);
+        
+        // Update root attribute for CSS dynamic theming
+        if (rootEl && currentBrand !== hardwareColors.brand) {
+          rootEl.setAttribute('data-model', hardwareColors.brand);
+          currentBrand = hardwareColors.brand;
+        }
+
         // Left stick
-        renderStick(leftCtx, state.leftStick.x, state.leftStick.y, leftTrail);
+        renderStick(leftCtx, state.leftStick.x, state.leftStick.y, leftTrail, hardwareColors);
         if (leftXVal) leftXVal.textContent = state.leftStick.x.toFixed(4);
         if (leftYVal) leftYVal.textContent = state.leftStick.y.toFixed(4);
-        if (leftDriftVal) leftDriftVal.textContent = `${state.leftStick.driftPct}%`;
+        if (leftDriftVal) {
+          leftDriftVal.textContent = `${state.leftStick.driftPct}%`;
+          leftDriftVal.style.color = state.leftStick.driftPct > 10 ? '#EF4444' : (state.leftStick.driftPct > 2 ? '#F59E0B' : `rgb(${hardwareColors.hex})`);
+        }
 
         if (leftBadge) {
           if (state.leftStick.driftPct > 10) {
             leftBadge.textContent = 'Severe Drift';
-            leftBadge.className = 'm-val badge-fail';
+            leftBadge.className = 'm-val badge-fail inline-flex px-2 py-0.5 rounded-md';
           } else if (state.leftStick.driftPct > 2) {
             leftBadge.textContent = 'Minor Drift';
-            leftBadge.className = 'm-val badge-warning';
+            leftBadge.className = 'm-val badge-warning inline-flex px-2 py-0.5 rounded-md';
           } else {
             leftBadge.textContent = 'Healthy';
-            leftBadge.className = 'm-val badge-pass';
+            leftBadge.className = 'm-val badge-pass inline-flex px-2 py-0.5 rounded-md';
           }
         }
 
         // Right stick
-        renderStick(rightCtx, state.rightStick.x, state.rightStick.y, rightTrail);
+        renderStick(rightCtx, state.rightStick.x, state.rightStick.y, rightTrail, hardwareColors);
         if (rightXVal) rightXVal.textContent = state.rightStick.x.toFixed(4);
         if (rightYVal) rightYVal.textContent = state.rightStick.y.toFixed(4);
-        if (rightDriftVal) rightDriftVal.textContent = `${state.rightStick.driftPct}%`;
+        if (rightDriftVal) {
+          rightDriftVal.textContent = `${state.rightStick.driftPct}%`;
+          rightDriftVal.style.color = state.rightStick.driftPct > 10 ? '#EF4444' : (state.rightStick.driftPct > 2 ? '#F59E0B' : `rgb(${hardwareColors.hex})`);
+        }
 
         if (rightBadge) {
           if (state.rightStick.driftPct > 10) {
             rightBadge.textContent = 'Severe Drift';
-            rightBadge.className = 'm-val badge-fail';
+            rightBadge.className = 'm-val badge-fail inline-flex px-2 py-0.5 rounded-md';
           } else if (state.rightStick.driftPct > 2) {
             rightBadge.textContent = 'Minor Drift';
-            rightBadge.className = 'm-val badge-warning';
+            rightBadge.className = 'm-val badge-warning inline-flex px-2 py-0.5 rounded-md';
           } else {
             rightBadge.textContent = 'Healthy';
-            rightBadge.className = 'm-val badge-pass';
+            rightBadge.className = 'm-val badge-pass inline-flex px-2 py-0.5 rounded-md';
           }
         }
 
       } else {
         if (statusDot) statusDot.className = 'status-dot';
         if (statusText) statusText.textContent = 'Connect a controller and press any button...';
-        if (modelName) modelName.textContent = 'No Controller Detected';
+        if (modelName) modelName.textContent = 'NO DEVICE';
+        if (rootEl) {
+          rootEl.setAttribute('data-model', 'none');
+          currentBrand = 'none';
+        }
 
-        renderStick(leftCtx, 0, 0, leftTrail);
-        renderStick(rightCtx, 0, 0, rightTrail);
+        renderStick(leftCtx, 0, 0, leftTrail, { hex: '255,255,255', brand: 'generic' });
+        renderStick(rightCtx, 0, 0, rightTrail, { hex: '255,255,255', brand: 'generic' });
       }
 
       animId = requestAnimationFrame(poll);
@@ -326,65 +391,114 @@
 </script>
 
 <style>
+  /* High Energy Premium UI Styling */
   .drift-tester {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
+    position: relative;
+    padding: 1rem;
+    border-radius: 1.5rem;
+    background: #000;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+  }
+
+  /* Ambient hardware glow underlay */
+  .ambient-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150%;
+    height: 150%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at center, rgba(37,99,235,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    transition: all 1s ease-in-out;
+    z-index: 0;
+  }
+
+  /* Hardware specific glowing themes */
+  .drift-tester[data-model="playstation"] .ambient-glow {
+    background: radial-gradient(circle at center, rgba(37,99,235,0.15) 0%, transparent 70%);
+  }
+  .drift-tester[data-model="xbox"] .ambient-glow {
+    background: radial-gradient(circle at center, rgba(16,185,129,0.12) 0%, transparent 70%);
+  }
+  .drift-tester[data-model="switch"] .ambient-glow {
+    background: radial-gradient(circle at left, rgba(239,68,68,0.12) 0%, transparent 50%),
+                radial-gradient(circle at right, rgba(59,130,246,0.12) 0%, transparent 50%);
+  }
+
+  /* Glass Panels */
+  .glass-panel {
+    background: rgba(15, 15, 20, 0.4);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
 
   .tester-status-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.875rem 1.25rem;
-    background: var(--color-surface-2);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-sm);
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    position: relative;
+    z-index: 10;
   }
 
   .status-indicator {
     display: flex;
     align-items: center;
-    gap: 0.625rem;
+    gap: 0.75rem;
   }
 
   .status-dot {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: var(--color-neutral);
+    background: rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
   }
   .status-dot.active {
-    background: var(--color-pass);
-    box-shadow: 0 0 8px var(--color-pass);
+    background: #10B981;
+    box-shadow: 0 0 12px #10B981, 0 0 4px #10B981;
   }
 
   .status-text {
-    font-size: var(--text-small);
-    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.7);
   }
 
   .controller-name {
-    font-family: var(--font-mono);
-    font-size: var(--text-small);
-    font-weight: 600;
-    color: var(--color-accent);
+    font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+    font-size: 0.875rem;
+    color: #fff;
+    text-transform: uppercase;
   }
+  .drift-tester[data-model="playstation"] .controller-name { color: #60A5FA; text-shadow: 0 0 10px rgba(96,165,250,0.5); }
+  .drift-tester[data-model="xbox"] .controller-name { color: #34D399; text-shadow: 0 0 10px rgba(52,211,153,0.5); }
+  .drift-tester[data-model="switch"] .controller-name { color: #F87171; text-shadow: 0 0 10px rgba(248,113,113,0.5); }
 
   .sticks-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
+    gap: 2rem;
   }
 
   .stick-card {
-    background: var(--color-surface-2);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-card);
-    padding: 1.25rem;
+    border-radius: 1.25rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s;
+  }
+  .stick-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.15);
   }
 
   .stick-card-header {
@@ -393,54 +507,55 @@
     justify-content: space-between;
   }
 
-  .stick-title {
-    font-size: 1rem;
-    font-weight: 700;
-  }
-
   .drift-value {
-    font-family: var(--font-mono);
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--color-accent);
-  }
-
-  .canvas-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+    text-shadow: 0 0 16px currentColor;
   }
 
   .stick-metrics {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
-    padding-top: 0.5rem;
-    border-top: 1px solid var(--color-border-subtle);
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
   }
 
   .metric {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-  }
-
-  .m-label {
-    font-size: var(--text-micro);
-    color: var(--color-text-tertiary);
-    font-family: var(--font-mono);
-  }
-
-  .m-val {
-    font-size: var(--text-small);
-    font-weight: 600;
+    gap: 0.3rem;
   }
 
   .tester-controls {
     display: flex;
-    gap: 0.75rem;
+    gap: 1rem;
     justify-content: flex-end;
+  }
+
+  .premium-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: #fff;
+    color: #000;
+    border: none;
+  }
+  .btn-primary:hover {
+    background: #f0f0f0;
+    transform: scale(1.02);
+  }
+  .btn-secondary {
+    color: #fff;
+  }
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
   }
 
   @media (max-width: 768px) {

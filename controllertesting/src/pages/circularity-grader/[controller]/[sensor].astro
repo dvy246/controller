@@ -1,0 +1,129 @@
+---
+/**
+ * circularity-grader/[controller]/[sensor].astro
+ * Programmatic SEO page for True Circularity & Symmetry Grader.
+ * Mapped across standard controllers and sensor types.
+ */
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import CircularityGrader from '../../../components/tools/controller/CircularityGrader.astro';
+
+export function getStaticPaths() {
+  const controllers = [
+    { id: 'ps5', name: 'PS5 DualSense' },
+    { id: 'xbox', name: 'Xbox Series X|S' },
+    { id: 'switch-pro', name: 'Nintendo Switch Pro' },
+    { id: 'ps4', name: 'PS4 DualShock 4' },
+    { id: 'generic', name: 'Generic PC Controller' }
+  ];
+
+  const sensors = [
+    { id: 'hall-effect', name: 'Hall Effect', tech: 'magnetic sensors (K-Silver, Gulikit)', bias: 'extremely precise and symmetric' },
+    { id: 'potentiometer', name: 'Potentiometer', tech: 'ALPS carbon tracks', bias: 'prone to slight asymmetry and physical wear' }
+  ];
+
+  const paths = [];
+
+  for (const c of controllers) {
+    for (const s of sensors) {
+      paths.push({
+        params: { controller: c.id, sensor: s.id },
+        props: {
+          controllerName: c.name,
+          sensorName: s.name,
+          sensorTech: s.tech,
+          sensorBias: s.bias
+        }
+      });
+    }
+  }
+
+  return paths;
+}
+
+const { controller, sensor } = Astro.params;
+const { controllerName, sensorName, sensorTech, sensorBias } = Astro.props;
+
+const title = `${controllerName} ${sensorName} Circularity Grader | ControllerTesting.com`;
+const description = `Grade the true stick circularity and symmetry of your ${controllerName} with ${sensorName} sensors. Detect physical wear, manufacturing defects, and outer rim precision.`;
+const toolName = `${controllerName} Circularity Grader (${sensorName})`;
+const category = 'God-Mode Diagnostics';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Tools', url: '/test/controller' },
+  { name: 'Circularity Grader' }
+];
+
+const faqs = [
+  {
+    question: `What makes ${sensorName} sensors different for circularity?`,
+    answer: `The ${controllerName} uses ${sensorName} modules (${sensorTech}). These are ${sensorBias}. Our grader detects if the physical perimeter maps cleanly to the digital output without losing data at the edges.`
+  },
+  {
+    question: 'What is a good circularity grade for Esports?',
+    answer: 'An A+ or A grade (< 5% error) is ideal for competitive gaming. It ensures that diagonal inputs reach maximum value simultaneously without deadzone compensation.'
+  },
+  {
+    question: `Does my ${controllerName} have perfect circularity out of the box?`,
+    answer: `Not always. Even new ${sensorName} sticks can have minor calibration offsets. Our grader measures the exact geometric deviation from a perfect circle so you know your baseline.`
+  }
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: title,
+  operatingSystem: 'Web Browser',
+  applicationCategory: 'DiagnosticTool',
+  description: description,
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD'
+  }
+};
+---
+
+<ToolLayout
+  title={title}
+  description={description}
+  toolName={toolName}
+  category={category}
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+  schema={schema}
+>
+  <Fragment slot="tool">
+    <CircularityGrader />
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="prose max-w-none p-6">
+      <h2 class="text-xl font-bold mb-4">Understanding Your Grade</h2>
+      <p class="text-stone-300">
+        Your grade evaluates the geometric perfection of the thumbstick module's outer boundary. 
+        <strong>A+ (Esports Ready)</strong> means the stick achieves a flawless circle, critical for consistent diagonal movement in games like Apex Legends and Rocket League. 
+        <strong>F (Defective)</strong> indicates severe asymmetry, meaning diagonal inputs will hit their max value prematurely or not at all.
+      </p>
+      <p class="text-stone-300 mt-2">
+        Since you're using a <strong>{controllerName}</strong> with a <strong>{sensorName}</strong> module, you can expect the underlying tech to be {sensorBias}.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Why Symmetry Matters for {controllerName}</h2>
+    <p>
+      Thumbstick circularity isn't just about drawing a circle. It's about diagonal reach. 
+      When a stick has poor circularity (a squircle or oval shape), pushing it to the top-right corner might 
+      result in <code class="bg-stone-800 px-1 py-0.5 rounded">X: 0.8, Y: 0.8</code> instead of <code class="bg-stone-800 px-1 py-0.5 rounded">X: 1.0, Y: 1.0</code>. 
+      This directly limits your maximum turning speed when aiming diagonally or performing quick movement tech in competitive games.
+    </p>
+
+    <h3>{sensorName} vs The Perfect Circle</h3>
+    <p>
+      The {sensorName} sensors in the {controllerName} use {sensorTech}. Over time, physical friction on the module housing and wear on the sensors can cause the digital output to drift from its factory calibration, reducing your overall circularity grade.
+    </p>
+  </Fragment>
+</ToolLayout>

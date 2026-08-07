@@ -1,0 +1,348 @@
+---
+// OverclockValidator.astro
+---
+
+<div class="overclock-validator-container w-full max-w-4xl mx-auto p-6 bg-surface-1 rounded-2xl border border-surface-2 shadow-2xl relative overflow-hidden backdrop-blur-md">
+  <!-- Glowing background effect -->
+  <div class="absolute -top-32 -left-32 w-64 h-64 bg-blue-500/20 rounded-full blur-[100px] pointer-events-none"></div>
+  <div class="absolute -bottom-32 -right-32 w-64 h-64 bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+  <div class="relative z-10">
+    <header class="mb-8 text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-white mb-2 font-geist">Hardware Telemetry Dashboard</h2>
+      <p class="text-surface-content-muted font-mono text-sm">Real-time Polling Rate & Jitter Analysis</p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <!-- Main Stats -->
+      <div class="stat-card bg-surface-2/50 border border-surface-3 rounded-xl p-5 flex flex-col items-center justify-center relative overflow-hidden group">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <span class="text-xs uppercase tracking-wider text-surface-content-muted mb-1 font-semibold">Current Hz</span>
+        <div class="text-5xl font-black text-white font-mono tracking-tighter tabular-nums" id="current-hz">0</div>
+        <span class="text-xs text-blue-400 mt-2 font-mono">Target: 1000Hz</span>
+      </div>
+
+      <div class="stat-card bg-surface-2/50 border border-surface-3 rounded-xl p-5 flex flex-col items-center justify-center relative overflow-hidden group">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <span class="text-xs uppercase tracking-wider text-surface-content-muted mb-1 font-semibold">Average Hz (10s)</span>
+        <div class="text-4xl font-bold text-white font-mono tracking-tighter tabular-nums" id="avg-hz">0</div>
+        <span class="text-xs text-emerald-400 mt-2 font-mono">Stable</span>
+      </div>
+
+      <div class="stat-card bg-surface-2/50 border border-surface-3 rounded-xl p-5 flex flex-col items-center justify-center relative overflow-hidden group">
+        <div class="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <span class="text-xs uppercase tracking-wider text-surface-content-muted mb-1 font-semibold">Jitter (Std Dev)</span>
+        <div class="text-4xl font-bold text-white font-mono tracking-tighter tabular-nums" id="jitter-ms">0.00</div>
+        <span class="text-xs text-amber-400 mt-2 font-mono">ms variance</span>
+      </div>
+    </div>
+
+    <!-- Visualizer Canvas -->
+    <div class="canvas-container bg-surface-3/30 border border-surface-3 rounded-xl p-4 mb-6 relative">
+      <div class="flex justify-between items-center mb-2 px-2">
+        <span class="text-xs text-surface-content-muted font-mono">Frame Pacing (Δms)</span>
+        <span class="text-xs text-surface-content-muted font-mono flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+          Live Capture
+        </span>
+      </div>
+      <canvas id="pacing-canvas" class="w-full h-48 rounded bg-surface-0/50 cursor-crosshair"></canvas>
+      
+      <!-- Overlays -->
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none" id="waiting-overlay">
+        <div class="text-center px-4 py-3 bg-surface-2/80 backdrop-blur rounded-lg border border-surface-3 shadow-xl">
+          <p class="text-sm font-medium text-white mb-1">Move analog sticks continuously</p>
+          <p class="text-xs text-surface-content-muted">to generate polling data</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status & Controls -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-surface-2/30 rounded-xl border border-surface-3">
+      <div class="flex items-center gap-3">
+        <div class="status-indicator w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.6)]" id="connection-status"></div>
+        <span class="text-sm font-medium text-surface-content-muted" id="connection-text">No Controller Detected</span>
+      </div>
+      
+      <button id="reset-stats" class="px-4 py-2 bg-surface-3 hover:bg-surface-4 text-white text-sm font-medium rounded-lg transition-colors border border-surface-4 hover:border-surface-content-muted active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        Reset Telemetry
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // High-performance vanilla JS telemetry logic
+  class OverclockValidator {
+    constructor() {
+      this.canvas = document.getElementById('pacing-canvas');
+      this.ctx = this.canvas.getContext('2d', { alpha: false });
+      
+      this.hzDisplay = document.getElementById('current-hz');
+      this.avgHzDisplay = document.getElementById('avg-hz');
+      this.jitterDisplay = document.getElementById('jitter-ms');
+      this.statusDot = document.getElementById('connection-status');
+      this.statusText = document.getElementById('connection-text');
+      this.waitingOverlay = document.getElementById('waiting-overlay');
+      this.resetBtn = document.getElementById('reset-stats');
+      
+      this.setupCanvas();
+      
+      // State
+      this.lastTimestamp = 0;
+      this.deltas = []; // ms deltas
+      this.MAX_SAMPLES = 200; // fit on canvas
+      this.recentHz = [];
+      this.isPolling = false;
+      this.gamepadIndex = null;
+      this.lastAxes = [];
+      this.lastButtons = [];
+      this.lastInputTime = 0;
+      
+      // Bind
+      this.loop = this.loop.bind(this);
+      
+      // Init
+      window.addEventListener('resize', () => this.setupCanvas());
+      window.addEventListener('gamepadconnected', (e) => this.onConnect(e));
+      window.addEventListener('gamepaddisconnected', (e) => this.onDisconnect(e));
+      
+      this.resetBtn.addEventListener('click', () => this.resetStats());
+      
+      // Check existing
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      for (let g of gamepads) {
+        if (g) { this.onConnect({ gamepad: g }); break; }
+      }
+      
+      requestAnimationFrame(this.loop);
+    }
+    
+    setupCanvas() {
+      // High-DPI canvas
+      const dpr = window.devicePixelRatio || 1;
+      const rect = this.canvas.getBoundingClientRect();
+      this.canvas.width = rect.width * dpr;
+      this.canvas.height = rect.height * dpr;
+      this.ctx.scale(dpr, dpr);
+      this.canvasWidth = rect.width;
+      this.canvasHeight = rect.height;
+      this.drawCanvasBackground();
+    }
+    
+    onConnect(e) {
+      if (this.gamepadIndex === null) {
+        this.gamepadIndex = e.gamepad.index;
+        this.statusDot.classList.replace('bg-red-500', 'bg-emerald-500');
+        this.statusDot.style.boxShadow = '0 0 10px rgba(16, 185, 129, 0.6)';
+        this.statusText.textContent = e.gamepad.id.split('(')[0].trim() || 'Controller Connected';
+        this.statusText.classList.replace('text-surface-content-muted', 'text-white');
+        this.isPolling = true;
+      }
+    }
+    
+    onDisconnect(e) {
+      if (e.gamepad.index === this.gamepadIndex) {
+        this.gamepadIndex = null;
+        this.statusDot.classList.replace('bg-emerald-500', 'bg-red-500');
+        this.statusDot.style.boxShadow = '0 0 10px rgba(239, 68, 68, 0.6)';
+        this.statusText.textContent = 'No Controller Detected';
+        this.statusText.classList.replace('text-white', 'text-surface-content-muted');
+        this.isPolling = false;
+        this.waitingOverlay.style.display = 'flex';
+      }
+    }
+    
+    resetStats() {
+      this.deltas = [];
+      this.recentHz = [];
+      this.hzDisplay.textContent = '0';
+      this.avgHzDisplay.textContent = '0';
+      this.jitterDisplay.textContent = '0.00';
+      this.drawCanvasBackground();
+    }
+    
+    hasStateChanged(gamepad) {
+      if (!gamepad) return false;
+      let changed = false;
+      
+      // Check axes
+      if (this.lastAxes.length !== gamepad.axes.length) {
+        this.lastAxes = [...gamepad.axes];
+        changed = true;
+      } else {
+        for (let i = 0; i < gamepad.axes.length; i++) {
+          if (this.lastAxes[i] !== gamepad.axes[i]) {
+            changed = true;
+            this.lastAxes[i] = gamepad.axes[i];
+          }
+        }
+      }
+      
+      // Check buttons
+      if (this.lastButtons.length !== gamepad.buttons.length) {
+        this.lastButtons = Array.from(gamepad.buttons, b => b.value);
+        changed = true;
+      } else {
+        for (let i = 0; i < gamepad.buttons.length; i++) {
+          if (this.lastButtons[i] !== gamepad.buttons[i].value) {
+            changed = true;
+            this.lastButtons[i] = gamepad.buttons[i].value;
+          }
+        }
+      }
+      
+      return changed;
+    }
+    
+    drawCanvasBackground() {
+      this.ctx.fillStyle = '#0f172a'; // Tailwind slate-900 (surface-0 equivalent)
+      this.ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+      
+      // Grid lines
+      this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+      this.ctx.lineWidth = 1;
+      this.ctx.beginPath();
+      // Target lines: 1ms (1000Hz), 2ms (500Hz), 4ms (250Hz), 8ms (125Hz)
+      const targets = [1, 2, 4, 8];
+      const maxDelta = 12; // 12ms max scale
+      
+      targets.forEach(t => {
+        const y = this.canvasHeight - (t / maxDelta) * this.canvasHeight;
+        this.ctx.moveTo(0, y);
+        this.ctx.lineTo(this.canvasWidth, y);
+      });
+      this.ctx.stroke();
+      
+      // Labels
+      this.ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+      this.ctx.font = '10px monospace';
+      targets.forEach(t => {
+        const y = this.canvasHeight - (t / maxDelta) * this.canvasHeight;
+        this.ctx.fillText(`${t}ms (${Math.round(1000/t)}Hz)`, 5, Math.max(10, y - 4));
+      });
+    }
+    
+    drawGraph() {
+      this.drawCanvasBackground();
+      
+      if (this.deltas.length < 2) return;
+      
+      const maxDelta = 12;
+      const step = this.canvasWidth / (this.MAX_SAMPLES - 1);
+      
+      this.ctx.beginPath();
+      this.ctx.strokeStyle = '#3b82f6'; // Blue-500
+      this.ctx.lineWidth = 2;
+      this.ctx.lineCap = 'round';
+      this.ctx.lineJoin = 'round';
+      
+      for (let i = 0; i < this.deltas.length; i++) {
+        const delta = Math.min(this.deltas[i], maxDelta); // cap for visual
+        const x = i * step + (this.MAX_SAMPLES - this.deltas.length) * step;
+        const y = this.canvasHeight - (delta / maxDelta) * this.canvasHeight;
+        
+        if (i === 0) {
+          this.ctx.moveTo(x, y);
+        } else {
+          this.ctx.lineTo(x, y);
+        }
+      }
+      
+      this.ctx.stroke();
+      
+      // Fill under curve
+      this.ctx.lineTo(this.canvasWidth, this.canvasHeight);
+      this.ctx.lineTo((this.MAX_SAMPLES - this.deltas.length) * step, this.canvasHeight);
+      this.ctx.closePath();
+      
+      const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvasHeight);
+      gradient.addColorStop(0, 'rgba(59, 130, 246, 0.2)');
+      gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+      this.ctx.fillStyle = gradient;
+      this.ctx.fill();
+    }
+    
+    updateStats() {
+      if (this.deltas.length < 10) return;
+      
+      // Calculate current Hz (using recent deltas)
+      const recentDeltas = this.deltas.slice(-10);
+      const avgRecentDelta = recentDeltas.reduce((a, b) => a + b, 0) / recentDeltas.length;
+      const currentHz = avgRecentDelta > 0 ? Math.round(1000 / avgRecentDelta) : 0;
+      
+      this.hzDisplay.textContent = currentHz;
+      
+      this.recentHz.push(currentHz);
+      if (this.recentHz.length > 100) this.recentHz.shift(); // rolling avg over ~1s of active movement
+      
+      // Calculate Average Hz
+      const avgHz = Math.round(this.recentHz.reduce((a, b) => a + b, 0) / this.recentHz.length);
+      this.avgHzDisplay.textContent = avgHz;
+      
+      // Calculate Jitter (StdDev of recent deltas)
+      const variance = recentDeltas.reduce((acc, val) => acc + Math.pow(val - avgRecentDelta, 2), 0) / recentDeltas.length;
+      const stdDev = Math.sqrt(variance);
+      
+      this.jitterDisplay.textContent = stdDev.toFixed(2);
+      
+      // UI Colors based on performance
+      if (avgHz >= 900) {
+        this.avgHzDisplay.className = "text-4xl font-bold text-blue-400 font-mono tracking-tighter tabular-nums";
+      } else if (avgHz >= 450) {
+        this.avgHzDisplay.className = "text-4xl font-bold text-emerald-400 font-mono tracking-tighter tabular-nums";
+      } else {
+        this.avgHzDisplay.className = "text-4xl font-bold text-white font-mono tracking-tighter tabular-nums";
+      }
+      
+      if (stdDev < 1) {
+        this.jitterDisplay.className = "text-4xl font-bold text-emerald-400 font-mono tracking-tighter tabular-nums";
+      } else if (stdDev > 2) {
+        this.jitterDisplay.className = "text-4xl font-bold text-amber-500 font-mono tracking-tighter tabular-nums";
+      } else {
+        this.jitterDisplay.className = "text-4xl font-bold text-white font-mono tracking-tighter tabular-nums";
+      }
+    }
+    
+    loop() {
+      if (this.isPolling && this.gamepadIndex !== null) {
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        const gamepad = gamepads[this.gamepadIndex];
+        
+        if (gamepad) {
+          const now = performance.now();
+          if (this.hasStateChanged(gamepad)) {
+            
+            if (this.waitingOverlay.style.display !== 'none') {
+              this.waitingOverlay.style.display = 'none';
+            }
+            
+            if (this.lastInputTime > 0) {
+              const delta = now - this.lastInputTime;
+              
+              // Filter out absurdly long deltas (e.g. user stopped moving)
+              if (delta < 50) {
+                this.deltas.push(delta);
+                if (this.deltas.length > this.MAX_SAMPLES) {
+                  this.deltas.shift();
+                }
+                
+                this.drawGraph();
+                this.updateStats();
+              }
+            }
+            this.lastInputTime = now;
+          }
+        }
+      }
+      
+      // Keep checking high-frequency even if no visible update
+      requestAnimationFrame(this.loop);
+    }
+  }
+  
+  // Init when DOM ready
+  document.addEventListener('DOMContentLoaded', () => {
+    new OverclockValidator();
+  });
+</script>

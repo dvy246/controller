@@ -1,0 +1,77 @@
+---
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import DeadzoneSandbox from '../../../components/tools/controller/DeadzoneSandbox.astro';
+
+export function getStaticPaths() {
+  const games = [
+    { slug: 'fortnite', name: 'Fortnite', shape: 'radial' as const },
+    { slug: 'apex-legends', name: 'Apex Legends', shape: 'axial' as const },
+    { slug: 'warzone', name: 'Warzone', shape: 'radial' as const },
+    { slug: 'rocket-league', name: 'Rocket League', shape: 'radial' as const },
+    { slug: 'valorant', name: 'Valorant', shape: 'radial' as const }
+  ];
+  
+  const controllers = ['ps5', 'xbox', 'switch'];
+
+  return games.flatMap(game => 
+    controllers.map(controller => ({
+      params: { game: game.slug, controller },
+      props: { game, controller }
+    }))
+  );
+}
+
+const { game, controller } = Astro.props;
+
+const controllerNames: Record<string, string> = {
+  'ps5': 'PS5 DualSense',
+  'xbox': 'Xbox Series X|S',
+  'switch': 'Nintendo Switch Pro'
+};
+const controllerName = controllerNames[controller] || controller.toUpperCase();
+
+const title = `${game.name} Deadzone Settings for ${controllerName} | Competitive Calculator`;
+const description = `Optimize your ${game.name} controller settings. Find the perfect deadzone to eliminate stick drift and improve your aim with our live Deadzone Sandbox.`;
+const toolName = `${game.name} Deadzone Sandbox (${controllerName})`;
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Deadzone Settings', url: '/deadzone-calculator' },
+  { name: game.name }
+];
+
+const faqs = [
+  {
+    question: `What is the best deadzone shape for ${game.name}?`,
+    answer: `${game.name} uses a ${game.shape} deadzone by default. Our interactive sandbox helps you visualize exactly how your analog stick behaves within this zone.`
+  },
+  {
+    question: "Why should I lower my deadzone?",
+    answer: "Lowering your deadzone increases responsiveness and makes micro-adjustments easier, crucial for competitive tracking and flick shots."
+  }
+];
+---
+<ToolLayout
+  title={title}
+  description={description}
+  toolName={toolName}
+  category="Deadzone Settings"
+  categoryUrl="/deadzone-calculator"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <DeadzoneSandbox shape={game.shape} gameName={game.name} />
+  </Fragment>
+
+  <Fragment slot="results">
+    <h3>Why use the Deadzone Sandbox?</h3>
+    <p>This interactive tool reads raw stick input directly from your gamepad in real-time, overlaying it on {game.name}'s specific deadzone geometry. If your red stick indicator stays inside the highlighted zone when you let go of the stick, you won't experience drift in-game.</p>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Optimizing {game.name} Settings</h2>
+    <p>Many competitive players struggle with stick drift and inconsistent aim because they don't understand how their controller's physical sensors interact with the game's deadzone logic. This calculator bridges that gap by letting you see the hidden math.</p>
+    <p>Adjust your in-game deadzone down to the lowest possible value before the red dot drifts outside the safety zone.</p>
+  </Fragment>
+</ToolLayout>

@@ -1,11 +1,10 @@
 ---
 /**
  * /test/controller/timeline — Drift Timeline Tracker
- * SEO Title: Controller Drift Timeline Tracker — Track Stick Degradation Over Time
+ * Tracks hardware degradation and stick drift over time.
  */
 
 import ToolLayout from '../../../layouts/ToolLayout.astro';
-import DriftTimeline from '../../../components/tools/controller/DriftTimeline.astro';
 
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
@@ -15,23 +14,23 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How does the Drift Timeline Tracker save my test history?',
-    answer: 'Snapshots are saved locally in your browser\'s localStorage. No accounts or server uploads are required, protecting your privacy completely.',
+    question: 'How does the Drift Timeline work?',
+    answer: 'Every time you use our Stick Drift Test, your results are saved locally in your browser. This timeline charts those historical results so you can see if your drift is worsening over time.',
   },
   {
-    question: 'How often should I save a drift snapshot?',
-    answer: 'We recommend saving a snapshot once every 2–4 weeks or whenever you notice changes in aiming precision during competitive gameplay.',
+    question: 'Where is my data stored?',
+    answer: 'Your history is stored entirely in your browser\'s local storage. No data is sent to our servers.',
   },
   {
-    question: 'Will my saved drift snapshots persist if I close my browser?',
-    answer: 'Yes! LocalStorage data remains saved indefinitely on your device until you clear your browser cache or click "Clear Saved History".',
+    question: 'How many tests should I do?',
+    answer: 'We recommend testing your controller once a month to establish a reliable baseline of hardware degradation.',
   },
 ];
 ---
 
 <ToolLayout
-  title="Controller Drift Timeline Tracker — Track Stick Degradation Over Time | ControllerTesting.com"
-  description="Track analog stick drift degradation over time. Save monthly drift snapshots locally to monitor hardware wear on PS5, Xbox, and Switch controllers."
+  title="Drift Timeline Tracker — Monitor Controller Degradation | ControllerTesting.com"
+  description="Track your controller's stick drift over time. Visualize hardware degradation and know exactly when it's time to replace or repair your gamepad."
   toolName="Drift Timeline Tracker"
   category="Controller Diagnostic"
   categoryUrl="/test/controller"
@@ -39,61 +38,466 @@ const faqs = [
   faqs={faqs}
 >
   <Fragment slot="tool">
-    <DriftTimeline />
+    <div class="timeline-container" id="timeline-container">
+      <div id="timeline-empty-state" class="timeline-empty" style="display: none;">
+        <div class="empty-icon">📈</div>
+        <h2 class="empty-title">No Drift History Yet</h2>
+        <p class="empty-desc">You need to test your controller for stick drift first to build a timeline.</p>
+        <a href="/test/controller/drift" class="btn-primary empty-btn">Run Stick Drift Test</a>
+      </div>
+      
+      <div id="timeline-content" style="display: none;">
+        <div class="timeline-header">
+          <div class="timeline-summary">
+            <h3 class="timeline-title">Drift Degradation History</h3>
+            <p class="timeline-subtitle" id="timeline-subtitle">Loading history...</p>
+          </div>
+          <button class="btn-secondary btn-sm" id="btn-clear-history">Clear History</button>
+        </div>
+        
+        <div class="chart-wrapper card-base">
+          <canvas id="drift-chart" width="800" height="350"></canvas>
+        </div>
+
+        <div class="history-table-wrapper">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Model</th>
+                <th>Stick</th>
+                <th>Drift %</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="history-table-body">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </Fragment>
 
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Tracking Degradation Rate</h2>
-      <p class="results-text">
-        Potentiometer thumbsticks typically degrade by 0.5% to 1.5% drift per 100 hours of active play. If your drift increases by more than 5% in a single month, check for internal dust accumulation.
-      </p>
+      <h2 class="section-title">Understanding Your Timeline</h2>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">Stable Baseline (0.0% – 2.0%)</strong>
+          <p class="legend-text">Your drift remains consistently below 2.0%. The potentiometers are healthy.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">Gradual Degradation (2.1% – 10.0%)</strong>
+          <p class="legend-text">A steady upward trend indicates normal wear. Adjust game deadzones accordingly.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">Spiking Failure (> 10.0%)</strong>
+          <p class="legend-text">A sudden jump above 10% indicates debris or a failing sensor. Cleaning or repair needed.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
-
-  <Fragment slot="export">
-    <div class="export-banner">
-      <div>
-        <h3 class="export-title">Run full diagnostic checkup</h3>
-        <p class="export-desc">Combine timeline tracking with complete 5-step hardware checkups.</p>
-      </div>
-      <div class="export-buttons">
-        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
-      </div>
-    </div>
-  </Fragment>
-
+  
   <Fragment slot="related-tools">
     <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <span class="tool-badge">Test Now</span>
       <h3 class="tool-name">Stick Drift Tester</h3>
-      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+      <p class="tool-desc">Measure analog stick precision to 0.1% accuracy.</p>
     </a>
     <a href="/test/controller/health-score" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Health Score Generator</h3>
-      <p class="tool-desc">Compute 0-100 quality grade.</p>
+      <h3 class="tool-name">Health Score Report</h3>
+      <p class="tool-desc">Generate a printable PDF report card for your controller.</p>
     </a>
-    <a href="/test/controller/circularity" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Circularity Test</h3>
-      <p class="tool-desc">Measure stick range of motion.</p>
+    <a href="/fix-or-replace" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Fix vs Replace Calculator</h3>
+      <p class="tool-desc">Calculate if it's worth repairing or buying a new controller.</p>
     </a>
   </Fragment>
-
+  
   <Fragment slot="content">
-    <h2>Why Tracking Stick Drift Over Time Prevents In-Game Surprises</h2>
+    <h2>Why Track Stick Drift Over Time?</h2>
     <p>
-      Potentiometer degradation occurs gradually as graphite tracks wear down. By recording periodic drift snapshots,
-      you can predict when a thumbstick will reach severe drift thresholds before tournament events.
+      Stick drift is rarely an immediate failure. It usually begins as microscopic wear on the potentiometer tracks, 
+      causing tiny phantom inputs that your game's default deadzone might mask. By testing your controller regularly 
+      and tracking the results in this timeline, you can see the degradation trend <em>before</em> it ruins your gaming experience.
+    </p>
+    
+    <h3>Predictive Maintenance for Competitive Gamers</h3>
+    <p>
+      If you play games like Apex Legends, Valorant, or Rocket League competitively, you need predictable hardware. 
+      A timeline that shows drift creeping from 2% to 6% over a few months is your early warning system. It tells you 
+      to either increase your deadzone by a few points or start shopping for a replacement controller, rather than 
+      waiting for the stick to fail during a crucial match.
     </p>
   </Fragment>
 </ToolLayout>
 
+<script is:inline src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const emptyState = document.getElementById('timeline-empty-state');
+    const contentState = document.getElementById('timeline-content');
+    const subtitle = document.getElementById('timeline-subtitle');
+    const tableBody = document.getElementById('history-table-body');
+    const clearBtn = document.getElementById('btn-clear-history');
+
+    function loadHistory() {
+      let history = [];
+      try {
+        const historyStr = localStorage.getItem('ct_drift_history');
+        if (historyStr) {
+          history = JSON.parse(historyStr);
+        } else {
+          // Fallback to legacy single item
+          const legacy = localStorage.getItem('ct_last_drift');
+          if (legacy) {
+            history = [JSON.parse(legacy)];
+          }
+        }
+      } catch (e) {
+        console.error('Failed to parse drift history', e);
+      }
+      return history;
+    }
+
+    function formatDate(ms) {
+      return new Date(ms).toLocaleDateString(undefined, { 
+        month: 'short', 
+        day: 'numeric',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function getBadgeClass(drift) {
+      if (drift > 10) return 'badge-fail';
+      if (drift > 2) return 'badge-warning';
+      return 'badge-pass';
+    }
+
+    function getStatusText(drift) {
+      if (drift > 10) return 'Severe';
+      if (drift > 2) return 'Minor';
+      return 'Healthy';
+    }
+
+    const history = loadHistory();
+
+    if (!history || history.length === 0) {
+      if (emptyState) emptyState.style.display = 'flex';
+      return;
+    }
+
+    if (contentState) contentState.style.display = 'block';
+    
+    // Sort chronological
+    history.sort((a, b) => a.date - b.date);
+
+    if (subtitle) {
+      subtitle.textContent = `Tracking ${history.length} record${history.length > 1 ? 's' : ''} over time`;
+    }
+
+    // Populate Table
+    if (tableBody) {
+      tableBody.innerHTML = history.reverse().map(entry => `
+        <tr>
+          <td class="mono">${formatDate(entry.date)}</td>
+          <td><strong>${entry.model || 'Unknown'}</strong></td>
+          <td style="text-transform: capitalize;">${entry.side || 'Left'}</td>
+          <td class="mono font-bold text-accent">${entry.drift}%</td>
+          <td><span class="m-val ${getBadgeClass(entry.drift)}">${getStatusText(entry.drift)}</span></td>
+        </tr>
+      `).join('');
+      // Re-reverse for chart
+      history.reverse();
+    }
+
+    // Render Chart
+    const ctx = document.getElementById('drift-chart');
+    if (ctx && window.Chart) {
+      new window.Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: history.map(h => formatDate(h.date).split(',')[0]), // Just date for labels
+          datasets: [{
+            label: 'Drift Percentage',
+            data: history.map(h => h.drift),
+            borderColor: '#2563EB', // Color accent
+            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+            borderWidth: 3,
+            pointBackgroundColor: '#0C0C14',
+            pointBorderColor: '#2563EB',
+            pointBorderWidth: 2,
+            pointRadius: 5,
+            pointHoverRadius: 7,
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: '#1E1E2E',
+              titleColor: '#FFFFFF',
+              bodyColor: '#A1A1AA',
+              borderColor: 'rgba(255,255,255,0.1)',
+              borderWidth: 1,
+              padding: 12,
+              displayColors: false,
+              callbacks: {
+                label: (context) => `Drift: ${context.raw}%`
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(255,255,255,0.05)',
+              },
+              ticks: {
+                color: '#A1A1AA',
+                callback: (val) => `${val}%`
+              }
+            },
+            x: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                color: '#A1A1AA'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Clear handler
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to clear your drift history? This cannot be undone.')) {
+          localStorage.removeItem('ct_drift_history');
+          localStorage.removeItem('ct_last_drift');
+          window.location.reload();
+        }
+      });
+    }
+  });
+</script>
+
 <style>
-  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
-  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
-  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
-  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
-  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
-  .prose { line-height: 1.7; color: var(--color-text-secondary); }
-  .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
-  .prose p { margin-bottom: 1rem; }
+  .timeline-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 400px;
+    padding: var(--spacing-card-sm) 0;
+  }
+
+  .timeline-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--color-surface-2);
+    border: 1px dashed var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    margin: auto 0;
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+  }
+
+  .empty-title {
+    font-size: var(--text-h3);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  .empty-desc {
+    color: var(--color-text-secondary);
+    max-width: 400px;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+  
+  .empty-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .timeline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: var(--spacing-card);
+    flex-wrap: wrap;
+    gap: var(--spacing-card-sm);
+  }
+
+  .timeline-title {
+    font-size: var(--text-h3);
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .timeline-subtitle {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+  }
+
+  .chart-wrapper {
+    width: 100%;
+    height: 350px;
+    padding: var(--spacing-card);
+    margin-bottom: var(--spacing-card-lg);
+    background: var(--color-surface-2);
+  }
+
+  .history-table-wrapper {
+    overflow-x: auto;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+  }
+
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  .history-table th {
+    padding: 1rem 1.25rem;
+    font-size: var(--text-micro);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-tertiary);
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .history-table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+    font-size: 0.9375rem;
+  }
+
+  .history-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .history-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .font-bold {
+    font-weight: 700;
+  }
+
+  .text-accent {
+    color: var(--color-accent);
+  }
+
+  .m-val {
+    font-size: var(--text-micro);
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-pass {
+    background: var(--color-pass-bg);
+    color: var(--color-pass);
+    border: 1px solid var(--color-pass);
+  }
+
+  .badge-warning {
+    background: var(--color-warning-bg);
+    color: var(--color-warning);
+    border: 1px solid var(--color-warning);
+  }
+
+  .badge-fail {
+    background: var(--color-fail-bg);
+    color: var(--color-fail);
+    border: 1px solid var(--color-fail);
+  }
+
+  /* Shared Results legend from drift */
+  .results-summary {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-card-sm);
+  }
+
+  .results-legend-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-card-sm);
+  }
+
+  .legend-card {
+    padding: var(--spacing-card-sm);
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .legend-pass {
+    background: var(--color-pass-bg);
+    border: 1px solid var(--color-pass);
+  }
+  .legend-pass .legend-title { color: var(--color-pass); }
+
+  .legend-warning {
+    background: var(--color-warning-bg);
+    border: 1px solid var(--color-warning);
+  }
+  .legend-warning .legend-title { color: var(--color-warning); }
+
+  .legend-fail {
+    background: var(--color-fail-bg);
+    border: 1px solid var(--color-fail);
+  }
+  .legend-fail .legend-title { color: var(--color-fail); }
+
+  .legend-title {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+  }
+
+  .legend-text {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 768px) {
+    .results-legend-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .timeline-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
 </style>

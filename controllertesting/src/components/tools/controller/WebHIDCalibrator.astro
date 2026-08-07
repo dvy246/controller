@@ -1,0 +1,368 @@
+---
+/**
+ * WebHIDCalibrator.astro
+ * Premium WebHID Firmare Calibrator Tool (Dummy)
+ */
+---
+<div class="webhid-calibrator doppelrand-shell">
+  <div class="doppelrand-core">
+    <div class="calibrator-header">
+      <h2 class="text-h3">Hardware Level Calibration</h2>
+      <p class="text-secondary">Directly communicate with your controller's firmware to write new zero-point offsets.</p>
+    </div>
+
+    <div class="calibrator-ui">
+      <div class="canvas-container">
+        <canvas id="calibration-canvas" width="400" height="400"></canvas>
+        <div class="crosshair"></div>
+      </div>
+      
+      <div class="controls">
+        <button id="btn-connect" class="btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="icon"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          Connect to DualSense
+        </button>
+        
+        <div id="calibration-steps" class="steps-container hidden">
+          <div class="step" id="step-read">
+            <span class="step-indicator"></span>
+            <span class="step-text">Reading current offsets...</span>
+          </div>
+          <div class="step" id="step-zero">
+            <span class="step-indicator"></span>
+            <span class="step-text">Calculating zero-point...</span>
+          </div>
+          <div class="step" id="step-flash">
+            <span class="step-indicator"></span>
+            <span class="step-text">Flashing firmware...</span>
+          </div>
+        </div>
+
+        <div id="success-state" class="success-state hidden">
+          <svg class="success-icon" viewBox="0 0 24 24" fill="none" stroke="var(--color-emerald)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <div class="success-text">Calibration Successful</div>
+          <div class="success-subtext">New zero-point saved to device memory.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .webhid-calibrator {
+    width: 100%;
+    margin: 2rem auto;
+  }
+  
+  .calibrator-header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .text-secondary {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+  }
+
+  .calibrator-ui {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .canvas-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    background: var(--color-surface-2);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border-default);
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+  }
+
+  #calibration-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .crosshair {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .crosshair::before, .crosshair::after {
+    content: '';
+    position: absolute;
+    background: var(--color-emerald);
+    opacity: 0.5;
+  }
+  .crosshair::before {
+    top: 9px; left: 0; width: 20px; height: 2px;
+  }
+  .crosshair::after {
+    left: 9px; top: 0; width: 2px; height: 20px;
+  }
+
+  .controls {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .btn-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: var(--color-accent);
+    color: var(--color-text-primary);
+    border: none;
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-smooth);
+    box-shadow: 0 4px 12px var(--color-accent-glow);
+  }
+
+  .btn-primary:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--color-accent-glow);
+  }
+  
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .steps-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: var(--color-surface-2);
+    padding: 1.5rem;
+    border-radius: var(--radius-card);
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0.4;
+    transition: opacity var(--duration-normal);
+  }
+  
+  .step.active {
+    opacity: 1;
+  }
+  
+  .step.completed .step-indicator {
+    background: var(--color-emerald);
+    box-shadow: 0 0 12px var(--color-emerald);
+  }
+
+  .step-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-surface-4);
+    transition: all var(--duration-normal);
+  }
+  
+  .step.active .step-indicator {
+    background: var(--color-accent);
+    box-shadow: 0 0 12px var(--color-accent);
+    animation: pulse 1.5s infinite;
+  }
+
+  .step-text {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+  }
+
+  .success-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.5rem;
+    padding: 2rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    border-radius: var(--radius-card);
+    animation: fade-in var(--duration-normal) var(--ease-smooth);
+  }
+
+  .success-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 0.5rem;
+    filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.5));
+  }
+
+  .success-text {
+    color: var(--color-emerald);
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+  }
+
+  .success-subtext {
+    color: var(--color-text-secondary);
+    font-size: var(--text-small);
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+</style>
+
+<script>
+  // Vanilla JS logic for dummy WebHID
+  const btnConnect = document.getElementById('btn-connect');
+  const stepsContainer = document.getElementById('calibration-steps');
+  const successState = document.getElementById('success-state');
+  const canvas = document.getElementById('calibration-canvas') as HTMLCanvasElement;
+  const ctx = canvas?.getContext('2d');
+  
+  let animationId;
+  let pointX = 200;
+  let pointY = 200;
+  let isCalibrating = false;
+
+  function drawRadar() {
+    if (!ctx) return;
+    ctx.clearRect(0, 0, 400, 400);
+    
+    // Grid
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(200, 0); ctx.lineTo(200, 400);
+    ctx.moveTo(0, 200); ctx.lineTo(400, 200);
+    ctx.stroke();
+
+    // Circles
+    ctx.beginPath();
+    ctx.arc(200, 200, 100, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(200, 200, 50, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // The Point
+    ctx.fillStyle = isCalibrating ? '#10b981' : '#ef4444';
+    ctx.shadowColor = isCalibrating ? '#10b981' : '#ef4444';
+    ctx.shadowBlur = 15;
+    ctx.beginPath();
+    ctx.arc(pointX, pointY, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+  
+  function animate() {
+    if (!isCalibrating) {
+      // Jitter around to simulate drift before calibration
+      const time = Date.now() / 1000;
+      pointX = 200 + Math.sin(time * 2) * 20 + (Math.random() - 0.5) * 10;
+      pointY = 200 + Math.cos(time * 1.5) * 15 + (Math.random() - 0.5) * 10;
+    } else {
+      // Smoothly move to center
+      pointX += (200 - pointX) * 0.1;
+      pointY += (200 - pointY) * 0.1;
+    }
+    
+    drawRadar();
+    animationId = requestAnimationFrame(animate);
+  }
+
+  if (canvas) {
+    animate();
+  }
+
+  if (btnConnect) {
+    btnConnect.addEventListener('click', async () => {
+      try {
+        if (!navigator.hid) {
+          alert("WebHID API not supported in this browser. Please use Chrome/Edge.");
+          return;
+        }
+
+        const devices = await navigator.hid.requestDevice({
+          filters: [{ vendorId: 0x054c }] // Sony Vendor ID
+        });
+
+        if (devices.length > 0) {
+          startCalibrationFlow();
+        }
+      } catch (error) {
+        console.error("HID request failed or was cancelled.", error);
+      }
+    });
+  }
+
+  function startCalibrationFlow() {
+    if (!btnConnect || !stepsContainer || !successState) return;
+    
+    btnConnect.disabled = true;
+    btnConnect.innerHTML = 'Calibrating...';
+    stepsContainer.classList.remove('hidden');
+    
+    const steps = [
+      document.getElementById('step-read'),
+      document.getElementById('step-zero'),
+      document.getElementById('step-flash')
+    ];
+    if(!steps[0] || !steps[1] || !steps[2]) return;
+    
+    // Step 1: Read
+    steps[0].classList.add('active');
+    
+    setTimeout(() => {
+      steps[0].classList.remove('active');
+      steps[0].classList.add('completed');
+      steps[1].classList.add('active');
+      
+      // Step 2: Calculate Zero
+      setTimeout(() => {
+        isCalibrating = true;
+        steps[1].classList.remove('active');
+        steps[1].classList.add('completed');
+        steps[2].classList.add('active');
+        
+        // Step 3: Flash
+        setTimeout(() => {
+          steps[2].classList.remove('active');
+          steps[2].classList.add('completed');
+          
+          // Finish
+          setTimeout(() => {
+            stepsContainer.classList.add('hidden');
+            btnConnect.classList.add('hidden');
+            successState.classList.remove('hidden');
+          }, 500);
+          
+        }, 1500);
+      }, 1500);
+    }, 1500);
+  }
+</script>

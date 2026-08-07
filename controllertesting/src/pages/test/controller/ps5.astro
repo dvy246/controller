@@ -1,0 +1,155 @@
+---
+/**
+ * /test/controller/ps5 — PS5 DualSense Controller Tester & Stick Drift Check
+ * Target keyword: ps5 controller tester
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import DriftTester from '../../../components/tools/controller/DriftTester.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'PS5 DualSense Tester' },
+];
+
+const faqs = [
+  {
+    "question": "Does the PS5 DualSense get stick drift?",
+    "answer": "Yes, like all controllers using potentiometer joysticks, the PS5 DualSense can develop stick drift due to wear on internal carbon tracks over time."
+  },
+  {
+    "question": "How to reset a PS5 controller?",
+    "answer": "Locate the small reset button on the back of the controller next to the Sony logo. Use a paperclip to press and hold the button for 5 seconds."
+  }
+];
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "PS5 DualSense Controller Tester & Stick Drift Check",
+      "operatingSystem": "Web Browser",
+      "applicationCategory": "UtilitiesApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": "Check your PS5 DualSense controller for stick drift, button responsiveness, and trigger issues with our advanced online diagnostic tool."
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://controllertesting.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Tests",
+          "item": "https://controllertesting.com/test/controller/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "PS5 DualSense Tester",
+          "item": "https://controllertesting.com/test/controller/ps5"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does the PS5 DualSense get stick drift?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, like all controllers using potentiometer joysticks, the PS5 DualSense can develop stick drift due to wear on internal carbon tracks over time."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How to reset a PS5 controller?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Locate the small reset button on the back of the controller next to the Sony logo. Use a paperclip to press and hold the button for 5 seconds."
+          }
+        }
+      ]
+    }
+  ]
+};
+---
+
+<ToolLayout
+  title="PS5 DualSense Controller Tester & Stick Drift Check"
+  description="Check your PS5 DualSense controller for stick drift, button responsiveness, and trigger issues with our advanced online diagnostic tool."
+  toolName="PS5 DualSense Tester"
+  category="Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(schemaData)} />
+  </Fragment>
+
+  {/* ── Tool Interactive Island ── */}
+  <Fragment slot="tool">
+    <DriftTester />
+  </Fragment>
+
+  {/* ── Results Slot ── */}
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Diagnostics Results</h2>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">0.0% – 2.0% (Healthy)</strong>
+          <p class="legend-text">Normal variance. Your controller is operating flawlessly.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">2.1% – 10.0% (Minor Drift)</strong>
+          <p class="legend-text">Slight potentiometer wear detected.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">> 10.0% (Severe Drift)</strong>
+          <p class="legend-text">Severe drift detected. Repair is highly recommended.</p>
+        </div>
+      </div>
+    </div>
+  </Fragment>
+
+  {/* ── SEO Repair Guide Section ── */}
+  <Fragment slot="export">
+    <div class="repair-guide" style="margin-top: 3rem; background: var(--color-surface-2); padding: 2rem; border-radius: var(--radius-card); border: 1px solid var(--color-border-subtle);">
+      <h2 style="margin-bottom: 1rem; font-size: 1.5rem; color: var(--color-text-primary);">How do you test and fix PS5 DualSense stick drift?</h2>
+      <p style="margin-bottom: 1.5rem; color: var(--color-text-secondary); line-height: 1.6;"><strong>To test for PS5 DualSense stick drift, use a web-based controller tester to measure analog stick centering precision. If drift exceeds five percent, try resetting the controller using the back pinhole. If the issue persists, the internal potentiometer requires replacement or a warranty claim.</strong></p>
+      
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div>
+          <h3 style="color: var(--color-accent); margin-bottom: 0.5rem;">Recommended Actions</h3>
+          <p style="color: var(--color-text-secondary); line-height: 1.6;">Always begin by using our free <a href="/test/controller/drift">drift diagnostic tool</a> to identify the exact cause of any input inconsistencies before attempting repairs.</p>
+        </div>
+      </div>
+    </div>
+  </Fragment>
+
+  {/* ── Related Tools Slot ── */}
+  <Fragment slot="related-tools">
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Universal Stick Drift Test</h3>
+      <p class="tool-desc">Test any controller across all major platforms.</p>
+    </a>
+    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Button Tester</h3>
+      <p class="tool-desc">Check for sticky or failing face buttons and triggers.</p>
+    </a>
+  </Fragment>
+</ToolLayout>

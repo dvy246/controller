@@ -2,7 +2,9 @@
 /**
  * Header.astro — ControllerTesting.com
  * Single-line nav, max 72px height, floating with backdrop blur.
- * design-taste-frontend: nav MUST render on one line, max 80px height.
+ * Flagship SaaS redesign: translucent frosted glass, metallic hairline border,
+ * liquid aurora glow layer, magnetic hover states with dots & Geist Mono badges,
+ * elevated Cmd+K search trigger, and smooth animated mobile drawer.
  */
 
 import LanguageSelector from './LanguageSelector.astro';
@@ -26,70 +28,266 @@ import LanguageSelector from './LanguageSelector.astro';
 
       {/* ── Logo ── */}
       <a href="/" class="nav-logo" aria-label="ControllerTesting.com home">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-          <rect width="28" height="28" rx="6" fill="var(--color-accent)"/>
-          <path d="M8 14c0-3.314 2.686-6 6-6s6 2.686 6 6-2.686 6-6 6-6-2.686-6-6z" stroke="var(--color-text-inverse)" stroke-width="1.5" fill="none"/>
-          <circle cx="14" cy="14" r="2" fill="var(--color-pass)"/>
-          <path d="M14 8v2M14 18v2M8 14h2M18 14h2" stroke="var(--color-text-inverse)" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <div class="logo-icon-wrapper">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <rect width="28" height="28" rx="7" fill="var(--color-accent)"/>
+            <path d="M8 14c0-3.314 2.686-6 6-6s6 2.686 6 6-2.686 6-6 6-6-2.686-6-6z" stroke="var(--color-text-inverse)" stroke-width="1.5" fill="none"/>
+            <circle cx="14" cy="14" r="2" fill="var(--color-pass)"/>
+            <path d="M14 8v2M14 18v2M8 14h2M18 14h2" stroke="var(--color-text-inverse)" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span class="logo-glow" aria-hidden="true"></span>
+        </div>
         <span class="nav-logo-text">
           Controller<span class="logo-accent">Testing</span>
         </span>
       </a>
 
-      {/* ── Primary Nav Links (grouped into dropdowns) ── */}
+      {/* ── Primary Nav Links & Dropdowns ── */}
       <ul class="nav-links" role="list">
+        <!-- Diagnostics Dropdown -->
         <li class="nav-dropdown">
           <button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">
+            <span class="nav-dot" aria-hidden="true"></span>
             Diagnostics
             <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M6 9l6 6 6-6"/>
             </svg>
           </button>
-          <ul class="dropdown-menu" role="menu" aria-label="Diagnostics">
-            <li role="none"><a role="menuitem" class="dropdown-link" href="/test/controller">Controller Tests</a></li>
-            <li role="none"><a role="menuitem" class="dropdown-link" href="/test/mouse">Mouse Tests</a></li>
-            <li role="none"><a role="menuitem" class="dropdown-link" href="/test/keyboard">Keyboard &amp; MIDI</a></li>
-            <li class="dropdown-sep" role="separator"></li>
-            <li role="none"><a role="menuitem" class="dropdown-link dropdown-link-em" href="/tools">All Tools Toolkit</a></li>
-            <li role="none"><a role="menuitem" class="dropdown-link dropdown-link-em" href="/test/controller/full-diagnostic">Full Diagnostic Wizard</a></li>
-          </ul>
+          <div class="dropdown-menu" role="menu" aria-label="Diagnostics">
+            <div class="dropdown-grid">
+              <div class="dropdown-column">
+                <span class="dropdown-category">Diagnostic Tools</span>
+                <a role="menuitem" class="dropdown-item" href="/test/controller">
+                  <div class="dropdown-item-icon">🎮</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">
+                      Controller Tests
+                      <span class="nav-badge badge-core">Core</span>
+                    </div>
+                    <span class="dropdown-item-desc">Stick drift, circularity & input latency</span>
+                  </div>
+                </a>
+                <a role="menuitem" class="dropdown-item" href="/test/mouse">
+                  <div class="dropdown-item-icon">🖱️</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">
+                      Mouse Suite
+                      <span class="nav-badge badge-precision">8KHz</span>
+                    </div>
+                    <span class="dropdown-item-desc">CPS, polling rate, DPI & double-click</span>
+                  </div>
+                </a>
+                <a role="menuitem" class="dropdown-item" href="/test/keyboard">
+                  <div class="dropdown-item-icon">⌨️</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">
+                      Keyboard &amp; MIDI
+                      <span class="nav-badge badge-midi">WebMIDI</span>
+                    </div>
+                    <span class="dropdown-item-desc">NKRO matrix &amp; MIDI velocity</span>
+                  </div>
+                </a>
+              </div>
+              
+              <div class="dropdown-column">
+                <span class="dropdown-category">Wizards &amp; Telemetry</span>
+                <a role="menuitem" class="dropdown-item dropdown-item-featured" href="/test/controller/full-diagnostic">
+                  <div class="dropdown-item-icon">⚡</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">
+                      Full Diagnostic Wizard
+                      <span class="nav-badge badge-pro">PRO</span>
+                    </div>
+                    <span class="dropdown-item-desc">5-step hardware checkup &amp; score</span>
+                  </div>
+                </a>
+                <a role="menuitem" class="dropdown-item" href="/test/controller/quick-health">
+                  <div class="dropdown-item-icon">🩺</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">
+                      Quick Health Check
+                      <span class="nav-badge badge-speed">60s</span>
+                    </div>
+                    <span class="dropdown-item-desc">Instant hardware status grade</span>
+                  </div>
+                </a>
+                <a role="menuitem" class="dropdown-item" href="/test/controller/passport">
+                  <div class="dropdown-item-icon">📜</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">
+                      Controller Passport
+                      <span class="nav-badge badge-live">Live</span>
+                    </div>
+                    <span class="dropdown-item-desc">Verifiable hardware evidence report</span>
+                  </div>
+                </a>
+              </div>
+              <div class="dropdown-column">
+                <span class="dropdown-category">Advanced Diagnostics</span>
+                <a role="menuitem" class="dropdown-item" href="/calibrate/dualsense/hall-effect">
+                  <div class="dropdown-item-icon">🎛️</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">
+                      WebHID Calibrator
+                      <span class="nav-badge badge-pass">New</span>
+                    </div>
+                    <span class="dropdown-item-desc">Hardware zero-point reset</span>
+                  </div>
+                </a>
+                <a role="menuitem" class="dropdown-item" href="/deadzone-calculator/apex-legends/ps5">
+                  <div class="dropdown-item-icon">🎯</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">Deadzone Sandbox</div>
+                    <span class="dropdown-item-desc">Game-engine specific tuning</span>
+                  </div>
+                </a>
+                <a role="menuitem" class="dropdown-item" href="/overclock-validator/ps5/usb-c">
+                  <div class="dropdown-item-icon">⏱️</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">Overclock Validator</div>
+                    <span class="dropdown-item-desc">True Hz & input latency</span>
+                  </div>
+                </a>
+                <a role="menuitem" class="dropdown-item" href="/haptics/unreal/explosion">
+                  <div class="dropdown-item-icon">📳</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">Haptic Composer</div>
+                    <span class="dropdown-item-desc">WebAudio rumble generation</span>
+                  </div>
+                </a>
+              </div>
+              <div class="dropdown-column">
+                <span class="dropdown-category">Niche Testers</span>
+                <a role="menuitem" class="dropdown-item" href="/test/controller/nintendo-switch">
+                  <div class="dropdown-item-icon">🎮</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">Nintendo Switch</div>
+                  </div>
+                </a>
+                <a role="menuitem" class="dropdown-item" href="/test/controller/ps5">
+                  <div class="dropdown-item-icon">🎮</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">PS5 DualSense</div>
+                  </div>
+                </a>
+                <a role="menuitem" class="dropdown-item" href="/test/controller/xbox">
+                  <div class="dropdown-item-icon">🎮</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">Xbox Controller</div>
+                  </div>
+                </a>
+                <a role="menuitem" class="dropdown-item" href="/test/controller/joycon">
+                  <div class="dropdown-item-icon">🕹️</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">Joy-Con</div>
+                  </div>
+                </a>
+                <a role="menuitem" class="dropdown-item" href="/test/controller/switch-pro">
+                  <div class="dropdown-item-icon">🎮</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">Switch Pro</div>
+                  </div>
+                </a>
+                <a role="menuitem" class="dropdown-item" href="/test/controller/joystick-tester">
+                  <div class="dropdown-item-icon">🕹️</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">Joystick Tester</div>
+                  </div>
+                </a>
+                <a role="menuitem" class="dropdown-item" href="/test/controller/gamepad-mapping">
+                  <div class="dropdown-item-icon">🎛️</div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">Gamepad Mapping</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div class="dropdown-footer">
+              <a role="menuitem" class="dropdown-footer-link" href="/tools">
+                <span>View All 32 Diagnostic Tools</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+            </div>
+          </div>
         </li>
+
+        <!-- Play Direct Link -->
         <li class="nav-link-wrap">
-          <a href="/games" class="nav-link">Play</a>
+          <a href="/games" class="nav-link">
+            <span class="nav-dot" aria-hidden="true"></span>
+            Play
+            <span class="nav-badge badge-games">Arcade</span>
+          </a>
         </li>
+
+        <!-- Resources Dropdown -->
         <li class="nav-dropdown">
           <button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">
+            <span class="nav-dot" aria-hidden="true"></span>
             Resources
             <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M6 9l6 6 6-6"/>
             </svg>
           </button>
-          <ul class="dropdown-menu" role="menu" aria-label="Resources">
-            <li role="none"><a role="menuitem" class="dropdown-link" href="/fix-or-replace">Fix &amp; Repair</a></li>
-            <li role="none"><a role="menuitem" class="dropdown-link" href="/warranty">Warranty Check</a></li>
-            <li role="none"><a role="menuitem" class="dropdown-link" href="/embeds">Widgets &amp; Embeds</a></li>
-            <li class="dropdown-sep" role="separator"></li>
-            <li role="none"><a role="menuitem" class="dropdown-link" href="/learn">Learn Guides</a></li>
-          </ul>
+          <div class="dropdown-menu dropdown-menu-single" role="menu" aria-label="Resources">
+            <a role="menuitem" class="dropdown-item" href="/fix-or-replace">
+              <div class="dropdown-item-icon">🛠️</div>
+              <div class="dropdown-item-content">
+                <div class="dropdown-item-title">Fix &amp; Repair</div>
+                <span class="dropdown-item-desc">Repair cost vs replacement decision calculator</span>
+              </div>
+            </a>
+            <a role="menuitem" class="dropdown-item" href="/warranty">
+              <div class="dropdown-item-icon">🛡️</div>
+              <div class="dropdown-item-content">
+                <div class="dropdown-item-title">Warranty Assistant</div>
+                <span class="dropdown-item-desc">RMA eligibility checker &amp; claim evidence</span>
+              </div>
+            </a>
+            <a role="menuitem" class="dropdown-item" href="/embeds">
+              <div class="dropdown-item-icon">📦</div>
+              <div class="dropdown-item-content">
+                <div class="dropdown-item-title">
+                  Widgets &amp; Embeds
+                  <span class="nav-badge badge-widgets">15 Widgets</span>
+                </div>
+                <span class="dropdown-item-desc">Embed diagnostic widgets on your site</span>
+              </div>
+            </a>
+            <a role="menuitem" class="dropdown-item" href="/compatibility">
+              <div class="dropdown-item-icon">📊</div>
+              <div class="dropdown-item-content">
+                <div class="dropdown-item-title">Compatibility Matrix</div>
+                <span class="dropdown-item-desc">Browser API support across OS &amp; controllers</span>
+              </div>
+            </a>
+            <div class="dropdown-sep" role="separator"></div>
+            <a role="menuitem" class="dropdown-item" href="/learn">
+              <div class="dropdown-item-icon">📚</div>
+              <div class="dropdown-item-content">
+                <div class="dropdown-item-title">Learn Guides</div>
+                <span class="dropdown-item-desc">Deep-dive technical repair &amp; tuning articles</span>
+              </div>
+            </a>
+          </div>
         </li>
       </ul>
 
       {/* ── Right actions ── */}
       <div class="nav-actions">
-        {/* Search trigger button */}
+        {/* Cmd+K Search trigger button */}
         <button
           type="button"
-          class="btn-ghost nav-search-btn"
+          class="nav-search-btn"
           aria-label="Search diagnostic tools (Cmd+K)"
           onclick="if(window.openGlobalSearch) window.openGlobalSearch()"
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <span class="search-btn-text">Search...</span>
-          <span class="search-btn-kbd">⌘K</span>
+          <span class="search-btn-text">Search diagnostic tools...</span>
+          <kbd class="search-btn-kbd" title="Press ⌘K or Ctrl+K to search">⌘K</kbd>
         </button>
 
         {/* Language selector */}
@@ -123,16 +321,18 @@ import LanguageSelector from './LanguageSelector.astro';
 
         {/* Mobile menu button */}
         <button
-          class="btn-ghost mobile-menu-btn"
-          aria-label="Open menu"
+          class="mobile-menu-btn"
+          aria-label="Toggle navigation menu"
           aria-expanded="false"
           aria-controls="mobile-menu"
           id="mobile-menu-toggle"
           type="button"
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
-            <path d="M3 12h18M3 6h18M3 18h18"/>
-          </svg>
+          <span class="hamburger-box" aria-hidden="true">
+            <span class="hamburger-line line-top"></span>
+            <span class="hamburger-line line-mid"></span>
+            <span class="hamburger-line line-bot"></span>
+          </span>
         </button>
       </div>
     </div>
@@ -140,34 +340,65 @@ import LanguageSelector from './LanguageSelector.astro';
 
   {/* ── Mobile menu ── */}
   <div id="mobile-menu" class="mobile-menu" aria-hidden="true" hidden>
-    <div role="list" class="mobile-nav-section">
-      <p class="mobile-nav-heading">Diagnostics</p>
-      <ul role="list" class="mobile-nav-links">
-        <li><a href="/test/controller" class="mobile-nav-link">Controller Tests</a></li>
-        <li><a href="/test/mouse" class="mobile-nav-link">Mouse Tests</a></li>
-        <li><a href="/test/keyboard" class="mobile-nav-link">Keyboard &amp; MIDI</a></li>
-        <li><a href="/tools" class="mobile-nav-link mobile-nav-link-em">All Tools Toolkit</a></li>
-        <li><a href="/test/controller/full-diagnostic" class="mobile-nav-link mobile-nav-link-em">Full Diagnostic Wizard</a></li>
-      </ul>
+    <div class="mobile-menu-inner">
+      <div class="mobile-search-wrapper">
+        <button
+          type="button"
+          class="mobile-search-btn"
+          onclick="if(window.openGlobalSearch) window.openGlobalSearch()"
+        >
+          <div class="mobile-search-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span>Search diagnostic tools...</span>
+          </div>
+          <kbd class="search-btn-kbd">⌘K</kbd>
+        </button>
+      </div>
+
+      <div class="mobile-nav-grid">
+        <div class="mobile-nav-section">
+          <p class="mobile-nav-heading">Diagnostics</p>
+          <ul role="list" class="mobile-nav-links">
+            <li><a href="/test/controller" class="mobile-nav-link"><span>🎮 Controller Tests</span><span class="nav-badge badge-core">Core</span></a></li>
+            <li><a href="/test/mouse" class="mobile-nav-link"><span>🖱️ Mouse Suite</span><span class="nav-badge badge-precision">8KHz</span></a></li>
+            <li><a href="/test/keyboard" class="mobile-nav-link"><span>⌨️ Keyboard &amp; MIDI</span><span class="nav-badge badge-midi">WebMIDI</span></a></li>
+            <li><a href="/test/controller/quick-health" class="mobile-nav-link mobile-nav-link-em"><span>🩺 Quick Health Check</span><span class="nav-badge badge-speed">60s</span></a></li>
+            <li><a href="/test/controller/full-diagnostic" class="mobile-nav-link mobile-nav-link-em"><span>⚡ Full Diagnostic Wizard</span><span class="nav-badge badge-pro">PRO</span></a></li>
+            <li><a href="/test/controller/passport" class="mobile-nav-link"><span>📜 Controller Passport</span></a></li>
+            <li><a href="/calibrate/dualsense/hall-effect" class="mobile-nav-link"><span>🎛️ WebHID Calibrator</span></a></li>
+            <li><a href="/deadzone-calculator/apex-legends/ps5" class="mobile-nav-link"><span>🎯 Deadzone Sandbox</span></a></li>
+            <li><a href="/tools" class="mobile-nav-link"><span>🧰 All 32 Diagnostic Tools</span></a></li>
+          </ul>
+        </div>
+
+        <div class="mobile-nav-section">
+          <p class="mobile-nav-heading">Arcade Games</p>
+          <ul role="list" class="mobile-nav-links">
+            <li><a href="/games" class="mobile-nav-link"><span>🎯 Arcade Games</span><span class="nav-badge badge-games">5 Games</span></a></li>
+          </ul>
+        </div>
+
+        <div class="mobile-nav-section">
+          <p class="mobile-nav-heading">Resources</p>
+          <ul role="list" class="mobile-nav-links">
+            <li><a href="/fix-or-replace" class="mobile-nav-link"><span>🛠️ Fix &amp; Repair</span></a></li>
+            <li><a href="/warranty" class="mobile-nav-link"><span>🛡️ Warranty Check</span></a></li>
+            <li><a href="/embeds" class="mobile-nav-link"><span>📦 Widgets &amp; Embeds</span><span class="nav-badge badge-widgets">15 Widgets</span></a></li>
+            <li><a href="/compatibility" class="mobile-nav-link"><span>📊 Compatibility Matrix</span></a></li>
+            <li><a href="/learn" class="mobile-nav-link"><span>📚 Technical Learn Guides</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mobile-cta-wrapper">
+        <a href="/test/controller/full-diagnostic" class="btn-primary mobile-cta">
+          Run Full Hardware Diagnostic
+        </a>
+      </div>
     </div>
-    <div role="list" class="mobile-nav-section">
-      <p class="mobile-nav-heading">Play</p>
-      <ul role="list" class="mobile-nav-links">
-        <li><a href="/games" class="mobile-nav-link">Game Arcade</a></li>
-      </ul>
-    </div>
-    <div role="list" class="mobile-nav-section">
-      <p class="mobile-nav-heading">Resources</p>
-      <ul role="list" class="mobile-nav-links">
-        <li><a href="/fix-or-replace" class="mobile-nav-link">Fix &amp; Repair</a></li>
-        <li><a href="/warranty" class="mobile-nav-link">Warranty Check</a></li>
-        <li><a href="/embeds" class="mobile-nav-link">Widgets &amp; Embeds</a></li>
-        <li><a href="/learn" class="mobile-nav-link">Learn Guides</a></li>
-      </ul>
-    </div>
-    <a href="/test/controller/full-diagnostic" class="btn-primary mobile-cta">
-      Run Full Diagnostic
-    </a>
   </div>
 </header>
 
@@ -179,19 +410,32 @@ import LanguageSelector from './LanguageSelector.astro';
       btn.addEventListener('click', function() {
         var expanded = btn.getAttribute('aria-expanded') === 'true';
         btn.setAttribute('aria-expanded', String(!expanded));
-        menu.hidden = expanded;
-        menu.setAttribute('aria-hidden', String(expanded));
+        if (expanded) {
+          menu.classList.remove('open');
+          setTimeout(function() {
+            menu.hidden = true;
+            menu.setAttribute('aria-hidden', 'true');
+          }, 220);
+        } else {
+          menu.hidden = false;
+          menu.setAttribute('aria-hidden', 'false');
+          void menu.offsetWidth;
+          menu.classList.add('open');
+        }
       });
       document.addEventListener('click', function(e) {
         if (!btn.contains(e.target) && !menu.contains(e.target)) {
           btn.setAttribute('aria-expanded', 'false');
-          menu.hidden = true;
-          menu.setAttribute('aria-hidden', 'true');
+          menu.classList.remove('open');
+          setTimeout(function() {
+            menu.hidden = true;
+            menu.setAttribute('aria-hidden', 'true');
+          }, 220);
         }
       });
     }
 
-    /* Keep the switch's ARIA state in sync with the persisted theme */
+    /* Keep theme switch ARIA state in sync */
     var toggle = document.getElementById('theme-toggle');
     if (toggle) {
       var theme = document.documentElement.getAttribute('data-theme') || 'dark';
@@ -208,15 +452,21 @@ import LanguageSelector from './LanguageSelector.astro';
     left: 0;
     right: 0;
     z-index: 50;
-    background: rgba(6, 6, 11, 0.72);
-    backdrop-filter: blur(16px) saturate(150%);
-    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    background: rgba(6, 6, 11, 0.75);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-bottom: 1px solid var(--color-border-subtle);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.35);
+    transition: background 300ms var(--ease-smooth), border-color 300ms var(--ease-smooth);
   }
 
-  /* ── Scroll progress hairline ──
-     Pure CSS scroll-driven animation (zero JS). Runs on the compositor:
-     only `transform` is animated (scaleX). Progressive enhancement:
-     wrapped in @supports so unsupported browsers render nothing (no CLS). */
+  :global([data-theme="light"]) .site-header {
+    background: rgba(250, 251, 253, 0.82);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  /* ── Scroll progress hairline ── */
   .scroll-progress {
     position: absolute;
     top: 0;
@@ -237,7 +487,7 @@ import LanguageSelector from './LanguageSelector.astro';
     .scroll-progress {
       animation: scroll-progress-grow linear both;
       animation-timeline: scroll(root);
-      animation-duration: 1ms; /* Firefox requires non-zero duration */
+      animation-duration: 1ms;
     }
   }
 
@@ -248,10 +498,6 @@ import LanguageSelector from './LanguageSelector.astro';
 
   @media (prefers-reduced-motion: reduce) {
     .scroll-progress { animation: none; }
-  }
-
-  :global([data-theme="light"]) .site-header {
-    background: rgba(250, 251, 253, 0.78);
   }
 
   /* ── Liquid purple aurora layer ── */
@@ -341,7 +587,6 @@ import LanguageSelector from './LanguageSelector.astro';
     100% { transform: translate3d(90px, 30px, 0) scale(1.35); }
   }
 
-  /* Liquid bottom hairline */
   .aurora-line {
     position: absolute;
     left: 0;
@@ -361,7 +606,7 @@ import LanguageSelector from './LanguageSelector.astro';
     .aurora-blob { animation: none; }
   }
 
-  /* ── Nav inner — single line, max 72px ── */
+  /* ── Nav inner — single line, max 64px ── */
   .site-nav {
     position: relative;
     z-index: 1;
@@ -375,7 +620,7 @@ import LanguageSelector from './LanguageSelector.astro';
     max-width: 1280px;
     margin-inline: auto;
     padding-inline: 1.5rem;
-    height: 64px;           /* design-taste: max 80px, we use 64 */
+    height: 64px;
   }
 
   /* ── Logo ── */
@@ -387,27 +632,48 @@ import LanguageSelector from './LanguageSelector.astro';
     text-decoration: none;
   }
 
+  .logo-icon-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-glow {
+    position: absolute;
+    inset: -2px;
+    border-radius: 9px;
+    background: var(--color-accent);
+    filter: blur(8px);
+    opacity: 0.35;
+    z-index: -1;
+    transition: opacity 200ms var(--ease-smooth);
+  }
+
+  .nav-logo:hover .logo-glow {
+    opacity: 0.65;
+  }
+
   .nav-logo-text {
     font-family: var(--font-sans);
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 1.05rem;
     color: var(--color-text-primary);
     white-space: nowrap;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
   }
 
   .logo-accent { color: var(--color-accent); }
 
-  /* ── Links ── */
+  /* ── Links & Dropdowns ── */
   .nav-links {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.35rem;
     list-style: none;
     margin-left: auto;
   }
 
-  /* ── Dropdown nav ── */
   .nav-dropdown {
     position: relative;
   }
@@ -417,50 +683,64 @@ import LanguageSelector from './LanguageSelector.astro';
     align-items: center;
   }
 
-  .nav-link {
-    display: flex;
+  .nav-link,
+  .nav-dropdown-trigger {
+    position: relative;
+    display: inline-flex;
     align-items: center;
-    gap: 0.375rem;
-    padding: 0.4rem 0.75rem;
-    border-radius: var(--radius-sm);
+    gap: 0.4rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    font-family: var(--font-sans);
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--color-text-secondary);
     text-decoration: none;
-    white-space: nowrap;
-    transition: color var(--duration-fast), background var(--duration-fast);
-  }
-
-  .nav-link:hover {
-    color: var(--color-text-primary);
-    background: var(--color-surface-3);
-  }
-
-  .nav-dropdown-trigger {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.4rem 0.75rem;
-    border: none;
-    border-radius: var(--radius-sm);
-    background: transparent;
-    font-family: inherit;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-text-secondary);
     cursor: pointer;
     white-space: nowrap;
-    transition: color var(--duration-fast), background var(--duration-fast);
+    transition: color 180ms var(--ease-smooth), background 180ms var(--ease-smooth), border-color 180ms var(--ease-smooth);
   }
 
-  .nav-dropdown-trigger:hover {
+  .nav-dropdown-trigger:hover,
+  .nav-link:hover,
+  .nav-dropdown:focus-within .nav-dropdown-trigger {
     color: var(--color-text-primary);
-    background: var(--color-surface-3);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  :global([data-theme="light"]) .nav-dropdown-trigger:hover,
+  :global([data-theme="light"]) .nav-link:hover,
+  :global([data-theme="light"]) .nav-dropdown:focus-within .nav-dropdown-trigger {
+    background: rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+
+  /* Magnetic indicator dot */
+  .nav-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    opacity: 0;
+    transform: scale(0.3);
+    box-shadow: 0 0 8px var(--color-accent);
+    transition: opacity 200ms var(--ease-smooth), transform 200ms var(--ease-smooth);
+  }
+
+  .nav-dropdown-trigger:hover .nav-dot,
+  .nav-link:hover .nav-dot,
+  .nav-dropdown:focus-within .nav-dot {
+    opacity: 1;
+    transform: scale(1);
   }
 
   .dropdown-chevron {
     opacity: 0.55;
-    transition: transform 180ms var(--ease-smooth);
+    transition: transform 200ms var(--ease-smooth);
   }
 
   .nav-dropdown:hover .dropdown-chevron,
@@ -468,23 +748,28 @@ import LanguageSelector from './LanguageSelector.astro';
     transform: rotate(180deg);
   }
 
+  /* ── Dropdown Mega Menu ── */
   .dropdown-menu {
     position: absolute;
-    top: calc(100% + 6px);
+    top: calc(100% + 8px);
     left: 50%;
-    transform: translateX(-50%) translateY(4px);
-    min-width: 220px;
-    padding: 0.375rem;
-    list-style: none;
-    margin: 0;
-    background: var(--color-surface-1);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-md);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.32), 0 4px 12px rgba(0, 0, 0, 0.18);
+    transform: translateX(-50%) translateY(8px);
+    min-width: 750px;
+    padding: 0.75rem;
+    background: rgba(12, 12, 20, 0.94);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 160ms var(--ease-smooth), transform 160ms var(--ease-smooth), visibility 160ms;
+    transition: opacity 200ms var(--ease-smooth), transform 200ms var(--ease-smooth), visibility 200ms;
+  }
+
+  .dropdown-menu-single {
+    min-width: 320px;
   }
 
   .nav-dropdown:hover .dropdown-menu,
@@ -495,37 +780,144 @@ import LanguageSelector from './LanguageSelector.astro';
     transform: translateX(-50%) translateY(0);
   }
 
-  .dropdown-link {
-    display: block;
-    padding: 0.5rem 0.75rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    white-space: nowrap;
-    transition: color var(--duration-fast), background var(--duration-fast);
+  :global([data-theme="light"]) .dropdown-menu {
+    background: rgba(255, 255, 255, 0.96);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
   }
 
-  .dropdown-link:hover,
-  .dropdown-link:focus-visible {
-    color: var(--color-text-primary);
-    background: var(--color-surface-3);
+  .dropdown-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+
+  .dropdown-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .dropdown-category {
+    display: block;
+    padding: 0.25rem 0.5rem;
+    margin-bottom: 0.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+  }
+
+  .dropdown-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--radius-card);
+    text-decoration: none;
+    transition: background 150ms var(--ease-smooth), border-color 150ms var(--ease-smooth);
+    border: 1px solid transparent;
+  }
+
+  .dropdown-item:hover,
+  .dropdown-item:focus-visible {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.08);
     outline: none;
   }
 
-  .dropdown-link-em {
-    color: var(--color-accent);
+  :global([data-theme="light"]) .dropdown-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.06);
+  }
+
+  .dropdown-item-featured {
+    background: rgba(37, 99, 235, 0.06);
+    border-color: rgba(37, 99, 235, 0.15);
+  }
+
+  .dropdown-item-icon {
+    font-size: 1.15rem;
+    line-height: 1;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+  }
+
+  .dropdown-item-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .dropdown-item-title {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
     font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .dropdown-item-desc {
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    line-height: 1.3;
   }
 
   .dropdown-sep {
     height: 1px;
-    margin: 0.375rem 0.5rem;
+    margin: 0.35rem 0.5rem;
     background: var(--color-border-subtle);
   }
 
-  /* ── Right actions ── */
+  .dropdown-footer {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .dropdown-footer-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.45rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: background 150ms var(--ease-smooth);
+  }
+
+  .dropdown-footer-link:hover {
+    background: rgba(37, 99, 235, 0.1);
+  }
+
+  /* ── Geist Mono Badges ── */
+  .nav-badge {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 600;
+    line-height: 1;
+    padding: 0.2rem 0.45rem;
+    border-radius: var(--radius-pill);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .badge-core { background: rgba(37, 99, 235, 0.15); color: #60a5fa; border: 1px solid rgba(37, 99, 235, 0.3); }
+  .badge-precision { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+  .badge-midi { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+  .badge-pro { background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(239, 68, 68, 0.2)); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+  .badge-speed { background: rgba(59, 130, 246, 0.15); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); }
+  .badge-live { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+  .badge-games { background: rgba(236, 72, 153, 0.15); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.3); }
+  .badge-widgets { background: rgba(99, 102, 241, 0.15); color: #a5b4fc; border: 1px solid rgba(99, 102, 241, 0.3); }
+
+  /* ── Right Actions & Search Trigger ── */
   .nav-actions {
     display: flex;
     align-items: center;
@@ -533,12 +925,77 @@ import LanguageSelector from './LanguageSelector.astro';
     flex-shrink: 0;
   }
 
-  .nav-icon-btn {
-    padding: 0.4rem;
+  .nav-search-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 2px 8px rgba(0, 0, 0, 0.2);
     color: var(--color-text-secondary);
+    font-family: var(--font-sans);
+    font-size: var(--text-small);
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: all 200ms var(--ease-smooth);
   }
 
-  /* ── Theme toggle slider ── */
+  .nav-search-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(37, 99, 235, 0.5);
+    color: var(--color-text-primary);
+    box-shadow: 0 0 16px rgba(37, 99, 235, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  :global([data-theme="light"]) .nav-search-btn {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  :global([data-theme="light"]) .nav-search-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(37, 99, 235, 0.4);
+  }
+
+  .search-icon {
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .nav-search-btn:hover .search-icon {
+    color: var(--color-accent);
+    opacity: 1;
+  }
+
+  .search-btn-kbd {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    line-height: 1;
+  }
+
+  :global([data-theme="light"]) .search-btn-kbd {
+    background: rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.12);
+    color: var(--color-text-primary);
+  }
+
+  .nav-cta {
+    font-size: 0.875rem;
+    padding: 0.45rem 1.125rem;
+    white-space: nowrap;
+  }
+
+  /* ── Theme Switch Slider ── */
   .theme-switch {
     display: inline-flex;
     align-items: center;
@@ -574,7 +1031,6 @@ import LanguageSelector from './LanguageSelector.astro';
     transition: background 300ms var(--ease-smooth), border-color 300ms var(--ease-smooth);
   }
 
-  /* Sun (light side) / Moon (dark side) hints inside the track */
   .track-icon {
     position: absolute;
     top: 50%;
@@ -614,61 +1070,112 @@ import LanguageSelector from './LanguageSelector.astro';
     transform: translateX(20px);
   }
 
-  .nav-search-btn {
+  /* ── Mobile Menu Toggle Button ── */
+  .mobile-menu-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border-subtle);
+    color: var(--color-text-primary);
+    cursor: pointer;
+    transition: background 150ms var(--ease-smooth);
+  }
+
+  .mobile-menu-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .hamburger-box {
+    position: relative;
+    width: 18px;
+    height: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .hamburger-line {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    border-radius: 2px;
+    transition: transform 200ms var(--ease-smooth), opacity 200ms var(--ease-smooth);
+  }
+
+  .mobile-menu-btn[aria-expanded="true"] .line-top {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  .mobile-menu-btn[aria-expanded="true"] .line-mid {
+    opacity: 0;
+  }
+
+  .mobile-menu-btn[aria-expanded="true"] .line-bot {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  /* ── Mobile Menu Drawer ── */
+  .mobile-menu {
+    border-top: 1px solid var(--color-border-subtle);
+    background: rgba(12, 12, 20, 0.96);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    padding: 1.25rem 1.5rem 1.5rem;
+    opacity: 0;
+    transform: translateY(-12px);
+    transition: opacity 220ms var(--ease-smooth), transform 220ms var(--ease-smooth);
+    max-height: calc(100vh - 72px);
+    overflow-y: auto;
+  }
+
+  .mobile-menu.open {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  :global([data-theme="light"]) .mobile-menu {
+    background: rgba(250, 251, 253, 0.96);
+  }
+
+  .mobile-search-wrapper {
+    margin-bottom: 1rem;
+  }
+
+  .mobile-search-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-card);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    cursor: pointer;
+  }
+
+  .mobile-search-content {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.35rem 0.75rem;
-    border-radius: var(--radius-pill);
-    background: var(--color-surface-2);
-    border: 1px solid var(--color-border-subtle);
-    color: var(--color-text-secondary);
-    font-size: var(--text-small);
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
   }
 
-  .nav-search-btn:hover {
-    background: var(--color-surface-3);
-    border-color: var(--color-accent);
-    color: var(--color-text-primary);
-  }
-
-  .search-btn-kbd {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    font-weight: 700;
-    color: var(--color-text-tertiary);
-    background: var(--color-surface-1);
-    border: 1px solid var(--color-border-subtle);
-    padding: 0.1em 0.4em;
-    border-radius: 3px;
-  }
-
-  .nav-cta {
-    font-size: 0.875rem;
-    padding: 0.45rem 1.125rem;
-  }
-
-  /* ── Mobile menu button — hidden on desktop ── */
-  .mobile-menu-btn { display: none; }
-
-  /* ── Mobile menu ── */
-  .mobile-menu {
-    border-top: 1px solid var(--color-border-subtle);
-    background:
-      linear-gradient(180deg, rgba(139, 92, 246, 0.07), transparent 40%),
-      var(--color-surface-1);
-    padding: 1rem 1.5rem 1.25rem;
-  }
-
-  .mobile-nav-section {
-    margin-bottom: 0.5rem;
+  .mobile-nav-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 
   .mobile-nav-heading {
-    margin: 0 0 0.125rem;
-    padding: 0.5rem 0.75rem 0.25rem;
+    margin: 0 0 0.25rem;
+    padding: 0.25rem 0.5rem;
     font-family: var(--font-mono);
     font-size: 0.6875rem;
     font-weight: 700;
@@ -681,15 +1188,17 @@ import LanguageSelector from './LanguageSelector.astro';
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 0.125rem;
+    gap: 0.2rem;
     margin: 0;
   }
 
   .mobile-nav-link {
-    display: block;
-    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.55rem 0.75rem;
     border-radius: var(--radius-sm);
-    font-size: 1rem;
+    font-size: 0.9375rem;
     font-weight: 500;
     color: var(--color-text-secondary);
     text-decoration: none;
@@ -698,7 +1207,7 @@ import LanguageSelector from './LanguageSelector.astro';
 
   .mobile-nav-link:hover {
     color: var(--color-text-primary);
-    background: var(--color-surface-3);
+    background: rgba(255, 255, 255, 0.06);
   }
 
   .mobile-nav-link-em {
@@ -706,20 +1215,29 @@ import LanguageSelector from './LanguageSelector.astro';
     font-weight: 600;
   }
 
+  .mobile-cta-wrapper {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
   .mobile-cta {
     width: 100%;
     justify-content: center;
-    margin-top: 0.75rem;
   }
 
-  /* ── Responsive ── */
+  /* ── Responsive breakpoints ── */
   @media (max-width: 1024px) {
     .nav-links { display: none; }
     .mobile-menu-btn { display: flex; }
+    .search-btn-text { display: none; }
+    .nav-search-btn { padding: 0.4rem 0.6rem; }
   }
 
   @media (max-width: 640px) {
     .nav-inner { padding-inline: 1rem; }
     .nav-cta { display: none; }
+    .nav-search-btn { display: none; }
   }
 </style>
+

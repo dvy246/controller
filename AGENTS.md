@@ -47,9 +47,9 @@ This document serves as the absolute source of truth for all AI agents, software
 
 ---
 
-## 4. 🛠️ Complete Diagnostic Tool Manifest (32 Tools Total)
+## 4. 🛠️ Complete Diagnostic Tool Manifest (39 Tools Total)
 
-### Controller & Peripheral Suite (22 Tools)
+### Controller & Peripheral Suite (29 Tools)
 1.  **Stick Drift Detector** (`/test/controller/drift`) — 0.1% stick drift canvas visualizer (`DriftTester.astro`).
 2.  **Full Diagnostic Wizard** (`/test/controller/full-diagnostic`) — 5-step hardware checkup wizard (`FullDiagnostic.astro`).
 3.  **Controller Health Score™** (`/test/controller/health-score`) — 0-100 grade & printable PDF report card (`HealthScore.astro`).
@@ -72,6 +72,13 @@ This document serves as the absolute source of truth for all AI agents, software
 20. **Touchpad Tester** (`/test/controller/touchpad`) — PS5 DualSense multi-touch trackpad (`TouchpadTester.astro`).
 21. **Microphone Tester** (`/test/controller/microphone`) — Built-in mic & 3.5mm headset audio meter (`MicrophoneTester.astro`).
 22. **Competitive Readiness** (`/test/controller/competitive-readiness`) — Esports tournament benchmark assessor (`CompetitiveReadiness.astro`).
+23. **Nintendo Switch Tester** (`/test/controller/nintendo-switch`) — Nintendo Switch controller tester (`nintendo-switch.astro`).
+24. **PS5 DualSense Tester** (`/test/controller/ps5`) — PS5 controller tester (`ps5.astro`).
+25. **Xbox Controller Tester** (`/test/controller/xbox`) — Xbox controller tester (`xbox.astro`).
+26. **Joy-Con Tester** (`/test/controller/joycon`) — Joy-Con controller tester (`joycon.astro`).
+27. **Switch Pro Tester** (`/test/controller/switch-pro`) — Switch Pro controller tester (`switch-pro.astro`).
+28. **Joystick Tester** (`/test/controller/joystick-tester`) — Joystick & flight stick tester (`joystick-tester.astro`).
+29. **Gamepad Mapping** (`/test/controller/gamepad-mapping`) — Gamepad mapping and button rebind tester (`gamepad-mapping.astro`).
 
 ### Mouse Suite (10 Tools)
 1.  **CPS Test** (`/test/mouse/cps`) — Clicks per second speed tester (`CPSTester.astro`).
@@ -90,6 +97,13 @@ This document serves as the absolute source of truth for all AI agents, software
 4.  **Sonic-Space Spatial Audio Tester** (`/audio-test/[feature]`) — Web Audio API 3D binaural radar & Bluetooth latency flash tester (`AudioRadar.astro`).
 5.  **Mech-Matrix Keyboard Sandbox** (`/keyboard-tester/[layout]`) — 3D isometric keyboard visualizer with switch sound synthesis & NKRO matrix (`MechKeyboard.astro`).
 
+### God-Mode Programmatic SEO Suite (5 Tools)
+1.  **"Zero-Point" WebHID Calibrator** (`/calibrate/[controller]/[sensor]`) — Hardware-level stick center offsets (`WebHIDCalibrator.astro`).
+2.  **Competitive Deadzone Geometry Sandbox** (`/deadzone-calculator/[game]/[controller]`) — Radial/Axial overlay over drift vectors (`DeadzoneSandbox.astro`).
+3.  **High-Frequency Overclock Validator** (`/overclock-validator/[controller]/[connection]`) — True Hz frame-pacing & input latency (`OverclockValidator.astro`).
+4.  **True Circularity Grader** (`/circularity-grader/[controller]/[sensor]`) — A-F statistical grading of outer perimeter (`CircularityGrader.astro`).
+5.  **Haptic Feedback Composer** (`/haptics/[gameEngine]/[effect]`) — Dual-motor waveform generator for WebAudio API (`HapticComposer.astro`).
+
 ---
 
 ## 5. 📦 Embed & Widget Backlink Engine
@@ -103,12 +117,13 @@ This document serves as the absolute source of truth for all AI agents, software
 ## 6. 🎮 Layer 3 & 4 Moat Ecosystem
 
 *   **First-Party Live Telemetry Engine**: `src/lib/telemetry.ts` & `src/data/reliabilityData.json` — 142,850-sample hardware drift/circularity database (snapshot dated 2026-08-02). Consent-gated (`TelemetryConsent.astro` in ToolLayout, key `ct_telemetry_consent`); `recordTelemetry` wired into DriftTester (5s throttle, 0<d≤50) + CircularityTester (10s throttle, ≥20 rim points); `mapGamepadToModelKey` null-guards models without baselines (never records under invented keys); `connectionType` optional.
+*   **Controller Passport & Evidence Report Engine**: `/report/[uuid]` — Dynamic routing for shareable, versioned diagnostic reports. Implements a nuanced result taxonomy (Normal, Anomaly, Hardware Issue) instead of generic pass/fail. Explicitly emits `<meta name="robots" content="noindex" />` to prevent crawl budget waste per programmatic SEO best practices.
 *   **Empirical Reliability Hubs** (`/reliability/[slug]`) — drift curves, circularity percentiles, lifespan metrics; breadcrumbs + dated snapshot surfaces. **Aggregate Dashboard** at `/reliability/dashboard` (stat strip: 142,850 results, 5 models, hall-vs-pot gap; drift/circularity/lifespan charts; percentile threshold table; dataset-limits note). **Monthly Report** at `/reliability/report` (freshness signal + media-citation bait).
 *   **Testing Methodology** (`/test/methodology`) + per-tool "How this test works & its limits" collapsible in ToolLayout — answers the r/consolerepair trust gap; no competitor has this.
 *   **Warranty Assistant** (`/warranty`) — RMA claim eligibility checker & claim evidence generator.
 *   **Fix vs Replace Calculator** (`/fix-or-replace`) — Repair cost ($4–$12) vs replacement price ($60–$80) decision calculator.
 *   **Rewards Engine**: `src/lib/rewards.ts` — LocalStorage XP points, level (`floor(pts/200)+1`), and **real daily streak tracking** (`touchStreak()` auto-bumped on any award; `bestStreak` tracked). Wired: `addPoints(50)` in DriftTester/CircularityTester/HealthScore/FullDiagnostic (once per session) + `addXP` (75–150) in all 5 arcade games. `/games` hub displays XP + Level + Daily Streak. `unlockAchievement` API exists but is **currently unused** — no UI claims achievements/leaderboards.
-*   **Controller Health Score™ Share Card**: `HealthScore.astro` — 1200×630 canvas PNG + clipboard share.
+*   **Controller Health Score™ Share Card**: `HealthScore.astro` — 1200×630 canvas PNG + clipboard share. Integrated with Evidence Report metadata (UUID, OS, Browser).
 *   **Drift Timeline Predictive Wear**: `DriftTimeline.astro` — `tl-wear-card` projects wear vs model baseline (avg drift onset).
 *   **Games Arcade Hub** (`/games`) — Catalog of browser arcade games.
 *   **Interactive Games**: Stick Sniper (`/games/stick-sniper`), Button Blitz (`/games/button-blitz`), Stick Maze Runner (`/games/stick-maze`), Trigger Racer (`/games/trigger-racer`), Quick Draw Reaction (`/games/quick-draw`).
@@ -120,6 +135,7 @@ This document serves as the absolute source of truth for all AI agents, software
 *   **Game Settings Guides**: `/settings/[game]/[controller]` — 30 pages (Fortnite, Apex Legends, Warzone, Rocket League, Street Fighter 6 × PS5/Xbox/Switch).
 *   **Controller Hardware Comparisons**: `/compare/[slug]` — 9 pages. Each head-to-head renders a **Measured Reliability Baselines** block sourced from `reliabilityData.json` (avg 12-mo drift, circularity, lifespan, sample counts) with per-model links to `/reliability/[key]`; models without baselines show an honest "No baseline dataset yet" placeholder (never estimated).
 *   **Controller Hardware Profiles**: `/controller/[slug]` — 9 profiles. Profiles mapped via `reliabilitySlug` render inline baseline stat cards from `reliabilityData.json`.
+*   **Compatibility Matrix**: `/compatibility` — High-end client-side filtering dashboard powered by `src/data/compatibilityData.json`. Highlights API limitations across OS/Browser combinations.
 *   **Controller Fit Blueprint**: `/fit` hub (FAQPage schema) + `/fit/[slug]` — 14 model profiles (Product schema, 3 hand-span verdicts, pending badges) + `/best-controller-for/[slug]` — 3 guides (`small-hands`, `large-hands`, `limited-grip-strength`). Data: `src/data/controllerFitData.json` (`widthMm`/`weightG` null = pending caliper, per-model `measurementPolicy`/`source`/`lastVerified`); engine: `src/lib/fit.ts` (classifyHand 165/195mm, fit band 0.75–0.95, verdict tiers recommended/try-first/not-ideal/pending, HAND_REFERENCES 150/180/205); island: `FitBlueprint.astro` (`client:visible`, silhouette slider + credit-card fallback calibration).
 *   **Step-by-Step Repair Guides**: `/fix/[category]/[slug]` — 12 stick-drift guides + index, HowTo schema + "Re-test now" loop CTA.
 *   **Reliability Reports**: `/reliability/[slug]` (5 models) + hub + dashboard + `/reliability/report`.
@@ -132,7 +148,7 @@ This document serves as the absolute source of truth for all AI agents, software
 ## 8. 🛡️ Technical SEO & Quality Gates
 
 *   **Custom Error Pages**: `src/pages/404.astro` (Input Signal Lost) & `src/pages/500.astro` (System Interruption).
-*   **JSON-LD Schemas**: `WebSite`, `Organization`, `WebApplication`, `FAQPage`, `BreadcrumbList`, `ItemList`, `HowTo`, `Product`, `VideoGame`.
+*   **JSON-LD Schemas**: `WebSite`, `Organization`, `WebApplication` (for standard apps), `SoftwareApplication` (for God-Mode diagnostic tools), `FAQPage`, `BreadcrumbList`, `ItemList`, `HowTo`, `Product`, `VideoGame`.
 *   **SEO Verification Script**: `scripts/build-check.sh` — Validates canonical tags, sitemaps (`dist/sitemap-index.xml`), `robots.txt`, and scans for unintended `noindex` tags.
 *   **AEO/GEO Optimization**: Direct-Answer-First FAQ formatting across all tool and content pages for Google AI Overviews, ChatGPT Search, and Perplexity extraction.
 *   **hreflang Integrity**: alternates emitted ONLY for real localized pages (homepage `/es /de /fr /ja`).

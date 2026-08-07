@@ -1,5 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
 import MechKeyboard from '../../components/features/MechKeyboard.astro';
 
 export function getStaticPaths() {
@@ -17,6 +20,11 @@ const title = `Mechanical Keyboard ${formattedLayout} Layout & Anti-Ghosting Tes
 const description = `Test your mechanical keyboard's N-Key Rollover (NKRO), ghosting matrix, switch audio profile, and key actuation performance across ${formattedLayout} layout.`;
 const canonical = `https://controllertesting.com/keyboard-tester/${layout}`;
 
+const breadcrumbs = [
+  { name: 'Tools', url: '/tools' },
+  { name: `${formattedLayout} Keyboard` }
+];
+
 const schema = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
@@ -33,18 +41,15 @@ const schema = {
 };
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical}>
+<BaseLayout title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs}>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
-  <main class="min-h-screen py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+  <Header />
+  <main class="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
     <!-- Breadcrumb -->
-    <nav class="text-xs text-slate-400 mb-6 flex items-center gap-2">
-      <a href="/" class="hover:text-blue-400 transition-colors">Home</a>
-      <span>/</span>
-      <a href="/games" class="hover:text-blue-400 transition-colors">Tools</a>
-      <span>/</span>
-      <span class="text-slate-200">{formattedLayout} Keyboard</span>
-    </nav>
+    <div class="mb-6">
+      <Breadcrumbs items={breadcrumbs} />
+    </div>
 
     <!-- Header -->
     <div class="mb-8 text-center sm:text-left">
@@ -80,4 +85,5 @@ const schema = {
       </div>
     </section>
   </main>
+  <Footer />
 </BaseLayout>

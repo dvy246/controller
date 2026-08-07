@@ -1,0 +1,85 @@
+---
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import WebHIDCalibrator from '../../../components/tools/controller/WebHIDCalibrator.astro';
+
+export function getStaticPaths() {
+  const controllers = [
+    { slug: 'dualsense', name: 'PS5 DualSense' },
+    { slug: 'ds4', name: 'PS4 DualShock' }
+  ];
+  const sensors = [
+    { slug: 'hall-effect', name: 'Hall Effect' },
+    { slug: 'potentiometer', name: 'Potentiometer' }
+  ];
+
+  const paths = [];
+  controllers.forEach(controller => {
+    sensors.forEach(sensor => {
+      paths.push({
+        params: { controller: controller.slug, sensor: sensor.slug },
+        props: { controllerName: controller.name, sensorName: sensor.name }
+      });
+    });
+  });
+  return paths;
+}
+
+const { controller, sensor } = Astro.params;
+const { controllerName, sensorName } = Astro.props;
+
+const title = `${controllerName} ${sensorName} Firmware Calibration | ControllerTesting.com`;
+const description = `Directly communicate with your ${controllerName}'s firmware via WebHID to reset ${sensorName} drift offsets.`;
+const toolName = `${controllerName} Zero-Point Calibrator`;
+const category = "Calibration";
+const categoryUrl = "/calibrate";
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Calibration', url: '/calibrate' },
+  { name: controllerName }
+];
+
+const faqs = [
+  {
+    question: "What does zero-point calibration do?",
+    answer: "It writes a new permanent hardware center point directly to the controller's firmware, fixing baseline drift caused by sensor wear."
+  },
+  {
+    question: "Is it safe to flash my firmware through the browser?",
+    answer: "Yes. WebHID communicates securely and only writes to the specific calibration registers, without altering the core firmware code."
+  },
+  {
+    question: "Will this fix stick drift permanently?",
+    answer: "If your drift is caused by offset degradation, this recalibrates the center. However, physical wear on potentiometers may eventually require a hardware replacement."
+  }
+];
+---
+
+<ToolLayout
+  title={title}
+  description={description}
+  toolName={toolName}
+  category={category}
+  categoryUrl={categoryUrl}
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <WebHIDCalibrator />
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>Why Calibrate Your {controllerName}?</h2>
+    <p>Over time, both <strong>{sensorName}</strong> sensors can shift off their factory center. Software deadzones only mask this issue, leading to sluggish response. A true firmware-level zero-point calibration recalculates the physical neutral position and saves it to the controller's onboard memory.</p>
+    
+    <h3>Prerequisites</h3>
+    <ul>
+      <li>Use a Chromium-based browser (Chrome, Edge, Opera) for WebHID support.</li>
+      <li>Connect your {controllerName} directly via USB cable (Bluetooth calibration is not recommended).</li>
+      <li>Do not touch the analog sticks during the flashing process.</li>
+    </ul>
+    
+    <h3>How the Process Works</h3>
+    <p>This tool uses the native browser WebHID API to send low-level instructions to your {controllerName}. We first read the raw offsets directly from the {sensorName} sensors, calculate the delta to true zero, and construct a binary payload that flashes the updated calibration matrix back to the controller.</p>
+  </Fragment>
+</ToolLayout>

@@ -1,0 +1,96 @@
+{
+  "updatedAt": "2026-08-07",
+  "matrix": [
+    {
+      "controllerId": "ps5-dualsense",
+      "controllerName": "PlayStation 5 DualSense",
+      "os": "Windows",
+      "browser": "Chrome",
+      "connection": "usb",
+      "status": "full",
+      "notes": "Native support via Gamepad API. WebHID required for precise calibration.",
+      "haptics": "partial",
+      "gyro": "unsupported"
+    },
+    {
+      "controllerId": "ps5-dualsense",
+      "controllerName": "PlayStation 5 DualSense",
+      "os": "Windows",
+      "browser": "Chrome",
+      "connection": "bluetooth",
+      "status": "partial",
+      "notes": "Polling rate limited to ~250Hz. Occasional mapping issues in Chromium.",
+      "haptics": "unsupported",
+      "gyro": "unsupported"
+    },
+    {
+      "controllerId": "ps5-dualsense",
+      "controllerName": "PlayStation 5 DualSense",
+      "os": "macOS",
+      "browser": "Safari",
+      "connection": "bluetooth",
+      "status": "full",
+      "notes": "Excellent native integration on macOS. Haptics via standard rumble.",
+      "haptics": "full",
+      "gyro": "unsupported"
+    },
+    {
+      "controllerId": "xbox-series-x",
+      "controllerName": "Xbox Wireless Controller",
+      "os": "Windows",
+      "browser": "Edge",
+      "connection": "bluetooth",
+      "status": "full",
+      "notes": "Flawless native Windows integration via XInput.",
+      "haptics": "full",
+      "gyro": "unsupported"
+    },
+    {
+      "controllerId": "xbox-series-x",
+      "controllerName": "Xbox Wireless Controller",
+      "os": "macOS",
+      "browser": "Chrome",
+      "connection": "bluetooth",
+      "status": "partial",
+      "notes": "Requires macOS Monterey or newer for correct button mapping.",
+      "haptics": "partial",
+      "gyro": "unsupported"
+    },
+    {
+      "controllerId": "switch-pro",
+      "controllerName": "Nintendo Switch Pro",
+      "os": "Windows",
+      "browser": "Chrome",
+      "connection": "bluetooth",
+      "status": "partial",
+      "notes": "Often mapped poorly as generic DirectInput without Steam running in background.",
+      "haptics": "unsupported",
+      "gyro": "unsupported"
+    },
+    {
+      "controllerId": "switch-pro",
+      "controllerName": "Nintendo Switch Pro",
+      "os": "macOS",
+      "browser": "Safari",
+      "connection": "bluetooth",
+      "status": "full",
+      "notes": "Native support added in macOS Ventura.",
+      "haptics": "unsupported",
+      "gyro": "unsupported"
+    },
+    {
+      "controllerId": "ps4-dualshock",
+      "controllerName": "PlayStation 4 DualShock",
+      "os": "iOS",
+      "browser": "Safari",
+      "connection": "bluetooth",
+      "status": "full",
+      "notes": "Officially supported by Apple. Maps perfectly to standard Gamepad API.",
+      "haptics": "unsupported",
+      "gyro": "unsupported"
+    }
+  ],
+  "osOptions": ["Windows", "macOS", "Linux", "iOS", "Android"],
+  "browserOptions": ["Chrome", "Edge", "Safari", "Firefox"],
+  "connectionOptions": ["usb", "bluetooth", "wireless_adapter"]
+}

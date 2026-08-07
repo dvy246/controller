@@ -3,8 +3,16 @@
  * src/pages/tools/index.astro
  * Master Testing Toolkit Hub
  * SEO optimized and aligned with Data Authority pivot.
+ * UPGRADED: Multi-Million Dollar Premium UI
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Diagnostic Toolkit' }
+];
 
 const toolsSchema = {
   '@context': 'https://schema.org',
@@ -68,295 +76,124 @@ const specializedTools = [
 <BaseLayout 
   title="Testing Toolkit | 32+ Diagnostic Tools for Controller & Mouse"
   description="The world's most comprehensive hardware testing toolkit. Diagnose stick drift, polling rate, circularity, and latency. Used by 142,850+ players."
+  breadcrumbs={breadcrumbs}
 >
   <script type="application/ld+json" set:html={JSON.stringify(toolsSchema)} />
 
-  <main class="toolkit-page">
-    <header class="toolkit-hero">
-      <div class="hero-content">
-        <div class="telemetry-badge">
-          <span class="live-dot"></span>
-          <span>142,850+ Controllers Tested Globally</span>
+  <Header />
+  
+  <main class="toolkit-page relative bg-[#05050A] min-h-screen text-stone-200 overflow-hidden">
+    {/* Abstract Premium Background Glows */}
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-[radial-gradient(ellipse_at_top,rgba(59,130,246,0.15),transparent_70%)] pointer-events-none"></div>
+    <div class="absolute top-[20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-purple-600/10 blur-[120px] pointer-events-none mix-blend-screen"></div>
+    <div class="absolute top-[40%] right-[-10%] w-[600px] h-[600px] rounded-full bg-blue-600/10 blur-[150px] pointer-events-none mix-blend-screen"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-24">
+      <div class="mb-12">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
+      
+      <header class="toolkit-hero mb-24 max-w-3xl">
+        <div class="telemetry-badge inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 mb-8 backdrop-blur-md">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
+          </span>
+          <span class="text-xs font-bold tracking-widest uppercase text-blue-400">142,850+ Controllers Tested Globally</span>
         </div>
-        <h1 class="hero-title">Diagnostic Testing Toolkit</h1>
-        <p class="hero-desc">
-          We provide the most comprehensive, privacy-first diagnostic suite available in the browser. 
+        
+        <h1 class="text-5xl lg:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-stone-200 to-stone-500 mb-6 drop-shadow-sm">
+          Diagnostic<br/>Testing Toolkit
+        </h1>
+        <p class="text-lg lg:text-xl text-stone-400 leading-relaxed max-w-2xl font-medium">
+          The most comprehensive, privacy-first diagnostic suite available in the browser. 
           No downloads required. Hardware telemetry powers our empirical reliability database.
         </p>
-      </div>
-    </header>
+      </header>
 
-    <section class="toolkit-section">
-      <div class="section-header">
-        <h2>Controller & Peripheral Suite</h2>
-        <p>The definitive 22-tool suite for gamepads, flight sticks, racing wheels, and MIDI.</p>
-      </div>
-      <div class="bento-grid">
-        {controllerTools.map(tool => (
-          <a href={tool.url} class="bento-card">
-            <div class="bento-icon">{tool.icon}</div>
-            <div class="bento-content">
-              <h3>{tool.name}</h3>
-              <p>{tool.desc}</p>
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
+      <div class="space-y-32">
+        {/* Controller Suite */}
+        <section class="toolkit-section">
+          <div class="section-header mb-12">
+            <h2 class="text-3xl font-bold tracking-tight text-white mb-3">Controller & Peripheral Suite</h2>
+            <p class="text-stone-400 text-lg">The definitive 22-tool suite for gamepads, flight sticks, racing wheels, and MIDI.</p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {controllerTools.map(tool => (
+              <a href={tool.url} class="group relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-blue-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-transparent to-purple-500/0 group-hover:from-blue-500/10 group-hover:to-purple-500/10 transition-colors duration-500"></div>
+                <div class="relative z-10 flex flex-col h-full">
+                  <div class="w-12 h-12 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                    {tool.icon}
+                  </div>
+                  <h3 class="text-lg font-bold text-white mb-2 tracking-tight group-hover:text-blue-400 transition-colors">{tool.name}</h3>
+                  <p class="text-sm text-stone-400 leading-relaxed font-medium">{tool.desc}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
 
-    <section class="toolkit-section">
-      <div class="section-header">
-        <h2>Mouse & Keyboard Suite</h2>
-        <p>High-precision polling rate and latency checkers for competitive peripherals.</p>
-      </div>
-      <div class="bento-grid">
-        {mouseTools.map(tool => (
-          <a href={tool.url} class="bento-card">
-            <div class="bento-icon">{tool.icon}</div>
-            <div class="bento-content">
-              <h3>{tool.name}</h3>
-              <p>{tool.desc}</p>
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
+        {/* Mouse Suite */}
+        <section class="toolkit-section">
+          <div class="section-header mb-12">
+            <h2 class="text-3xl font-bold tracking-tight text-white mb-3">Mouse & Keyboard Suite</h2>
+            <p class="text-stone-400 text-lg">High-precision polling rate and latency checkers for competitive peripherals.</p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {mouseTools.map(tool => (
+              <a href={tool.url} class="group relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-emerald-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-transparent to-cyan-500/0 group-hover:from-emerald-500/10 group-hover:to-cyan-500/10 transition-colors duration-500"></div>
+                <div class="relative z-10 flex flex-col h-full">
+                  <div class="w-12 h-12 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                    {tool.icon}
+                  </div>
+                  <h3 class="text-lg font-bold text-white mb-2 tracking-tight group-hover:text-emerald-400 transition-colors">{tool.name}</h3>
+                  <p class="text-sm text-stone-400 leading-relaxed font-medium">{tool.desc}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
 
-    <section class="toolkit-section">
-      <div class="section-header">
-        <h2>High-SEA Programmatic Suite</h2>
-        <p>Advanced physics, spatial audio, and aim-training sandbox engines.</p>
+        {/* Specialized Suite */}
+        <section class="toolkit-section">
+          <div class="section-header mb-12">
+            <h2 class="text-3xl font-bold tracking-tight text-white mb-3">High-SEA Programmatic Suite</h2>
+            <p class="text-stone-400 text-lg">Advanced physics, spatial audio, and aim-training sandbox engines.</p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {specializedTools.map(tool => (
+              <a href={tool.url} class="group relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-fuchsia-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-fuchsia-500/0 via-transparent to-purple-500/0 group-hover:from-fuchsia-500/10 group-hover:to-purple-500/10 transition-colors duration-500"></div>
+                <div class="relative z-10 flex flex-col h-full">
+                  <div class="w-12 h-12 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
+                    {tool.icon}
+                  </div>
+                  <h3 class="text-lg font-bold text-white mb-2 tracking-tight group-hover:text-fuchsia-400 transition-colors">{tool.name}</h3>
+                  <p class="text-sm text-stone-400 leading-relaxed font-medium">{tool.desc}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
       </div>
-      <div class="bento-grid">
-        {specializedTools.map(tool => (
-          <a href={tool.url} class="bento-card">
-            <div class="bento-icon">{tool.icon}</div>
-            <div class="bento-content">
-              <h3>{tool.name}</h3>
-              <p>{tool.desc}</p>
-            </div>
-          </a>
-        ))}
-      </div>
-    </section>
 
-    <section class="toolkit-footer">
-      <div class="footer-card embed-card">
-        <h3>Want to embed these tools on your site?</h3>
-        <p>Get free gamepad testing widgets for your website. Easy to integrate, fully responsive, and zero dependencies.</p>
-        <a href="/embeds" class="btn-primary">Explore Widgets</a>
-      </div>
-      <div class="footer-card feedback-card">
-        <h3>Need a New Tool?</h3>
-        <p>We're constantly expanding our dataset and toolkit. If you need a specific tool, let us know.</p>
-        <a href="/contact" class="btn-secondary">Submit Feedback</a>
-      </div>
-    </section>
+      <section class="mt-32 pt-16 border-t border-white/10 grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="relative bg-gradient-to-br from-blue-900/20 to-transparent border border-blue-500/20 rounded-[2rem] p-10 overflow-hidden group">
+          <div class="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay"></div>
+          <h3 class="text-2xl font-bold text-white mb-4 relative z-10">Embed these tools</h3>
+          <p class="text-blue-200/70 mb-8 relative z-10 text-lg">Get free gamepad testing widgets for your website. Easy to integrate, fully responsive, and zero dependencies.</p>
+          <a href="/embeds" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-blue-500 text-white font-bold hover:bg-blue-400 transition-colors relative z-10 shadow-[0_0_20px_rgba(59,130,246,0.4)]">Explore Widgets</a>
+        </div>
+        
+        <div class="relative bg-gradient-to-br from-stone-800/40 to-transparent border border-white/10 rounded-[2rem] p-10 overflow-hidden group">
+          <h3 class="text-2xl font-bold text-white mb-4 relative z-10">Need a New Tool?</h3>
+          <p class="text-stone-400 mb-8 relative z-10 text-lg">We're constantly expanding our dataset and toolkit. If you need a specific tool, let us know.</p>
+          <a href="/contact" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-white/10 text-white font-bold hover:bg-white/20 border border-white/10 transition-colors relative z-10">Submit Feedback</a>
+        </div>
+      </section>
+    </div>
   </main>
+  <Footer />
 </BaseLayout>
-
-<style>
-  .toolkit-page {
-    padding-top: calc(var(--header-height) + 4rem);
-    padding-bottom: 6rem;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding-inline: var(--spacing-layout);
-  }
-
-  .toolkit-hero {
-    margin-bottom: 5rem;
-    text-align: left;
-    max-width: 800px;
-  }
-
-  .telemetry-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.375rem 0.875rem;
-    background: rgba(37, 99, 235, 0.1);
-    border: 1px solid rgba(37, 99, 235, 0.2);
-    border-radius: 9999px;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--color-accent);
-    margin-bottom: 1.5rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-  }
-
-  .live-dot {
-    width: 6px;
-    height: 6px;
-    background: var(--color-accent);
-    border-radius: 50%;
-    box-shadow: 0 0 8px var(--color-accent);
-    animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  @keyframes pulse-dot {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
-
-  .hero-title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    color: var(--color-text-primary);
-    margin-bottom: 1.25rem;
-  }
-
-  .hero-desc {
-    font-size: clamp(1.125rem, 2vw, 1.25rem);
-    line-height: 1.6;
-    color: var(--color-text-secondary);
-    max-width: 54ch;
-  }
-
-  .toolkit-section {
-    margin-bottom: 5rem;
-  }
-
-  .section-header {
-    margin-bottom: 2rem;
-  }
-
-  .section-header h2 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    letter-spacing: -0.02em;
-    margin-bottom: 0.5rem;
-  }
-
-  .section-header p {
-    color: var(--color-text-secondary);
-    font-size: 1.0625rem;
-  }
-
-  .bento-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1.25rem;
-  }
-
-  .bento-card {
-    display: flex;
-    gap: 1rem;
-    background: var(--color-surface-1);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-card);
-    padding: 1.5rem;
-    text-decoration: none;
-    transition: all var(--duration-normal) var(--ease-smooth);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .bento-card:hover {
-    background: var(--color-surface-2);
-    border-color: var(--color-border-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  }
-
-  .bento-icon {
-    font-size: 1.75rem;
-    flex-shrink: 0;
-    width: 3rem;
-    height: 3rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--color-surface-2);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--color-border-subtle);
-  }
-
-  .bento-content h3 {
-    font-size: 1.0625rem;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin-bottom: 0.375rem;
-    line-height: 1.3;
-  }
-
-  .bento-content p {
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
-    line-height: 1.5;
-  }
-
-  .toolkit-footer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-top: 6rem;
-    padding-top: 4rem;
-    border-top: 1px solid var(--color-border-subtle);
-  }
-
-  .footer-card {
-    background: var(--color-surface-1);
-    border: 1px solid var(--color-border-default);
-    border-radius: var(--radius-card);
-    padding: 2.5rem;
-    text-align: left;
-  }
-
-  .footer-card h3 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-    margin-bottom: 0.75rem;
-    letter-spacing: -0.01em;
-  }
-
-  .footer-card p {
-    color: var(--color-text-secondary);
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
-    font-size: 1.0625rem;
-  }
-
-  .btn-primary, .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.75rem 1.5rem;
-    font-size: 0.9375rem;
-    font-weight: 600;
-    border-radius: var(--radius-sm);
-    text-decoration: none;
-    transition: all var(--duration-fast) var(--ease-out);
-  }
-
-  .btn-primary {
-    background: var(--color-accent);
-    color: #fff;
-  }
-
-  .btn-primary:hover {
-    background: var(--color-accent-hover);
-  }
-
-  .btn-secondary {
-    background: var(--color-surface-2);
-    color: var(--color-text-primary);
-    border: 1px solid var(--color-border-hover);
-  }
-
-  .btn-secondary:hover {
-    background: var(--color-surface-3);
-  }
-
-  @media (max-width: 768px) {
-    .toolkit-footer {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>

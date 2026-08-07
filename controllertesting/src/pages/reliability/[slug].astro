@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import Footer from '../../components/global/Footer.astro';
+import Header from '../../components/global/Header.astro';
 import reliabilityData from '../../data/reliabilityData.json';
 
 export function getStaticPaths() {
@@ -36,109 +38,247 @@ const schemaData = {
 ---
 
 <BaseLayout
-  title={`${modelData.name} Hardware Reliability & Stick Drift Report (Baseline Reference Dataset)`}
+  title={`${modelData.name} Hardware Reliability & Stick Drift Report`}
   description={`Baseline stick drift magnitude, circularity error %, and sensor wear reference figures for ${modelData.name}, compiled from ${modelData.samples.toLocaleString()} documented test results.`}
   canonical={canonicalUrl}
   breadcrumbs={breadcrumbs}
+  schema={schemaData}
 >
-  <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+  <Header />
 
-  <section class="max-w-5xl mx-auto px-4 py-16">
+  <main class="reliability-report-page container-site page-layout">
     <Breadcrumbs items={breadcrumbs} />
-    <!-- Header -->
-    <div class="mb-12 text-center">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono mb-4">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+    
+    <header class="report-hero card-base card-gradient text-center">
+      <div class="badge-tag mb-4 inline-flex items-center gap-2">
+        <span class="live-dot"></span>
         Baseline Reference Dataset • {modelData.samples.toLocaleString()} Documented Results • Snapshot {reliabilityData.updatedAt}
       </div>
-      <h1 class="text-4xl sm:text-5xl font-bold tracking-tight text-stone-100 mb-4">
-        {modelData.name} Reliability Report
-      </h1>
-      <p class="text-stone-400 text-lg max-w-2xl mx-auto">
+      <h1 class="text-h1 mb-4">{modelData.name} Reliability Report</h1>
+      <p class="text-lead text-secondary max-w-prose mx-auto">
         Baseline stick drift degradation figures, circularity error metrics, and sensor wear references compiled from aggregated test results. Every unit is different — measure yours directly with our free diagnostics.
       </p>
+      <div class="mt-8">
+        <a href="/test/controller/drift" class="btn-primary">Test Your Controller</a>
+      </div>
+    </header>
+
+    <div class="metrics-grid">
+      <div class="metric-card card-base">
+        <div class="metric-label text-tertiary">Avg 12-Month Drift</div>
+        <div class="metric-value mono text-warning">{modelData.avgDriftAfter12MonthsPercent}%</div>
+        <p class="metric-desc text-secondary">Measured static offset at rest</p>
+      </div>
+
+      <div class="metric-card card-base">
+        <div class="metric-label text-tertiary">Avg Circularity Error</div>
+        <div class="metric-value mono text-accent">{modelData.avgCircularityErrorPercent}%</div>
+        <p class="metric-desc text-secondary">Deviation from 100% outer circle</p>
+      </div>
+
+      <div class="metric-card card-base">
+        <div class="metric-label text-tertiary">Avg Drift-Free Lifespan</div>
+        <div class="metric-value mono text-pass">{modelData.avgLifespanMonthsBeforeDrift} Mo</div>
+        <p class="metric-desc text-secondary">Before >2.5% deadzone tuning required</p>
+      </div>
     </div>
 
-    <!-- Metric Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-      <div class="bg-stone-900/80 border border-stone-800 p-6 rounded-2xl">
-        <div class="text-stone-400 text-sm font-medium mb-1">Avg 12-Month Drift</div>
-        <div class="text-3xl font-bold text-amber-400 font-mono">{modelData.avgDriftAfter12MonthsPercent}%</div>
-        <p class="text-xs text-stone-500 mt-2">Measured static offset at rest</p>
-      </div>
-
-      <div class="bg-stone-900/80 border border-stone-800 p-6 rounded-2xl">
-        <div class="text-stone-400 text-sm font-medium mb-1">Avg Circularity Error</div>
-        <div class="text-3xl font-bold text-blue-400 font-mono">{modelData.avgCircularityErrorPercent}%</div>
-        <p class="text-xs text-stone-500 mt-2">Deviation from 100% outer circle</p>
-      </div>
-
-      <div class="bg-stone-900/80 border border-stone-800 p-6 rounded-2xl">
-        <div class="text-stone-400 text-sm font-medium mb-1">Avg Drift-Free Lifespan</div>
-        <div class="text-3xl font-bold text-emerald-400 font-mono">{modelData.avgLifespanMonthsBeforeDrift} Mo</div>
-        <p class="text-xs text-stone-500 mt-2">Before >2.5% deadzone tuning required</p>
-      </div>
-    </div>
-
-    <!-- Percentile Benchmark Table -->
-    <div class="bg-stone-900/80 border border-stone-800 rounded-2xl p-8 mb-12">
-      <h2 class="text-2xl font-bold text-stone-100 mb-6">Drift Magnitude Percentiles</h2>
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm text-stone-300">
-          <thead class="bg-stone-800/50 text-stone-400 border-b border-stone-800">
+    <section class="percentile-section card-base mb-12">
+      <h2 class="text-h2 mb-6">Drift Magnitude Percentiles</h2>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
             <tr>
-              <th class="py-3 px-4">Tier</th>
-              <th class="py-3 px-4">Drift Threshold (%)</th>
-              <th class="py-3 px-4">Percentile Standing</th>
-              <th class="py-3 px-4">Recommended Action</th>
+              <th>Tier</th>
+              <th>Drift Threshold (%)</th>
+              <th>Percentile Standing</th>
+              <th>Recommended Action</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-stone-800">
+          <tbody>
             <tr>
-              <td class="py-3 px-4 font-semibold text-emerald-400">Excellent</td>
-              <td class="py-3 px-4 font-mono">≤ {modelData.percentileThresholds.excellent}%</td>
-              <td class="py-3 px-4">Top 10% cleanest sensors</td>
-              <td class="py-3 px-4">No action needed (0% deadzone)</td>
+              <td class="font-semibold text-pass">Excellent</td>
+              <td class="mono">≤ {modelData.percentileThresholds.excellent}%</td>
+              <td>Top 10% cleanest sensors</td>
+              <td>No action needed (0% deadzone)</td>
             </tr>
             <tr>
-              <td class="py-3 px-4 font-semibold text-blue-400">Good</td>
-              <td class="py-3 px-4 font-mono">≤ {modelData.percentileThresholds.good}%</td>
-              <td class="py-3 px-4">Top 30% normal wear</td>
-              <td class="py-3 px-4">Default game deadzone (2-3%)</td>
+              <td class="font-semibold text-accent">Good</td>
+              <td class="mono">≤ {modelData.percentileThresholds.good}%</td>
+              <td>Top 30% normal wear</td>
+              <td>Default game deadzone (2-3%)</td>
             </tr>
             <tr>
-              <td class="py-3 px-4 font-semibold text-amber-400">Average</td>
-              <td class="py-3 px-4 font-mono">≤ {modelData.percentileThresholds.average}%</td>
-              <td class="py-3 px-4">50th percentile baseline</td>
-              <td class="py-3 px-4">Set 5% deadzone in settings</td>
+              <td class="font-semibold text-warning">Average</td>
+              <td class="mono">≤ {modelData.percentileThresholds.average}%</td>
+              <td>50th percentile baseline</td>
+              <td>Set 5% deadzone in settings</td>
             </tr>
             <tr>
-              <td class="py-3 px-4 font-semibold text-rose-400">Poor / Degraded</td>
-              <td class="py-3 px-4 font-mono">> {modelData.percentileThresholds.average}%</td>
-              <td class="py-3 px-4">Bottom 20% high drift</td>
-              <td class="py-3 px-4">Clean potentiometers or replace module</td>
+              <td class="font-semibold text-fail">Poor / Degraded</td>
+              <td class="mono">> {modelData.percentileThresholds.average}%</td>
+              <td>Bottom 20% high drift</td>
+              <td>Clean potentiometers or replace module</td>
             </tr>
           </tbody>
         </table>
       </div>
-    </div>
+    </section>
 
-    <!-- Known Issues Sourced from Hardware Telemetry -->
-    <div class="bg-stone-900/80 border border-stone-800 rounded-2xl p-8">
-      <h2 class="text-2xl font-bold text-stone-100 mb-4">Documented Wear Characteristics</h2>
-      <ul class="space-y-3 text-stone-300">
+    <section class="issues-section card-base mb-12">
+      <h2 class="text-h2 mb-4">Documented Wear Characteristics</h2>
+      <ul class="issues-list">
         {modelData.commonIssues.map((issue: string) => (
-          <li class="flex items-start gap-3">
-            <span class="text-amber-400 font-bold">•</span>
-            <span>{issue}</span>
-          </li>
+          <li>{issue}</li>
         ))}
       </ul>
-      <p class="text-xs text-stone-500 mt-6">
-        About this data: this is a static baseline snapshot (compiled {reliabilityData.updatedAt}), not live telemetry.
-        Figures are aggregated reference values; your individual controller may perform better or worse.
-        For a measurement of your own hardware, run the <a href="/test/controller/drift" class="text-blue-400 underline">Stick Drift Detector</a> or the <a href="/test/controller/circularity" class="text-blue-400 underline">Circularity Test</a>.
-      </p>
-    </div>
-  </section>
+      <div class="data-notice mt-8 pt-6 border-t border-border-subtle text-small text-tertiary">
+        <p>
+          <strong>About this data:</strong> this is a static baseline snapshot (compiled {reliabilityData.updatedAt}), not live telemetry.
+          Figures are aggregated reference values; your individual controller may perform better or worse.
+          For a measurement of your own hardware, run the <a href="/test/controller/drift" class="text-accent underline hover:text-white transition-colors">Stick Drift Detector</a> or the <a href="/test/controller/circularity" class="text-accent underline hover:text-white transition-colors">Circularity Test</a>.
+        </p>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
 </BaseLayout>
+
+<style>
+  .reliability-report-page {
+    padding-top: 80px;
+    padding-bottom: var(--spacing-section-lg);
+  }
+
+  .report-hero {
+    margin-bottom: 3rem;
+    padding: 4rem 2rem;
+  }
+
+  .badge-tag {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-pass);
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    padding: 0.35rem 1rem;
+    border-radius: var(--radius-pill);
+  }
+
+  .live-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--color-pass);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+    70% { opacity: 0.4; box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+    100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .metric-card {
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.2s var(--ease-spring);
+  }
+
+  .metric-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .metric-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+  }
+
+  .metric-value {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+  }
+
+  .metric-desc {
+    font-size: var(--text-small);
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+  }
+
+  .data-table th {
+    background: var(--color-surface-2);
+    padding: 1rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .data-table th:first-child { border-top-left-radius: var(--radius-sm); }
+  .data-table th:last-child { border-top-right-radius: var(--radius-sm); }
+
+  .data-table td {
+    padding: 1.25rem 1.5rem;
+    font-size: 0.9375rem;
+    border-bottom: 1px solid var(--color-border-subtle);
+    color: var(--color-text-secondary);
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+  .issues-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .issues-list li {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .issues-list li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--color-warning);
+    font-weight: bold;
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  @media (max-width: 768px) {
+    .metrics-grid { grid-template-columns: 1fr; }
+  }
+</style>

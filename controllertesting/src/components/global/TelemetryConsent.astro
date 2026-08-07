@@ -9,19 +9,26 @@
 import { getTelemetryConsent, setTelemetryConsent } from '../../lib/telemetry';
 ---
 
-<div class="telemetry-consent hidden" id="telemetry-consent" role="region" aria-label="Data consent">
+<div class="telemetry-consent" id="telemetry-consent" role="region" aria-label="Data consent">
   <div class="consent-inner">
     <div class="consent-copy">
-      <strong class="consent-title">Help improve drift reliability data</strong>
+      <div class="consent-header">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-accent">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+        <strong class="consent-title">Privacy-First Reliability Telemetry</strong>
+      </div>
       <p class="consent-text">
-        142,850 documented results and counting. Opt in and your readings help us
-        refine per-model drift baselines. Everything stays in your browser's
-        local storage — nothing leaves this device, ever.
+        Join 142,850+ tests helping us map real-world drift rates. By enabling this, your anonymous drift and circularity scores are synced to build public baselines. Your Controller Passport history remains 100% local on your device regardless of this setting.
       </p>
     </div>
     <div class="consent-actions">
-      <button type="button" class="btn-primary btn-sm" id="consent-accept">Help improve data</button>
-      <button type="button" class="btn-ghost btn-sm" id="consent-decline">No thanks</button>
+      <label class="premium-toggle" aria-label="Toggle telemetry sync">
+        <input type="checkbox" id="consent-toggle" class="sr-only">
+        <div class="toggle-track"></div>
+        <div class="toggle-thumb"></div>
+      </label>
+      <span class="toggle-status mono" id="consent-status-text">Local Only</span>
     </div>
   </div>
 </div>
@@ -30,56 +37,135 @@ import { getTelemetryConsent, setTelemetryConsent } from '../../lib/telemetry';
   import { getTelemetryConsent, setTelemetryConsent } from '../../lib/telemetry';
 
   document.addEventListener('DOMContentLoaded', () => {
-    const banner = document.getElementById('telemetry-consent');
-    if (!banner) return;
-    if (getTelemetryConsent() || localStorage.getItem('ct_telemetry_consent') !== null) {
-      return;
+    const toggle = document.getElementById('consent-toggle') as HTMLInputElement;
+    const statusText = document.getElementById('consent-status-text');
+    
+    if (!toggle || !statusText) return;
+
+    // Initialize state
+    const hasConsent = getTelemetryConsent();
+    toggle.checked = hasConsent;
+    updateStatusText(hasConsent);
+
+    toggle.addEventListener('change', (e) => {
+      const isChecked = (e.target as HTMLInputElement).checked;
+      setTelemetryConsent(isChecked);
+      updateStatusText(isChecked);
+      
+      // Haptic feedback illusion
+      if (typeof navigator.vibrate === 'function') {
+        navigator.vibrate(10);
+      }
+    });
+
+    function updateStatusText(enabled: boolean) {
+      if (statusText) {
+        statusText.textContent = enabled ? 'Sync Enabled' : 'Local Only';
+        statusText.style.color = enabled ? 'var(--color-pass)' : 'var(--color-text-tertiary)';
+      }
     }
-    banner.classList.remove('hidden');
-
-    const accept = document.getElementById('consent-accept');
-    const decline = document.getElementById('consent-decline');
-
-    const dismiss = () => banner.classList.add('hidden');
-
-    accept?.addEventListener('click', () => {
-      setTelemetryConsent(true);
-      dismiss();
-    });
-
-    decline?.addEventListener('click', () => {
-      setTelemetryConsent(false);
-      dismiss();
-    });
   });
 </script>
 
 <style>
   .telemetry-consent {
-    border: 1px solid rgba(37, 99, 235, 0.3);
-    background: rgba(37, 99, 235, 0.06);
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
     margin-bottom: 2rem;
+    transition: border-color 0.3s var(--ease-smooth);
   }
 
-  .telemetry-consent.hidden { display: none; }
+  .telemetry-consent:hover {
+    border-color: rgba(37, 99, 235, 0.3);
+  }
 
-  .consent-inner { display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; flex-wrap: wrap; }
+  .consent-inner {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
 
-  .consent-copy { flex: 1 1 320px; }
+  .consent-copy {
+    flex: 1 1 300px;
+  }
 
-  .consent-title { display: block; font-size: 0.9375rem; color: var(--color-text-primary); margin-bottom: 0.25rem; }
+  .consent-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
 
-  .consent-text { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; margin: 0; }
+  .consent-title {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+  }
 
-  .consent-actions { display: flex; align-items: center; gap: 0.75rem; }
+  .consent-text {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
 
-  .btn-sm { padding: 0.5rem 0.875rem; font-size: var(--text-small); border-radius: 8px; cursor: pointer; font-family: var(--font-sans); }
+  .consent-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+    min-width: 100px;
+  }
 
-  .btn-primary { background: var(--color-accent); color: #fff; border: 1px solid var(--color-accent); font-weight: 600; }
+  /* Apple-style Toggle */
+  .premium-toggle {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 32px;
+    cursor: pointer;
+  }
 
-  .btn-ghost { background: transparent; color: var(--color-text-secondary); border: 1px solid var(--color-border-subtle); font-weight: 500; }
+  .toggle-track {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--color-surface-3);
+    border-radius: 32px;
+    border: 1px solid var(--color-border-subtle);
+    transition: background-color 0.3s var(--ease-spring), border-color 0.3s ease;
+  }
 
-  .btn-ghost:hover { color: var(--color-text-primary); border-color: var(--color-text-tertiary); }
+  .premium-toggle input:checked ~ .toggle-track {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+
+  .toggle-thumb {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.4s var(--ease-spring);
+  }
+
+  .premium-toggle input:checked ~ .toggle-thumb {
+    transform: translateX(20px);
+  }
+
+  .toggle-status {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: color 0.3s ease;
+  }
 </style>

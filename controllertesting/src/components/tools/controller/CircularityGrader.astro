@@ -1,0 +1,488 @@
+---
+/**
+ * CircularityGrader.astro — Statistical Circularity & Symmetry Grader
+ * Outputs a statistical Grade (A+, A, B, C, D, F) for the thumbstick.
+ */
+---
+
+<div class="circularity-grader group" id="grader-root" data-model="none">
+  <div class="ambient-glow" id="grader-ambient-glow"></div>
+
+  <div class="tester-status-bar glass-panel relative z-10">
+    <div class="status-indicator">
+      <span class="status-dot" id="grader-status-dot"></span>
+      <span class="status-text" id="grader-status-text">Rotate both thumbsticks 360 degrees to grade circularity...</span>
+    </div>
+    <div class="controller-name tracking-wider" id="grader-model-name">No Controller Detected</div>
+  </div>
+
+  <div class="grader-grid relative z-10 mt-6">
+    {/* Left Stick Canvas */}
+    <div class="grader-card glass-panel" id="left-grader-card">
+      <div class="grader-header">
+        <h3 class="grader-title text-stone-100">Left Stick Grade</h3>
+        <div class="flex flex-col items-end">
+          <span class="grader-grade-val" id="left-grader-grade">--</span>
+          <span class="grader-err-val" id="left-grader-err">0.0% Error</span>
+        </div>
+      </div>
+      <div class="canvas-wrap py-4 relative">
+        <canvas id="left-grader-canvas" width="300" height="300" class="drop-shadow-2xl"></canvas>
+        <div class="grade-overlay" id="left-grade-overlay" style="opacity: 0;"></div>
+      </div>
+      <div class="grader-metrics">
+        <div class="metric">
+          <span class="m-label uppercase tracking-widest text-stone-400">Verdict</span>
+          <span class="m-val" id="left-grader-verdict">Waiting...</span>
+        </div>
+        <div class="metric text-right">
+          <span class="m-label uppercase tracking-widest text-stone-400">Samples</span>
+          <span class="m-val mono text-stone-100" id="left-pts-count">0</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Right Stick Canvas */}
+    <div class="grader-card glass-panel" id="right-grader-card">
+      <div class="grader-header">
+        <h3 class="grader-title text-stone-100">Right Stick Grade</h3>
+        <div class="flex flex-col items-end">
+          <span class="grader-grade-val" id="right-grader-grade">--</span>
+          <span class="grader-err-val" id="right-grader-err">0.0% Error</span>
+        </div>
+      </div>
+      <div class="canvas-wrap py-4 relative">
+        <canvas id="right-grader-canvas" width="300" height="300" class="drop-shadow-2xl"></canvas>
+        <div class="grade-overlay" id="right-grade-overlay" style="opacity: 0;"></div>
+      </div>
+      <div class="grader-metrics">
+        <div class="metric">
+          <span class="m-label uppercase tracking-widest text-stone-400">Verdict</span>
+          <span class="m-val" id="right-grader-verdict">Waiting...</span>
+        </div>
+        <div class="metric text-right">
+          <span class="m-label uppercase tracking-widest text-stone-400">Samples</span>
+          <span class="m-val mono text-stone-100" id="right-pts-count">0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tester-controls mt-6">
+    <button type="button" class="btn-secondary" id="btn-reset-grader">Reset Data</button>
+  </div>
+</div>
+
+<script>
+  import { parseGamepadState, calculateCircularityError } from '../../../lib/gamepad';
+  import { recordTelemetry, mapGamepadToModelKey } from '../../../lib/telemetry';
+  import { addPoints } from '../../../lib/rewards';
+
+  let lastTelemetryAt = 0;
+  let rewarded = false;
+
+  function awardFirstMeasurement(): void {
+    if (rewarded) return;
+    rewarded = true;
+    addPoints(50);
+  }
+
+  function getGradeInfo(err: number, pts: number) {
+    if (pts < 20) return { grade: '--', verdict: 'Waiting...', color: '#6B7280', tint: 'rgba(107,114,128,0.2)' };
+    if (err < 3) return { grade: 'A+', verdict: 'Esports Ready', color: '#10B981', tint: 'rgba(16,185,129,0.4)' };
+    if (err < 5) return { grade: 'A', verdict: 'Excellent', color: '#34D399', tint: 'rgba(52,211,153,0.3)' };
+    if (err < 8) return { grade: 'B', verdict: 'Good', color: '#FCD34D', tint: 'rgba(252,211,77,0.3)' };
+    if (err < 12) return { grade: 'C', verdict: 'Average', color: '#F59E0B', tint: 'rgba(245,158,11,0.3)' };
+    if (err < 15) return { grade: 'D', verdict: 'Poor', color: '#F97316', tint: 'rgba(249,115,22,0.3)' };
+    return { grade: 'F', verdict: 'Defective', color: '#EF4444', tint: 'rgba(239,68,68,0.4)' };
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const leftCanvas = document.getElementById('left-grader-canvas') as HTMLCanvasElement;
+    const rightCanvas = document.getElementById('right-grader-canvas') as HTMLCanvasElement;
+    if (!leftCanvas || !rightCanvas) return;
+
+    const leftCtx = leftCanvas.getContext('2d');
+    const rightCtx = rightCanvas.getContext('2d');
+
+    const leftPoints: { x: number; y: number }[] = [];
+    const rightPoints: { x: number; y: number }[] = [];
+    let currentBrand = 'none';
+
+    function getHardwareBrandColor(modelKey: string | null) {
+      if (!modelKey) return { hex: '255, 255, 255', brand: 'generic' }; 
+      if (modelKey.includes('ps5') || modelKey.includes('ps4')) return { hex: '37, 99, 235', brand: 'playstation' }; 
+      if (modelKey.includes('xbox')) return { hex: '16, 185, 129', brand: 'xbox' }; 
+      if (modelKey.includes('switch')) return { hex: '239, 68, 68', brand: 'switch' }; 
+      return { hex: '139, 92, 246', brand: 'generic' }; 
+    }
+
+    function renderGrader(
+      ctx: CanvasRenderingContext2D | null,
+      points: { x: number; y: number }[],
+      currentX: number,
+      currentY: number,
+      brandColors: { hex: string; brand: string },
+      gradeInfo: any
+    ) {
+      if (!ctx) return;
+      const w = ctx.canvas.width;
+      const h = ctx.canvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = (w / 2) - 30;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Background outer circle (premium glass effect)
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(12, 12, 20, 0.4)';
+      ctx.fill();
+
+      // Ideal outer circle boundary
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(${brandColors.hex}, 0.5)`;
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Plot actual outer points boundary hull
+      if (points.length > 5) {
+        ctx.beginPath();
+        for (let i = 0; i < points.length; i++) {
+          const pt = points[i];
+          const px = cx + pt.x * radius;
+          const py = cy + pt.y * radius;
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        // Fill delta with grade color tint
+        ctx.fillStyle = gradeInfo.tint;
+        ctx.fill();
+        ctx.strokeStyle = gradeInfo.color;
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+      }
+
+      // Draw active stick position with glow
+      const px = cx + currentX * radius;
+      const py = cy + currentY * radius;
+      
+      ctx.beginPath();
+      ctx.arc(px, py, 14, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${brandColors.hex}, 0.3)`;
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(px, py, 5, 0, Math.PI * 2);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fill();
+      ctx.strokeStyle = `rgb(${brandColors.hex})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    function pollGrader() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp: Gamepad | null = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+          activeGp = gamepads[i];
+          break;
+        }
+      }
+
+      if (activeGp) {
+        const dot = document.getElementById('grader-status-dot');
+        const text = document.getElementById('grader-status-text');
+        const model = document.getElementById('grader-model-name');
+        if (dot) dot.className = 'status-dot active';
+        if (text) text.textContent = 'Rotate sticks 360° to grade circularity';
+        if (model) model.textContent = activeGp.id;
+
+        const state = parseGamepadState(activeGp);
+        const modelKey = mapGamepadToModelKey(state.detectedModel);
+        const hardwareColors = getHardwareBrandColor(modelKey);
+
+        const rootEl = document.getElementById('grader-root');
+        if (rootEl && currentBrand !== hardwareColors.brand) {
+          rootEl.setAttribute('data-model', hardwareColors.brand);
+          currentBrand = hardwareColors.brand;
+        }
+
+        // Left stick
+        const lDist = Math.hypot(state.leftStick.x, state.leftStick.y);
+        if (lDist > 0.3) {
+          leftPoints.push({ x: state.leftStick.x, y: state.leftStick.y });
+          if (leftPoints.length > 300) leftPoints.shift();
+        }
+        
+        const lErr = calculateCircularityError(leftPoints);
+        const lGradeInfo = getGradeInfo(lErr, leftPoints.length);
+        
+        renderGrader(leftCtx, leftPoints, state.leftStick.x, state.leftStick.y, hardwareColors, lGradeInfo);
+
+        const lGradeEl = document.getElementById('left-grader-grade');
+        const lErrEl = document.getElementById('left-grader-err');
+        const lPtsEl = document.getElementById('left-pts-count');
+        const lVerdictEl = document.getElementById('left-grader-verdict');
+        const lCard = document.getElementById('left-grader-card');
+
+        if (lGradeEl) {
+          lGradeEl.textContent = lGradeInfo.grade;
+          lGradeEl.style.color = lGradeInfo.color;
+        }
+        if (lErrEl) lErrEl.textContent = `${lErr}% Error`;
+        if (lPtsEl) lPtsEl.textContent = String(leftPoints.length);
+        if (lVerdictEl) {
+          lVerdictEl.textContent = lGradeInfo.verdict;
+          lVerdictEl.style.color = lGradeInfo.color;
+        }
+        if (lCard) {
+            lCard.style.boxShadow = leftPoints.length > 20 ? `0 8px 32px ${lGradeInfo.tint}` : '';
+        }
+
+        // Right stick
+        const rDist = Math.hypot(state.rightStick.x, state.rightStick.y);
+        if (rDist > 0.3) {
+          rightPoints.push({ x: state.rightStick.x, y: state.rightStick.y });
+          if (rightPoints.length > 300) rightPoints.shift();
+        }
+        
+        const rErr = calculateCircularityError(rightPoints);
+        const rGradeInfo = getGradeInfo(rErr, rightPoints.length);
+        
+        renderGrader(rightCtx, rightPoints, state.rightStick.x, state.rightStick.y, hardwareColors, rGradeInfo);
+
+        const rGradeEl = document.getElementById('right-grader-grade');
+        const rErrEl = document.getElementById('right-grader-err');
+        const rPtsEl = document.getElementById('right-pts-count');
+        const rVerdictEl = document.getElementById('right-grader-verdict');
+        const rCard = document.getElementById('right-grader-card');
+
+        if (rGradeEl) {
+          rGradeEl.textContent = rGradeInfo.grade;
+          rGradeEl.style.color = rGradeInfo.color;
+        }
+        if (rErrEl) rErrEl.textContent = `${rErr}% Error`;
+        if (rPtsEl) rPtsEl.textContent = String(rightPoints.length);
+        if (rVerdictEl) {
+          rVerdictEl.textContent = rGradeInfo.verdict;
+          rVerdictEl.style.color = rGradeInfo.color;
+        }
+        if (rCard) {
+            rCard.style.boxShadow = rightPoints.length > 20 ? `0 8px 32px ${rGradeInfo.tint}` : '';
+        }
+        
+        // Telemetry
+        if (leftPoints.length > 20 || rightPoints.length > 20) {
+           const now = Date.now();
+           if (now - lastTelemetryAt > 10000 && modelKey) {
+             lastTelemetryAt = now;
+             awardFirstMeasurement();
+             recordTelemetry({
+               modelKey,
+               driftX: 0,
+               driftY: 0,
+               circularityError: lErr > 0 ? lErr : rErr,
+             });
+           }
+        }
+      } else {
+        const dot = document.getElementById('grader-status-dot');
+        const text = document.getElementById('grader-status-text');
+        const model = document.getElementById('grader-model-name');
+        if (dot) dot.className = 'status-dot';
+        if (text) text.textContent = 'Connect a controller and press any button...';
+        if (model) model.textContent = 'No Controller Detected';
+        
+        const rootEl = document.getElementById('grader-root');
+        if (rootEl) {
+          rootEl.setAttribute('data-model', 'none');
+          currentBrand = 'none';
+        }
+
+        renderGrader(leftCtx, leftPoints, 0, 0, { hex: '255,255,255', brand: 'generic' }, {color: '#6B7280', tint: 'transparent'});
+        renderGrader(rightCtx, rightPoints, 0, 0, { hex: '255,255,255', brand: 'generic' }, {color: '#6B7280', tint: 'transparent'});
+      }
+
+      requestAnimationFrame(pollGrader);
+    }
+
+    pollGrader();
+
+    document.getElementById('btn-reset-grader')?.addEventListener('click', () => {
+      leftPoints.length = 0;
+      rightPoints.length = 0;
+    });
+  });
+</script>
+
+<style>
+  .circularity-grader {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    background: var(--color-surface-1, #111115);
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+  }
+
+  .ambient-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150%;
+    height: 150%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at center, rgba(37,99,235,0.05) 0%, transparent 60%);
+    pointer-events: none;
+    transition: all 1s ease-in-out;
+    z-index: 0;
+  }
+
+  .circularity-grader[data-model="playstation"] .ambient-glow {
+    background: radial-gradient(circle at center, rgba(37,99,235,0.12) 0%, transparent 70%);
+  }
+  .circularity-grader[data-model="xbox"] .ambient-glow {
+    background: radial-gradient(circle at center, rgba(16,185,129,0.10) 0%, transparent 70%);
+  }
+  .circularity-grader[data-model="switch"] .ambient-glow {
+    background: radial-gradient(circle at left, rgba(239,68,68,0.10) 0%, transparent 50%),
+                radial-gradient(circle at right, rgba(59,130,246,0.10) 0%, transparent 50%);
+  }
+
+  .glass-panel {
+    background: var(--color-surface-2, rgba(25, 25, 30, 0.6));
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--color-surface-3, rgba(255, 255, 255, 0.08));
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    transition: box-shadow 0.4s ease;
+  }
+
+  .tester-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-neutral, #6b7280);
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  .status-dot.active {
+    background: var(--color-pass, #10B981);
+    box-shadow: 0 0 10px var(--color-pass, #10B981);
+  }
+
+  .status-text {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  .controller-name {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.875rem;
+    color: #fff;
+    text-transform: uppercase;
+  }
+
+  .grader-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  .grader-card {
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s, box-shadow 0.4s;
+  }
+  .grader-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255,255,255,0.15);
+  }
+
+  .grader-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .grader-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+
+  .grader-grade-val {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    transition: color 0.3s;
+  }
+
+  .grader-err-val {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin-top: 0.25rem;
+  }
+
+  .canvas-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .grader-metrics {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .m-label {
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    font-family: var(--font-mono);
+  }
+
+  .m-val {
+    font-size: 1rem;
+    font-weight: 700;
+    transition: color 0.3s;
+  }
+
+  @media (max-width: 768px) {
+    .grader-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  }
+</style>

@@ -1,0 +1,344 @@
+---
+export interface Props {
+  engine: string;
+  effect: string;
+}
+
+const { engine, effect } = Astro.props;
+---
+
+<div class="haptic-composer card-base relative" data-engine={engine} data-effect={effect}>
+  <div class="composer-header mb-4 flex justify-between items-end">
+    <div>
+      <h2 class="text-xl font-bold tracking-tight text-white mb-1">Waveform Composer</h2>
+      <p class="text-sm text-gray-400">Drag points to sculpt your rumble curve. X = Time, Y = Intensity.</p>
+    </div>
+    <button id="play-haptics-btn" class="btn-primary group relative overflow-hidden font-medium">
+      <span class="relative z-10 flex items-center gap-2">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" class="group-hover:scale-110 transition-transform"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        Test on Controller
+      </span>
+      <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform"></div>
+    </button>
+  </div>
+  
+  <div class="canvas-wrapper bg-gray-950 border border-gray-800 rounded-xl overflow-hidden relative shadow-inner">
+    <canvas id="waveform-canvas" width="800" height="300" class="w-full h-auto cursor-crosshair touch-none"></canvas>
+    <div class="absolute bottom-3 left-5 text-xs text-gray-500 font-mono tracking-widest uppercase">Time (1000ms) &rarr;</div>
+    <div class="absolute top-5 left-3 text-xs text-gray-500 font-mono tracking-widest uppercase origin-top-left -rotate-90">Intensity &uarr;</div>
+  </div>
+
+  <div class="code-gen-panel mt-6 pt-6 border-t border-gray-800">
+    <div class="flex justify-between items-center mb-3">
+      <div class="flex items-center gap-3">
+        <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+        <h3 class="font-bold text-sm text-gray-300 uppercase tracking-widest">
+          {engine === 'unity' ? 'Unity C# (Input System)' : 'Unreal Engine (C++)'} Output
+        </h3>
+      </div>
+      <button id="copy-code-btn" class="text-xs font-semibold bg-gray-800 hover:bg-gray-700 px-4 py-1.5 rounded text-gray-200 transition-colors border border-gray-700 hover:border-gray-600">
+        Copy Snippet
+      </button>
+    </div>
+    <div class="code-block-wrapper bg-[#0A0A0B] border border-gray-800/80 rounded-xl p-5 overflow-x-auto shadow-sm group">
+      <pre><code id="generated-code" class="text-sm font-mono text-emerald-400/90 leading-relaxed group-hover:text-emerald-400 transition-colors"></code></pre>
+    </div>
+  </div>
+</div>
+
+<style>
+  .haptic-composer {
+    background: var(--color-surface-1, #111827);
+    border: 1px solid var(--color-border-subtle, #374151);
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+  }
+  .btn-primary {
+    background: var(--color-accent, #2563EB);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--radius-md, 0.5rem);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn-primary:active {
+    transform: scale(0.97);
+  }
+</style>
+
+<script>
+  const initComposer = () => {
+    const root = document.querySelector('.haptic-composer');
+    if (!root) return;
+
+    const engine = root.getAttribute('data-engine');
+    const effect = root.getAttribute('data-effect');
+    
+    const canvas = document.getElementById('waveform-canvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d');
+    const playBtn = document.getElementById('play-haptics-btn');
+    const copyBtn = document.getElementById('copy-code-btn');
+    const codeOut = document.getElementById('generated-code');
+
+    if (!ctx) return;
+
+    const width = canvas.width;
+    const height = canvas.height;
+    
+    // Initial curve points based on effect
+    let points = [];
+    if (effect === 'explosion') {
+      points = [{x: 0, y: height}, {x: width * 0.05, y: 0}, {x: width * 0.25, y: height*0.3}, {x: width * 0.6, y: height*0.8}, {x: width, y: height}];
+    } else if (effect === 'heartbeat') {
+      points = [{x: 0, y: height}, {x: width * 0.15, y: 0}, {x: width * 0.25, y: height}, {x: width * 0.4, y: height*0.1}, {x: width * 0.5, y: height}, {x: width, y: height}];
+    } else if (effect === 'recoil') {
+      points = [{x: 0, y: height}, {x: width * 0.02, y: 0}, {x: width * 0.15, y: height*0.6}, {x: width * 0.35, y: height}, {x: width, y: height}];
+    } else {
+      points = [{x: 0, y: height/2}, {x: width/2, y: height/2}, {x: width, y: height/2}];
+    }
+
+    let draggingPoint = null;
+    let isPlaying = false;
+    let animationFrame = null;
+    let playbackProgress = -1;
+
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height);
+      
+      // Grid
+      ctx.strokeStyle = '#1F2937';
+      ctx.lineWidth = 1;
+      for(let i=0; i<=10; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * (width/10), 0);
+        ctx.lineTo(i * (width/10), height);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.moveTo(0, i * (height/4));
+        ctx.lineTo(width, i * (height/4));
+        ctx.stroke();
+      }
+
+      // Fill gradient
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, height);
+      ctx.lineTo(points[0].x, points[0].y);
+      for(let i=1; i<points.length; i++) {
+        // Simple linear interpolation
+        ctx.lineTo(points[i].x, points[i].y);
+      }
+      ctx.lineTo(points[points.length-1].x, height);
+      ctx.closePath();
+      
+      const gradient = ctx.createLinearGradient(0, 0, 0, height);
+      gradient.addColorStop(0, 'rgba(37, 99, 235, 0.4)'); // accent color with alpha
+      gradient.addColorStop(1, 'rgba(37, 99, 235, 0.0)');
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      // Stroke line
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      for(let i=1; i<points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y);
+      }
+      ctx.strokeStyle = '#3B82F6';
+      ctx.lineWidth = 3;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+
+      // Control points
+      points.forEach((p, i) => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, draggingPoint === p ? 10 : 7, 0, Math.PI * 2);
+        ctx.fillStyle = draggingPoint === p ? '#3B82F6' : '#0F172A';
+        ctx.fill();
+        ctx.strokeStyle = '#60A5FA';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      });
+
+      // Playback playhead
+      if (playbackProgress >= 0) {
+        const px = playbackProgress * width;
+        ctx.beginPath();
+        ctx.moveTo(px, 0);
+        ctx.lineTo(px, height);
+        ctx.strokeStyle = '#10B981'; // emerald-500
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      
+      updateCode();
+    };
+
+    const getMousePos = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      // Support touch as well
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: (clientX - rect.left) * (canvas.width / rect.width),
+        y: (clientY - rect.top) * (canvas.height / rect.height)
+      };
+    };
+
+    const handleDown = (e) => {
+      const pos = getMousePos(e);
+      const clicked = points.find(p => Math.hypot(p.x - pos.x, p.y - pos.y) < 20);
+      if (clicked) {
+        draggingPoint = clicked;
+        if(e.cancelable) e.preventDefault();
+      }
+      draw();
+    };
+
+    const handleMove = (e) => {
+      if (!draggingPoint) return;
+      const pos = getMousePos(e);
+      const idx = points.indexOf(draggingPoint);
+      
+      // X constraints
+      if (idx > 0 && pos.x <= points[idx-1].x) pos.x = points[idx-1].x + 2;
+      if (idx < points.length-1 && pos.x >= points[idx+1].x) pos.x = points[idx+1].x - 2;
+      if (idx === 0) pos.x = 0;
+      if (idx === points.length-1) pos.x = width;
+      
+      // Y constraints
+      pos.y = Math.max(0, Math.min(height, pos.y));
+      
+      draggingPoint.x = pos.x;
+      draggingPoint.y = pos.y;
+      draw();
+    };
+
+    const handleUp = () => {
+      draggingPoint = null;
+      draw();
+    };
+
+    canvas.addEventListener('mousedown', handleDown);
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleUp);
+    canvas.addEventListener('touchstart', handleDown, {passive: false});
+    window.addEventListener('touchmove', handleMove, {passive: false});
+    window.addEventListener('touchend', handleUp);
+
+    const updateCode = () => {
+      const normalized = points.map(p => ({
+        time: (p.x / width).toFixed(3),
+        intensity: (1 - (p.y / height)).toFixed(3)
+      }));
+      
+      let code = '';
+      if (engine === 'unity') {
+        code = `using UnityEngine;\nusing UnityEngine.InputSystem;\nusing System.Collections;\n\npublic class HapticComposerEffect : MonoBehaviour\n{\n    public void PlayHaptics()\n    {\n        Gamepad pad = Gamepad.current;\n        if (pad == null) return;\n\n        AnimationCurve curve = new AnimationCurve(\n`;
+        normalized.forEach(n => {
+          code += `            new Keyframe(${n.time}f, ${n.intensity}f),\n`;
+        });
+        code = code.slice(0, -2); // remove last comma
+        code += `\n        );\n        \n        StartCoroutine(ExecuteCurve(pad, curve, 1.0f));\n    }\n\n    private IEnumerator ExecuteCurve(Gamepad pad, AnimationCurve curve, float duration)\n    {\n        float t = 0;\n        while(t < duration)\n        {\n            float val = curve.Evaluate(t / duration);\n            pad.SetMotorSpeeds(val, val);\n            yield return null;\n            t += Time.deltaTime;\n        }\n        pad.ResetHaptics();\n    }\n}`;
+      } else {
+        code = `// UForceFeedbackEffect dynamic curve for ${effect}\nUForceFeedbackEffect* Create${effect.charAt(0).toUpperCase() + effect.slice(1)}Haptics()\n{\n    UForceFeedbackEffect* ForceFeedback = NewObject<UForceFeedbackEffect>();\n    ForceFeedback->Duration = 1.0f;\n    \n    FForceFeedbackChannelDetails ChannelDetails;\n    \n`;
+        normalized.forEach((n, i) => {
+          code += `    FForceFeedbackCurvePoint Point${i};\n    Point${i}.Time = ${n.time}f;\n    Point${i}.Value = ${n.intensity}f;\n    ChannelDetails.Curve.Add(Point${i});\n`;
+        });
+        code += `\n    ForceFeedback->ChannelDetails.Add(ChannelDetails);\n    return ForceFeedback;\n}`;
+      }
+      codeOut.textContent = code;
+    };
+
+    const getIntensityAtTime = (tRatio) => {
+      const px = tRatio * width;
+      let left = points[0];
+      let right = points[points.length-1];
+      for(let i=0; i<points.length-1; i++) {
+        if (px >= points[i].x && px <= points[i+1].x) {
+          left = points[i];
+          right = points[i+1];
+          break;
+        }
+      }
+      const rangeX = right.x - left.x;
+      if (rangeX === 0) return 1 - (left.y / height);
+      const ratio = (px - left.x) / rangeX;
+      const py = left.y + (right.y - left.y) * ratio;
+      return 1 - (py / height);
+    };
+
+    const simulateHaptics = async () => {
+      if (isPlaying) return;
+      
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let pad = null;
+      for (const gp of gamepads) {
+        if (gp?.vibrationActuator) {
+          pad = gp;
+          break;
+        }
+      }
+
+      if (!pad) {
+        alert('Gamepad API Haptics not supported or no controller connected. Try pressing a button on a connected DualSense/Xbox controller in Edge/Chrome.');
+        return;
+      }
+
+      isPlaying = true;
+      playBtn.classList.add('opacity-50', 'pointer-events-none');
+      
+      const duration = 1000;
+      const step = 50; 
+      const chunks = duration / step;
+      let currentChunk = 0;
+
+      const runStep = () => {
+        if (currentChunk > chunks) {
+          isPlaying = false;
+          playbackProgress = -1;
+          playBtn.classList.remove('opacity-50', 'pointer-events-none');
+          draw();
+          return;
+        }
+
+        const t = currentChunk / chunks;
+        playbackProgress = t;
+        const intensity = getIntensityAtTime(t);
+        
+        try {
+           pad.vibrationActuator.playEffect('dual-rumble', {
+             startDelay: 0,
+             duration: step,
+             weakMagnitude: intensity,
+             strongMagnitude: intensity
+           });
+        } catch(e) {}
+        
+        draw();
+        currentChunk++;
+        setTimeout(runStep, step);
+      };
+
+      runStep();
+    };
+
+    playBtn.addEventListener('click', simulateHaptics);
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(codeOut.textContent);
+      const originalText = copyBtn.textContent;
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => { copyBtn.textContent = originalText; }, 2000);
+    });
+
+    draw();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initComposer);
+  } else {
+    // Note: Astro ViewTransitions may require handling astro:page-load instead
+    document.addEventListener('astro:page-load', initComposer, { once: true });
+    initComposer();
+  }
+</script>

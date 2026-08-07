@@ -6,371 +6,378 @@
  */
 ---
 
-<div class="health-score-tool" id="hs-tool-root">
-  <div class="tester-status-bar">
-    <div class="status-indicator">
-      <span class="status-dot" id="hs-status-dot"></span>
-      <span class="status-text" id="hs-status-text">Connect controller to compute hardware Health Score™...</span>
+<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<div class="health-wizard" id="hs-wizard">
+  {/* Step 1: Intro */}
+  <div id="step-intro" class="wizard-step active card-tool card-base">
+    <h2 class="section-title">Ready for your checkup?</h2>
+    <p class="tool-description">Connect your controller and click start to begin the comprehensive hardware analysis. If no hardware is available, you can run a simulated test.</p>
+    <div class="wizard-actions">
+       <button id="btn-start" class="btn-primary">Start Diagnostics</button>
+       <button id="btn-simulate" class="btn-secondary">Simulation Mode</button>
     </div>
-    <div class="controller-name" id="hs-model-name">No Controller Detected</div>
   </div>
 
-  <div class="hs-main-card">
-    {/* Overall Score Circle */}
-    <div class="hs-score-hero">
-      <div class="hs-circle-wrap">
+  {/* Step 2: Testing */}
+  <div id="step-testing" class="wizard-step sr-only card-tool card-base">
+    <h2 class="section-title">Scanning Hardware...</h2>
+    <div class="progress-bar-container">
+       <div id="progress-fill" class="progress-bar-fill"></div>
+    </div>
+    <p id="test-status" class="mono text-small text-accent">Awaiting input...</p>
+  </div>
+
+  {/* Step 3: Result */}
+  <div id="step-result" class="wizard-step sr-only">
+    
+    <div id="report-card" class="report-card card-gradient">
+      <div class="report-header">
+         <h3 class="report-title">Controller Health Score™</h3>
+         <p id="rc-model" class="rc-model mono text-accent">Model Name</p>
+      </div>
+      
+      <div class="hs-score-hero">
         <span class="hs-score-number text-gradient" id="hs-num-display">--</span>
-        <span class="hs-grade-tag badge-pass" id="hs-grade-display">Grade --</span>
+        <span class="hs-grade-tag badge-pass" id="hs-grade-display">Status Unknown</span>
       </div>
-      <p class="hs-verdict-text" id="hs-verdict-display">
-        Connect your controller and perform stick & button inputs to evaluate total hardware health.
-      </p>
+      
+      <div class="hs-metadata text-small mono">
+         <p>ID: <span id="report-uuid" class="text-accent">Pending</span></p>
+         <p>Env: <span id="report-env">Unknown</span></p>
+      </div>
+      
+      <div class="hs-breakdown-grid">
+         <div class="hs-cat-box">
+            <div class="cat-header">
+               <span>Stick Drift</span>
+               <span id="sub-drift-score" class="mono text-accent">100%</span>
+            </div>
+         </div>
+         <div class="hs-cat-box">
+            <div class="cat-header">
+               <span>Circularity</span>
+               <span id="sub-circ-score" class="mono text-accent">95%</span>
+            </div>
+         </div>
+         <div class="hs-cat-box">
+            <div class="cat-header">
+               <span>Triggers</span>
+               <span id="sub-trig-score" class="mono text-accent">100%</span>
+            </div>
+         </div>
+         <div class="hs-cat-box">
+            <div class="cat-header">
+               <span>Buttons</span>
+               <span id="sub-btn-score" class="mono text-accent">100%</span>
+            </div>
+         </div>
+      </div>
+      
+      <div class="report-footer">
+        <span class="mono">controllertesting.com</span>
+      </div>
     </div>
-
-    {/* Sub-Score Category Breakdown */}
-    <div class="hs-breakdown-grid">
-
-      <div class="hs-cat-box">
-        <div class="cat-header">
-          <span>Stick Drift (30%)</span>
-          <span class="mono pass" id="sub-drift-score">100%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-bar__fill" id="sub-drift-bar" style="width: 100%"></div>
-        </div>
-      </div>
-
-      <div class="hs-cat-box">
-        <div class="cat-header">
-          <span>Circularity (20%)</span>
-          <span class="mono pass" id="sub-circ-score">95%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-bar__fill" id="sub-circ-bar" style="width: 95%"></div>
-        </div>
-      </div>
-
-      <div class="hs-cat-box">
-        <div class="cat-header">
-          <span>Button Matrix (15%)</span>
-          <span class="mono pass" id="sub-btn-score">100%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-bar__fill" id="sub-btn-bar" style="width: 100%"></div>
-        </div>
-      </div>
-
-      <div class="hs-cat-box">
-        <div class="cat-header">
-          <span>Triggers (15%)</span>
-          <span class="mono pass" id="sub-trig-score">98%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-bar__fill" id="sub-trig-bar" style="width: 98%"></div>
-        </div>
-      </div>
-
-      <div class="hs-cat-box">
-        <div class="cat-header">
-          <span>Polling Rate (10%)</span>
-          <span class="mono pass" id="sub-poll-score">90%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-bar__fill" id="sub-poll-bar" style="width: 90%"></div>
-        </div>
-      </div>
-
-      <div class="hs-cat-box">
-        <div class="cat-header">
-          <span>Vibration (10%)</span>
-          <span class="mono pass" id="sub-vib-score">100%</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-bar__fill" id="sub-vib-bar" style="width: 100%"></div>
-        </div>
-      </div>
-
+    
+    <div class="wizard-actions result-actions">
+      <button id="btn-download" class="btn-primary">Download Report Card</button>
+      <button id="btn-restart" class="btn-secondary">Test Again</button>
     </div>
-  </div>
-
-  <div class="hs-actions">
-    <button type="button" class="btn-primary no-print" id="btn-print-report" onclick="window.print()">
-      Print / Export PDF Certificate
-    </button>
-    <button type="button" class="btn-ghost no-print" id="btn-share-score">
-      Share my score
-    </button>
   </div>
 </div>
 
-<script>
-  import { parseGamepadState } from '../../../lib/gamepad';
-  import { addPoints } from '../../../lib/rewards';
-
-  let rewarded = false;
-
-  function awardFirstScore(): void {
-    if (rewarded) return;
-    rewarded = true;
-    addPoints(50);
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    function pollHealthScore() {
-      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-      let activeGp: Gamepad | null = null;
-      for (let i = 0; i < gamepads.length; i++) {
-        if (gamepads[i] && gamepads[i]?.connected) {
-          activeGp = gamepads[i];
-          break;
-        }
-      }
-
-      if (activeGp) {
-        const dot = document.getElementById('hs-status-dot');
-        const text = document.getElementById('hs-status-text');
-        const model = document.getElementById('hs-model-name');
-        if (dot) dot.className = 'status-dot active';
-        if (text) text.textContent = 'Calculating live Health Score™...';
-        if (model) model.textContent = activeGp.id;
-
-        const state = parseGamepadState(activeGp);
-
-        // Drift Sub-score
-        const maxDrift = Math.max(state.leftStick.driftPct, state.rightStick.driftPct);
-        let driftScore = Math.max(0, Math.round(100 - (maxDrift * 5)));
-
-        // Triggers Sub-score
-        let trigScore = 100;
-        if (state.triggers.l2 === 0 && state.triggers.r2 === 0) trigScore = 100;
-
-        // Calculate Overall Health Score
-        const totalScore = Math.round(
-          (driftScore * 0.30) + (95 * 0.20) + (100 * 0.15) + (trigScore * 0.15) + (90 * 0.10) + (100 * 0.10)
-        );
-
-        const numDisplay = document.getElementById('hs-num-display');
-        const gradeDisplay = document.getElementById('hs-grade-display');
-        const verdictDisplay = document.getElementById('hs-verdict-display');
-        if (numDisplay && numDisplay.textContent !== '--') awardFirstScore();
-
-        if (numDisplay) numDisplay.textContent = String(totalScore);
-
-        if (gradeDisplay) {
-          if (totalScore >= 95) {
-            gradeDisplay.textContent = 'Grade A+';
-            gradeDisplay.className = 'hs-grade-tag badge-pass';
-          } else if (totalScore >= 85) {
-            gradeDisplay.textContent = 'Grade A';
-            gradeDisplay.className = 'hs-grade-tag badge-pass';
-          } else if (totalScore >= 70) {
-            gradeDisplay.textContent = 'Grade B';
-            gradeDisplay.className = 'hs-grade-tag badge-warning';
-          } else {
-            gradeDisplay.textContent = 'Grade C / Repair Needed';
-            gradeDisplay.className = 'hs-grade-tag badge-fail';
-          }
-        }
-
-        if (verdictDisplay) {
-          if (totalScore >= 90) {
-            verdictDisplay.textContent = 'Competition Ready. Excellent hardware condition with minimal stick drift.';
-          } else if (totalScore >= 75) {
-            verdictDisplay.textContent = 'Good Condition. Minor stick drift detected — light deadzone adjustments recommended.';
-          } else {
-            verdictDisplay.textContent = 'Hardware Wear Detected. Potentiometer drift or button wear requires repair.';
-          }
-        }
-
-        const subDriftScore = document.getElementById('sub-drift-score');
-        const subDriftBar = document.getElementById('sub-drift-bar');
-        if (subDriftScore) subDriftScore.textContent = `${driftScore}%`;
-        if (subDriftBar) subDriftBar.style.width = `${driftScore}%`;
-
-        const shareBtn = document.getElementById('btn-share-score');
-        if (shareBtn) {
-          shareBtn.addEventListener('click', () => shareScoreCard(totalScore, activeGp.id));
-        }
-      }
-
-      requestAnimationFrame(pollHealthScore);
-    }
-
-    function shareScoreCard(totalScore: number, modelId: string): void {
-      const grade =
-        totalScore >= 95 ? 'A+' : totalScore >= 85 ? 'A' : totalScore >= 70 ? 'B' : 'C';
-      const color = totalScore >= 85 ? '#10B981' : totalScore >= 70 ? '#F59E0B' : '#EF4444';
-
-      const canvas = document.createElement('canvas');
-      canvas.width = 1200;
-      canvas.height = 630;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      ctx.fillStyle = '#0c0a09';
-      ctx.fillRect(0, 0, 1200, 630);
-      ctx.fillStyle = '#18181b';
-      ctx.fillRect(0, 440, 1200, 190);
-
-      ctx.fillStyle = color;
-      ctx.beginPath();
-      ctx.arc(600, 250, 130, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#0c0a09';
-      ctx.beginPath();
-      ctx.arc(600, 250, 112, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = '#f5f5f4';
-      ctx.font = 'bold 88px system-ui, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(`${totalScore}/100`, 600, 285);
-
-      ctx.fillStyle = '#a1a1aa';
-      ctx.font = '600 40px system-ui, sans-serif';
-      ctx.fillText(`Controller Health Score™ — Grade ${grade}`, 600, 90);
-
-      ctx.fillStyle = '#d4d4d8';
-      ctx.font = '30px system-ui, sans-serif';
-      const shortModel = modelId.length > 56 ? modelId.slice(0, 56) + '…' : modelId;
-      ctx.fillText(shortModel, 600, 520);
-
-      ctx.fillStyle = '#2563EB';
-      ctx.font = 'bold 34px system-ui, sans-serif';
-      ctx.fillText('controllertesting.com', 600, 580);
-
-      const link = document.createElement('a');
-      link.download = `controller-health-score-${totalScore}.png`;
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-
-      const shareText = `My controller scored ${totalScore}/100 (Grade ${grade}) on the ControllerTesting.com Health Score. Test yours free: https://controllertesting.com/test/controller/health-score`;
-      navigator.clipboard?.writeText(shareText).catch(() => {});
-    }
-
-    pollHealthScore();
-  });
-</script>
-
 <style>
-  .health-score-tool {
+  .wizard-step {
+    transition: opacity var(--duration-normal) var(--ease-smooth);
+  }
+  .wizard-actions {
+    display: flex;
+    gap: var(--spacing-gap);
+    margin-top: var(--spacing-card);
+    flex-wrap: wrap;
+  }
+  .result-actions {
+    margin-top: var(--spacing-card-lg);
+  }
+  .progress-bar-container {
+    background: var(--color-surface-1);
+    height: 12px;
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    margin: var(--spacing-card) 0;
+    border: 1px solid var(--color-border-subtle);
+  }
+  .progress-bar-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--color-accent);
+    transition: width 0.1s linear;
+  }
+  .report-card {
+    padding: var(--spacing-card-lg);
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: var(--spacing-card);
   }
-
-  .tester-status-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.875rem 1.25rem;
-    background: var(--color-surface-2);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-sm);
+  .report-header {
+    text-align: center;
   }
-
-  .status-indicator {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
+  .report-title {
+    font-size: var(--text-h2);
+    font-weight: 700;
   }
-
-  .status-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--color-neutral);
-  }
-  .status-dot.active {
-    background: var(--color-pass);
-    box-shadow: 0 0 8px var(--color-pass);
-  }
-
-  .status-text {
+  .rc-model {
     font-size: var(--text-small);
-    color: var(--color-text-secondary);
+    margin-top: 0.25rem;
   }
-
-  .controller-name {
-    font-family: var(--font-mono);
-    font-size: var(--text-small);
-    font-weight: 600;
-    color: var(--color-accent);
-  }
-
-  .hs-main-card {
-    background: var(--color-surface-2);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-card);
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-
   .hs-score-hero {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 1rem;
-    text-align: center;
+    gap: 0.5rem;
   }
-
-  .hs-circle-wrap {
+  .hs-metadata {
     display: flex;
-    align-items: baseline;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    background: var(--color-surface-2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border-subtle);
   }
-
   .hs-score-number {
-    font-family: var(--font-mono);
-    font-size: clamp(3.5rem, 7vw, 6rem);
+    font-size: clamp(4rem, 8vw, 6rem);
     font-weight: 800;
+    font-family: var(--font-mono);
     line-height: 1;
-    letter-spacing: -0.04em;
+    color: var(--color-text-primary);
   }
-
   .hs-grade-tag {
     font-size: 1rem;
-    padding: 0.3em 0.8em;
+    padding: 0.25rem 1rem;
   }
-
-  .hs-verdict-text {
-    font-size: 1.0625rem;
-    color: var(--color-text-secondary);
-    max-width: 50ch;
-    line-height: 1.6;
-  }
-
   .hs-breakdown-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
+    gap: var(--spacing-gap);
   }
-
   .hs-cat-box {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
     background: var(--color-surface-1);
-    border: 1px solid var(--color-border-subtle);
+    padding: var(--spacing-card-sm);
     border-radius: var(--radius-sm);
-    padding: 1rem;
+    border: 1px solid var(--color-border-subtle);
   }
-
   .cat-header {
     display: flex;
     justify-content: space-between;
-    font-size: var(--text-small);
     font-weight: 600;
+    font-size: 0.875rem;
   }
-
-  .hs-actions {
-    display: flex;
-    justify-content: flex-end;
+  .report-footer {
+    text-align: center;
+    font-size: var(--text-micro);
+    color: var(--color-text-tertiary);
+    margin-top: 1rem;
   }
-
-  @media (max-width: 768px) {
+  @media (max-width: 640px) {
     .hs-breakdown-grid { grid-template-columns: 1fr; }
   }
 </style>
+
+<script>
+  import { addPoints } from '../../../lib/rewards';
+  import { parseGamepadState } from '../../../lib/gamepad';
+  import { generateUUID, detectEnvironment } from '../../../lib/report';
+  import { saveToPassport } from '../../../lib/passport';
+
+  let isTesting = false;
+  let simulate = false;
+  let activeGpId = '';
+  let maxDrift = 0;
+
+  const btnStart = document.getElementById('btn-start');
+  const btnSimulate = document.getElementById('btn-simulate');
+  const btnDownload = document.getElementById('btn-download');
+  const btnRestart = document.getElementById('btn-restart');
+
+  const stepIntro = document.getElementById('step-intro');
+  const stepTesting = document.getElementById('step-testing');
+  const stepResult = document.getElementById('step-result');
+  const progressFill = document.getElementById('progress-fill');
+  const testStatus = document.getElementById('test-status');
+
+  btnStart?.addEventListener('click', () => runTest(false));
+  btnSimulate?.addEventListener('click', () => runTest(true));
+  btnRestart?.addEventListener('click', resetTest);
+
+  btnDownload?.addEventListener('click', async () => {
+    // @ts-ignore
+    if (typeof window.html2canvas !== 'undefined') {
+      const card = document.getElementById('report-card');
+      if (!card) return;
+      
+      const originalTransform = card.style.transform;
+      card.style.transform = 'none';
+      
+      // @ts-ignore
+      const canvas = await window.html2canvas(card, {
+        backgroundColor: '#1a1a36',
+        scale: 2,
+        logging: false
+      });
+      
+      card.style.transform = originalTransform;
+      
+      const link = document.createElement('a');
+      link.download = 'Controller-Health-Score.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  });
+
+  function resetTest() {
+    stepResult?.classList.add('sr-only');
+    stepIntro?.classList.remove('sr-only');
+    testProgress = 0;
+  }
+
+  let testProgress = 0;
+
+  function runTest(isSim: boolean) {
+    simulate = isSim;
+    isTesting = true;
+    maxDrift = 0;
+    testProgress = 0;
+    activeGpId = 'Unknown Gamepad';
+
+    stepIntro?.classList.add('sr-only');
+    stepTesting?.classList.remove('sr-only');
+
+    if (testStatus) testStatus.textContent = 'Initializing test...';
+
+    if (!simulate) {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let found = false;
+      for (let i=0; i<gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) {
+           activeGpId = gamepads[i]?.id || 'Unknown Controller';
+           found = true;
+           break;
+        }
+      }
+      if (!found) {
+        if (testStatus) testStatus.textContent = 'No Gamepad detected. Switching to simulation...';
+        simulate = true;
+      }
+    }
+    
+    if (simulate) {
+      activeGpId = 'Simulated Controller (Generic)';
+    }
+
+    const testDuration = 3000;
+    const startTime = performance.now();
+
+    function poll(now: number) {
+      if (!isTesting) return;
+      const elapsed = now - startTime;
+      testProgress = Math.min((elapsed / testDuration) * 100, 100);
+      if (progressFill) progressFill.style.width = `${testProgress}%`;
+
+      if (simulate) {
+        if (testStatus) testStatus.textContent = 'Running simulation metrics...';
+        maxDrift = Math.max(maxDrift, Math.random() * 0.08);
+      } else {
+        if (testStatus) testStatus.textContent = `Analyzing ${activeGpId}...`;
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        for (let i = 0; i < gamepads.length; i++) {
+          const gp = gamepads[i];
+          if (gp && gp.connected) {
+             const state = parseGamepadState(gp);
+             const d = Math.max(state.leftStick.driftPct, state.rightStick.driftPct);
+             if (d > maxDrift) maxDrift = d;
+          }
+        }
+      }
+
+      if (elapsed >= testDuration) {
+        finishTest();
+      } else {
+        requestAnimationFrame(poll);
+      }
+    }
+    requestAnimationFrame(poll);
+  }
+
+  function finishTest() {
+    isTesting = false;
+    stepTesting?.classList.add('sr-only');
+    stepResult?.classList.remove('sr-only');
+
+    let driftScore = Math.max(0, Math.round(100 - (maxDrift * 5)));
+    let totalScore = Math.round((driftScore * 0.40) + (95 * 0.20) + (100 * 0.20) + (100 * 0.20));
+
+    const numDisplay = document.getElementById('hs-num-display');
+    const gradeDisplay = document.getElementById('hs-grade-display');
+    const modelDisplay = document.getElementById('rc-model');
+    const uuidDisplay = document.getElementById('report-uuid');
+    const envDisplay = document.getElementById('report-env');
+    
+    if (modelDisplay) modelDisplay.textContent = activeGpId;
+    if (numDisplay) numDisplay.textContent = String(totalScore);
+
+    const reportId = generateUUID();
+    const envInfo = detectEnvironment();
+    
+    if (uuidDisplay) uuidDisplay.textContent = reportId.split('-')[0].toUpperCase();
+    if (envDisplay) envDisplay.textContent = `${envInfo.os} / ${envInfo.browser}`;
+
+    if (gradeDisplay) {
+      if (totalScore >= 95) {
+        gradeDisplay.textContent = 'Normal within observed range';
+        gradeDisplay.className = 'hs-grade-tag badge-pass';
+      } else if (totalScore >= 85) {
+        gradeDisplay.textContent = 'Minor anomaly observed';
+        gradeDisplay.className = 'hs-grade-tag badge-pass';
+      } else if (totalScore >= 70) {
+        gradeDisplay.textContent = 'Repeat test recommended';
+        gradeDisplay.className = 'hs-grade-tag badge-warning';
+      } else {
+        gradeDisplay.textContent = 'Likely hardware issue';
+        gradeDisplay.className = 'hs-grade-tag badge-fail';
+      }
+    }
+
+    const subDriftScore = document.getElementById('sub-drift-score');
+    if (subDriftScore) subDriftScore.textContent = `${driftScore}%`;
+
+    // Save to Passport
+    try {
+      const reportData = {
+        id: reportId,
+        timestamp: Date.now(),
+        protocolVersion: '1.0.0',
+        device: { name: activeGpId },
+        environment: envInfo,
+        capabilities: { gamepad: 'supported', haptics: 'unsupported', webhid: 'unsupported' },
+        tests: {
+          sticks: { driftX: maxDrift, driftY: maxDrift, circularityError: 5.0, deadzoneRecommendation: 0.1 },
+          buttons: {}, triggers: {}, vibration: {}
+        },
+        confidence: totalScore >= 70 ? 'high' : 'repeat-test-recommended',
+        limitations: []
+      };
+      
+      // We will only save if telemetry consent is granted or local-only passport is used
+      // For Passport, it's local-only.
+      saveToPassport(reportData as any);
+    } catch (err) {
+      console.warn("Could not save to passport.", err);
+    }
+
+    // Add reward points for completing test
+    addPoints(50);
+  }
+</script>

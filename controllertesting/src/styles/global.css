@@ -358,17 +358,21 @@ svg {
     transform 80ms linear;
   will-change: transform;
 
-  /* ── ::before — bottom gradient glow (cobalt + violet) ── */
+  /* ── ::before — bottom gradient glow + mouse spotlight ── */
   &::before {
     content: "";
     position: absolute;
     inset: 0;
-    bottom: 0;
     pointer-events: none;
     border-radius: inherit;
     opacity: 0;
-    /* Cobalt left, violet right — matches site accent */
+    /* Spotlight follows mouse, plus static corner glows */
     background:
+      radial-gradient(
+        800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 255, 255, 0.05),
+        transparent 40%
+      ),
       radial-gradient(
         ellipse 120% 60% at 20% 110%,
         rgba(37, 99, 235, 0.28) 0%,
@@ -383,7 +387,7 @@ svg {
     z-index: 0;
   }
 
-  /* ── ::after — top-left glass specular glint ── */
+  /* ── ::after — top-left glass specular glint + tracking glare ── */
   &::after {
     content: "";
     position: absolute;
@@ -391,13 +395,19 @@ svg {
     pointer-events: none;
     border-radius: inherit;
     opacity: 0;
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.06) 0%,
-      rgba(255, 255, 255, 0) 40%,
-      rgba(255, 255, 255, 0) 80%,
-      rgba(255, 255, 255, 0.03) 100%
-    );
+    background: 
+      radial-gradient(
+        600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 255, 255, 0.08),
+        transparent 40%
+      ),
+      linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.06) 0%,
+        rgba(255, 255, 255, 0) 40%,
+        rgba(255, 255, 255, 0) 80%,
+        rgba(255, 255, 255, 0.03) 100%
+      );
     transition: opacity var(--duration-normal) var(--ease-smooth);
     z-index: 1;
   }

@@ -10,7 +10,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) => {
-        const excludePaths = ['/404', '/500', '/api/', '/admin/'];
+        const excludePaths = ['/404', '/500', '/api/', '/admin/', '/embed/'];
         return !excludePaths.some(p => page.includes(p));
       },
       serialize: (item) => {
@@ -21,7 +21,7 @@ export default defineConfig({
         } else if (path.startsWith('/test/')) {
           item.priority = 1.0;
           item.changefreq = 'weekly';
-        } else if (/^\/(controller|reliability|compare|fix|settings)\//.test(path)) {
+        } else if (/^\/(controller|reliability|compare|fix|settings|fit|best-controller-for)\//.test(path)) {
           item.priority = 0.9;
           item.changefreq = 'monthly';
         } else if (/^\/(es|de|fr|ja)\/?$/.test(path)) {
@@ -29,9 +29,6 @@ export default defineConfig({
           item.changefreq = 'monthly';
         } else if (path.startsWith('/games/')) {
           item.priority = 0.7;
-          item.changefreq = 'monthly';
-        } else if (path.startsWith('/embed/')) {
-          item.priority = 0.5;
           item.changefreq = 'monthly';
         } else {
           item.priority = 0.8;

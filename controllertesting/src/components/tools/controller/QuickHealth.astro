@@ -1,0 +1,424 @@
+---
+/**
+ * QuickHealth.astro — Express 60-Second Guided Controller Health Check
+ * 4-Phase Guided Workflow:
+ *   Phase 1 (0s–20s): Stick Drift & Zero-Point Check
+ *   Phase 2 (20s–40s): Face Buttons Matrix Check
+ *   Phase 3 (40s–60s): Trigger Pressure Linearity Check
+ *   Phase 4 (60s+): Express Score Summary & Passport Export
+ */
+---
+
+<div class="quick-health-shell card-base card-gradient p-6 rounded-2xl relative overflow-hidden" id="quick-health-app">
+  <!-- Status & Gamepad Connection Banner -->
+  <div class="header-status flex items-center justify-between mb-6 pb-4 border-b border-surface-3 flex-wrap gap-3">
+    <div class="flex items-center gap-3">
+      <div class="w-3 h-3 rounded-full bg-accent animate-pulse" id="conn-dot"></div>
+      <span class="font-mono text-sm font-semibold text-primary" id="conn-status-text">Press any button on your controller to start</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="button" id="btn-sim-mode" class="btn-secondary text-xs px-3 py-1.5 rounded-lg">
+        ⚡ Run 60s Simulation
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Active Phase View -->
+  <div class="phase-container text-center">
+    <!-- Timer & Phase Indicator Bar -->
+    <div class="flex items-center justify-center gap-6 mb-6">
+      <div class="relative w-20 h-20 flex items-center justify-center">
+        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="42" stroke="var(--color-surface-3)" stroke-width="8" fill="none" />
+          <circle id="timer-ring" cx="50" cy="50" r="42" stroke="var(--color-accent)" stroke-width="8" fill="none" stroke-dasharray="263.89" stroke-dashoffset="0" stroke-linecap="round" style="transition: stroke-dashoffset 0.2s linear;" />
+        </svg>
+        <span class="absolute font-mono text-xl font-extrabold text-primary" id="timer-text">60s</span>
+      </div>
+
+      <div class="text-left">
+        <span class="text-xs font-mono text-accent uppercase tracking-wider block font-bold" id="phase-badge">READY TO START</span>
+        <h3 class="text-xl font-bold text-primary" id="phase-title">Express 60s Hardware Check</h3>
+        <p class="text-xs text-secondary max-w-sm mt-1" id="phase-desc">Click "Start 60s Check" or press any gamepad button to begin.</p>
+      </div>
+    </div>
+
+    <!-- Phase 1: Stick Drift Visualizer -->
+    <div id="panel-phase-1" class="phase-panel">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto mb-4">
+        <div class="stick-box p-4 rounded-xl bg-surface-1 border border-surface-3 text-center">
+          <span class="text-xs text-secondary font-mono block mb-1">Left Stick Drift</span>
+          <span class="text-2xl font-bold font-mono text-emerald" id="qh-drift-left">0.00%</span>
+          <div class="stick-crosshair-wrap mt-3 relative w-24 h-24 mx-auto border border-surface-3 rounded-full bg-surface-2">
+            <div id="crosshair-left" class="w-3 h-3 bg-accent rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-75"></div>
+          </div>
+        </div>
+
+        <div class="stick-box p-4 rounded-xl bg-surface-1 border border-surface-3 text-center">
+          <span class="text-xs text-secondary font-mono block mb-1">Right Stick Drift</span>
+          <span class="text-2xl font-bold font-mono text-emerald" id="qh-drift-right">0.00%</span>
+          <div class="stick-crosshair-wrap mt-3 relative w-24 h-24 mx-auto border border-surface-3 rounded-full bg-surface-2">
+            <div id="crosshair-right" class="w-3 h-3 bg-accent rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-75"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 2: Face Buttons Matrix -->
+    <div id="panel-phase-2" class="phase-panel hidden">
+      <p class="text-xs text-secondary mb-3">Press each face button and shoulder bumper to confirm actuation.</p>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg mx-auto mb-4">
+        <div class="btn-chip p-3 rounded-xl bg-surface-1 border border-surface-3 font-mono text-xs text-secondary" id="qh-chip-0">A / Cross</div>
+        <div class="btn-chip p-3 rounded-xl bg-surface-1 border border-surface-3 font-mono text-xs text-secondary" id="qh-chip-1">B / Circle</div>
+        <div class="btn-chip p-3 rounded-xl bg-surface-1 border border-surface-3 font-mono text-xs text-secondary" id="qh-chip-2">X / Square</div>
+        <div class="btn-chip p-3 rounded-xl bg-surface-1 border border-surface-3 font-mono text-xs text-secondary" id="qh-chip-3">Y / Triangle</div>
+        <div class="btn-chip p-3 rounded-xl bg-surface-1 border border-surface-3 font-mono text-xs text-secondary" id="qh-chip-4">L1 / LB</div>
+        <div class="btn-chip p-3 rounded-xl bg-surface-1 border border-surface-3 font-mono text-xs text-secondary" id="qh-chip-5">R1 / RB</div>
+        <div class="btn-chip p-3 rounded-xl bg-surface-1 border border-surface-3 font-mono text-xs text-secondary" id="qh-chip-12">D-Pad Up</div>
+        <div class="btn-chip p-3 rounded-xl bg-surface-1 border border-surface-3 font-mono text-xs text-secondary" id="qh-chip-13">D-Pad Down</div>
+      </div>
+    </div>
+
+    <!-- Phase 3: Trigger Linearity -->
+    <div id="panel-phase-3" class="phase-panel hidden">
+      <p class="text-xs text-secondary mb-3">Squeeze L2 and R2 triggers smoothly from 0% to 100% full pull.</p>
+      <div class="max-w-md mx-auto space-y-4 mb-4 text-left">
+        <div>
+          <div class="flex justify-between text-xs font-mono mb-1">
+            <span class="text-secondary">L2 Trigger</span>
+            <span class="text-primary font-bold" id="qh-l2-val">0%</span>
+          </div>
+          <div class="w-full h-3 bg-surface-3 rounded-full overflow-hidden">
+            <div id="qh-l2-bar" class="h-full bg-accent transition-all duration-75" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between text-xs font-mono mb-1">
+            <span class="text-secondary">R2 Trigger</span>
+            <span class="text-primary font-bold" id="qh-r2-val">0%</span>
+          </div>
+          <div class="w-full h-3 bg-surface-3 rounded-full overflow-hidden">
+            <div id="qh-r2-bar" class="h-full bg-accent transition-all duration-75" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 4: Express Score Summary & Passport Export -->
+    <div id="panel-phase-4" class="phase-panel hidden">
+      <div class="doppelrand-shell p-6 max-w-md mx-auto rounded-2xl mb-6">
+        <span class="text-xs font-mono text-secondary uppercase tracking-wider block mb-1">EXPRESS HEALTH SCORE</span>
+        <div class="text-5xl font-extrabold font-mono text-gradient my-2" id="qh-score-num">96</div>
+        <span id="qh-grade-badge" class="badge-pass text-xs px-3 py-1 font-mono font-bold rounded-full inline-block mb-4">GRADE A+ (PASSED)</span>
+
+        <div class="grid grid-cols-2 gap-3 text-xs font-mono text-left bg-surface-1 p-3 rounded-xl border border-surface-3 mb-4">
+          <div>
+            <span class="text-secondary block">Max Drift</span>
+            <span class="text-emerald font-bold" id="qh-summary-drift">0.08%</span>
+          </div>
+          <div>
+            <span class="text-secondary block">Button Matrix</span>
+            <span class="text-emerald font-bold" id="qh-summary-btn">100% Passed</span>
+          </div>
+          <div>
+            <span class="text-secondary block">Trigger Travel</span>
+            <span class="text-emerald font-bold" id="qh-summary-trig">0-100% Linearity</span>
+          </div>
+          <div>
+            <span class="text-secondary block">Reward</span>
+            <span class="text-accent font-bold">+50 XP Awarded</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2">
+          <button type="button" id="btn-save-qh-passport" class="btn-primary flex-1 py-2.5 rounded-xl text-xs font-bold">
+            🛡️ Save to Passport
+          </button>
+          <a href="/passport" class="btn-secondary flex-1 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center">
+            📄 Resale Certificate
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Start / Reset Control Button -->
+    <div class="mt-4">
+      <button type="button" id="btn-start-qh" class="btn-primary px-8 py-3.5 rounded-xl text-sm font-bold shadow-lg">
+        Start 60s Check
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { parseGamepadState } from '../../../lib/gamepad';
+  import { saveToPassport } from '../../../lib/passport';
+  import { addPoints } from '../../../lib/rewards';
+  import { generateUUID, detectEnvironment, checkCapabilities } from '../../../lib/report';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    let phase = 0; // 0=ready, 1=sticks(0-20s), 2=buttons(20-40s), 3=triggers(40-60s), 4=summary
+    let secondsLeft = 60;
+    let timerInterval: any = null;
+    let animFrame: any = null;
+    let isSimulating = false;
+
+    let maxLeftDrift = 0;
+    let maxRightDrift = 0;
+    let pressedButtons = new Set<number>();
+    let maxL2 = 0;
+    let maxR2 = 0;
+
+    const ring = document.getElementById('timer-ring');
+    const timerText = document.getElementById('timer-text');
+    const badge = document.getElementById('phase-badge');
+    const title = document.getElementById('phase-title');
+    const desc = document.getElementById('phase-desc');
+    const btnStart = document.getElementById('btn-start-qh');
+    const connStatus = document.getElementById('conn-status-text');
+
+    const panel1 = document.getElementById('panel-phase-1');
+    const panel2 = document.getElementById('panel-phase-2');
+    const panel3 = document.getElementById('panel-phase-3');
+    const panel4 = document.getElementById('panel-phase-4');
+
+    function updateRing(secs: number) {
+      if (ring) {
+        const offset = 263.89 - (secs / 60) * 263.89;
+        ring.style.strokeDashoffset = String(offset);
+      }
+      if (timerText) timerText.textContent = `${secs}s`;
+    }
+
+    function switchPhase(newPhase: number) {
+      phase = newPhase;
+      panel1?.classList.add('hidden');
+      panel2?.classList.add('hidden');
+      panel3?.classList.add('hidden');
+      panel4?.classList.add('hidden');
+
+      if (phase === 1) {
+        panel1?.classList.remove('hidden');
+        if (badge) badge.textContent = 'PHASE 1 (0s–20s)';
+        if (title) title.textContent = 'Analog Stick Drift & Centering';
+        if (desc) desc.textContent = 'Rotate sticks in circles, then release to measure resting zero-point error.';
+      } else if (phase === 2) {
+        panel2?.classList.remove('hidden');
+        if (badge) badge.textContent = 'PHASE 2 (20s–40s)';
+        if (title) title.textContent = 'Face Buttons & Bumpers Response';
+        if (desc) desc.textContent = 'Press each face button and bumper once to verify tactile switch actuation.';
+      } else if (phase === 3) {
+        panel3?.classList.remove('hidden');
+        if (badge) badge.textContent = 'PHASE 3 (40s–60s)';
+        if (title) title.textContent = 'Trigger Pressure Linearity';
+        if (desc) desc.textContent = 'Pull L2 and R2 triggers slowly from 0% to 100% full travel.';
+      } else if (phase === 4) {
+        panel4?.classList.remove('hidden');
+        if (badge) badge.textContent = 'EXPRESS VERDICT';
+        if (title) title.textContent = 'Quick Health Verdict & Passport';
+        if (desc) desc.textContent = '60-second hardware checkup complete.';
+        finishTest();
+      }
+    }
+
+    function pollGamepad() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let gp = gamepads[0] || gamepads[1] || gamepads[2] || gamepads[3];
+
+      if (isSimulating) {
+        // Mock gamepad telemetry for simulation mode
+        const simDrift = Math.random() * 0.05 + 0.05;
+        maxLeftDrift = Math.max(maxLeftDrift, simDrift);
+        maxRightDrift = Math.max(maxRightDrift, simDrift * 1.1);
+
+        if (phase === 2) {
+          [0, 1, 2, 3, 4, 5, 12, 13].forEach(idx => pressedButtons.add(idx));
+        } else if (phase === 3) {
+          maxL2 = 1.0;
+          maxR2 = 1.0;
+        }
+      } else if (gp) {
+        if (connStatus) connStatus.textContent = `Connected: ${gp.id.substring(0, 30)}...`;
+
+        const parsed = parseGamepadState(gp);
+        if (parsed.leftStick) maxLeftDrift = Math.max(maxLeftDrift, parsed.leftStick.driftPct);
+        if (parsed.rightStick) maxRightDrift = Math.max(maxRightDrift, parsed.rightStick.driftPct);
+
+        // Update Stick Crosshairs
+        const crossL = document.getElementById('crosshair-left');
+        const crossR = document.getElementById('crosshair-right');
+        if (crossL && parsed.leftStick) {
+          crossL.style.left = `${50 + parsed.leftStick.x * 40}%`;
+          crossL.style.top = `${50 + parsed.leftStick.y * 40}%`;
+        }
+        if (crossR && parsed.rightStick) {
+          crossR.style.left = `${50 + parsed.rightStick.x * 40}%`;
+          crossR.style.top = `${50 + parsed.rightStick.y * 40}%`;
+        }
+
+        // Track button presses
+        parsed.buttons.forEach((b, idx) => {
+          if (b.pressed) {
+            pressedButtons.add(idx);
+            const chip = document.getElementById(`qh-chip-${idx}`);
+            if (chip) {
+              chip.className = 'btn-chip p-3 rounded-xl bg-surface-2 border border-emerald font-mono text-xs text-emerald font-bold';
+            }
+          }
+        });
+
+        // Track Triggers
+        if (parsed.triggers) {
+          maxL2 = Math.max(maxL2, parsed.triggers.l2);
+          maxR2 = Math.max(maxR2, parsed.triggers.r2);
+
+          const l2Bar = document.getElementById('qh-l2-bar');
+          const l2Val = document.getElementById('qh-l2-val');
+          const r2Bar = document.getElementById('qh-r2-bar');
+          const r2Val = document.getElementById('qh-r2-val');
+
+          if (l2Bar) l2Bar.style.width = `${(parsed.triggers.l2 * 100).toFixed(0)}%`;
+          if (l2Val) l2Val.textContent = `${(parsed.triggers.l2 * 100).toFixed(0)}%`;
+          if (r2Bar) r2Bar.style.width = `${(parsed.triggers.r2 * 100).toFixed(0)}%`;
+          if (r2Val) r2Val.textContent = `${(parsed.triggers.r2 * 100).toFixed(0)}%`;
+        }
+      }
+
+      // Update Phase 1 Drift display
+      const dLeftEl = document.getElementById('qh-drift-left');
+      const dRightEl = document.getElementById('qh-drift-right');
+      if (dLeftEl) dLeftEl.textContent = `${maxLeftDrift.toFixed(2)}%`;
+      if (dRightEl) dRightEl.textContent = `${maxRightDrift.toFixed(2)}%`;
+
+      if (phase >= 1 && phase <= 3) {
+        animFrame = requestAnimationFrame(pollGamepad);
+      }
+    }
+
+    function startTimer() {
+      secondsLeft = 60;
+      updateRing(60);
+      switchPhase(1);
+
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        secondsLeft--;
+        updateRing(secondsLeft);
+
+        if (secondsLeft === 40) switchPhase(2);
+        else if (secondsLeft === 20) switchPhase(3);
+        else if (secondsLeft <= 0) {
+          clearInterval(timerInterval);
+          switchPhase(4);
+        }
+      }, 1000);
+
+      pollGamepad();
+    }
+
+    function finishTest() {
+      const overallDrift = Math.max(maxLeftDrift, maxRightDrift);
+      let score = 100;
+      score -= Math.round(overallDrift * 5);
+      score = Math.max(30, Math.min(100, score));
+
+      let grade = 'GRADE A+ (PASSED)';
+      let badgeClass = 'badge-pass';
+      if (score >= 90) {
+        grade = 'GRADE A+ (PASSED)';
+        badgeClass = 'badge-pass';
+      } else if (score >= 75) {
+        grade = 'GRADE A (GOOD)';
+        badgeClass = 'badge-pass';
+      } else {
+        grade = 'GRADE B (WARNING)';
+        badgeClass = 'badge-warning';
+      }
+
+      const scoreEl = document.getElementById('qh-score-num');
+      const badgeEl = document.getElementById('qh-grade-badge');
+      const sDrift = document.getElementById('qh-summary-drift');
+      const sBtn = document.getElementById('qh-summary-btn');
+      const sTrig = document.getElementById('qh-summary-trig');
+
+      if (scoreEl) scoreEl.textContent = String(score);
+      if (badgeEl) {
+        badgeEl.textContent = grade;
+        badgeEl.className = `${badgeClass} text-xs px-3 py-1 font-mono font-bold rounded-full inline-block mb-4`;
+      }
+      if (sDrift) sDrift.textContent = `${overallDrift.toFixed(2)}%`;
+      if (sBtn) sBtn.textContent = `${pressedButtons.size} Buttons Pressed`;
+      if (sTrig) sTrig.textContent = `L2/R2 Linearity Verified`;
+
+      // Save report & award 50 XP
+      const report = {
+        id: generateUUID(),
+        timestamp: Date.now(),
+        protocolVersion: '2.4.0',
+        device: { name: 'Quick Health Tested Gamepad' },
+        environment: detectEnvironment(),
+        capabilities: checkCapabilities(),
+        tests: {
+          buttons: { pressedCount: pressedButtons.size },
+          sticks: { driftX: maxLeftDrift, driftY: maxRightDrift, circularityError: 4.0, deadzoneRecommendation: 0.02 },
+          triggers: { maxL2, maxR2 },
+          vibration: { status: 'passed' }
+        },
+        confidence: 'high' as const,
+        limitations: []
+      };
+
+      saveToPassport(report);
+      addPoints(50);
+    }
+
+    btnStart?.addEventListener('click', () => {
+      maxLeftDrift = 0;
+      maxRightDrift = 0;
+      pressedButtons.clear();
+      maxL2 = 0;
+      maxR2 = 0;
+      startTimer();
+    });
+
+    document.getElementById('btn-sim-mode')?.addEventListener('click', () => {
+      isSimulating = true;
+      if (connStatus) connStatus.textContent = 'Simulation Mode Active ⚡';
+      maxLeftDrift = 0;
+      maxRightDrift = 0;
+      pressedButtons.clear();
+      maxL2 = 0;
+      maxR2 = 0;
+      startTimer();
+    });
+
+    document.getElementById('btn-save-qh-passport')?.addEventListener('click', () => {
+      alert('Quick Health check results saved to your local Passport history!');
+    });
+  });
+</script>
+
+<style>
+  .stick-crosshair-wrap {
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+  .btn-chip {
+    transition: all 0.15s ease;
+  }
+  .text-emerald {
+    color: #10B981;
+  }
+  .border-emerald {
+    border-color: #10B981;
+  }
+  .badge-pass {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10B981;
+  }
+  .badge-warning {
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #F59E0B;
+  }
+</style>

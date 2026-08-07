@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Controller Quick Check</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>Controller Quick Check</h1>
+    <span class="status" id="gp-status">No controller connected — press any button</span>
+    <span class="model" id="gp-model"></span>
+  </header>
+
+  <main class="app-body">
+    <section class="card">
+      <div class="metric-row">
+        <div class="metric">
+          <span class="metric-label">Left Stick Drift</span>
+          <span class="metric-value" id="m-left-drift">--</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Right Stick Drift</span>
+          <span class="metric-value" id="m-right-drift">--</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Circularity Error</span>
+          <span class="metric-value" id="m-circ-error">--</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Polling Rate (est.)</span>
+          <span class="metric-value" id="m-polling">--</span>
+        </div>
+      </div>
+      <p class="hint">Rotate the stick slowly along its outer rim for circularity. Values update live.</p>
+    </section>
+
+    <section class="card">
+      <div class="button-row">
+        <button type="button" id="btn-vibrate">Test Vibration</button>
+        <button type="button" id="btn-export-json" disabled>Export JSON</button>
+        <button type="button" id="btn-export-csv" disabled>Export CSV</button>
+      </div>
+    </section>
+
+    <section class="card disclaimer">
+      <p>
+        This is a browser diagnostic, <strong>not a hardware-lab certification</strong>. Readings depend on
+        connection mode (wired vs Bluetooth) and browser sampling. For repair or RMA decisions, confirm with a
+        second tool.
+      </p>
+    </section>
+
+    <footer class="app-footer">
+      <a href="https://controllertesting.com/test/controller/drift" target="_blank" rel="noopener">Full drift test</a>
+      ·
+      <a href="https://controllertesting.com/test/methodology" target="_blank" rel="noopener">Methodology &amp; limits</a>
+      ·
+      <a href="https://controllertesting.com/reliability" target="_blank" rel="noopener">Reliability data</a>
+      <p class="small">Open-source core: gamepad-analyzer (MIT) · All data stays on your device.</p>
+    </footer>
+  </main>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

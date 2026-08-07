@@ -1,4 +1,4 @@
-import reliabilityData from '../data/reliabilityData.json';
+import reliabilityData from "../data/reliabilityData.json";
 
 export interface TelemetryPayload {
   modelKey: string;
@@ -7,28 +7,28 @@ export interface TelemetryPayload {
   circularityError: number;
   pollingRateHz?: number;
   /** Not detectable from the browser Gamepad API — omit when unknown. */
-  connectionType?: 'usb' | 'bluetooth' | 'wireless_adapter';
+  connectionType?: "usb" | "bluetooth" | "wireless_adapter";
   controllerAgeMonths?: number;
 }
 
 export interface PercentileResult {
   percentile: number; // 0 - 100 (higher is better than X% of controllers)
-  tier: 'excellent' | 'good' | 'average' | 'poor';
+  tier: "excellent" | "good" | "average" | "poor";
   avgLifespanRemainingMonths: number;
   totalModelSamples: number;
 }
 
-const LOCAL_CONSENT_KEY = 'ct_telemetry_consent';
-const LOCAL_TELEMETRY_LOG = 'ct_telemetry_log';
+const LOCAL_CONSENT_KEY = "ct_telemetry_consent";
+const LOCAL_TELEMETRY_LOG = "ct_telemetry_log";
 
 export function getTelemetryConsent(): boolean {
-  if (typeof window === 'undefined') return false;
-  return localStorage.getItem(LOCAL_CONSENT_KEY) === 'true';
+  if (typeof window === "undefined") return false;
+  return localStorage.getItem(LOCAL_CONSENT_KEY) === "true";
 }
 
 export function setTelemetryConsent(consent: boolean): void {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(LOCAL_CONSENT_KEY, consent ? 'true' : 'false');
+  if (typeof window === "undefined") return;
+  localStorage.setItem(LOCAL_CONSENT_KEY, consent ? "true" : "false");
 }
 
 /**
@@ -38,58 +38,68 @@ export function setTelemetryConsent(consent: boolean): void {
  */
 export function mapGamepadToModelKey(detectedModel: string): string | null {
   switch (detectedModel) {
-    case 'PlayStation 5 DualSense':
-      return 'ps5-dualsense';
-    case 'Xbox Wireless Controller':
-      return 'xbox-series-x';
-    case 'Nintendo Switch Pro Controller':
-      return 'switch-pro';
+    case "PlayStation 5 DualSense":
+      return "ps5-dualsense";
+    case "Xbox Wireless Controller":
+      return "xbox-series-x";
+    case "Nintendo Switch Pro Controller":
+      return "switch-pro";
     default:
       return null;
   }
 }
 
-export function calculateDriftPercentile(modelKey: string, measuredDriftPercent: number): PercentileResult {
-  const model = (reliabilityData.models as Record<string, any>)[modelKey] || reliabilityData.models['ps5-dualsense'];
+export function calculateDriftPercentile(
+  modelKey: string,
+  measuredDriftPercent: number,
+): PercentileResult {
+  const model =
+    (reliabilityData.models as Record<string, any>)[modelKey] ||
+    reliabilityData.models["ps5-dualsense"];
   const thresholds = model.percentileThresholds;
 
   let percentile = 50;
-  let tier: 'excellent' | 'good' | 'average' | 'poor' = 'average';
+  let tier: "excellent" | "good" | "average" | "poor" = "average";
 
   if (measuredDriftPercent <= thresholds.excellent) {
     percentile = 92;
-    tier = 'excellent';
+    tier = "excellent";
   } else if (measuredDriftPercent <= thresholds.good) {
     percentile = 75;
-    tier = 'good';
+    tier = "good";
   } else if (measuredDriftPercent <= thresholds.average) {
     percentile = 48;
-    tier = 'average';
+    tier = "average";
   } else {
     percentile = 18;
-    tier = 'poor';
+    tier = "poor";
   }
 
   // Estimate remaining lifespan before deadzone tuning required (>5% drift)
-  const remainingMonths = Math.max(0, Math.round((5 - measuredDriftPercent) * 2.5));
+  const remainingMonths = Math.max(
+    0,
+    Math.round((5 - measuredDriftPercent) * 2.5),
+  );
 
   return {
     percentile,
     tier,
     avgLifespanRemainingMonths: remainingMonths,
-    totalModelSamples: model.samples
+    totalModelSamples: model.samples,
   };
 }
 
 export function recordTelemetry(payload: TelemetryPayload): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === "undefined") return false;
   if (!getTelemetryConsent()) return false;
 
   try {
-    const existing = JSON.parse(localStorage.getItem(LOCAL_TELEMETRY_LOG) || '[]');
+    const existing = JSON.parse(
+      localStorage.getItem(LOCAL_TELEMETRY_LOG) || "[]",
+    );
     existing.push({
       ...payload,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
     // Keep last 50 local logs
     if (existing.length > 50) existing.shift();

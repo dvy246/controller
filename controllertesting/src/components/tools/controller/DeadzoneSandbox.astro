@@ -1,0 +1,182 @@
+---
+export interface Props {
+  shape: 'radial' | 'axial';
+  gameName: string;
+}
+
+const { shape, gameName } = Astro.props;
+---
+<div class="deadzone-sandbox-container">
+  <div class="canvas-wrapper card-base">
+    <canvas id="deadzoneCanvas" width="400" height="400"></canvas>
+  </div>
+  <aside class="sidebar card-base glass">
+    <h3>Recommended Deadzone</h3>
+    <div class="live-rec">
+      <span id="recValue">0%</span>
+    </div>
+    <p class="helper-text">Based on live drift vector max when stick is idle.</p>
+    <div class="shape-info">
+      <strong>Game:</strong> {gameName}<br />
+      <strong>Shape:</strong> <span class="capitalize">{shape}</span>
+    </div>
+  </aside>
+</div>
+
+<script define:vars={{ shape }}>
+  const canvas = document.getElementById('deadzoneCanvas');
+  const ctx = canvas.getContext('2d');
+  let maxDrift = 0;
+  let raf;
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw axes
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(200, 0); ctx.lineTo(200, 400);
+    ctx.moveTo(0, 200); ctx.lineTo(400, 200);
+    ctx.stroke();
+
+    // Draw deadzone shape overlay
+    ctx.strokeStyle = 'rgba(37, 99, 235, 0.8)';
+    ctx.fillStyle = 'rgba(37, 99, 235, 0.15)';
+    ctx.lineWidth = 2;
+    if (shape === 'radial') {
+      ctx.beginPath();
+      // default visualization at ~25% radius (100px diameter -> 50px radius)
+      ctx.arc(200, 200, 50, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    } else if (shape === 'axial') {
+      ctx.fillRect(175, 0, 50, 400);
+      ctx.fillRect(0, 175, 400, 50);
+      ctx.strokeRect(175, 0, 50, 400);
+      ctx.strokeRect(0, 175, 400, 50);
+    }
+
+    // Get Gamepad
+    const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+    const pad = pads[0];
+    
+    if (pad && pad.axes.length >= 2) {
+      const x = pad.axes[0];
+      const y = pad.axes[1];
+      
+      const px = 200 + x * 200;
+      const py = 200 + y * 200;
+
+      // Draw point
+      ctx.fillStyle = '#EF4444'; // Fail Red
+      ctx.beginPath();
+      ctx.arc(px, py, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw vector line
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.5)';
+      ctx.beginPath();
+      ctx.moveTo(200, 200);
+      ctx.lineTo(px, py);
+      ctx.stroke();
+
+      // Calc max drift when close to center (assuming idle)
+      if (Math.abs(x) < 0.2 && Math.abs(y) < 0.2) {
+        const drift = Math.sqrt(x*x + y*y);
+        if (drift > maxDrift) {
+          maxDrift = drift;
+          const percentage = Math.min(100, Math.ceil(maxDrift * 100));
+          document.getElementById('recValue').textContent = percentage + '%';
+        }
+      }
+    } else {
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+      ctx.font = '16px "Geist Sans", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Connect controller to start', 200, 190);
+      ctx.fillText('Press any button to activate', 200, 215);
+    }
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  draw();
+  
+  // Cleanup on unmount for View Transitions
+  document.addEventListener('astro:before-swap', () => {
+    cancelAnimationFrame(raf);
+  });
+</script>
+
+<style>
+  .deadzone-sandbox-container {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    font-family: 'Geist Sans', sans-serif;
+  }
+  .canvas-wrapper {
+    flex: 1;
+    min-width: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--color-surface-1, #0a0a0a);
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  canvas {
+    background: var(--color-surface-0, #000000);
+    border-radius: 50%;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  }
+  .sidebar {
+    width: 300px;
+    padding: 2rem;
+    background: var(--color-surface-2, rgba(255,255,255,0.03));
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .sidebar h3 {
+    margin-top: 0;
+    font-size: 1.125rem;
+    color: var(--color-text-primary, #ffffff);
+    font-weight: 600;
+  }
+  .live-rec {
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--color-accent, #2563EB);
+    margin: 1rem 0 0.5rem;
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+  }
+  .helper-text {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary, #a1a1aa);
+    line-height: 1.4;
+  }
+  .shape-info {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary, #a1a1aa);
+  }
+  .shape-info strong {
+    color: var(--color-text-primary, #ffffff);
+  }
+  .capitalize {
+    text-transform: capitalize;
+  }
+</style>

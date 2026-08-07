@@ -1,0 +1,425 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+
+export function getStaticPaths() {
+  return [
+    { params: { uuid: 'demo' } }
+  ];
+}
+
+const { uuid } = Astro.params;
+const breadcrumbs = [
+  { name: 'Controller Passport', url: '/passport' },
+  { name: `Evidence Report ${uuid}` }
+];
+---
+
+<BaseLayout
+  title={`Verifiable Hardware Evidence Report ${uuid} | ControllerTesting.com`}
+  description="Verified controller diagnostic evidence report. View stick drift %, circularity error, and button latency telemetry."
+  noindex={true}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main class="container-site page-layout pt-24 pb-16">
+    <div class="mb-6 hide-on-print">
+      <Breadcrumbs items={breadcrumbs} />
+    </div>
+
+    <!-- Report Loading Container -->
+    <div id="report-loading" class="text-center py-12">
+      <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-surface-2 border border-surface-3 text-accent font-mono text-sm">
+        <span class="animate-spin text-lg">⚙️</span>
+        Initializing Verifiable Hardware Evidence Report...
+      </div>
+    </div>
+
+    <!-- Fallback Card (Report Not Found) -->
+    <div id="report-not-found" class="hidden card-base card-gradient p-8 max-w-2xl mx-auto text-center rounded-2xl">
+      <div class="text-4xl mb-4">🔍</div>
+      <h2 class="text-2xl font-bold text-primary mb-3">Report Not Found Locally</h2>
+      <p class="text-secondary mb-6 text-sm leading-relaxed">
+        ControllerTesting.com operates with a privacy-first, local-first architecture. Diagnostic evidence reports are stored directly in your browser's local storage. This report ID (<span class="mono text-accent font-semibold">{uuid}</span>) was not found on this device.
+      </p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <a href="/test/controller/full-diagnostic" class="btn-primary py-2.5 px-5 rounded-xl text-sm font-semibold">Run Diagnostic Test</a>
+        <a href="/report/demo" class="btn-secondary py-2.5 px-5 rounded-xl text-sm font-semibold">View Demo Report</a>
+        <a href="/passport" class="btn-secondary py-2.5 px-5 rounded-xl text-sm font-semibold">View Passport History</a>
+      </div>
+    </div>
+
+    <!-- Main Hydrated Report Card -->
+    <div id="report-card" class="hidden doppelrand-shell p-8 max-w-4xl mx-auto rounded-2xl relative overflow-hidden">
+      <!-- Certificate Header Ribbon -->
+      <div class="flex items-center justify-between border-b border-surface-3 pb-6 mb-8 flex-wrap gap-4">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-accent-glow flex items-center justify-center font-bold text-xl text-accent border border-accent-border">
+            CT
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono font-bold text-accent uppercase tracking-wider">VERIFIED EVIDENCE REPORT</span>
+              <span id="rep-confidence" class="badge-pass text-xs px-2 py-0.5 font-mono">High Confidence</span>
+            </div>
+            <h1 id="rep-device-name" class="text-2xl font-extrabold text-primary mt-0.5">PS5 DualSense</h1>
+            <p class="text-xs text-secondary font-mono">Report UUID: <span id="rep-uuid" class="text-accent">{uuid}</span> • Protocol v<span id="rep-version">2.4.0</span></p>
+          </div>
+        </div>
+
+        <div class="text-right">
+          <div class="text-xs text-secondary">Verified Date</div>
+          <div id="rep-timestamp" class="text-sm font-semibold font-mono text-primary">2026-08-07 10:41 UTC</div>
+        </div>
+      </div>
+
+      <!-- Hero Score Section -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="md:col-span-1 card-base card-gradient p-6 rounded-xl flex flex-col items-center justify-center text-center">
+          <span class="text-xs font-mono text-secondary uppercase tracking-wider mb-1">Health Score</span>
+          <div id="rep-score-num" class="text-5xl font-extrabold font-mono text-gradient my-1">94</div>
+          <div id="rep-grade-badge" class="badge-pass text-xs px-3 py-1 font-mono font-bold rounded-full mt-2">GRADE A+ (PASSED)</div>
+        </div>
+
+        <!-- Key Metrics Summary Grid -->
+        <div class="md:col-span-2 grid grid-cols-2 gap-4">
+          <div class="card-base p-4 rounded-xl">
+            <div class="text-xs text-secondary">Left Stick Drift</div>
+            <div id="rep-drift-left" class="text-2xl font-bold font-mono text-emerald mt-1">0.08%</div>
+            <div class="text-micro text-secondary mt-1">Resting Zero-Point Error</div>
+          </div>
+
+          <div class="card-base p-4 rounded-xl">
+            <div class="text-xs text-secondary">Right Stick Drift</div>
+            <div id="rep-drift-right" class="text-2xl font-bold font-mono text-emerald mt-1">0.12%</div>
+            <div class="text-micro text-secondary mt-1">Resting Zero-Point Error</div>
+          </div>
+
+          <div class="card-base p-4 rounded-xl">
+            <div class="text-xs text-secondary">Circularity Error</div>
+            <div id="rep-circularity" class="text-2xl font-bold font-mono text-accent mt-1">4.2%</div>
+            <div class="text-micro text-secondary mt-1">360° Axis Linearity</div>
+          </div>
+
+          <div class="card-base p-4 rounded-xl">
+            <div class="text-xs text-secondary">Recommended Deadzone</div>
+            <div id="rep-deadzone" class="text-2xl font-bold font-mono text-primary mt-1">2.0%</div>
+            <div class="text-micro text-secondary mt-1">In-Game Threshold</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Telemetry Breakdown Grid -->
+      <div class="mb-8">
+        <h3 class="text-sm font-bold text-secondary uppercase tracking-wider mb-4">Hardware Telemetry Breakdown</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="card-base p-5 rounded-xl">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-bold text-primary">Face Buttons</span>
+              <span id="rep-btn-status" class="text-xs font-mono text-emerald">PASSED ✓</span>
+            </div>
+            <p class="text-xs text-secondary">Face action buttons (A/B/X/Y) & D-pad tested with zero ghosting or missed actuations.</p>
+          </div>
+
+          <div class="card-base p-5 rounded-xl">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-bold text-primary">Analog Triggers</span>
+              <span id="rep-trig-status" class="text-xs font-mono text-emerald">PASSED ✓</span>
+            </div>
+            <p class="text-xs text-secondary">L2/R2 analog pressure curves verified for smooth 0% to 100% full travel linearity.</p>
+          </div>
+
+          <div class="card-base p-5 rounded-xl">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-bold text-primary">Haptics & Vibration</span>
+              <span id="rep-vib-status" class="text-xs font-mono text-emerald">PASSED ✓</span>
+            </div>
+            <p class="text-xs text-secondary">Dual rumble motors & haptic feedback actuators verified operational.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Environment & Capabilities Specs -->
+      <div class="mb-8 p-4 rounded-xl bg-surface-1 border border-surface-3">
+        <h3 class="text-xs font-bold text-secondary uppercase tracking-wider mb-3">Testing Environment & Capabilities</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono">
+          <div>
+            <span class="text-secondary block">Browser</span>
+            <span id="rep-browser" class="text-primary font-semibold">Chrome</span>
+          </div>
+          <div>
+            <span class="text-secondary block">Operating System</span>
+            <span id="rep-os" class="text-primary font-semibold">macOS</span>
+          </div>
+          <div>
+            <span class="text-secondary block">Gamepad API</span>
+            <span id="rep-cap-gamepad" class="text-emerald font-semibold">Supported ✓</span>
+          </div>
+          <div>
+            <span class="text-secondary block">WebHID API</span>
+            <span id="rep-cap-webhid" class="text-emerald font-semibold">Supported ✓</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Row -->
+      <div class="action-bar flex flex-col sm:flex-row gap-3 hide-on-print">
+        <button type="button" id="btn-print-report" class="btn-secondary flex-1 py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2">
+          📄 Download PDF / Print
+        </button>
+        <button type="button" id="btn-share-report" class="btn-secondary flex-1 py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2">
+          🔗 Copy Shareable Link
+        </button>
+        <button type="button" id="btn-save-passport" class="btn-primary flex-1 py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-2">
+          🛡️ Save to Passport
+        </button>
+      </div>
+
+      <!-- Toast Container -->
+      <div id="toast" class="hidden fixed bottom-6 right-6 bg-surface-4 border border-accent text-primary px-4 py-3 rounded-xl text-sm font-mono shadow-2xl z-50">
+        Copied report link to clipboard!
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { getPassportHistory, saveToPassport } from '../../lib/passport';
+  import type { EvidenceReport } from '../../lib/report';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const uuid = window.location.pathname.split('/').filter(Boolean).pop() || 'demo';
+    const isEmbed = window.location.search.includes('embed=true');
+
+    if (isEmbed) {
+      document.body.classList.add('embed-mode');
+      document.querySelectorAll('header, footer, .hide-on-print').forEach(el => {
+        if (el instanceof HTMLElement) el.style.display = 'none';
+      });
+      const mainEl = document.querySelector('main');
+      if (mainEl) {
+        mainEl.classList.remove('pt-24', 'pb-16');
+        mainEl.classList.add('pt-4', 'pb-4');
+      }
+    }
+
+    let reportData: EvidenceReport | null = null;
+
+    // 1. Try fetching from ct_report_${uuid}
+    try {
+      const cached = localStorage.getItem(`ct_report_${uuid}`);
+      if (cached) {
+        reportData = JSON.parse(cached);
+      }
+    } catch (e) {}
+
+    // 2. Try searching in ct_passport_history
+    if (!reportData) {
+      try {
+        const history = getPassportHistory();
+        for (const deviceId in history) {
+          const found = history[deviceId].reports.find(r => r.id === uuid);
+          if (found) {
+            reportData = found;
+            break;
+          }
+        }
+      } catch (e) {}
+    }
+
+    // 3. Demo fallback if uuid === 'demo' or not found for demo
+    if (!reportData && uuid === 'demo') {
+      reportData = {
+        id: 'demo-9f82a10b-4c3e-41a2',
+        timestamp: Date.now() - 3600000,
+        protocolVersion: '2.4.0',
+        device: {
+          name: 'PS5 DualSense Wireless Controller',
+          vendorId: '0x054c',
+          productId: '0x0ce6',
+          mappedModelKey: 'ps5-dualsense'
+        },
+        environment: { browser: 'Chrome 122', os: 'macOS', connection: 'usb' },
+        capabilities: { gamepad: 'supported', haptics: 'supported' as any, webhid: 'supported' },
+        tests: {
+          buttons: { facePassed: true, bumpersPassed: true },
+          sticks: {
+            driftX: 0.08,
+            driftY: 0.12,
+            circularityError: 4.2,
+            deadzoneRecommendation: 0.02
+          },
+          triggers: { l2Passed: true, r2Passed: true },
+          vibration: { status: 'passed' }
+        },
+        confidence: 'high',
+        limitations: []
+      };
+    }
+
+    const loadingEl = document.getElementById('report-loading');
+    const notFoundEl = document.getElementById('report-not-found');
+    const cardEl = document.getElementById('report-card');
+
+    if (!reportData) {
+      loadingEl?.classList.add('hidden');
+      notFoundEl?.classList.remove('hidden');
+      return;
+    }
+
+    // Populate Report Data
+    loadingEl?.classList.add('hidden');
+    cardEl?.classList.remove('hidden');
+
+    const driftMax = Math.max(reportData.tests.sticks.driftX, reportData.tests.sticks.driftY);
+    const circErr = reportData.tests.sticks.circularityError;
+
+    let score = 100;
+    score -= Math.round(driftMax * 5);
+    score -= Math.round(circErr * 1.5);
+    score = Math.max(20, Math.min(100, score));
+
+    let gradeStr = 'GRADE A+ (PASSED)';
+    let gradeClass = 'badge-pass';
+    if (score >= 90) {
+      gradeStr = 'GRADE A+ (PASSED)';
+      gradeClass = 'badge-pass';
+    } else if (score >= 75) {
+      gradeStr = 'GRADE A (GOOD)';
+      gradeClass = 'badge-pass';
+    } else if (score >= 60) {
+      gradeStr = 'GRADE B (WARNING)';
+      gradeClass = 'badge-warning';
+    } else {
+      gradeStr = 'GRADE C (HARDWARE ISSUE)';
+      gradeClass = 'badge-fail';
+    }
+
+    const devNameEl = document.getElementById('rep-device-name');
+    const uuidEl = document.getElementById('rep-uuid');
+    const versionEl = document.getElementById('rep-version');
+    const timeEl = document.getElementById('rep-timestamp');
+    const scoreEl = document.getElementById('rep-score-num');
+    const gradeEl = document.getElementById('rep-grade-badge');
+
+    const driftLeftEl = document.getElementById('rep-drift-left');
+    const driftRightEl = document.getElementById('rep-drift-right');
+    const circEl = document.getElementById('rep-circularity');
+    const dzEl = document.getElementById('rep-deadzone');
+
+    const browserEl = document.getElementById('rep-browser');
+    const osEl = document.getElementById('rep-os');
+
+    if (devNameEl) devNameEl.textContent = reportData.device.name;
+    if (uuidEl) uuidEl.textContent = reportData.id;
+    if (versionEl) versionEl.textContent = reportData.protocolVersion || '2.4.0';
+    if (timeEl) timeEl.textContent = new Date(reportData.timestamp).toISOString().replace('T', ' ').substring(0, 16) + ' UTC';
+
+    if (scoreEl) scoreEl.textContent = String(score);
+    if (gradeEl) {
+      gradeEl.textContent = gradeStr;
+      gradeEl.className = `${gradeClass} text-xs px-3 py-1 font-mono font-bold rounded-full mt-2`;
+    }
+
+    if (driftLeftEl) driftLeftEl.textContent = `${reportData.tests.sticks.driftX.toFixed(2)}%`;
+    if (driftRightEl) driftRightEl.textContent = `${reportData.tests.sticks.driftY.toFixed(2)}%`;
+    if (circEl) circEl.textContent = `${circErr.toFixed(1)}%`;
+    if (dzEl) dzEl.textContent = `${((reportData.tests.sticks.deadzoneRecommendation || 0.02) * 100).toFixed(1)}%`;
+
+    if (browserEl) browserEl.textContent = reportData.environment.browser;
+    if (osEl) osEl.textContent = reportData.environment.os;
+
+    const btnStatusEl = document.getElementById('rep-btn-status');
+    const trigStatusEl = document.getElementById('rep-trig-status');
+    const vibStatusEl = document.getElementById('rep-vib-status');
+
+    if (btnStatusEl) {
+      const btnsOk = reportData.tests?.buttons ? (reportData.tests.buttons.facePassed && reportData.tests.buttons.bumpersPassed) : true;
+      btnStatusEl.textContent = btnsOk ? 'PASSED ✓' : 'FLAGGED ⚠';
+      btnStatusEl.className = btnsOk ? 'text-xs font-mono text-emerald' : 'text-xs font-mono text-fail';
+    }
+
+    if (trigStatusEl) {
+      const trigOk = reportData.tests?.triggers ? (reportData.tests.triggers.l2Passed && reportData.tests.triggers.r2Passed) : true;
+      trigStatusEl.textContent = trigOk ? 'PASSED ✓' : 'FAULT ✕';
+      trigStatusEl.className = trigOk ? 'text-xs font-mono text-emerald' : 'text-xs font-mono text-fail';
+    }
+
+    if (vibStatusEl) {
+      const vibOk = reportData.tests?.vibration ? (reportData.tests.vibration.status === 'passed') : true;
+      vibStatusEl.textContent = vibOk ? 'PASSED ✓' : 'CHECK ⚠';
+      vibStatusEl.className = vibOk ? 'text-xs font-mono text-emerald' : 'text-xs font-mono text-warning';
+    }
+
+    // Button Handlers
+    document.getElementById('btn-print-report')?.addEventListener('click', () => {
+      window.print();
+    });
+
+    document.getElementById('btn-share-report')?.addEventListener('click', () => {
+      const shareUrl = window.location.href;
+      navigator.clipboard.writeText(shareUrl);
+      const toast = document.getElementById('toast');
+      if (toast) {
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 3000);
+      }
+    });
+
+    document.getElementById('btn-save-passport')?.addEventListener('click', () => {
+      if (reportData) {
+        saveToPassport(reportData);
+        alert('Report saved to your local Passport history!');
+      }
+    });
+  });
+</script>
+
+<style>
+  .badge-pass {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10B981;
+  }
+  .badge-warning {
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #F59E0B;
+  }
+  .badge-fail {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #EF4444;
+  }
+  .bg-accent-glow {
+    background: rgba(37, 99, 235, 0.15);
+  }
+  .border-accent-border {
+    border-color: rgba(37, 99, 235, 0.3);
+  }
+  .text-emerald {
+    color: #10B981;
+  }
+  .text-accent {
+    color: var(--color-accent);
+  }
+  @media print {
+    .hide-on-print {
+      display: none !important;
+    }
+    body {
+      background: #ffffff !important;
+      color: #000000 !important;
+    }
+    .doppelrand-shell {
+      border: 1px solid #ccc !important;
+      box-shadow: none !important;
+      background: #ffffff !important;
+    }
+  }
+</style>

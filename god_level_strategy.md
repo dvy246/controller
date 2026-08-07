@@ -1,7 +1,15 @@
 # ⚡ God-Level Strategy: ControllerTesting.com
 
 > [!IMPORTANT]
-> This document is the complete architecture for a controller testing platform designed to **outclass all 16+ competitors** with tools they can't easily replicate and SEO they can't catch up to. Every design decision serves two goals: (1) be the best tool, and (2) be unbeatable in Google.
+> **SUPERSEDED CLAIMS NOTICE (2026-08-02):** This document's characterization of
+> controllertest.io as "clean tools, zero content" is **FALSE**. See the verified
+> evidence dossier `controllertest.md`: controllertest.io is an Astro SSG with
+> 400 URLs, 24 English pages, 10 locales, a Chrome extension, WebHID
+> calibration, and real earned press — it cannot be beaten on tool parity or
+> head-term SEO. The valid plays are the content verticals (fix/settings/
+> compare/profiles/reliability), first-party data, retention, and trust/
+> methodology positioning, exactly as executed in Phases 1-2 of this repo's
+> plan.
 
 ---
 

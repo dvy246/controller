@@ -1,0 +1,129 @@
+---
+/**
+ * /test/controller/quick-health — Express 60-Second Controller Health Check Page
+ * SEO Title: 60-Second Quick Controller Health Check — Express Diagnostic Tool
+ */
+
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import QuickHealth from '../../../components/tools/controller/QuickHealth.astro';
+
+const breadcrumbs = [
+  { name: 'Tests', url: '/test/controller' },
+  { name: 'Controller Tests', url: '/test/controller' },
+  { name: 'Quick Health Check' },
+];
+
+const faqs = [
+  {
+    question: 'What is the 60-Second Quick Health Check?',
+    answer: 'The Quick Health Check is an express 60-second guided diagnostic that tests stick drift, button matrix actuation, and trigger linearity in continuous guided phases.',
+  },
+  {
+    question: 'How is the Quick Health Score calculated?',
+    answer: 'The score (0-100) combines resting thumbstick zero-point drift %, face button matrix coverage, and L2/R2 analog trigger pressure travel.',
+  },
+  {
+    question: 'Can I save my Quick Health results to my Passport?',
+    answer: 'Yes! Upon completing the 60-second check, your results are automatically saved to your local Controller Passport history and award 50 XP.',
+  },
+];
+---
+
+<ToolLayout
+  title="60-Second Quick Controller Health Check — Express Hardware Diagnostic | ControllerTesting.com"
+  description="Run an express 60-second guided controller checkup. Test stick drift, face button matrix, and trigger pressure in under a minute. Save results to your Controller Passport."
+  toolName="Quick Health Check (60s)"
+  category="Controller Diagnostic"
+  categoryUrl="/test/controller"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  {/* ── Tool Interactive Island ── */}
+  <Fragment slot="tool">
+    <QuickHealth />
+  </Fragment>
+
+  {/* ── Results Slot ── */}
+  <Fragment slot="results">
+    <div class="results-summary space-y-4">
+      <h2 class="section-title text-xl font-bold">Understanding Express Health Verdicts</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="card-base p-4 rounded-xl border border-emerald/30 bg-emerald/10">
+          <strong class="text-emerald font-mono block mb-1">Grade A+ (90–100)</strong>
+          <p class="text-xs text-secondary">Zero measurable drift, 100% button actuation, perfect trigger linearity.</p>
+        </div>
+        <div class="card-base p-4 rounded-xl border border-warning/30 bg-warning/10">
+          <strong class="text-warning font-mono block mb-1">Grade B (70–89)</strong>
+          <p class="text-xs text-secondary">Minor stick drift (2-5%) or minor button wear. Deadzone adjustment recommended.</p>
+        </div>
+        <div class="card-base p-4 rounded-xl border border-fail/30 bg-fail/10">
+          <strong class="text-fail font-mono block mb-1">Grade C (&lt;70)</strong>
+          <p class="text-xs text-secondary">Significant drift (&gt;5%) or sticky buttons. Module cleaning or replacement required.</p>
+        </div>
+      </div>
+    </div>
+  </Fragment>
+
+  {/* ── Export Slot ── */}
+  <Fragment slot="export">
+    <div class="export-banner flex items-center justify-between gap-4 flex-wrap p-6 rounded-2xl bg-surface-2 border border-surface-3">
+      <div>
+        <h3 class="export-title text-lg font-bold">Need a full 5-step deep dive?</h3>
+        <p class="export-desc text-xs text-secondary">Run our 2-minute Flagship Full Diagnostic Wizard for detailed rumble and circularity testing.</p>
+      </div>
+      <div class="export-buttons flex gap-3">
+        <a href="/test/controller/full-diagnostic" class="btn-primary py-2.5 px-4 rounded-xl text-xs font-bold">Full Diagnostic Wizard</a>
+        <a href="/passport" class="btn-secondary py-2.5 px-4 rounded-xl text-xs font-bold">View Resale Passport</a>
+      </div>
+    </div>
+  </Fragment>
+
+  {/* ── Related Tools Slot ── */}
+  <Fragment slot="related-tools">
+    <a href="/test/controller/full-diagnostic" class="tool-card card-base card-hover p-4 rounded-xl">
+      <span class="tool-badge text-xs text-accent font-mono font-bold">Flagship</span>
+      <h3 class="tool-name font-bold text-primary text-base mt-1">Full Diagnostic Wizard</h3>
+      <p class="tool-desc text-xs text-secondary">Test drift, buttons, triggers, and rumble in 2 minutes.</p>
+    </a>
+    <a href="/test/controller/drift" class="tool-card card-base card-hover p-4 rounded-xl">
+      <h3 class="tool-name font-bold text-primary text-base">Stick Drift Detector</h3>
+      <p class="tool-desc text-xs text-secondary">Precision 0.1% axis drift canvas visualizer.</p>
+    </a>
+    <a href="/test/controller/health-score" class="tool-card card-base card-hover p-4 rounded-xl">
+      <h3 class="tool-name font-bold text-primary text-base">Health Score™</h3>
+      <p class="tool-desc text-xs text-secondary">Calculate 0-100 hardware health grade & report card.</p>
+    </a>
+    <a href="/test/controller/polling-rate" class="tool-card card-base card-hover p-4 rounded-xl">
+      <h3 class="tool-name font-bold text-primary text-base">Polling Rate Checker</h3>
+      <p class="tool-desc text-xs text-secondary">Test controller report frequency in Hz.</p>
+    </a>
+  </Fragment>
+
+  {/* ── SEO Content Slot ── */}
+  <Fragment slot="content">
+    <h2 class="text-xl font-bold text-primary mb-3">Why Use the 60-Second Quick Controller Health Check?</h2>
+    <p class="text-sm text-secondary leading-relaxed mb-4">
+      When buying a used controller, prepping for a tournament match, or troubleshooting sudden aim issues, you don't always have time for extensive manual testing. Our 60-Second Quick Health Check automates stick drift sampling, button responsiveness, and trigger pressure verification into four 15-second guided phases.
+    </p>
+
+    <h3 class="text-lg font-bold text-primary mb-2">What Does the 60-Second Test Cover?</h3>
+    <ul class="list-disc ml-5 text-sm text-secondary leading-relaxed space-y-1 mb-4">
+      <li><strong>Phase 1: Stick Drift & Zero-Point Error:</strong> Measures resting thumbstick drift percentage and axis center offset.</li>
+      <li><strong>Phase 2: Button Response Matrix:</strong> Confirms face action button (A/B/X/Y or Cross/Circle/Square/Triangle), D-pad, and shoulder bumper actuations.</li>
+      <li><strong>Phase 3: Trigger Linearity:</strong> Evaluates L2/R2 analog trigger pressure from 0% resting to 100% full travel.</li>
+      <li><strong>Phase 4: Express Score & Passport Record:</strong> Calculates an overall hardware score, awards 50 XP, and logs your test snapshot into your Controller Passport.</li>
+    </ul>
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .text-emerald { color: #10B981; }
+  .text-warning { color: #F59E0B; }
+  .text-fail { color: #EF4444; }
+  .bg-emerald\/10 { background: rgba(16, 185, 129, 0.1); }
+  .bg-warning\/10 { background: rgba(245, 158, 11, 0.1); }
+  .bg-fail\/10 { background: rgba(239, 68, 68, 0.1); }
+  .border-emerald\/30 { border-color: rgba(16, 185, 129, 0.3); }
+  .border-warning\/30 { border-color: rgba(245, 158, 11, 0.3); }
+  .border-fail\/30 { border-color: rgba(239, 68, 68, 0.3); }
+</style>

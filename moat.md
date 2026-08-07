@@ -1,6 +1,17 @@
 # Competitive Moat & SEO Dominance Strategy
 ## ControllerTesting.com — The Playbook to Own the Market
 
+> [!IMPORTANT]
+> **SUPERSEDED CLAIMS NOTICE (2026-08-02):** The claims in this document about
+> controllertest.io being an "SPA (vanilla JS) with ~5-30 indexed pages and zero
+> content" are **FALSE**. Verified evidence in `controllertest.md` (dossier,
+> direct sitemap/HTML fetches) shows: Astro v5.17.3 SSG, **400 URLs**, 24 unique
+> English pages, **10 full locales**, Chrome extension, WebHID calibration, and
+> earned press (Ghacks, korben, coruzant). `controllertest.md` supersedes all
+> competitor claims in this file. The strategy still stands: attack their
+> verified gaps (content verticals, reliability data, retention, trust
+> positioning) — not head-term SEO or tool parity.
+
 ---
 
 ## 1. The Core Thesis: Why We Will Win

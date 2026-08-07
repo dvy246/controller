@@ -1,0 +1,78 @@
+---
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+import HapticComposer from '../../../components/tools/controller/HapticComposer.astro';
+
+export function getStaticPaths() {
+  const engines = ['unity', 'unreal'];
+  const effects = ['explosion', 'heartbeat', 'recoil'];
+  
+  const paths = [];
+  for (const engine of engines) {
+    for (const effect of effects) {
+      paths.push({ params: { gameEngine: engine, effect } });
+    }
+  }
+  return paths;
+}
+
+const { gameEngine, effect } = Astro.params;
+
+const title = `${effect.charAt(0).toUpperCase() + effect.slice(1)} Haptic Rumble Pattern for ${gameEngine.charAt(0).toUpperCase() + gameEngine.slice(1)} - ControllerTesting.com`;
+const description = `Design and test an interactive ${effect} haptic feedback rumble pattern. Export production-ready C# code for ${gameEngine.charAt(0).toUpperCase() + gameEngine.slice(1)} game developers directly to your clipboard.`;
+const toolName = `Haptic Composer: ${effect.charAt(0).toUpperCase() + effect.slice(1)} (${gameEngine.charAt(0).toUpperCase() + gameEngine.slice(1)})`;
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Haptics', url: '/haptics' },
+  { name: gameEngine, url: `/haptics/${gameEngine}` },
+  { name: effect }
+];
+
+const faqs = [
+  {
+    question: `How do I use this ${effect} rumble pattern in ${gameEngine}?`,
+    answer: `Simply adjust the waveform curve to your liking, test it live using your connected controller, and copy the generated C# script from the panel below into your ${gameEngine} project.`
+  },
+  {
+    question: "Does the Web Gamepad API support complex rumble curves?",
+    answer: "The Web Gamepad API primarily supports standard dual-rumble (weak and strong motors). To simulate complex curves like this tool does, we play multiple sequential rumble effects over short durations. Game engines support richer curve evaluation natively."
+  }
+];
+
+---
+
+<ToolLayout
+  title={title}
+  description={description}
+  toolName={toolName}
+  category="Programmatic Suite"
+  categoryUrl="/haptics"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <div slot="tool">
+    <HapticComposer engine={gameEngine} effect={effect} />
+  </div>
+
+  <div slot="results">
+    <div class="p-6">
+      <h3 class="text-xl font-bold mb-4">Implementation Guide</h3>
+      <p class="text-color-text-secondary mb-4">
+        Follow the generated code snippet to integrate this haptic waveform into your game.
+        Ensure you have the required input management packages installed for {gameEngine.charAt(0).toUpperCase() + gameEngine.slice(1)}.
+      </p>
+    </div>
+  </div>
+
+  <div slot="content">
+    <h2>Designing Haptics for Immersion</h2>
+    <p>
+      Haptic feedback bridges the gap between digital interaction and physical sensation. 
+      When creating an <strong>{effect}</strong> effect, it's critical to match the visual 
+      and auditory cues with tactile response. 
+    </p>
+    <p>
+      In <strong>{gameEngine.charAt(0).toUpperCase() + gameEngine.slice(1)}</strong>, you can trigger these events based on physics collisions, 
+      animation states, or input actions. Use our composer to iterate rapidly without needing to rebuild your game.
+    </p>
+  </div>
+</ToolLayout>
