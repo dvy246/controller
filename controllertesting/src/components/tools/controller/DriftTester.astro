@@ -7,24 +7,25 @@
  * UPGRADED: High-energy premium UI & dynamic hardware simulator overlay.
  */
 ---
-<div class="drift-tester group" id="drift-tester-root" data-model="none">
-  {/* Dynamic ambient glow based on controller type */}
-  <div class="ambient-glow" id="ambient-glow"></div>
+<div class="doppelrand-shell group relative" id="drift-tester-root" data-model="none">
+  <div class="doppelrand-core flex flex-col gap-8 relative z-10">
+    {/* Dynamic ambient glow based on controller type */}
+    <div class="ambient-glow" id="ambient-glow"></div>
 
-  {/* ── Status Bar ── */}
-  <div class="tester-status-bar glass-panel">
-    <div class="status-indicator">
-      <span class="status-dot" id="gp-status-dot"></span>
-      <span class="status-text font-medium" id="gp-status-text">Connect a controller and press any button...</span>
+    {/* ── Status Bar ── */}
+    <div class="tester-status-bar card-base">
+      <div class="status-indicator">
+        <span class="status-dot" id="gp-status-dot"></span>
+        <span class="status-text font-medium" id="gp-status-text">Connect a controller and press any button...</span>
+      </div>
+      <div class="controller-name tracking-wider text-accent" id="gp-model-name">NO DEVICE</div>
     </div>
-    <div class="controller-name tracking-wider" id="gp-model-name">NO DEVICE</div>
-  </div>
 
   {/* ── Visualizers Grid (Left & Right Sticks) ── */}
   <div class="sticks-grid relative z-10">
 
     {/* Left Analog Stick */}
-    <div class="stick-card glass-panel group/stick">
+    <div class="stick-card card-gradient card-hover group/stick">
       <div class="stick-card-header">
         <h3 class="stick-title text-stone-100 font-bold tracking-tight">Left Analog Stick</h3>
         <span class="drift-value font-mono text-2xl" id="left-drift-val">0.0%</span>
@@ -52,7 +53,7 @@
     </div>
 
     {/* Right Analog Stick */}
-    <div class="stick-card glass-panel group/stick">
+    <div class="stick-card card-gradient card-hover group/stick">
       <div class="stick-card-header">
         <h3 class="stick-title text-stone-100 font-bold tracking-tight">Right Analog Stick</h3>
         <span class="drift-value font-mono text-2xl" id="right-drift-val">0.0%</span>
@@ -91,6 +92,7 @@
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
       Reset Canvas Trail
     </button>
+  </div>
   </div>
 </div>
 
@@ -391,19 +393,6 @@
 </script>
 
 <style>
-  /* High Energy Premium UI Styling */
-  .drift-tester {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    position: relative;
-    padding: 1rem;
-    border-radius: 1.5rem;
-    background: #000;
-    overflow: hidden;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
-  }
-
   /* Ambient hardware glow underlay */
   .ambient-glow {
     position: absolute;
@@ -419,24 +408,15 @@
   }
 
   /* Hardware specific glowing themes */
-  .drift-tester[data-model="playstation"] .ambient-glow {
+  .doppelrand-shell[data-model="playstation"] .ambient-glow {
     background: radial-gradient(circle at center, rgba(37,99,235,0.15) 0%, transparent 70%);
   }
-  .drift-tester[data-model="xbox"] .ambient-glow {
+  .doppelrand-shell[data-model="xbox"] .ambient-glow {
     background: radial-gradient(circle at center, rgba(16,185,129,0.12) 0%, transparent 70%);
   }
-  .drift-tester[data-model="switch"] .ambient-glow {
+  .doppelrand-shell[data-model="switch"] .ambient-glow {
     background: radial-gradient(circle at left, rgba(239,68,68,0.12) 0%, transparent 50%),
                 radial-gradient(circle at right, rgba(59,130,246,0.12) 0%, transparent 50%);
-  }
-
-  /* Glass Panels */
-  .glass-panel {
-    background: rgba(15, 15, 20, 0.4);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
 
   .tester-status-bar {
@@ -478,9 +458,9 @@
     color: #fff;
     text-transform: uppercase;
   }
-  .drift-tester[data-model="playstation"] .controller-name { color: #60A5FA; text-shadow: 0 0 10px rgba(96,165,250,0.5); }
-  .drift-tester[data-model="xbox"] .controller-name { color: #34D399; text-shadow: 0 0 10px rgba(52,211,153,0.5); }
-  .drift-tester[data-model="switch"] .controller-name { color: #F87171; text-shadow: 0 0 10px rgba(248,113,113,0.5); }
+  .doppelrand-shell[data-model="playstation"] .controller-name { color: #60A5FA; text-shadow: 0 0 10px rgba(96,165,250,0.5); }
+  .doppelrand-shell[data-model="xbox"] .controller-name { color: #34D399; text-shadow: 0 0 10px rgba(52,211,153,0.5); }
+  .doppelrand-shell[data-model="switch"] .controller-name { color: #F87171; text-shadow: 0 0 10px rgba(248,113,113,0.5); }
 
   .sticks-grid {
     display: grid;

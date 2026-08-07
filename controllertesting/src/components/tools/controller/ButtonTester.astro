@@ -6,8 +6,10 @@
  */
 ---
 
-<div class="button-tester" id="btn-tester-root">
-  <div class="tester-status-bar">
+<div class="doppelrand-shell group relative" data-model="none" id="btn-tester-root">
+  <div class="ambient-glow"></div>
+  <div class="doppelrand-core flex flex-col gap-8 relative z-10">
+  <div class="tester-status-bar card-base">
     <div class="status-indicator">
       <span class="status-dot" id="btn-status-dot"></span>
       <span class="status-text" id="btn-status-text">Press any button to begin testing...</span>
@@ -17,7 +19,7 @@
 
   <div class="button-tester-grid">
     {/* Face Buttons */}
-    <div class="btn-group-card">
+    <div class="btn-group-card card-gradient card-hover">
       <h3 class="group-title">Face Buttons (Action)</h3>
       <div class="chips-flex">
         <div class="chip-item" id="chip-btn-0"><span class="chip-label">A / Cross</span> <span class="chip-count" id="count-0">0</span></div>
@@ -28,7 +30,7 @@
     </div>
 
     {/* Bumpers & Triggers */}
-    <div class="btn-group-card">
+    <div class="btn-group-card card-gradient card-hover">
       <h3 class="group-title">Shoulders & Triggers</h3>
       <div class="chips-flex">
         <div class="chip-item" id="chip-btn-4"><span class="chip-label">L1 / LB</span> <span class="chip-count" id="count-4">0</span></div>
@@ -39,7 +41,7 @@
     </div>
 
     {/* D-Pad */}
-    <div class="btn-group-card">
+    <div class="btn-group-card card-gradient card-hover">
       <h3 class="group-title">D-Pad Directional</h3>
       <div class="chips-flex">
         <div class="chip-item" id="chip-btn-12"><span class="chip-label">Up</span> <span class="chip-count" id="count-12">0</span></div>
@@ -50,7 +52,7 @@
     </div>
 
     {/* Center & Sticks Clicks */}
-    <div class="btn-group-card">
+    <div class="btn-group-card card-gradient card-hover">
       <h3 class="group-title">Center & Stick Clicks</h3>
       <div class="chips-flex">
         <div class="chip-item" id="chip-btn-8"><span class="chip-label">Select / Share</span> <span class="chip-count" id="count-8">0</span></div>
@@ -63,6 +65,7 @@
 
   <div class="tester-controls">
     <button type="button" class="btn-secondary" id="btn-clear-counts">Reset Click Counters</button>
+  </div>
   </div>
 </div>
 

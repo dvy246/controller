@@ -5,8 +5,10 @@
  */
 ---
 
-<div class="deadzone-tester" id="dz-tester-root">
-  <div class="tester-status-bar">
+<div class="doppelrand-shell group relative" data-model="none" id="dz-tester-root">
+  <div class="ambient-glow"></div>
+  <div class="doppelrand-core flex flex-col gap-8 relative z-10">
+  <div class="tester-status-bar card-base">
     <div class="status-indicator">
       <span class="status-dot" id="dz-status-dot"></span>
       <span class="status-text" id="dz-status-text">Move thumbsticks to test deadzone responsiveness...</span>
@@ -14,7 +16,7 @@
     <div class="controller-name" id="dz-model-name">No Controller Detected</div>
   </div>
 
-  <div class="dz-config-bar">
+  <div class="dz-config-bar card-gradient">
     <div class="config-item">
       <label for="dz-inner-slider">Inner Deadzone Threshold: <strong class="mono" id="dz-inner-val">5%</strong></label>
       <input type="range" id="dz-inner-slider" min="0" max="30" value="5" class="input-range" />
@@ -28,7 +30,7 @@
   <div class="dz-canvases-grid">
 
     {/* Left Stick Deadzone Canvas */}
-    <div class="dz-card">
+    <div class="dz-card card-gradient card-hover">
       <div class="dz-card-header">
         <h3 class="dz-title">Left Stick Response</h3>
         <span class="dz-state-badge badge-pass" id="left-dz-state">In Deadzone</span>
@@ -51,7 +53,7 @@
     </div>
 
     {/* Right Stick Deadzone Canvas */}
-    <div class="dz-card">
+    <div class="dz-card card-gradient card-hover">
       <div class="dz-card-header">
         <h3 class="dz-title">Right Stick Response</h3>
         <span class="dz-state-badge badge-pass" id="right-dz-state">In Deadzone</span>
@@ -73,6 +75,7 @@
       </div>
     </div>
 
+  </div>
   </div>
 </div>
 

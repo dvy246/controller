@@ -29,11 +29,11 @@ const toolsSchema = {
 };
 
 const controllerTools = [
-  { name: 'Full Diagnostic Wizard', url: '/test/controller/full-diagnostic', desc: '5-step hardware checkup wizard.', icon: '⚡' },
-  { name: 'Stick Drift Detector', url: '/test/controller/drift', desc: '0.1% stick drift canvas visualizer.', icon: '🎯' },
-  { name: 'Controller Health Score™', url: '/test/controller/health-score', desc: '0-100 grade & printable PDF report card.', icon: '📈' },
+  { name: 'Full Diagnostic Wizard', url: '/test/controller/full-diagnostic', desc: '5-step hardware checkup wizard.', icon: '⚡', badge: 'Flagship' },
+  { name: 'Stick Drift Detector', url: '/test/controller/drift', desc: '0.1% stick drift canvas visualizer.', icon: '🎯', badge: 'High Priority' },
+  { name: 'Controller Health Score™', url: '/test/controller/health-score', desc: '0-100 grade & printable PDF report card.', icon: '📈', badge: 'Flagship' },
   { name: 'Nintendo Switch Tester & Repair', url: '/test/controller/nintendo-switch', desc: 'Joy-Con drift tester and Hall-effect replacement guide.', icon: '🔴' },
-  { name: 'PS Controller WebHID Calibration', url: '/test/controller/ps-calibration', desc: 'Low-level WebHID zero-point sampling & firmware save.', icon: '🔧' },
+  { name: 'PS Controller WebHID Calibration', url: '/test/controller/ps-calibration', desc: 'Low-level WebHID zero-point sampling & firmware save.', icon: '🔧', badge: 'Flagship' },
   { name: 'Steering Wheel & Pedals', url: '/test/controller/steering-wheel', desc: '900°/1080° rotation disc & Throttle/Brake/Clutch linearity.', icon: '🏎️' },
   { name: 'Fight Stick & Hitbox', url: '/test/controller/fight-stick', desc: 'Vewlix 8-button layout & Capcom SOCD cleaner rule check.', icon: '🕹️' },
   { name: 'Flight Stick & HOTAS', url: '/test/controller/flight-stick', desc: 'Pitch/roll/yaw, 128+ buttons & throttle quadrant.', icon: '✈️' },
@@ -82,30 +82,30 @@ const specializedTools = [
 
   <Header />
   
-  <main class="toolkit-page relative bg-[#05050A] min-h-screen text-stone-200 overflow-hidden">
+  <main class="toolkit-page relative min-h-screen overflow-hidden bg-[var(--color-bg-base)]">
     {/* Abstract Premium Background Glows */}
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-[radial-gradient(ellipse_at_top,rgba(59,130,246,0.15),transparent_70%)] pointer-events-none"></div>
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.12),transparent_70%)] pointer-events-none"></div>
     <div class="absolute top-[20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-purple-600/10 blur-[120px] pointer-events-none mix-blend-screen"></div>
     <div class="absolute top-[40%] right-[-10%] w-[600px] h-[600px] rounded-full bg-blue-600/10 blur-[150px] pointer-events-none mix-blend-screen"></div>
 
-    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-32 pb-24">
+    <div class="container-site relative z-10 pt-32 pb-24">
       <div class="mb-12">
         <Breadcrumbs items={breadcrumbs} />
       </div>
       
-      <header class="toolkit-hero mb-24 max-w-3xl">
-        <div class="telemetry-badge inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 mb-8 backdrop-blur-md">
-          <span class="relative flex h-2.5 w-2.5">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
+      <header class="toolkit-hero mb-20 max-w-3xl">
+        <div class="telemetry-badge inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-[var(--color-surface-2)] border border-[var(--color-border-default)] mb-8 shadow-sm">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-accent)] opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-accent)]"></span>
           </span>
-          <span class="text-xs font-bold tracking-widest uppercase text-blue-400">142,850+ Controllers Tested Globally</span>
+          <span class="text-xs font-bold tracking-widest uppercase text-[var(--color-text-secondary)]">142,850+ Controllers Tested Globally</span>
         </div>
         
-        <h1 class="text-5xl lg:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-stone-200 to-stone-500 mb-6 drop-shadow-sm">
-          Diagnostic<br/>Testing Toolkit
+        <h1 class="text-5xl lg:text-7xl font-black tracking-tighter text-[var(--color-text-primary)] mb-6 drop-shadow-sm">
+          Diagnostic<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-accent)] to-[#60A5FA]">Testing Toolkit</span>
         </h1>
-        <p class="text-lg lg:text-xl text-stone-400 leading-relaxed max-w-2xl font-medium">
+        <p class="text-lg lg:text-xl text-[var(--color-text-secondary)] leading-relaxed max-w-2xl font-medium">
           The most comprehensive, privacy-first diagnostic suite available in the browser. 
           No downloads required. Hardware telemetry powers our empirical reliability database.
         </p>
@@ -114,21 +114,25 @@ const specializedTools = [
       <div class="space-y-32">
         {/* Controller Suite */}
         <section class="toolkit-section">
-          <div class="section-header mb-12">
-            <h2 class="text-3xl font-bold tracking-tight text-white mb-3">Controller & Peripheral Suite</h2>
-            <p class="text-stone-400 text-lg">The definitive 22-tool suite for gamepads, flight sticks, racing wheels, and MIDI.</p>
+          <div class="section-header mb-10 border-b border-[var(--color-border-subtle)] pb-6">
+            <h2 class="text-3xl font-bold tracking-tight text-[var(--color-text-primary)] mb-3">Controller & Peripheral Suite</h2>
+            <p class="text-[var(--color-text-secondary)] text-lg font-medium">The definitive 22-tool suite for gamepads, flight sticks, racing wheels, and MIDI.</p>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div class="grid-tools">
             {controllerTools.map(tool => (
-              <a href={tool.url} class="group relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-blue-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-transparent to-purple-500/0 group-hover:from-blue-500/10 group-hover:to-purple-500/10 transition-colors duration-500"></div>
-                <div class="relative z-10 flex flex-col h-full">
-                  <div class="w-12 h-12 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
-                    {tool.icon}
+              <a href={tool.url} class={`tool-hub-card card-hover ${tool.badge === 'Flagship' ? 'card-gradient' : 'card-base'}`}>
+                <div class="card-top-bar">
+                  <div class="card-icon">
+                    <span class="text-xl" aria-hidden="true">{tool.icon}</span>
                   </div>
-                  <h3 class="text-lg font-bold text-white mb-2 tracking-tight group-hover:text-blue-400 transition-colors">{tool.name}</h3>
-                  <p class="text-sm text-stone-400 leading-relaxed font-medium">{tool.desc}</p>
+                  {tool.badge && <span class="badge-tag">{tool.badge}</span>}
                 </div>
+                <h3 class="card-tool-name">{tool.name}</h3>
+                <p class="card-tool-desc">{tool.desc}</p>
+                <span class="card-action-link">
+                  Run test
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </span>
               </a>
             ))}
           </div>
@@ -136,21 +140,24 @@ const specializedTools = [
 
         {/* Mouse Suite */}
         <section class="toolkit-section">
-          <div class="section-header mb-12">
-            <h2 class="text-3xl font-bold tracking-tight text-white mb-3">Mouse & Keyboard Suite</h2>
-            <p class="text-stone-400 text-lg">High-precision polling rate and latency checkers for competitive peripherals.</p>
+          <div class="section-header mb-10 border-b border-[var(--color-border-subtle)] pb-6">
+            <h2 class="text-3xl font-bold tracking-tight text-[var(--color-text-primary)] mb-3">Mouse & Keyboard Suite</h2>
+            <p class="text-[var(--color-text-secondary)] text-lg font-medium">High-precision polling rate and latency checkers for competitive peripherals.</p>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div class="grid-tools">
             {mouseTools.map(tool => (
-              <a href={tool.url} class="group relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-emerald-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-transparent to-cyan-500/0 group-hover:from-emerald-500/10 group-hover:to-cyan-500/10 transition-colors duration-500"></div>
-                <div class="relative z-10 flex flex-col h-full">
-                  <div class="w-12 h-12 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
-                    {tool.icon}
+              <a href={tool.url} class="tool-hub-card card-hover card-base">
+                <div class="card-top-bar">
+                  <div class="card-icon">
+                    <span class="text-xl" aria-hidden="true">{tool.icon}</span>
                   </div>
-                  <h3 class="text-lg font-bold text-white mb-2 tracking-tight group-hover:text-emerald-400 transition-colors">{tool.name}</h3>
-                  <p class="text-sm text-stone-400 leading-relaxed font-medium">{tool.desc}</p>
                 </div>
+                <h3 class="card-tool-name">{tool.name}</h3>
+                <p class="card-tool-desc">{tool.desc}</p>
+                <span class="card-action-link">
+                  Run test
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </span>
               </a>
             ))}
           </div>
@@ -158,42 +165,139 @@ const specializedTools = [
 
         {/* Specialized Suite */}
         <section class="toolkit-section">
-          <div class="section-header mb-12">
-            <h2 class="text-3xl font-bold tracking-tight text-white mb-3">High-SEA Programmatic Suite</h2>
-            <p class="text-stone-400 text-lg">Advanced physics, spatial audio, and aim-training sandbox engines.</p>
+          <div class="section-header mb-10 border-b border-[var(--color-border-subtle)] pb-6">
+            <h2 class="text-3xl font-bold tracking-tight text-[var(--color-text-primary)] mb-3">High-SEA Programmatic Suite</h2>
+            <p class="text-[var(--color-text-secondary)] text-lg font-medium">Advanced physics, spatial audio, and aim-training sandbox engines.</p>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="grid-tools">
             {specializedTools.map(tool => (
-              <a href={tool.url} class="group relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 transition-all duration-500 hover:-translate-y-2 hover:bg-white/10 hover:border-fuchsia-500/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.2)] overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-br from-fuchsia-500/0 via-transparent to-purple-500/0 group-hover:from-fuchsia-500/10 group-hover:to-purple-500/10 transition-colors duration-500"></div>
-                <div class="relative z-10 flex flex-col h-full">
-                  <div class="w-12 h-12 rounded-2xl bg-black/40 border border-white/10 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
-                    {tool.icon}
+              <a href={tool.url} class="tool-hub-card card-hover card-base">
+                <div class="card-top-bar">
+                  <div class="card-icon">
+                    <span class="text-xl" aria-hidden="true">{tool.icon}</span>
                   </div>
-                  <h3 class="text-lg font-bold text-white mb-2 tracking-tight group-hover:text-fuchsia-400 transition-colors">{tool.name}</h3>
-                  <p class="text-sm text-stone-400 leading-relaxed font-medium">{tool.desc}</p>
                 </div>
+                <h3 class="card-tool-name">{tool.name}</h3>
+                <p class="card-tool-desc">{tool.desc}</p>
+                <span class="card-action-link">
+                  Run test
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </span>
               </a>
             ))}
           </div>
         </section>
       </div>
 
-      <section class="mt-32 pt-16 border-t border-white/10 grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="relative bg-gradient-to-br from-blue-900/20 to-transparent border border-blue-500/20 rounded-[2rem] p-10 overflow-hidden group">
-          <div class="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay"></div>
-          <h3 class="text-2xl font-bold text-white mb-4 relative z-10">Embed these tools</h3>
-          <p class="text-blue-200/70 mb-8 relative z-10 text-lg">Get free gamepad testing widgets for your website. Easy to integrate, fully responsive, and zero dependencies.</p>
-          <a href="/embeds" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-blue-500 text-white font-bold hover:bg-blue-400 transition-colors relative z-10 shadow-[0_0_20px_rgba(59,130,246,0.4)]">Explore Widgets</a>
+      <section class="mt-32 pt-16 border-t border-[var(--color-border-subtle)] grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="relative bg-[var(--color-surface-1)] border border-[var(--color-border-default)] rounded-[2rem] p-10 overflow-hidden group shadow-sm">
+          <div class="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay"></div>
+          <h3 class="text-2xl font-bold text-[var(--color-text-primary)] mb-4 relative z-10">Embed these tools</h3>
+          <p class="text-[var(--color-text-secondary)] mb-8 relative z-10 text-lg font-medium">Get free gamepad testing widgets for your website. Easy to integrate, fully responsive, and zero dependencies.</p>
+          <a href="/embeds" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[var(--color-accent)] text-white font-bold hover:bg-[var(--color-accent-hover)] transition-colors relative z-10 shadow-md">Explore Widgets</a>
         </div>
         
-        <div class="relative bg-gradient-to-br from-stone-800/40 to-transparent border border-white/10 rounded-[2rem] p-10 overflow-hidden group">
-          <h3 class="text-2xl font-bold text-white mb-4 relative z-10">Need a New Tool?</h3>
-          <p class="text-stone-400 mb-8 relative z-10 text-lg">We're constantly expanding our dataset and toolkit. If you need a specific tool, let us know.</p>
-          <a href="/contact" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-white/10 text-white font-bold hover:bg-white/20 border border-white/10 transition-colors relative z-10">Submit Feedback</a>
+        <div class="relative bg-[var(--color-surface-2)] border border-[var(--color-border-default)] rounded-[2rem] p-10 overflow-hidden group shadow-sm">
+          <h3 class="text-2xl font-bold text-[var(--color-text-primary)] mb-4 relative z-10">Need a New Tool?</h3>
+          <p class="text-[var(--color-text-secondary)] mb-8 relative z-10 text-lg font-medium">We're constantly expanding our dataset and toolkit. If you need a specific tool, let us know.</p>
+          <a href="/contact" class="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[var(--color-surface-3)] text-[var(--color-text-primary)] font-bold hover:bg-[var(--color-surface-4)] border border-[var(--color-border-default)] transition-colors relative z-10">Submit Feedback</a>
         </div>
       </section>
     </div>
   </main>
   <Footer />
 </BaseLayout>
+
+<style>
+  /* Local styling rules in case some CSS global classes were missing. We strictly use container-site. */
+  .grid-tools {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    width: 100%;
+  }
+
+  .tool-hub-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    padding: 1.5rem;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: var(--radius-lg, 1.25rem);
+    transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .tool-hub-card:hover {
+    text-decoration: none;
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .card-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm, 0.5rem);
+    background: var(--color-surface-3);
+    border: 1px solid var(--color-border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-primary);
+    transition: transform 0.3s ease;
+  }
+  
+  .tool-hub-card:hover .card-icon {
+    transform: scale(1.1) rotate(5deg);
+    color: var(--color-accent);
+  }
+
+  .badge-tag {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    background: rgba(37, 99, 235, 0.15);
+    color: var(--color-accent);
+    padding: 0.2em 0.55em;
+    border-radius: 3px;
+    border: 1px solid rgba(37, 99, 235, 0.2);
+  }
+
+  .card-tool-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .card-tool-desc {
+    font-size: var(--text-small, 0.875rem);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    flex-grow: 1;
+  }
+
+  .card-action-link {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: var(--text-small, 0.875rem);
+    font-weight: 600;
+    color: var(--color-accent);
+    margin-top: 0.25rem;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+  }
+  
+  .tool-hub-card:hover .card-action-link {
+    opacity: 1;
+  }
+</style>

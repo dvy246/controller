@@ -5,11 +5,11 @@
  */
 ---
 
-<div class="circularity-tester group" id="circ-tester-root" data-model="none">
+<div class="doppelrand-shell group relative" data-model="none" id="circ-tester-root">
   {/* Dynamic ambient glow based on controller type */}
   <div class="ambient-glow" id="ambient-glow"></div>
-
-  <div class="tester-status-bar glass-panel relative z-10">
+  <div class="doppelrand-core flex flex-col gap-8 relative z-10">
+  <div class="tester-status-bar card-base relative z-10">
     <div class="status-indicator">
       <span class="status-dot" id="circ-status-dot"></span>
       <span class="status-text" id="circ-status-text">Rotate both thumbsticks 360 degrees to measure circularity...</span>
@@ -20,7 +20,7 @@
   <div class="circ-grid relative z-10">
 
     {/* Left Stick Canvas */}
-    <div class="circ-card glass-panel">
+    <div class="circ-card card-gradient card-hover">
       <div class="circ-header">
         <h3 class="circ-title text-stone-100">Left Stick Circularity</h3>
         <span class="circ-err-val" id="left-circ-err">0.0% Error</span>
@@ -45,7 +45,7 @@
     </div>
 
     {/* Right Stick Canvas */}
-    <div class="circ-card glass-panel">
+    <div class="circ-card card-gradient card-hover">
       <div class="circ-header">
         <h3 class="circ-title text-stone-100">Right Stick Circularity</h3>
         <span class="circ-err-val" id="right-circ-err">0.0% Error</span>
@@ -73,6 +73,7 @@
 
   <div class="tester-controls">
     <button type="button" class="btn-secondary" id="btn-reset-circ">Reset Circularity Data</button>
+  </div>
   </div>
 </div>
 

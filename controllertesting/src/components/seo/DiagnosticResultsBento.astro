@@ -1,0 +1,59 @@
+---
+interface Props {
+  title?: string;
+  subtitle?: string;
+}
+
+const { 
+  title = "Diagnostics Results",
+  subtitle = "Hardware variance and drift severity classification scale."
+} = Astro.props;
+---
+
+<div class="premium-bento-section my-24" data-reveal>
+  <div class="text-center sm:text-left mb-12">
+    <h2 class="text-4xl font-extrabold text-primary tracking-tight mb-3">{title}</h2>
+    <p class="text-base text-secondary max-w-2xl">{subtitle}</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-min">
+    
+    <!-- Pass Card -->
+    <div class="col-span-1 md:col-span-8 doppelrand-shell p-[0.375rem] rounded-[2rem] bg-emerald-500/5 group transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.01]">
+      <div class="doppelrand-core bg-surface-1 border border-emerald-500/20 rounded-[calc(2rem-0.375rem)] p-8 h-full shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]">
+        <div class="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center mb-6 border border-emerald-500/20">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        </div>
+        <h3 class="text-2xl font-bold text-primary mb-2">0.0% – 2.0% (Healthy)</h3>
+        <p class="text-secondary leading-relaxed">Normal variance. Your controller is operating flawlessly with factory-spec centering. No repairs needed.</p>
+      </div>
+    </div>
+
+    <!-- Warning Card -->
+    <div class="col-span-1 md:col-span-4 doppelrand-shell p-[0.375rem] rounded-[2rem] bg-amber-500/5 group transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.01]">
+      <div class="doppelrand-core bg-surface-1 border border-amber-500/20 rounded-[calc(2rem-0.375rem)] p-8 h-full shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center mb-6 border border-amber-500/20">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-amber-500"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          </div>
+          <h3 class="text-xl font-bold text-primary mb-2">2.1% – 10.0%</h3>
+          <p class="text-sm text-secondary">Slight potentiometer wear detected. Monitor for degradation.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fail Card -->
+    <div class="col-span-1 md:col-span-12 doppelrand-shell p-[0.375rem] rounded-[2rem] bg-red-500/5 group transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.01]">
+      <div class="doppelrand-core bg-surface-1 border border-red-500/20 rounded-[calc(2rem-0.375rem)] p-8 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)] flex flex-col sm:flex-row items-center sm:items-start gap-6">
+        <div class="w-16 h-16 shrink-0 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-500"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+        </div>
+        <div class="text-center sm:text-left">
+          <h3 class="text-2xl font-bold text-primary mb-2">> 10.0% (Severe Drift)</h3>
+          <p class="text-secondary leading-relaxed max-w-3xl">Critical component failure. Gameplay will be severely impacted by phantom inputs. A sensor replacement or Hall Effect modification is required to restore function.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

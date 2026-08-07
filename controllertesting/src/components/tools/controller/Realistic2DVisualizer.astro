@@ -1,0 +1,126 @@
+---
+export interface Props {
+  imageSrc: string;
+  brand: 'xbox' | 'switch';
+}
+
+const { imageSrc, brand } = Astro.props;
+
+// Approximate stick positions based on typical product photos for these brands
+const config = {
+  xbox: {
+    leftStick: { left: '28%', top: '39%' },
+    rightStick: { left: '64%', top: '61%' }
+  },
+  switch: {
+    leftStick: { left: '12%', top: '28%' },
+    rightStick: { left: '88%', top: '66%' }
+  }
+};
+
+const currentConfig = config[brand];
+---
+
+<div class="realistic-2d-visualizer w-full h-full min-h-[500px] flex flex-col items-center justify-center relative overflow-hidden" id="realistic-2d-container">
+  
+  <div class="telemetry-hud absolute top-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2">
+    <div class="status-indicator bg-black/40 backdrop-blur-xl border border-white/10 px-4 py-1.5 rounded-full flex items-center gap-2 font-mono text-xs text-white/60 tracking-widest uppercase">
+      <span class="status-dot w-2 h-2 rounded-full bg-white/20 transition-all duration-300" id="status-dot"></span>
+      <span id="status-text">Awaiting Gamepad</span>
+    </div>
+  </div>
+
+  <div class="controller-wrapper relative w-full max-w-2xl mx-auto px-4 transition-transform duration-700 hover:scale-105" id="controller-wrapper">
+    <img src={imageSrc} alt={`${brand} controller layout`} class="w-full h-auto object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]" />
+    
+    <!-- Left Stick -->
+    <div class="analog-stick absolute w-[12%] aspect-square rounded-full flex items-center justify-center shadow-2xl" 
+         style={`left: ${currentConfig.leftStick.left}; top: ${currentConfig.leftStick.top}; transform: translate(-50%, -50%);`}
+         id="left-stick-container">
+      <div class="stick-cap w-[90%] h-[90%] rounded-full bg-black/40 backdrop-blur-md border border-white/20 shadow-[inset_0_2px_4px_rgba(255,255,255,0.2),0_4px_12px_rgba(0,0,0,0.5)] transition-transform duration-75 will-change-transform" id="left-stick-cap">
+        <div class="absolute inset-0 rounded-full shadow-[0_0_20px_var(--glow-color,rgba(255,255,255,0))] transition-shadow duration-300"></div>
+      </div>
+    </div>
+
+    <!-- Right Stick -->
+    <div class="analog-stick absolute w-[12%] aspect-square rounded-full flex items-center justify-center shadow-2xl" 
+         style={`left: ${currentConfig.rightStick.left}; top: ${currentConfig.rightStick.top}; transform: translate(-50%, -50%);`}
+         id="right-stick-container">
+      <div class="stick-cap w-[90%] h-[90%] rounded-full bg-black/40 backdrop-blur-md border border-white/20 shadow-[inset_0_2px_4px_rgba(255,255,255,0.2),0_4px_12px_rgba(0,0,0,0.5)] transition-transform duration-75 will-change-transform" id="right-stick-cap">
+        <div class="absolute inset-0 rounded-full shadow-[0_0_20px_var(--glow-color,rgba(255,255,255,0))] transition-shadow duration-300"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .stick-cap {
+    /* 3D effect base */
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.8) 100%);
+  }
+</style>
+
+<script>
+  import { parseGamepadState } from '../../../lib/gamepad.ts';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const leftStickCap = document.getElementById('left-stick-cap');
+    const rightStickCap = document.getElementById('right-stick-cap');
+    const statusDot = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+    const container = document.getElementById('realistic-2d-container');
+    const controllerWrapper = document.getElementById('controller-wrapper');
+    
+    // Set brand specific glow
+    const brand = container?.querySelector('img')?.alt.includes('xbox') ? 'xbox' : 'switch';
+    const glowColor = brand === 'xbox' ? 'rgba(16,124,16,0.6)' : 'rgba(227,0,11,0.6)';
+    
+    if (leftStickCap) leftStickCap.style.setProperty('--glow-color', glowColor);
+    if (rightStickCap) rightStickCap.style.setProperty('--glow-color', glowColor);
+
+    let animationFrameId: number;
+
+    function updateTelemetry() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i]?.connected) { activeGp = gamepads[i]; break; }
+      }
+
+      if (activeGp && statusDot && statusText && leftStickCap && rightStickCap && controllerWrapper) {
+        const state = parseGamepadState(activeGp);
+        
+        statusDot.classList.add('bg-green-500');
+        statusDot.classList.remove('bg-white/20');
+        statusDot.style.boxShadow = '0 0 10px rgba(34, 197, 94, 0.6)';
+        statusText.style.color = '#fff';
+        statusText.textContent = `Connected: ${state.detectedModel || 'Gamepad'}`;
+        
+        // Max translation in pixels based on relative size
+        const maxOffset = controllerWrapper.clientWidth * 0.05; // 5% of width
+
+        // Update left stick DOM (Zero latency translation)
+        leftStickCap.style.transform = `translate(${state.leftStick.x * maxOffset}px, ${state.leftStick.y * maxOffset}px) scale(1.05)`;
+        
+        // Update right stick DOM
+        rightStickCap.style.transform = `translate(${state.rightStick.x * maxOffset}px, ${state.rightStick.y * maxOffset}px) scale(1.05)`;
+
+      } else {
+        if (statusDot && statusText) {
+          statusDot.classList.remove('bg-green-500');
+          statusDot.classList.add('bg-white/20');
+          statusDot.style.boxShadow = 'none';
+          statusText.style.color = 'rgba(255,255,255,0.6)';
+          statusText.textContent = 'Awaiting Gamepad';
+        }
+        if (leftStickCap) leftStickCap.style.transform = `translate(0px, 0px) scale(1)`;
+        if (rightStickCap) rightStickCap.style.transform = `translate(0px, 0px) scale(1)`;
+      }
+
+      animationFrameId = requestAnimationFrame(updateTelemetry);
+    }
+
+    // Start loop
+    animationFrameId = requestAnimationFrame(updateTelemetry);
+  });
+</script>

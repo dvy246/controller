@@ -5,7 +5,10 @@
  */
 
 import ToolLayout from '../../../layouts/ToolLayout.astro';
-import DriftTester from '../../../components/tools/controller/DriftTester.astro';
+import Interactive3DVisualizer from '../../../components/tools/controller/Interactive3DVisualizer.astro';
+import DiagnosticResultsBento from '../../../components/seo/DiagnosticResultsBento.astro';
+import PremiumGuideCard from '../../../components/seo/PremiumGuideCard.astro';
+import PremiumFaqAccordion from '../../../components/seo/PremiumFaqAccordion.astro';
 
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
@@ -102,42 +105,39 @@ const schemaData = {
 
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
-    <DriftTester />
-  </Fragment>
+    <div class="doppelrand-shell ps5-brand-shell group relative" data-model="playstation">
+      <!-- PlayStation Blue Ambient Glow -->
+      
+      <!-- Floating PS Geometry (CSS only for vibe) -->
+      <div class="ps-geometry-bg" aria-hidden="true">
+         <span class="ps-shape ps-cross">×</span>
+         <span class="ps-shape ps-circle">○</span>
+         <span class="ps-shape ps-square">□</span>
+         <span class="ps-shape ps-triangle">△</span>
+      </div>
 
-  {/* ── Results Slot ── */}
-  <Fragment slot="results">
-    <div class="results-summary">
-      <h2 class="section-title">Diagnostics Results</h2>
-      <div class="results-legend-grid">
-        <div class="legend-card legend-pass">
-          <strong class="legend-title">0.0% – 2.0% (Healthy)</strong>
-          <p class="legend-text">Normal variance. Your controller is operating flawlessly.</p>
-        </div>
-        <div class="legend-card legend-warning">
-          <strong class="legend-title">2.1% – 10.0% (Minor Drift)</strong>
-          <p class="legend-text">Slight potentiometer wear detected.</p>
-        </div>
-        <div class="legend-card legend-fail">
-          <strong class="legend-title">> 10.0% (Severe Drift)</strong>
-          <p class="legend-text">Severe drift detected. Repair is highly recommended.</p>
-        </div>
+      <div class="doppelrand-core flex flex-col relative z-10" style="min-height: 500px; padding: 0;">
+        <Interactive3DVisualizer isRigid={true} />
       </div>
     </div>
   </Fragment>
 
+  {/* ── Results Slot ── */}
+  <Fragment slot="results">
+    <DiagnosticResultsBento />
+  </Fragment>
+
   {/* ── SEO Repair Guide Section ── */}
   <Fragment slot="export">
-    <div class="repair-guide" style="margin-top: 3rem; background: var(--color-surface-2); padding: 2rem; border-radius: var(--radius-card); border: 1px solid var(--color-border-subtle);">
-      <h2 style="margin-bottom: 1rem; font-size: 1.5rem; color: var(--color-text-primary);">How do you test and fix PS5 DualSense stick drift?</h2>
-      <p style="margin-bottom: 1.5rem; color: var(--color-text-secondary); line-height: 1.6;"><strong>To test for PS5 DualSense stick drift, use a web-based controller tester to measure analog stick centering precision. If drift exceeds five percent, try resetting the controller using the back pinhole. If the issue persists, the internal potentiometer requires replacement or a warranty claim.</strong></p>
+    <PremiumGuideCard title="How do you test and fix PS5 DualSense stick drift?">
+      <p>To test for PS5 DualSense stick drift, use a web-based controller tester to measure analog stick centering precision. If drift exceeds five percent, try resetting the controller using the back pinhole. If the issue persists, the internal potentiometer requires replacement or a warranty claim.</p>
       
-      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-        <div>
-          <h3 style="color: var(--color-accent); margin-bottom: 0.5rem;">Recommended Actions</h3>
-          <p style="color: var(--color-text-secondary); line-height: 1.6;">Always begin by using our free <a href="/test/controller/drift">drift diagnostic tool</a> to identify the exact cause of any input inconsistencies before attempting repairs.</p>
-        </div>
-      </div>
+      <h3 style="color: var(--color-accent); margin-bottom: 0.5rem; font-size: 1.2rem; font-weight: bold;">Recommended Actions</h3>
+      <p>Always begin by using our free <a href="/test/controller/drift">drift diagnostic tool</a> to identify the exact cause of any input inconsistencies before attempting repairs.</p>
+    </PremiumGuideCard>
+
+    <div class="max-w-4xl mx-auto px-4">
+      <PremiumFaqAccordion faqs={faqs} title="PS5 DualSense FAQs" subtitle="Common issues and questions about Sony's DualSense controller." />
     </div>
   </Fragment>
 
@@ -153,3 +153,41 @@ const schemaData = {
     </a>
   </Fragment>
 </ToolLayout>
+
+<style>
+  .ps5-brand-shell {
+    --ambient-glow: #2563EB;
+    background: radial-gradient(circle at center, rgba(37, 99, 235, 0.25) 0%, transparent 60%),
+                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(37, 99, 235, 0.05) 10px, rgba(37, 99, 235, 0.05) 20px);
+    box-shadow: inset 0 0 40px rgba(37, 99, 235, 0.1), 0 0 60px rgba(37, 99, 235, 0.2);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+  }
+  .ps-geometry-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+    opacity: 0.1;
+  }
+  .ps-shape {
+    position: absolute;
+    font-size: 8rem;
+    font-weight: 300;
+    color: #fff;
+    filter: blur(2px);
+    animation: floatShape 20s infinite linear;
+  }
+  .ps-cross { top: 10%; left: 10%; animation-delay: 0s; }
+  .ps-circle { top: 20%; right: 15%; animation-delay: -5s; }
+  .ps-square { bottom: 15%; left: 20%; animation-delay: -10s; }
+  .ps-triangle { bottom: 10%; right: 10%; animation-delay: -15s; }
+
+  @keyframes floatShape {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0.1; }
+    50% { transform: translateY(-40px) rotate(180deg); opacity: 0.3; }
+    100% { transform: translateY(0) rotate(360deg); opacity: 0.1; }
+  }
+</style>

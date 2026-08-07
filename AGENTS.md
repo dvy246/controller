@@ -10,9 +10,9 @@ This document serves as the absolute source of truth for all AI agents, software
 *   **Styling**: Tailwind CSS v4 via `@tailwindcss/vite` plugin (`@import "tailwindcss"` and `@theme` tokens in `src/styles/global.css`).
 *   **Client Interactivity**: Vanilla JS & Astro Client Islands (`client:visible`, `client:idle`). Zero heavy JavaScript framework overhead on content pages.
 *   **Typography**: Geist Sans & Geist Mono font stack. **Inter and Roboto are strictly banned**.
-*   **Design System**: 5-Layer Surface Depth System (`--color-surface-0` through `--color-surface-4`), Electric Cobalt accent (`#2563EB`), Pass Emerald (`#10B981`), Warning Amber (`#F59E0B`), Fail Red (`#EF4444`).
+*   **Design System**: 5-Layer Surface Depth System (`--color-surface-0` through `--color-surface-4`), Electric Cobalt accent (`#2563EB`), Pass Emerald (`#10B981`), Warning Amber (`#F59E0B`), Fail Red (`#EF4444`). Uses nested `Doppelrand` shell architecture for premium component containers (`DiagnosticResultsBento`, `PremiumGuideCard`).
 *   **Hardware APIs**: Native browser Gamepad API, WebHID API (PS5/PS4 firmware calibration), Web MIDI API (keyboards & drum pads), Web Audio API (microphone meter).
-*   **3D Interactive Graphics**: Three.js (ESM CDN) with GLTFLoader & DRACOLoader for high-fidelity photorealistic product visualization (PS5 Controller GLB) powered by real-time Gamepad API telemetry.
+*   **3D Interactive Graphics**: Three.js (ESM CDN) with GLTFLoader & DRACOLoader for high-fidelity photorealistic product visualization (PS5, Xbox, and Nintendo Switch GLB models) powered by real-time Gamepad API telemetry. Includes **Strict Hardware Mismatch Detection** and a glassmorphic **Awaiting Connection Overlay** (`Interactive3DVisualizer.astro`) which prevents users from testing with the wrong gamepad and gracefully handles disconnections.
 
 ---
 
@@ -72,11 +72,11 @@ This document serves as the absolute source of truth for all AI agents, software
 20. **Touchpad Tester** (`/test/controller/touchpad`) — PS5 DualSense multi-touch trackpad (`TouchpadTester.astro`).
 21. **Microphone Tester** (`/test/controller/microphone`) — Built-in mic & 3.5mm headset audio meter (`MicrophoneTester.astro`).
 22. **Competitive Readiness** (`/test/controller/competitive-readiness`) — Esports tournament benchmark assessor (`CompetitiveReadiness.astro`).
-23. **Nintendo Switch Tester** (`/test/controller/nintendo-switch`) — Nintendo Switch controller tester (`nintendo-switch.astro`).
-24. **PS5 DualSense Tester** (`/test/controller/ps5`) — PS5 controller tester (`ps5.astro`).
-25. **Xbox Controller Tester** (`/test/controller/xbox`) — Xbox controller tester (`xbox.astro`).
-26. **Joy-Con Tester** (`/test/controller/joycon`) — Joy-Con controller tester (`joycon.astro`).
-27. **Switch Pro Tester** (`/test/controller/switch-pro`) — Switch Pro controller tester (`switch-pro.astro`).
+23. **Nintendo Switch Tester** (`/test/controller/nintendo-switch`) — Nintendo Switch controller tester (`nintendo-switch.astro`). Renders with `DiagnosticResultsBento` & `PremiumGuideCard`.
+24. **PS5 DualSense Tester** (`/test/controller/ps5`) — PS5 controller tester (`ps5.astro`). Renders with `DiagnosticResultsBento` & `PremiumGuideCard`.
+25. **Xbox Controller Tester** (`/test/controller/xbox`) — Xbox controller tester (`xbox.astro`). Renders with `DiagnosticResultsBento` & `PremiumGuideCard`.
+26. **Joy-Con Tester** (`/test/controller/joycon`) — Joy-Con controller tester (`joycon.astro`). Renders with `DiagnosticResultsBento` & `PremiumGuideCard`.
+27. **Switch Pro Tester** (`/test/controller/switch-pro`) — Switch Pro controller tester (`switch-pro.astro`). Renders with `DiagnosticResultsBento` & `PremiumGuideCard`.
 28. **Joystick Tester** (`/test/controller/joystick-tester`) — Joystick & flight stick tester (`joystick-tester.astro`).
 29. **Gamepad Mapping** (`/test/controller/gamepad-mapping`) — Gamepad mapping and button rebind tester (`gamepad-mapping.astro`).
 

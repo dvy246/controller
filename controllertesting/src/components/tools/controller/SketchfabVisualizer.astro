@@ -1,0 +1,314 @@
+---
+/**
+ * SketchfabVisualizer.astro
+ * 
+ * Renders a Sketchfab iframe embed while overlaying our premium, real-time telemetry HUD on top.
+ */
+
+export interface Props {
+  embedSrc: string;
+}
+
+const { embedSrc } = Astro.props;
+---
+<div class="sketchfab-wrapper">
+  
+  <!-- Sketchfab iframe -->
+  <iframe 
+    title="3D Controller Model" 
+    frameborder="0" 
+    allowfullscreen 
+    mozallowfullscreen="true" 
+    webkitallowfullscreen="true" 
+    allow="autoplay; fullscreen; xr-spatial-tracking" 
+    xr-spatial-tracking 
+    execution-while-out-of-viewport 
+    execution-while-not-rendered 
+    web-share 
+    src={embedSrc}
+    class="sketchfab-iframe"
+  ></iframe>
+
+  <!-- Subtle Tech Overlay / Badge -->
+  <div class="telemetry-hud" id="telemetry-hud">
+    <div class="status-indicator">
+      <span class="status-dot" id="status-dot"></span>
+      <span id="status-text">Awaiting Gamepad</span>
+    </div>
+    <div class="telemetry-dashboard" id="telemetry-data" style="display: none;">
+      
+      <!-- Sticks -->
+      <div class="telemetry-section">
+        <div class="telemetry-label">ANALOG STICKS</div>
+        <div class="telemetry-row">
+          <span class="telemetry-key">LS</span>
+          <span class="telemetry-val" id="ls-val">0.00, 0.00</span>
+        </div>
+        <div class="telemetry-row">
+          <span class="telemetry-key">RS</span>
+          <span class="telemetry-val" id="rs-val">0.00, 0.00</span>
+        </div>
+      </div>
+      
+      <div class="telemetry-divider"></div>
+
+      <!-- Triggers -->
+      <div class="telemetry-section">
+        <div class="telemetry-label">ANALOG TRIGGERS</div>
+        <div class="telemetry-row">
+          <span class="telemetry-key">LT</span>
+          <div class="telemetry-bar-bg"><div class="telemetry-bar-fill" id="lt-val" style="width: 0%"></div></div>
+        </div>
+        <div class="telemetry-row">
+          <span class="telemetry-key">RT</span>
+          <div class="telemetry-bar-bg"><div class="telemetry-bar-fill" id="rt-val" style="width: 0%"></div></div>
+        </div>
+      </div>
+
+      <div class="telemetry-divider"></div>
+
+      <!-- Active Buttons -->
+      <div class="telemetry-section">
+        <div class="telemetry-label">ACTIVE INPUTS</div>
+        <div class="telemetry-buttons" id="active-buttons">
+          <span class="telemetry-empty">None</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  .sketchfab-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+
+  .sketchfab-iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: auto;
+  }
+
+  /* Premium HUD styling */
+  .telemetry-hud {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 1; /* Always visible to show connection status */
+  }
+
+  .status-indicator {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 8px 16px;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+  }
+  .status-dot.connected { 
+    background: var(--color-pass, #10b981); 
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.8); 
+  }
+
+  .telemetry-dashboard {
+    background: rgba(6, 6, 11, 0.6);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  }
+
+  .telemetry-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 100px;
+  }
+
+  .telemetry-divider {
+    width: 1px;
+    background: rgba(255,255,255,0.1);
+    align-self: stretch;
+  }
+
+  .telemetry-label {
+    font-family: var(--font-sans, sans-serif);
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+
+  .telemetry-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+  }
+
+  .telemetry-key {
+    color: rgba(255,255,255,0.5);
+    font-weight: 600;
+    width: 20px;
+  }
+
+  .telemetry-val {
+    color: #3b82f6;
+    font-weight: 700;
+  }
+
+  .telemetry-bar-bg {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    width: 60px;
+  }
+
+  .telemetry-bar-fill {
+    height: 100%;
+    background: #3b82f6;
+    border-radius: 3px;
+    box-shadow: 0 0 8px rgba(59,130,246,0.6);
+    transition: width 0.05s linear;
+  }
+
+  .telemetry-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-width: 120px;
+  }
+
+  /* Must use :global because the spans are injected via JS */
+  .telemetry-dashboard :global(.active-btn) {
+    background: rgba(59,130,246,0.2);
+    border: 1px solid rgba(59,130,246,0.5);
+    color: #60a5fa;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(59,130,246,0.3);
+  }
+
+  .telemetry-dashboard :global(.telemetry-empty) {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.2);
+    font-style: italic;
+  }
+</style>
+
+<script>
+  import { parseGamepadState } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Telemetry hook
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i]?.connected) { activeGp = gamepads[i]; break; }
+      }
+
+      const statusDot = document.getElementById('status-dot') as HTMLElement | null;
+      const statusText = document.getElementById('status-text') as HTMLElement | null;
+      const telemetryData = document.getElementById('telemetry-data') as HTMLElement | null;
+      
+      if (activeGp && statusDot && statusText && telemetryData) {
+        const state = parseGamepadState(activeGp);
+        statusDot.classList.add('connected');
+        statusText.style.color = '#fff';
+        statusText.textContent = `Connected: ${state.detectedModel || 'Gamepad'}`;
+        
+        telemetryData.style.display = 'flex';
+        const lsVal = document.getElementById('ls-val');
+        if (lsVal) lsVal.textContent = `${state.leftStick.x.toFixed(2)}, ${state.leftStick.y.toFixed(2)}`;
+        const rsVal = document.getElementById('rs-val');
+        if (rsVal) rsVal.textContent = `${state.rightStick.x.toFixed(2)}, ${state.rightStick.y.toFixed(2)}`;
+
+        // 1. Triggers
+        const ltVal = document.getElementById('lt-val');
+        if (ltVal) ltVal.style.width = `${state.triggers.l2 * 100}%`;
+        const rtVal = document.getElementById('rt-val');
+        if (rtVal) rtVal.style.width = `${state.triggers.r2 * 100}%`;
+
+        // 2. Buttons
+        const activeBtnsNode = document.getElementById('active-buttons');
+        if (activeBtnsNode) {
+          // Standard Gamepad API Mapping
+          const BTN_MAP = ["A/×", "B/○", "X/□", "Y/△", "L1", "R1", "L2", "R2", "Share", "Menu", "L3", "R3", "Up", "Down", "Left", "Right", "Home"];
+          const activeHtml: string[] = [];
+          
+          state.buttons.forEach((btn, idx) => {
+            if (btn.pressed) {
+              const name = BTN_MAP[idx] || `B${idx}`;
+              activeHtml.push(`<span class="active-btn">${name}</span>`);
+            }
+          });
+
+          if (activeHtml.length > 0) {
+            activeBtnsNode.innerHTML = activeHtml.join('');
+          } else {
+            activeBtnsNode.innerHTML = '<span class="telemetry-empty">None</span>';
+          }
+        }
+
+      } else if (statusDot && statusText && telemetryData) {
+        statusDot.classList.remove('connected');
+        statusText.style.color = 'rgba(255,255,255,0.6)';
+        statusText.textContent = 'Awaiting Gamepad';
+        telemetryData.style.display = 'none';
+      }
+    }
+    
+    requestAnimationFrame(animate);
+  });
+</script>

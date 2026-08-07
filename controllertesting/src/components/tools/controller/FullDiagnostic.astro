@@ -12,11 +12,10 @@
  */
 ---
 
-<div class="diagnostic-wizard relative rounded-3xl overflow-hidden p-[1px] bg-gradient-to-b from-white/10 to-transparent shadow-2xl" id="diag-wizard">
-  <div class="absolute inset-0 bg-[#0A0A0E] z-0"></div>
+<div class="doppelrand-shell group relative" data-model="none" id="diag-wizard">
   <div class="ambient-glow absolute -top-[50%] -left-[50%] w-[200%] h-[200%] pointer-events-none z-0 bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.08)_0%,transparent_50%)]"></div>
 
-  <div class="wizard-container relative z-10 flex flex-col p-6 sm:p-10 gap-8 h-full bg-[#0A0A0E]/80 backdrop-blur-3xl rounded-[calc(1.5rem-1px)]">
+  <div class="doppelrand-core flex flex-col p-6 sm:p-10 gap-8 relative z-10 h-full">
     
     {/* ── Wizard Progress Bar ── */}
     <div class="wizard-header flex flex-col gap-4">
@@ -40,15 +39,15 @@
       </div>
       <div class="panel-body">
         <div class="diag-metrics-row grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="diag-metric-box glass-card">
+          <div class="diag-metric-box card-gradient card-hover">
             <span class="d-label">Left Stick Drift</span>
             <span class="d-val text-yellow-500 text-glow-yellow" id="diag-left-drift">0.0%</span>
           </div>
-          <div class="diag-metric-box glass-card">
+          <div class="diag-metric-box card-gradient card-hover">
             <span class="d-label">Right Stick Drift</span>
             <span class="d-val text-emerald-400 text-glow-emerald" id="diag-right-drift">0.0%</span>
           </div>
-          <div class="diag-metric-box glass-card">
+          <div class="diag-metric-box card-gradient card-hover">
             <span class="d-label">Circularity Error</span>
             <span class="d-val text-emerald-400 text-glow-emerald" id="diag-circ-error">0.0%</span>
           </div>
@@ -97,7 +96,7 @@
       </div>
       <div class="panel-body">
         <div class="triggers-progress-wrap flex flex-col gap-6">
-          <div class="trigger-bar-box p-6 glass-card">
+          <div class="trigger-bar-box p-6 card-gradient card-hover">
             <div class="flex justify-between items-end mb-3">
               <span class="text-sm font-bold tracking-wider text-stone-300 uppercase">L2 Trigger</span>
               <span class="font-mono text-2xl text-blue-400 font-bold" id="l2-val-text">0%</span>
@@ -106,7 +105,7 @@
               <div class="h-full bg-blue-500 shadow-[0_0_12px_rgba(59,130,246,0.8)] transition-all duration-75" id="l2-bar" style="width: 0%"></div>
             </div>
           </div>
-          <div class="trigger-bar-box p-6 glass-card">
+          <div class="trigger-bar-box p-6 card-gradient card-hover">
             <div class="flex justify-between items-end mb-3">
               <span class="text-sm font-bold tracking-wider text-stone-300 uppercase">R2 Trigger</span>
               <span class="font-mono text-2xl text-blue-400 font-bold" id="r2-val-text">0%</span>
@@ -155,7 +154,7 @@
         <h3 class="text-2xl font-bold tracking-tight text-white">Diagnostic Results</h3>
       </div>
       <div class="panel-body final-score-body flex justify-center py-8">
-        <div class="score-card-hero flex flex-col items-center text-center gap-6 p-10 glass-card rounded-3xl relative overflow-hidden">
+        <div class="score-card-hero flex flex-col items-center text-center gap-6 p-10 card-gradient card-hover rounded-3xl relative overflow-hidden">
           <div class="absolute inset-0 bg-gradient-to-t from-blue-500/10 to-transparent pointer-events-none"></div>
           <div class="score-number-wrap flex flex-col sm:flex-row items-center sm:items-baseline gap-4 relative z-10">
             <span class="score-display text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-stone-400 drop-shadow-2xl" id="final-score-num">88</span>

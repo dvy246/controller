@@ -102,7 +102,7 @@ function getHubIcon(href: string) {
 
       <div class="grid-tools">
         {controllerTools.map((tool) => (
-          <a href={tool.href} class="tool-hub-card card-base card-hover">
+          <a href={tool.href} class={`tool-hub-card card-hover ${tool.badge === 'Flagship' ? 'card-gradient' : 'card-base'}`}>
             <div class="card-top-bar">
               <span class="card-icon" set:html={getHubIcon(tool.href)} aria-hidden="true" />
               {tool.badge && <span class="badge-tag">{tool.badge}</span>}
@@ -182,16 +182,9 @@ function getHubIcon(href: string) {
     padding: 1.5rem;
     text-decoration: none;
     cursor: pointer;
-    background: var(--color-surface-2);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-card);
-    transition: background var(--duration-fast), border-color var(--duration-fast), transform var(--duration-fast);
   }
 
   .tool-hub-card:hover {
-    background: var(--color-surface-3);
-    border-color: var(--color-accent);
-    transform: translateY(-3px);
     text-decoration: none;
   }
 

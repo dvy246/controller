@@ -5,7 +5,10 @@
  */
 
 import ToolLayout from '../../../layouts/ToolLayout.astro';
-import DriftTester from '../../../components/tools/controller/DriftTester.astro';
+import Interactive3DVisualizer from '../../../components/tools/controller/Interactive3DVisualizer.astro';
+import DiagnosticResultsBento from '../../../components/seo/DiagnosticResultsBento.astro';
+import PremiumGuideCard from '../../../components/seo/PremiumGuideCard.astro';
+import PremiumFaqAccordion from '../../../components/seo/PremiumFaqAccordion.astro';
 
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
@@ -90,42 +93,47 @@ const schemaData = {
 
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
-    <DriftTester />
+    <div class="doppelrand-shell nintendo-brand-shell" data-model="switch">
+      <Interactive3DVisualizer />
+    </div>
+    <style>
+      .nintendo-brand-shell {
+        background: linear-gradient(135deg, rgba(255, 0, 50, 0.15) 0%, transparent 50%, rgba(0, 195, 227, 0.15) 100%);
+        border: 2px solid transparent;
+        background-clip: padding-box;
+        position: relative;
+        border-radius: 12px;
+        padding: 1rem;
+      }
+      .nintendo-brand-shell::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        margin: -2px;
+        border-radius: inherit;
+        background: linear-gradient(135deg, #ff0032 0%, #00c3e3 100%);
+        opacity: 0.5;
+      }
+    </style>
   </Fragment>
 
   {/* ── Results Slot ── */}
   <Fragment slot="results">
-    <div class="results-summary">
-      <h2 class="section-title">Diagnostics Results</h2>
-      <div class="results-legend-grid">
-        <div class="legend-card legend-pass">
-          <strong class="legend-title">0.0% – 2.0% (Healthy)</strong>
-          <p class="legend-text">Normal variance. Your controller is operating flawlessly.</p>
-        </div>
-        <div class="legend-card legend-warning">
-          <strong class="legend-title">2.1% – 10.0% (Minor Drift)</strong>
-          <p class="legend-text">Slight potentiometer wear detected.</p>
-        </div>
-        <div class="legend-card legend-fail">
-          <strong class="legend-title">> 10.0% (Severe Drift)</strong>
-          <p class="legend-text">Severe drift detected. Repair is highly recommended.</p>
-        </div>
-      </div>
-    </div>
+    <DiagnosticResultsBento />
   </Fragment>
 
   {/* ── SEO Repair Guide Section ── */}
   <Fragment slot="export">
-    <div class="repair-guide" style="margin-top: 3rem; background: var(--color-surface-2); padding: 2rem; border-radius: var(--radius-card); border: 1px solid var(--color-border-subtle);">
-      <h2 style="margin-bottom: 1rem; font-size: 1.5rem; color: var(--color-text-primary);">How to calibrate a Switch Pro Controller on PC?</h2>
-      <p style="margin-bottom: 1.5rem; color: var(--color-text-secondary); line-height: 1.6;"><strong>To calibrate a Switch Pro Controller on a PC, connect it via USB or Bluetooth. Open the Windows joy.cpl settings or Steam's controller configuration to adjust deadzones. For precise hardware-level testing, use a web-based tester to verify analog stick circularity and center offsets.</strong></p>
+    <PremiumGuideCard title="How to calibrate a Switch Pro Controller on PC?">
+      <p>To calibrate a Switch Pro Controller on a PC, connect it via USB or Bluetooth. Open the Windows joy.cpl settings or Steam's controller configuration to adjust deadzones. For precise hardware-level testing, use a web-based tester to verify analog stick circularity and center offsets.</p>
       
-      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-        <div>
-          <h3 style="color: var(--color-accent); margin-bottom: 0.5rem;">Recommended Actions</h3>
-          <p style="color: var(--color-text-secondary); line-height: 1.6;">Always begin by using our free <a href="/test/controller/drift">drift diagnostic tool</a> to identify the exact cause of any input inconsistencies before attempting repairs.</p>
-        </div>
-      </div>
+      <h3 style="color: var(--color-accent); margin-bottom: 0.5rem; font-size: 1.2rem; font-weight: bold;">Recommended Actions</h3>
+      <p>Always begin by using our free <a href="/test/controller/drift">drift diagnostic tool</a> to identify the exact cause of any input inconsistencies before attempting repairs.</p>
+    </PremiumGuideCard>
+
+    <div class="max-w-4xl mx-auto px-4">
+      <PremiumFaqAccordion faqs={faqs} title="Switch Pro Controller FAQs" subtitle="Common issues and questions about Nintendo's Pro Controller." />
     </div>
   </Fragment>
 

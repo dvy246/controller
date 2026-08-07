@@ -5,8 +5,10 @@
  */
 ---
 
-<div class="trigger-tester" id="trig-tester-root">
-  <div class="tester-status-bar">
+<div class="doppelrand-shell group relative" data-model="none" id="trig-tester-root">
+  <div class="ambient-glow"></div>
+  <div class="doppelrand-core flex flex-col gap-8 relative z-10">
+  <div class="tester-status-bar card-base">
     <div class="status-indicator">
       <span class="status-dot" id="trig-status-dot"></span>
       <span class="status-text" id="trig-status-text">Press L2 and R2 triggers to measure analog response...</span>
@@ -17,7 +19,7 @@
   <div class="triggers-grid">
 
     {/* L2 Trigger Card */}
-    <div class="trigger-card">
+    <div class="trigger-card card-gradient card-hover">
       <div class="trig-card-header">
         <h3 class="trig-title">Left Trigger (L2 / LT)</h3>
         <span class="trig-percentage" id="l2-pct-val">0.0%</span>
@@ -46,7 +48,7 @@
     </div>
 
     {/* R2 Trigger Card */}
-    <div class="trigger-card">
+    <div class="trigger-card card-gradient card-hover">
       <div class="trig-card-header">
         <h3 class="trig-title">Right Trigger (R2 / RT)</h3>
         <span class="trig-percentage" id="r2-pct-val">0.0%</span>
@@ -78,6 +80,7 @@
 
   <div class="tester-controls">
     <button type="button" class="btn-secondary" id="btn-reset-trig-max">Reset Max Peak Range</button>
+  </div>
   </div>
 </div>
 

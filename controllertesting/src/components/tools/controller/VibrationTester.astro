@@ -5,8 +5,10 @@
  */
 ---
 
-<div class="vibration-tester" id="vib-tester-root">
-  <div class="tester-status-bar">
+<div class="doppelrand-shell group relative" data-model="none" id="vib-tester-root">
+  <div class="ambient-glow"></div>
+  <div class="doppelrand-core flex flex-col gap-8 relative z-10">
+  <div class="tester-status-bar card-base">
     <div class="status-indicator">
       <span class="status-dot" id="vib-status-dot"></span>
       <span class="status-text" id="vib-status-text">Connect a gamepad supporting vibration actuators...</span>
@@ -17,7 +19,7 @@
   <div class="vib-controls-grid">
 
     {/* Left Motor (Heavy) */}
-    <div class="vib-card">
+    <div class="vib-card card-gradient card-hover">
       <h3 class="vib-card-title">Heavy Rumble Motor (Left)</h3>
       <p class="vib-card-desc">Tests low-frequency heavy rumble weight motor typically used for explosions & impacts.</p>
       <div class="slider-row">
@@ -29,7 +31,7 @@
     </div>
 
     {/* Right Motor (Light) */}
-    <div class="vib-card">
+    <div class="vib-card card-gradient card-hover">
       <h3 class="vib-card-title">Light Rumble Motor (Right)</h3>
       <p class="vib-card-desc">Tests high-frequency light rumble motor used for subtle textures, gunshots & engine revs.</p>
       <div class="slider-row">
@@ -42,12 +44,13 @@
 
   </div>
 
-  <div class="vib-dual-card">
+  <div class="vib-dual-card card-gradient card-hover">
     <div class="dual-header">
       <h3 class="vib-card-title">Dual Motor Haptic Sweep</h3>
       <p class="vib-card-desc">Sweeps both motors simultaneously from 0% to 100% power over 2 seconds.</p>
     </div>
     <button type="button" class="btn-primary" id="btn-pulse-both">Run Full Haptic Sweep</button>
+  </div>
   </div>
 </div>
 
