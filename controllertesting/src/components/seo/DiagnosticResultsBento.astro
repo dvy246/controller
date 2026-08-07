@@ -10,55 +10,55 @@ const {
 } = Astro.props;
 ---
 
-<div class="premium-bento-section mb-12" data-reveal>
+<div class="premium-bento-section mb-16 sm:mb-24" data-reveal>
   <div class="text-center sm:text-left mb-8">
-    <div class="flex items-center gap-3 mb-2">
-      <span class="w-2.5 h-2.5 rounded-full bg-accent animate-pulse"></span>
-      <h2 class="text-2xl sm:text-3xl font-extrabold text-primary tracking-tight">{title}</h2>
+    <div class="flex items-center gap-3 mb-2 justify-center sm:justify-start">
+      <span class="w-2.5 h-2.5 rounded-full bg-[var(--color-accent)] animate-pulse" aria-hidden="true"></span>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight">{title}</h2>
     </div>
-    <p class="text-base text-secondary max-w-2xl">{subtitle}</p>
+    <p class="text-base text-[var(--color-text-secondary)] max-w-2xl">{subtitle}</p>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
     
     <!-- Pass Card (Healthy) -->
-    <div class="col-span-1 md:col-span-8 doppelrand-shell p-[0.375rem] rounded-2xl bg-emerald-500/5 group transition-all duration-300 hover:border-emerald-500/40">
-      <div class="doppelrand-core bg-surface-1 border border-emerald-500/20 rounded-[calc(1.5rem-0.375rem)] p-6 sm:p-8 h-full flex flex-col justify-between">
+    <div class="col-span-1 md:col-span-8 doppelrand-shell p-[0.375rem] rounded-2xl transition-all duration-300 hover:border-[var(--color-pass)]">
+      <div class="doppelrand-core bg-[var(--color-surface-1)] border border-[var(--color-border-subtle)] rounded-[calc(1.5rem-0.375rem)] p-6 sm:p-8 h-full flex flex-col justify-between">
         <div>
-          <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-6 border border-emerald-500/30">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          <div class="w-12 h-12 rounded-xl bg-[var(--color-pass-bg)] flex items-center justify-center mb-6 border border-[var(--color-pass)]/30">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--color-pass)]"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
           </div>
-          <span class="badge-pass font-mono text-xs px-2.5 py-1 rounded-md font-bold inline-block mb-3">Grade A (0.0% – 2.0%)</span>
-          <h3 class="text-xl font-bold text-primary mb-2">Healthy Centering</h3>
-          <p class="text-secondary text-sm sm:text-base leading-relaxed">Normal factory variance. Your controller stick operates flawlessly with precision zero-point accuracy. No calibration needed.</p>
+          <span class="badge-pass font-mono text-xs px-2.5 py-1 rounded-md font-bold inline-block mb-3 whitespace-nowrap">Grade A (0.0% – 2.0%)</span>
+          <h3 class="text-xl font-bold text-[var(--color-text-primary)] mb-2">Healthy Centering</h3>
+          <p class="text-[var(--color-text-secondary)] text-sm sm:text-base leading-relaxed">Normal factory variance. Your controller stick operates flawlessly with precision zero-point accuracy. No calibration needed.</p>
         </div>
       </div>
     </div>
 
     <!-- Warning Card (Slight Drift) -->
-    <div class="col-span-1 md:col-span-4 doppelrand-shell p-[0.375rem] rounded-2xl bg-amber-500/5 group transition-all duration-300 hover:border-amber-500/40">
-      <div class="doppelrand-core bg-surface-1 border border-amber-500/20 rounded-[calc(1.5rem-0.375rem)] p-6 sm:p-8 h-full flex flex-col justify-between">
+    <div class="col-span-1 md:col-span-4 doppelrand-shell p-[0.375rem] rounded-2xl transition-all duration-300 hover:border-[var(--color-warning)]">
+      <div class="doppelrand-core bg-[var(--color-surface-1)] border border-[var(--color-border-subtle)] rounded-[calc(1.5rem-0.375rem)] p-6 sm:p-8 h-full flex flex-col justify-between">
         <div>
-          <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center mb-6 border border-amber-500/30">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-amber-500"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          <div class="w-12 h-12 rounded-xl bg-[var(--color-warning-bg)] flex items-center justify-center mb-6 border border-[var(--color-warning)]/30">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--color-warning)]"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
           </div>
-          <span class="badge-warning font-mono text-xs px-2.5 py-1 rounded-md font-bold inline-block mb-3">Grade B (2.1% – 10.0%)</span>
-          <h3 class="text-xl font-bold text-primary mb-2">Minor Wear</h3>
-          <p class="text-secondary text-sm leading-relaxed">Slight potentiometer resistance wear detected. Deadzone adjustment recommended.</p>
+          <span class="badge-warning font-mono text-xs px-2.5 py-1 rounded-md font-bold inline-block mb-3 whitespace-nowrap">Grade B (2.1% – 10.0%)</span>
+          <h3 class="text-xl font-bold text-[var(--color-text-primary)] mb-2">Minor Wear</h3>
+          <p class="text-[var(--color-text-secondary)] text-sm leading-relaxed">Slight potentiometer resistance wear detected. Deadzone adjustment recommended.</p>
         </div>
       </div>
     </div>
 
     <!-- Fail Card (Severe Drift) -->
-    <div class="col-span-1 md:col-span-12 doppelrand-shell p-[0.375rem] rounded-2xl bg-red-500/5 group transition-all duration-300 hover:border-red-500/40">
-      <div class="doppelrand-core bg-surface-1 border border-red-500/20 rounded-[calc(1.5rem-0.375rem)] p-6 sm:p-8 flex flex-col sm:flex-row items-start gap-6">
-        <div class="w-12 h-12 shrink-0 rounded-xl bg-red-500/10 flex items-center justify-center border border-red-500/30">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-red-500"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+    <div class="col-span-1 md:col-span-12 doppelrand-shell p-[0.375rem] rounded-2xl transition-all duration-300 hover:border-[var(--color-fail)]">
+      <div class="doppelrand-core bg-[var(--color-surface-1)] border border-[var(--color-border-subtle)] rounded-[calc(1.5rem-0.375rem)] p-6 sm:p-8 flex flex-col sm:flex-row items-start gap-6">
+        <div class="w-12 h-12 shrink-0 rounded-xl bg-[var(--color-fail-bg)] flex items-center justify-center border border-[var(--color-fail)]/30">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--color-fail)]"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
         </div>
         <div>
-          <span class="badge-fail font-mono text-xs px-2.5 py-1 rounded-md font-bold inline-block mb-3">Grade C (> 10.0%)</span>
-          <h3 class="text-xl font-bold text-primary mb-2">Severe Hardware Drift</h3>
-          <p class="text-secondary text-sm sm:text-base leading-relaxed max-w-3xl">Critical component degradation. In-game camera or character will move without input. Sensor module replacement or Hall-effect upgrade required.</p>
+          <span class="badge-fail font-mono text-xs px-2.5 py-1 rounded-md font-bold inline-block mb-3 whitespace-nowrap">Grade C (&gt; 10.0%)</span>
+          <h3 class="text-xl font-bold text-[var(--color-text-primary)] mb-2">Severe Hardware Drift</h3>
+          <p class="text-[var(--color-text-secondary)] text-sm sm:text-base leading-relaxed max-w-3xl">Critical component degradation. In-game camera or character will move without input. Sensor module replacement or Hall-effect upgrade required.</p>
         </div>
       </div>
     </div>

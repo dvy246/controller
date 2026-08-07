@@ -2,42 +2,45 @@
 /**
  * TriggerBars.astro
  * High-fidelity vertical fill bars for analog triggers (L2 / R2).
+ * Features neon pressure gradients, scale tick marks, and zero-latency scaleY transforms.
  */
 ---
-<div class="triggers-container w-full h-full flex justify-around items-center px-4">
+<div class="triggers-container w-full h-full flex justify-around items-center px-4 py-2 select-none">
   
   <!-- L2 Trigger -->
-  <div class="trigger-col flex flex-col items-center gap-3">
-    <div class="trigger-label font-bold text-stone-400">L2</div>
-    <div class="trigger-bar-wrapper relative w-16 h-32 bg-black/50 rounded-xl overflow-hidden border border-white/5 shadow-inner">
-      <div id="l2-fill" class="trigger-fill absolute bottom-0 left-0 w-full bg-gradient-to-t from-blue-600 to-blue-400 origin-bottom" style="height: 100%; transform: scaleY(0)"></div>
+  <div class="trigger-col flex flex-col items-center gap-2">
+    <div class="trigger-label font-mono font-bold text-xs text-stone-400 dark:text-stone-400 tracking-wider">L2 TRIGGER</div>
+    <div class="trigger-bar-wrapper relative w-16 h-36 bg-black/60 rounded-2xl overflow-hidden border border-white/10 shadow-inner backdrop-blur-md">
+      <div id="l2-fill" class="trigger-fill absolute bottom-0 left-0 w-full bg-gradient-to-t from-blue-600 via-indigo-500 to-blue-400 origin-bottom shadow-[0_0_15px_rgba(37,99,235,0.6)]" style="height: 100%; transform: scaleY(0)"></div>
       
-      <!-- Scale Marks -->
-      <div class="absolute inset-0 pointer-events-none flex flex-col justify-between py-2">
+      <!-- Scale Tick Marks -->
+      <div class="absolute inset-0 pointer-events-none flex flex-col justify-between py-3 px-1">
+        <div class="w-full h-px bg-white/20"></div>
         <div class="w-full h-px bg-white/10"></div>
+        <div class="w-full h-px bg-white/20"></div>
         <div class="w-full h-px bg-white/10"></div>
-        <div class="w-full h-px bg-white/10"></div>
-        <div class="w-full h-px bg-white/10"></div>
+        <div class="w-full h-px bg-white/20"></div>
       </div>
     </div>
-    <div class="trigger-value font-mono text-sm text-stone-300" id="l2-val">0.000</div>
+    <span class="trigger-value font-mono font-bold text-xs text-emerald-400 px-2 py-0.5 rounded bg-black/70 border border-emerald-500/30 shadow-sm" id="l2-val">0.000</span>
   </div>
 
   <!-- R2 Trigger -->
-  <div class="trigger-col flex flex-col items-center gap-3">
-    <div class="trigger-label font-bold text-stone-400">R2</div>
-    <div class="trigger-bar-wrapper relative w-16 h-32 bg-black/50 rounded-xl overflow-hidden border border-white/5 shadow-inner">
-      <div id="r2-fill" class="trigger-fill absolute bottom-0 left-0 w-full bg-gradient-to-t from-blue-600 to-blue-400 origin-bottom" style="height: 100%; transform: scaleY(0)"></div>
+  <div class="trigger-col flex flex-col items-center gap-2">
+    <div class="trigger-label font-mono font-bold text-xs text-stone-400 dark:text-stone-400 tracking-wider">R2 TRIGGER</div>
+    <div class="trigger-bar-wrapper relative w-16 h-36 bg-black/60 rounded-2xl overflow-hidden border border-white/10 shadow-inner backdrop-blur-md">
+      <div id="r2-fill" class="trigger-fill absolute bottom-0 left-0 w-full bg-gradient-to-t from-blue-600 via-indigo-500 to-blue-400 origin-bottom shadow-[0_0_15px_rgba(37,99,235,0.6)]" style="height: 100%; transform: scaleY(0)"></div>
       
-      <!-- Scale Marks -->
-      <div class="absolute inset-0 pointer-events-none flex flex-col justify-between py-2">
+      <!-- Scale Tick Marks -->
+      <div class="absolute inset-0 pointer-events-none flex flex-col justify-between py-3 px-1">
+        <div class="w-full h-px bg-white/20"></div>
         <div class="w-full h-px bg-white/10"></div>
+        <div class="w-full h-px bg-white/20"></div>
         <div class="w-full h-px bg-white/10"></div>
-        <div class="w-full h-px bg-white/10"></div>
-        <div class="w-full h-px bg-white/10"></div>
+        <div class="w-full h-px bg-white/20"></div>
       </div>
     </div>
-    <div class="trigger-value font-mono text-sm text-stone-300" id="r2-val">0.000</div>
+    <span class="trigger-value font-mono font-bold text-xs text-blue-400 px-2 py-0.5 rounded bg-black/70 border border-blue-500/30 shadow-sm" id="r2-val">0.000</span>
   </div>
 
 </div>
@@ -55,36 +58,38 @@
     let lastR2 = -1;
 
     GamepadLoop.subscribe((state) => {
-      if (!state) return;
+      if (!state) {
+        if (l2Val) l2Val.textContent = '0.000';
+        if (r2Val) r2Val.textContent = '0.000';
+        if (l2Fill) l2Fill.style.transform = 'scaleY(0)';
+        if (r2Fill) r2Fill.style.transform = 'scaleY(0)';
+        return;
+      }
       
       const l2 = state.triggers.l2;
       const r2 = state.triggers.r2;
 
-      if (l2Fill && l2Val && l2 !== lastL2) {
+      if (l2Fill && l2Val && Math.abs(l2 - lastL2) > 0.001) {
         l2Fill.style.transform = `scaleY(${l2})`;
         l2Val.textContent = l2.toFixed(3);
         
-        // Change color when maxed out
-        if (l2 >= 1.0) {
-          l2Fill.classList.replace('from-blue-600', 'from-emerald-500');
-          l2Fill.classList.replace('to-blue-400', 'to-emerald-400');
+        // Highlight when maxed out at full pull (>= 0.98)
+        if (l2 >= 0.98) {
+          l2Fill.className = 'trigger-fill absolute bottom-0 left-0 w-full bg-gradient-to-t from-emerald-600 via-emerald-500 to-emerald-400 origin-bottom shadow-[0_0_20px_rgba(16,185,129,0.9)]';
         } else {
-          l2Fill.classList.replace('from-emerald-500', 'from-blue-600');
-          l2Fill.classList.replace('to-emerald-400', 'to-blue-400');
+          l2Fill.className = 'trigger-fill absolute bottom-0 left-0 w-full bg-gradient-to-t from-blue-600 via-indigo-500 to-blue-400 origin-bottom shadow-[0_0_15px_rgba(37,99,235,0.6)]';
         }
         lastL2 = l2;
       }
 
-      if (r2Fill && r2Val && r2 !== lastR2) {
+      if (r2Fill && r2Val && Math.abs(r2 - lastR2) > 0.001) {
         r2Fill.style.transform = `scaleY(${r2})`;
         r2Val.textContent = r2.toFixed(3);
 
-        if (r2 >= 1.0) {
-          r2Fill.classList.replace('from-blue-600', 'from-emerald-500');
-          r2Fill.classList.replace('to-blue-400', 'to-emerald-400');
+        if (r2 >= 0.98) {
+          r2Fill.className = 'trigger-fill absolute bottom-0 left-0 w-full bg-gradient-to-t from-emerald-600 via-emerald-500 to-emerald-400 origin-bottom shadow-[0_0_20px_rgba(16,185,129,0.9)]';
         } else {
-          r2Fill.classList.replace('from-emerald-500', 'from-blue-600');
-          r2Fill.classList.replace('to-emerald-400', 'to-blue-400');
+          r2Fill.className = 'trigger-fill absolute bottom-0 left-0 w-full bg-gradient-to-t from-blue-600 via-indigo-500 to-blue-400 origin-bottom shadow-[0_0_15px_rgba(37,99,235,0.6)]';
         }
         lastR2 = r2;
       }
@@ -94,7 +99,8 @@
 
 <style>
   .trigger-fill {
-    /* Fast transition for smooth visual feedback. Transform is GPU accelerated. */
-    transition: transform 0.05s linear, background-color 0.1s ease;
+    will-change: transform;
+    transition: transform 0.04s linear, background 0.1s ease;
   }
 </style>
+

@@ -58,27 +58,33 @@ import LanguageSelector from './LanguageSelector.astro';
               <div class="dropdown-column">
                 <span class="dropdown-category">Diagnostic Tools</span>
                 <a role="menuitem" class="dropdown-item" href="/test/controller">
-                  <div class="dropdown-item-icon">🎮</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="4"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">
                       Controller Tests
                       <span class="nav-badge badge-core">Core</span>
                     </div>
-                    <span class="dropdown-item-desc">Stick drift, circularity & input latency</span>
+                    <span class="dropdown-item-desc">Stick drift, circularity &amp; input latency</span>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href="/test/mouse">
-                  <div class="dropdown-item-icon">🖱️</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="6"/><line x1="12" y1="7" x2="12" y2="11"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">
                       Mouse Suite
                       <span class="nav-badge badge-precision">8KHz</span>
                     </div>
-                    <span class="dropdown-item-desc">CPS, polling rate, DPI & double-click</span>
+                    <span class="dropdown-item-desc">CPS, polling rate, DPI &amp; double-click</span>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href="/test/keyboard">
-                  <div class="dropdown-item-icon">⌨️</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M8 16h8"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">
                       Keyboard &amp; MIDI
@@ -92,7 +98,9 @@ import LanguageSelector from './LanguageSelector.astro';
               <div class="dropdown-column">
                 <span class="dropdown-category">Wizards &amp; Telemetry</span>
                 <a role="menuitem" class="dropdown-item dropdown-item-featured" href="/test/controller/full-diagnostic">
-                  <div class="dropdown-item-icon">⚡</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">
                       Full Diagnostic Wizard
@@ -102,7 +110,9 @@ import LanguageSelector from './LanguageSelector.astro';
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href="/test/controller/quick-health">
-                  <div class="dropdown-item-icon">🩺</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">
                       Quick Health Check
@@ -112,7 +122,9 @@ import LanguageSelector from './LanguageSelector.astro';
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href="/test/controller/passport">
-                  <div class="dropdown-item-icon">📜</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">
                       Controller Passport
@@ -125,7 +137,9 @@ import LanguageSelector from './LanguageSelector.astro';
               <div class="dropdown-column">
                 <span class="dropdown-category">Advanced Diagnostics</span>
                 <a role="menuitem" class="dropdown-item" href="/calibrate/dualsense/hall-effect">
-                  <div class="dropdown-item-icon">🎛️</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">
                       WebHID Calibrator
@@ -135,21 +149,27 @@ import LanguageSelector from './LanguageSelector.astro';
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href="/deadzone-calculator/apex-legends/ps5">
-                  <div class="dropdown-item-icon">🎯</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">Deadzone Sandbox</div>
                     <span class="dropdown-item-desc">Game-engine specific tuning</span>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href="/overclock-validator/ps5/usb-c">
-                  <div class="dropdown-item-icon">⏱️</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">Overclock Validator</div>
-                    <span class="dropdown-item-desc">True Hz & input latency</span>
+                    <span class="dropdown-item-desc">True Hz &amp; input latency</span>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href="/haptics/unreal/explosion">
-                  <div class="dropdown-item-icon">📳</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h2M6 8v8M10 4v16M14 6v12M18 9v6M22 12h-2"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">Haptic Composer</div>
                     <span class="dropdown-item-desc">WebAudio rumble generation</span>
@@ -159,43 +179,57 @@ import LanguageSelector from './LanguageSelector.astro';
               <div class="dropdown-column">
                 <span class="dropdown-category">Niche Testers</span>
                 <a role="menuitem" class="dropdown-item" href="/test/controller/nintendo-switch">
-                  <div class="dropdown-item-icon">🎮</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="4"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="12" r="2"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">Nintendo Switch</div>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href="/test/controller/ps5">
-                  <div class="dropdown-item-icon">🎮</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="4"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">PS5 DualSense</div>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href="/test/controller/xbox">
-                  <div class="dropdown-item-icon">🎮</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="4"/><circle cx="8" cy="12" r="2"/><circle cx="16" cy="12" r="2"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">Xbox Controller</div>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href="/test/controller/joycon">
-                  <div class="dropdown-item-icon">🕹️</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="6"/><circle cx="12" cy="8" r="2"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">Joy-Con</div>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href="/test/controller/switch-pro">
-                  <div class="dropdown-item-icon">🎮</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="4"/><path d="M6 12h4M8 10v4"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">Switch Pro</div>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href="/test/controller/joystick-tester">
-                  <div class="dropdown-item-icon">🕹️</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v14M12 22a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">Joystick Tester</div>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href="/test/controller/gamepad-mapping">
-                  <div class="dropdown-item-icon">🎛️</div>
+                  <div class="dropdown-item-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                  </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">Gamepad Mapping</div>
                   </div>
@@ -231,21 +265,27 @@ import LanguageSelector from './LanguageSelector.astro';
           </button>
           <div class="dropdown-menu dropdown-menu-single" role="menu" aria-label="Resources">
             <a role="menuitem" class="dropdown-item" href="/fix-or-replace">
-              <div class="dropdown-item-icon">🛠️</div>
+              <div class="dropdown-item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+              </div>
               <div class="dropdown-item-content">
                 <div class="dropdown-item-title">Fix &amp; Repair</div>
                 <span class="dropdown-item-desc">Repair cost vs replacement decision calculator</span>
               </div>
             </a>
             <a role="menuitem" class="dropdown-item" href="/warranty">
-              <div class="dropdown-item-icon">🛡️</div>
+              <div class="dropdown-item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
               <div class="dropdown-item-content">
                 <div class="dropdown-item-title">Warranty Assistant</div>
                 <span class="dropdown-item-desc">RMA eligibility checker &amp; claim evidence</span>
               </div>
             </a>
             <a role="menuitem" class="dropdown-item" href="/embeds">
-              <div class="dropdown-item-icon">📦</div>
+              <div class="dropdown-item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              </div>
               <div class="dropdown-item-content">
                 <div class="dropdown-item-title">
                   Widgets &amp; Embeds
@@ -255,7 +295,9 @@ import LanguageSelector from './LanguageSelector.astro';
               </div>
             </a>
             <a role="menuitem" class="dropdown-item" href="/compatibility">
-              <div class="dropdown-item-icon">📊</div>
+              <div class="dropdown-item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              </div>
               <div class="dropdown-item-content">
                 <div class="dropdown-item-title">Compatibility Matrix</div>
                 <span class="dropdown-item-desc">Browser API support across OS &amp; controllers</span>
@@ -263,7 +305,9 @@ import LanguageSelector from './LanguageSelector.astro';
             </a>
             <div class="dropdown-sep" role="separator"></div>
             <a role="menuitem" class="dropdown-item" href="/learn">
-              <div class="dropdown-item-icon">📚</div>
+              <div class="dropdown-item-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              </div>
               <div class="dropdown-item-content">
                 <div class="dropdown-item-title">Learn Guides</div>
                 <span class="dropdown-item-desc">Deep-dive technical repair &amp; tuning articles</span>
@@ -362,33 +406,33 @@ import LanguageSelector from './LanguageSelector.astro';
         <div class="mobile-nav-section">
           <p class="mobile-nav-heading">Diagnostics</p>
           <ul role="list" class="mobile-nav-links">
-            <li><a href="/test/controller" class="mobile-nav-link"><span>🎮 Controller Tests</span><span class="nav-badge badge-core">Core</span></a></li>
-            <li><a href="/test/mouse" class="mobile-nav-link"><span>🖱️ Mouse Suite</span><span class="nav-badge badge-precision">8KHz</span></a></li>
-            <li><a href="/test/keyboard" class="mobile-nav-link"><span>⌨️ Keyboard &amp; MIDI</span><span class="nav-badge badge-midi">WebMIDI</span></a></li>
-            <li><a href="/test/controller/quick-health" class="mobile-nav-link mobile-nav-link-em"><span>🩺 Quick Health Check</span><span class="nav-badge badge-speed">60s</span></a></li>
-            <li><a href="/test/controller/full-diagnostic" class="mobile-nav-link mobile-nav-link-em"><span>⚡ Full Diagnostic Wizard</span><span class="nav-badge badge-pro">PRO</span></a></li>
-            <li><a href="/test/controller/passport" class="mobile-nav-link"><span>📜 Controller Passport</span></a></li>
-            <li><a href="/calibrate/dualsense/hall-effect" class="mobile-nav-link"><span>🎛️ WebHID Calibrator</span></a></li>
-            <li><a href="/deadzone-calculator/apex-legends/ps5" class="mobile-nav-link"><span>🎯 Deadzone Sandbox</span></a></li>
-            <li><a href="/tools" class="mobile-nav-link"><span>🧰 All 32 Diagnostic Tools</span></a></li>
+            <li><a href="/test/controller" class="mobile-nav-link"><span>Controller Tests</span><span class="nav-badge badge-core">Core</span></a></li>
+            <li><a href="/test/mouse" class="mobile-nav-link"><span>Mouse Suite</span><span class="nav-badge badge-precision">8KHz</span></a></li>
+            <li><a href="/test/keyboard" class="mobile-nav-link"><span>Keyboard &amp; MIDI</span><span class="nav-badge badge-midi">WebMIDI</span></a></li>
+            <li><a href="/test/controller/quick-health" class="mobile-nav-link mobile-nav-link-em"><span>Quick Health Check</span><span class="nav-badge badge-speed">60s</span></a></li>
+            <li><a href="/test/controller/full-diagnostic" class="mobile-nav-link mobile-nav-link-em"><span>Full Diagnostic Wizard</span><span class="nav-badge badge-pro">PRO</span></a></li>
+            <li><a href="/test/controller/passport" class="mobile-nav-link"><span>Controller Passport</span></a></li>
+            <li><a href="/calibrate/dualsense/hall-effect" class="mobile-nav-link"><span>WebHID Calibrator</span></a></li>
+            <li><a href="/deadzone-calculator/apex-legends/ps5" class="mobile-nav-link"><span>Deadzone Sandbox</span></a></li>
+            <li><a href="/tools" class="mobile-nav-link"><span>All 32 Diagnostic Tools</span></a></li>
           </ul>
         </div>
 
         <div class="mobile-nav-section">
           <p class="mobile-nav-heading">Arcade Games</p>
           <ul role="list" class="mobile-nav-links">
-            <li><a href="/games" class="mobile-nav-link"><span>🎯 Arcade Games</span><span class="nav-badge badge-games">5 Games</span></a></li>
+            <li><a href="/games" class="mobile-nav-link"><span>Arcade Games</span><span class="nav-badge badge-games">5 Games</span></a></li>
           </ul>
         </div>
 
         <div class="mobile-nav-section">
           <p class="mobile-nav-heading">Resources</p>
           <ul role="list" class="mobile-nav-links">
-            <li><a href="/fix-or-replace" class="mobile-nav-link"><span>🛠️ Fix &amp; Repair</span></a></li>
-            <li><a href="/warranty" class="mobile-nav-link"><span>🛡️ Warranty Check</span></a></li>
-            <li><a href="/embeds" class="mobile-nav-link"><span>📦 Widgets &amp; Embeds</span><span class="nav-badge badge-widgets">15 Widgets</span></a></li>
-            <li><a href="/compatibility" class="mobile-nav-link"><span>📊 Compatibility Matrix</span></a></li>
-            <li><a href="/learn" class="mobile-nav-link"><span>📚 Technical Learn Guides</span></a></li>
+            <li><a href="/fix-or-replace" class="mobile-nav-link"><span>Fix &amp; Repair</span></a></li>
+            <li><a href="/warranty" class="mobile-nav-link"><span>Warranty Check</span></a></li>
+            <li><a href="/embeds" class="mobile-nav-link"><span>Widgets &amp; Embeds</span><span class="nav-badge badge-widgets">15 Widgets</span></a></li>
+            <li><a href="/compatibility" class="mobile-nav-link"><span>Compatibility Matrix</span></a></li>
+            <li><a href="/learn" class="mobile-nav-link"><span>Technical Learn Guides</span></a></li>
           </ul>
         </div>
       </div>
@@ -839,10 +883,12 @@ import LanguageSelector from './LanguageSelector.astro';
   }
 
   .dropdown-item-icon {
-    font-size: 1.15rem;
-    line-height: 1;
-    margin-top: 0.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-accent);
     flex-shrink: 0;
+    margin-top: 0.15rem;
   }
 
   .dropdown-item-content {
