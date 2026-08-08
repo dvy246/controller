@@ -164,15 +164,13 @@
   import { OrbitControls } from 'https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js';
   import { parseGamepadState } from '../../lib/gamepad.ts';
 
-  document.addEventListener('DOMContentLoaded', () => {
+  const startHero3D = () => {
     const container = document.getElementById('hero-container') as HTMLElement | null;
     const canvas = document.getElementById('webgl-canvas') as HTMLCanvasElement | null;
     const spinner = document.getElementById('loading-spinner') as HTMLElement | null;
     
-    if (!container || !canvas) return;
-
-    // Wait for DOM layout
-    setTimeout(initThreeJS, 100); 
+    if (!container || !canvas || container.dataset.threeInitialized === 'true') return;
+    container.dataset.threeInitialized = 'true';
 
     let scene: any, camera: any, renderer: any, controls: any;
     let controllerModel: any;
@@ -182,52 +180,52 @@
       if (!container || !canvas || !spinner) return;
       spinner.classList.add('active');
 
-      scene = new THREE.Scene();
-      
-      // Premium camera setup (tighter FOV for product shots)
-      camera = new THREE.PerspectiveCamera(35, container.clientWidth / container.clientHeight, 0.1, 100);
-      camera.position.set(0, 1.2, 4);
+      try {
+        scene = new THREE.Scene();
+        
+        // Camera setup
+        camera = new THREE.PerspectiveCamera(35, container.clientWidth / container.clientHeight, 0.1, 100);
+        camera.position.set(0, 1.2, 4);
 
-      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-      renderer.setSize(container.clientWidth, container.clientHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // High-res for premium feel
-      
-      // Premium lighting setup
-      // Use tone mapping for cinematic look
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.2;
+        renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.2;
 
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-      scene.add(ambientLight);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
 
-      // Key light
-      const keyLight = new THREE.DirectionalLight(0xffffff, 2);
-      keyLight.position.set(5, 5, 2);
-      scene.add(keyLight);
+        const keyLight = new THREE.DirectionalLight(0xffffff, 2);
+        keyLight.position.set(5, 5, 2);
+        scene.add(keyLight);
 
-      // Fill light (subtle blue/purple tint from left)
-      const fillLight = new THREE.DirectionalLight(0x8b5cf6, 1.5);
-      fillLight.position.set(-5, 0, 5);
-      scene.add(fillLight);
-      
-      // Rim light (sharp highlight from behind)
-      const rimLight = new THREE.DirectionalLight(0xffffff, 1.5);
-      rimLight.position.set(0, 5, -5);
-      scene.add(rimLight);
+        const fillLight = new THREE.DirectionalLight(0x8b5cf6, 1.5);
+        fillLight.position.set(-5, 0, 5);
+        scene.add(fillLight);
+        
+        const rimLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        rimLight.position.set(0, 5, -5);
+        scene.add(rimLight);
 
-      controls = new OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.04;
-      controls.enablePan = false;
-      controls.enableZoom = false; // Prevent zooming which breaks layout
-      controls.target.set(0, 0, 0);
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.04;
+        controls.enablePan = false;
+        controls.enableZoom = false;
+        controls.target.set(0, 0, 0);
 
-      controls.addEventListener('start', () => isInteracting = true);
-      controls.addEventListener('end', () => isInteracting = false);
+        controls.addEventListener('start', () => isInteracting = true);
+        controls.addEventListener('end', () => isInteracting = false);
 
-      loadControllerModel();
-      window.addEventListener('resize', onWindowResize);
-      renderer.setAnimationLoop(animate);
+        loadControllerModel();
+        window.addEventListener('resize', onWindowResize);
+        renderer.setAnimationLoop(animate);
+      } catch (err) {
+        console.warn('WebGL Context init error:', err);
+        if(spinner) spinner.style.display = 'none';
+      }
     }
 
     function loadControllerModel() {
@@ -236,16 +234,15 @@
       dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
       loader.setDRACOLoader(dracoLoader);
 
-      // Load the actual PS5 controller GLB we downloaded
+      const modelPath = '/models/controller.glb';
+
       loader.load(
-        '/models/controller.glb', 
+        modelPath, 
         (gltf: any) => {
           controllerModel = gltf.scene;
           
-          // Ensure materials look premium
           controllerModel.traverse((child: any) => {
             if (child.isMesh && child.material) {
-              // Boost environmental reflection if it's a standard material
               if (child.material.isMeshStandardMaterial) {
                 child.material.envMapIntensity = 1.5;
                 child.material.needsUpdate = true;
@@ -253,19 +250,16 @@
             }
           });
 
-          // Center and scale model properly
           const box = new THREE.Box3().setFromObject(controllerModel);
           const center = box.getCenter(new THREE.Vector3());
           const size = box.getSize(new THREE.Vector3());
           
-          // Normalize scale so it always fits perfectly regardless of original GLB scale
           const maxDim = Math.max(size.x, size.y, size.z);
-          const scale = 2.0 / maxDim; // Target size of ~2 units
+          const scale = 2.0 / (maxDim || 1);
           controllerModel.scale.set(scale, scale, scale);
           
           controllerModel.position.sub(center.multiplyScalar(scale));
           
-          // Rotate it slightly for a better hero angle
           controllerModel.rotation.x = 0.2;
           controllerModel.rotation.y = -0.3;
 
@@ -276,24 +270,67 @@
         },
         undefined,
         (error: any) => {
-          console.error('Error loading 3D model:', error);
-          if(spinner) spinner.innerHTML = '<span style="color:#ef4444;">Failed to load model</span>';
+          console.error('Error loading 3D model GLB:', error);
+          // Fallback: build a sleek procedural 3D gamepad mesh if GLB fails to fetch
+          buildProceduralGamepad();
         }
       );
+    }
+
+    function buildProceduralGamepad() {
+      const group = new THREE.Group();
+      
+      // Main Body Shell
+      const bodyGeo = new THREE.BoxGeometry(2.2, 1.2, 0.4);
+      const bodyMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.3, metalness: 0.8 });
+      const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
+      group.add(bodyMesh);
+
+      // Left & Right Grips
+      const gripGeo = new THREE.CylinderGeometry(0.3, 0.25, 1.2, 32);
+      const gripMat = new THREE.MeshStandardMaterial({ color: 0x09090b, roughness: 0.5 });
+      
+      const leftGrip = new THREE.Mesh(gripGeo, gripMat);
+      leftGrip.position.set(-1.1, -0.4, 0);
+      leftGrip.rotation.z = 0.3;
+      group.add(leftGrip);
+
+      const rightGrip = new THREE.Mesh(gripGeo, gripMat);
+      rightGrip.position.set(1.1, -0.4, 0);
+      rightGrip.rotation.z = -0.3;
+      group.add(rightGrip);
+
+      // Thumbsticks
+      const stickGeo = new THREE.CylinderGeometry(0.25, 0.25, 0.15, 32);
+      const stickMat = new THREE.MeshStandardMaterial({ color: 0x2563eb, roughness: 0.2, metalness: 0.5 });
+      
+      const ls = new THREE.Mesh(stickGeo, stickMat);
+      ls.position.set(-0.5, -0.2, 0.25);
+      group.add(ls);
+
+      const rs = new THREE.Mesh(stickGeo, stickMat);
+      rs.position.set(0.5, -0.2, 0.25);
+      group.add(rs);
+
+      group.rotation.x = 0.2;
+      group.rotation.y = -0.3;
+
+      controllerModel = group;
+      scene.add(controllerModel);
+
+      if(spinner) spinner.classList.remove('active');
+      if(canvas) canvas.classList.add('loaded');
     }
 
     const clock = new THREE.Clock();
 
     function animate() {
-      // @ts-ignore
       const delta = clock.getDelta();
-      controls.update();
+      if (controls) controls.update();
 
       if (controllerModel && !isInteracting) {
-        // Very slow premium rotation
-        controllerModel.rotation.y += 0.002;
-        // Floating hover effect
-        controllerModel.position.y = Math.sin(clock.getElapsedTime()) * 0.03;
+        controllerModel.rotation.y += 0.003;
+        controllerModel.position.y = Math.sin(clock.getElapsedTime()) * 0.04;
       }
 
       // Telemetry hook
@@ -318,9 +355,6 @@
         if (lsVal) lsVal.textContent = `${state.leftStick.x.toFixed(2)}, ${state.leftStick.y.toFixed(2)}`;
         const rsVal = document.getElementById('rs-val');
         if (rsVal) rsVal.textContent = `${state.rightStick.x.toFixed(2)}, ${state.rightStick.y.toFixed(2)}`;
-
-        // If the GLB has named nodes for sticks, we could rotate them here.
-        // Usually they are named 'Left_Stick' or similar depending on the specific model.
       } else if (statusDot && statusText && telemetryData) {
         statusDot.classList.remove('connected');
         statusText.style.color = 'rgba(255,255,255,0.6)';
@@ -328,7 +362,9 @@
         telemetryData.style.display = 'none';
       }
 
-      renderer.render(scene, camera);
+      if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+      }
     }
 
     function onWindowResize() {
@@ -337,5 +373,15 @@
       camera.updateProjectionMatrix();
       renderer.setSize(container.clientWidth, container.clientHeight);
     }
-  });
+
+    initThreeJS();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startHero3D);
+  } else {
+    startHero3D();
+  }
+
+  document.addEventListener('astro:page-load', startHero3D);
 </script>
