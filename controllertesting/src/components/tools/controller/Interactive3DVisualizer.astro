@@ -346,14 +346,9 @@ const { modelUrl = '/models/controller.glb', isRigid = false } = Astro.props;
 </style>
 
 <script>
-  // @ts-ignore
-  import * as THREE from 'https://esm.sh/three@0.160.0';
-  // @ts-ignore
-  import { GLTFLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
-  // @ts-ignore
-  import { DRACOLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/DRACOLoader.js';
-  // @ts-ignore
-  import { OrbitControls } from 'https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+  import * as THREE from 'three';
+  import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+  import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
   import { parseGamepadState } from '../../../lib/gamepad.ts';
 
   document.addEventListener('DOMContentLoaded', () => {
