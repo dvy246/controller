@@ -73,11 +73,11 @@ This document serves as the absolute source of truth for all AI agents, software
 20. **Touchpad Tester** (`/test/controller/touchpad`) — PS5 DualSense multi-touch trackpad (`TouchpadTester.astro`).
 21. **Microphone Tester** (`/test/controller/microphone`) — Built-in mic & 3.5mm headset audio meter (`MicrophoneTester.astro`).
 22. **Competitive Readiness** (`/test/controller/competitive-readiness`) — Esports tournament benchmark assessor (`CompetitiveReadiness.astro`).
-23. **Nintendo Switch Tester** (`/test/controller/nintendo-switch`) — Nintendo Switch controller tester (`nintendo-switch.astro`). Renders with `DiagnosticResultsBento` & `PremiumGuideCard`.
-24. **PS5 DualSense Tester** (`/test/controller/ps5`) — PS5 controller tester (`ps5.astro`). Renders with `DiagnosticResultsBento` & `PremiumGuideCard`.
-25. **Xbox Controller Tester** (`/test/controller/xbox`) — Xbox controller tester (`xbox.astro`). Renders with `DiagnosticResultsBento` & `PremiumGuideCard`.
-26. **Joy-Con Tester** (`/test/controller/joycon`) — Joy-Con controller tester (`joycon.astro`). Renders with `DiagnosticResultsBento` & `PremiumGuideCard`.
-27. **Switch Pro Tester** (`/test/controller/switch-pro`) — Switch Pro controller tester (`switch-pro.astro`). Renders with `DiagnosticResultsBento` & `PremiumGuideCard`.
+23. **Nintendo Switch Tester** (`/test/controller/nintendo-switch`) — Nintendo Switch controller tester (`nintendo-switch.astro`). Standardized on 5-Card Bento `Interactive2DVisualizer` & `DiagnosticResultsBento`.
+24. **PS5 DualSense Tester** (`/test/controller/ps5`) — PS5 controller tester (`ps5.astro`). Standardized on 5-Card Bento `Interactive2DVisualizer` & `DiagnosticResultsBento`.
+25. **Xbox Controller Tester** (`/test/controller/xbox`) — Xbox controller tester (`xbox.astro`). Standardized on 5-Card Bento `Interactive2DVisualizer` & `DiagnosticResultsBento`.
+26. **Joy-Con Tester** (`/test/controller/joycon`) — Joy-Con controller tester (`joycon.astro`). Standardized on 5-Card Bento `Interactive2DVisualizer` & `DiagnosticResultsBento`.
+27. **Switch Pro Tester** (`/test/controller/switch-pro`) — Switch Pro controller tester (`switch-pro.astro`). Standardized on 5-Card Bento `Interactive2DVisualizer` & `DiagnosticResultsBento`.
 28. **Joystick Tester** (`/test/controller/joystick-tester`) — Joystick & flight stick tester (`joystick-tester.astro`).
 29. **Gamepad Mapping** (`/test/controller/gamepad-mapping`) — Gamepad mapping and button rebind tester (`gamepad-mapping.astro`).
 
