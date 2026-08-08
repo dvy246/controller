@@ -22,7 +22,7 @@ export const ui = {
     "nav.repair": "Fix & Repair",
     "nav.embeds": "Widgets & Embeds",
     "nav.runDiagnostic": "Run Diagnostic",
-    "nav.search": "Search...",
+    "nav.search": "Search…",
     "hero.headlinePrefix": "Know exactly what's wrong",
     "hero.headlineAccent": "with your controller.",
     "hero.subtext":

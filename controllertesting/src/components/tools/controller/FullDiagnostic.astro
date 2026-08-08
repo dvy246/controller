@@ -20,36 +20,36 @@
     {/* ── Wizard Progress Bar ── */}
     <div class="wizard-header flex flex-col gap-4">
       <div class="wizard-steps-nav flex gap-2 w-full justify-between" role="tablist" aria-label="Diagnostic steps">
-        <div class="wiz-step active" id="step-nav-1" role="tab">1. Sticks</div>
-        <div class="wiz-step" id="step-nav-2" role="tab">2. Buttons</div>
-        <div class="wiz-step" id="step-nav-3" role="tab">3. Triggers</div>
-        <div class="wiz-step" id="step-nav-4" role="tab">4. Rumble</div>
-        <div class="wiz-step" id="step-nav-5" role="tab">5. Score</div>
+        <div class="wiz-step active" id="step-nav-1" role="tab" tabindex="0" aria-selected="true" aria-controls="wiz-panel-1">1. Sticks</div>
+        <div class="wiz-step" id="step-nav-2" role="tab" tabindex="0" aria-selected="false" aria-controls="wiz-panel-2">2. Buttons</div>
+        <div class="wiz-step" id="step-nav-3" role="tab" tabindex="0" aria-selected="false" aria-controls="wiz-panel-3">3. Triggers</div>
+        <div class="wiz-step" id="step-nav-4" role="tab" tabindex="0" aria-selected="false" aria-controls="wiz-panel-4">4. Rumble</div>
+        <div class="wiz-step" id="step-nav-5" role="tab" tabindex="0" aria-selected="false" aria-controls="wiz-panel-5">5. Score</div>
       </div>
       <div class="wizard-progress w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-        <div class="wizard-progress-fill h-full bg-blue-500 shadow-[0_0_12px_rgba(59,130,246,0.8)] transition-all duration-500 ease-out" id="wizard-progress-bar" style="width: 20%"></div>
+        <div class="wizard-progress-fill h-full bg-blue-500 shadow-[0_0_12px_rgba(59,130,246,0.8)] transition-all duration-500 ease-out motion-reduce:transition-none" id="wizard-progress-bar" style="width: 20%"></div>
       </div>
     </div>
 
     {/* ── Step 1: Sticks Diagnostic ── */}
-    <div class="wiz-panel active" id="wiz-panel-1">
+    <div class="wiz-panel active" id="wiz-panel-1" role="tabpanel" aria-labelledby="step-nav-1">
       <div class="panel-header text-center mb-6">
         <h3 class="text-2xl font-bold tracking-tight text-white mb-2">Analog Stick Calibration</h3>
         <p class="text-stone-400 text-sm">Rotate both analog sticks in full circles, then release them completely.</p>
       </div>
       <div class="panel-body">
-        <div class="diag-metrics-row grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="diag-metrics-row grid grid-cols-1 md:grid-cols-3 gap-4" aria-live="polite">
           <div class="diag-metric-box card-gradient card-hover">
             <span class="d-label">Left Stick Drift</span>
-            <span class="d-val text-yellow-500 text-glow-yellow" id="diag-left-drift">0.0%</span>
+            <span class="d-val text-yellow-500 text-glow-yellow tabular-nums" id="diag-left-drift">0.0%</span>
           </div>
           <div class="diag-metric-box card-gradient card-hover">
             <span class="d-label">Right Stick Drift</span>
-            <span class="d-val text-emerald-400 text-glow-emerald" id="diag-right-drift">0.0%</span>
+            <span class="d-val text-emerald-400 text-glow-emerald tabular-nums" id="diag-right-drift">0.0%</span>
           </div>
           <div class="diag-metric-box card-gradient card-hover">
             <span class="d-label">Circularity Error</span>
-            <span class="d-val text-emerald-400 text-glow-emerald" id="diag-circ-error">0.0%</span>
+            <span class="d-val text-emerald-400 text-glow-emerald tabular-nums" id="diag-circ-error">0.0%</span>
           </div>
         </div>
       </div>
@@ -59,7 +59,7 @@
     </div>
 
     {/* ── Step 2: Button Matrix ── */}
-    <div class="wiz-panel" id="wiz-panel-2">
+    <div class="wiz-panel" id="wiz-panel-2" role="tabpanel" aria-labelledby="step-nav-2" aria-hidden="true">
       <div class="panel-header text-center mb-6">
         <h3 class="text-2xl font-bold tracking-tight text-white mb-2">Button Response & Ghosting</h3>
         <p class="text-stone-400 text-sm">Press every button on your controller once. Each button will light up green when confirmed.</p>
@@ -89,7 +89,7 @@
     </div>
 
     {/* ── Step 3: Triggers ── */}
-    <div class="wiz-panel" id="wiz-panel-3">
+    <div class="wiz-panel" id="wiz-panel-3" role="tabpanel" aria-labelledby="step-nav-3" aria-hidden="true">
       <div class="panel-header text-center mb-6">
         <h3 class="text-2xl font-bold tracking-tight text-white mb-2">Trigger Pressure Linearity</h3>
         <p class="text-stone-400 text-sm">Press L2 and R2 slowly from 0% to 100% full pull.</p>
@@ -123,7 +123,7 @@
     </div>
 
     {/* ── Step 4: Vibration / Rumble ── */}
-    <div class="wiz-panel" id="wiz-panel-4">
+    <div class="wiz-panel" id="wiz-panel-4" role="tabpanel" aria-labelledby="step-nav-4" aria-hidden="true">
       <div class="panel-header text-center mb-6">
         <h3 class="text-2xl font-bold tracking-tight text-white mb-2">Vibration Motor Test</h3>
         <p class="text-stone-400 text-sm">Click below to test heavy and light rumble motors.</p>
@@ -149,7 +149,7 @@
     </div>
 
     {/* ── Step 5: Final Score ── */}
-    <div class="wiz-panel" id="wiz-panel-5">
+    <div class="wiz-panel" id="wiz-panel-5" role="tabpanel" aria-labelledby="step-nav-5" aria-hidden="true">
       <div class="panel-header text-center mb-2">
         <h3 class="text-2xl font-bold tracking-tight text-white">Diagnostic Results</h3>
       </div>
@@ -157,10 +157,10 @@
         <div class="score-card-hero flex flex-col items-center text-center gap-6 p-10 card-gradient card-hover rounded-3xl relative overflow-hidden">
           <div class="absolute inset-0 bg-gradient-to-t from-blue-500/10 to-transparent pointer-events-none"></div>
           <div class="score-number-wrap flex flex-col sm:flex-row items-center sm:items-baseline gap-4 relative z-10">
-            <span class="score-display text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-stone-400 drop-shadow-2xl" id="final-score-num">88</span>
+            <span class="score-display text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-stone-400 drop-shadow-2xl" id="final-score-num" aria-live="polite">88</span>
             <span class="score-grade-badge inline-flex items-center px-4 py-1.5 rounded-full text-sm font-bold tracking-widest uppercase bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]" id="final-score-grade">GRADE A</span>
           </div>
-          <p class="score-summary-text text-lg text-stone-300 max-w-lg leading-relaxed relative z-10" id="final-score-summary">
+          <p class="score-summary-text text-lg text-stone-300 max-w-lg leading-relaxed relative z-10" id="final-score-summary" aria-live="polite">
             Your controller is in Excellent condition! Stick drift is negligible and all buttons respond within nominal thresholds.
           </p>
         </div>
@@ -197,8 +197,15 @@
       for (let i = 1; i <= 5; i++) {
         const nav = document.getElementById(`step-nav-${i}`);
         const panel = document.getElementById(`wiz-panel-${i}`);
-        if (nav) nav.className = i === step ? 'wiz-step active' : i < step ? 'wiz-step done' : 'wiz-step';
-        if (panel) panel.style.display = i === step ? 'block' : 'none';
+        if (nav) {
+          nav.className = i === step ? 'wiz-step active' : i < step ? 'wiz-step done' : 'wiz-step';
+          nav.setAttribute('aria-selected', i === step ? 'true' : 'false');
+          nav.setAttribute('tabindex', i === step ? '0' : '-1');
+        }
+        if (panel) {
+          panel.style.display = i === step ? 'block' : 'none';
+          panel.setAttribute('aria-hidden', i === step ? 'false' : 'true');
+        }
         
         // Add entrance animation class to active panel
         if (i === step && panel) {
@@ -211,6 +218,29 @@
       // Update progress fill
       const bar = document.getElementById('wizard-progress-bar');
       if (bar) bar.style.width = `${(step / 5) * 100}%`;
+    }
+
+    // Step nav click + keyboard activation (tabs are focusable, not buttons)
+    for (let i = 1; i <= 5; i++) {
+      const nav = document.getElementById(`step-nav-${i}`);
+      if (!nav) continue;
+      nav.addEventListener('click', () => {
+        showStep(i);
+      });
+      nav.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          showStep(i);
+        } else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          const dir = e.key === 'ArrowRight' ? 1 : -1;
+          let next = currentStep + dir;
+          if (next < 1) next = 1;
+          if (next > 5) next = 5;
+          document.getElementById(`step-nav-${next}`)?.focus();
+          showStep(next);
+        }
+      });
     }
 
     // Step Navigation Listeners
@@ -328,8 +358,12 @@
   }
 
   /* Wizard Steps Nav */
+  .wizard-steps-nav {
+    flex-wrap: wrap;
+  }
   .wiz-step {
     flex: 1;
+    min-width: 4.5rem;
     text-align: center;
     padding: 0.5rem;
     font-size: 0.75rem;
@@ -339,6 +373,16 @@
     color: rgba(255,255,255,0.4);
     border-radius: 0.5rem;
     transition: all 0.3s;
+    cursor: pointer;
+    outline-offset: 2px;
+  }
+  .wiz-step:hover {
+    color: rgba(255,255,255,0.75);
+    background: rgba(255,255,255,0.05);
+  }
+  .wiz-step:focus-visible {
+    outline: 2px solid #60A5FA;
+    outline-offset: 2px;
   }
   .wiz-step.active {
     color: #60A5FA;
@@ -347,14 +391,6 @@
   }
   .wiz-step.done {
     color: #34D399;
-  }
-
-  /* Glass Cards */
-  .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 1rem;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
   }
 
   /* Metrics */
@@ -366,9 +402,10 @@
     color: rgba(255,255,255,0.5);
   }
   .d-val {
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-family: var(--font-mono);
     font-size: 1.75rem;
     font-weight: 700;
+    font-variant-numeric: tabular-nums;
   }
   .text-glow-emerald { text-shadow: 0 0 15px rgba(52, 211, 153, 0.6); }
   .text-glow-yellow { text-shadow: 0 0 15px rgba(234, 179, 8, 0.6); }
@@ -401,6 +438,15 @@
     font-size: 0.875rem;
     font-weight: 600;
     transition: all 0.2s;
+  }
+  .premium-btn:focus-visible {
+    outline: 2px solid #60A5FA;
+    outline-offset: 2px;
+  }
+  .premium-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
   }
   .primary-gradient {
     background: linear-gradient(135deg, #3B82F6, #2563EB);
@@ -452,5 +498,21 @@
 
   .inset-shadow {
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+  }
+
+  /* Numeric trigger readouts */
+  .trigger-bar-box .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-in {
+      animation: none;
+    }
+    .wiz-step,
+    .premium-btn,
+    .btn-test-chip {
+      transition: none;
+    }
   }
 </style>

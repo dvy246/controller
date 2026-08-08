@@ -17,7 +17,7 @@ const breadcrumbs = [
 
 const mouseTools = [
   { name: 'CPS Test (Click Speed)', href: '/test/mouse/cps', desc: 'Test clicks per second in 5s, 10s & 30s modes', badge: 'Popular' },
-  { name: 'Mouse Polling Rate', href: '/test/mouse/polling-rate', desc: 'Test mouse report rate in Hz up to 8000Hz (8KKHz)', badge: 'Flagship' },
+  { name: 'Mouse Polling Rate', href: '/test/mouse/polling-rate', desc: 'Test mouse report rate in Hz up to 8000Hz (8kHz)', badge: 'Flagship' },
   { name: 'DPI Analyzer', href: '/test/mouse/dpi', desc: 'Calculate true hardware DPI & pixel sensitivity' },
   { name: 'Click Latency', href: '/test/mouse/click-latency', desc: 'Measure mouse click response delay in ms' },
   { name: 'Mouse Button Tester', href: '/test/mouse/buttons', desc: 'Test MB1, MB2, MB3, MB4, MB5 side buttons' },
@@ -62,8 +62,8 @@ function getMouseIcon(href: string) {
       <Breadcrumbs items={breadcrumbs} />
 
       <header class="hub-header">
-        <span class="hub-badge">Mouse Diagnostic Suite</span>
-        <h1 class="hub-title">Mouse Diagnostic Hub</h1>
+        <span class="badge-tag">Mouse Diagnostic Suite</span>
+        <h1 class="hub-title text-h1">Mouse Diagnostic Hub</h1>
         <p class="hub-subtitle">
           Diagnose mouse polling rate (Hz), click latency, CPS speed, DPI accuracy, and double-clicking switch faults. 100% browser-based.
         </p>
@@ -93,18 +93,17 @@ function getMouseIcon(href: string) {
 
 <style>
   .hub-page { padding-top: 96px; padding-bottom: var(--spacing-section); }
-  .container-site { width: 100%; max-width: 1280px; margin-inline: auto; padding-inline: 1.5rem; }
   .hub-header { margin-bottom: 2.5rem; }
-  .hub-badge { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
-  .hub-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-header .badge-tag { margin-bottom: 0.75rem; }
+  .hub-title { font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
   .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
-  .grid-tools { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; width: 100%; }
+  .grid-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1.25rem; width: 100%; }
   .tool-hub-card { display: flex; flex-direction: column; gap: 0.875rem; padding: 1.5rem; text-decoration: none; cursor: pointer; background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); transition: background var(--duration-fast), border-color var(--duration-fast), transform var(--duration-fast); }
   .tool-hub-card:hover { background: var(--color-surface-3); border-color: var(--color-accent); transform: translateY(-3px); text-decoration: none; }
+  .tool-hub-card:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
   .card-top-bar { display: flex; align-items: center; justify-content: space-between; }
   .card-icon { width: 40px; height: 40px; border-radius: var(--radius-sm); background: var(--color-surface-3); border: 1px solid var(--color-border-subtle); display: flex; align-items: center; justify-content: center; color: var(--color-accent); }
   .card-tool-name { font-size: 1.125rem; font-weight: 700; color: var(--color-text-primary); letter-spacing: -0.01em; }
-  .badge-tag { font-family: var(--font-mono); font-size: 0.55rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; background: rgba(37, 99, 235, 0.15); color: var(--color-accent); padding: 0.2em 0.55em; border-radius: 3px; border: 1px solid rgba(37, 99, 235, 0.2); }
   .card-tool-desc { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.5; flex-grow: 1; }
   .card-action-link { display: flex; align-items: center; gap: 0.375rem; font-size: var(--text-small); font-weight: 600; color: var(--color-accent); margin-top: 0.25rem; }
 </style>

@@ -1,0 +1,681 @@
+---
+/**
+ * ReportViewer.astro — Shared controller health certificate renderer.
+ *
+ * One component powers every surface that shows an EvidenceReport:
+ *   - mode="url":  reads + verifies the `?d=&c=` self-verifying payload from
+ *                  the current URL (the /verify experience).
+ *   - mode="local": loads from localStorage by uuid (legacy /report/[uuid]).
+ *   - mode="demo":  renders the built-in demo certificate.
+ *
+ * Honesty boundary: the checksum guard detects corruption, not forgery. The
+ * UI says "self-verifying" — never "tamper-proof" or "server-verified".
+ */
+
+export interface Props {
+  mode: "url" | "local" | "demo";
+  /** Report id — required when mode="local". */
+  uuid?: string;
+  /** Strip chrome for <iframe> embedding. */
+  embed?: boolean;
+}
+
+const { mode, uuid = "demo", embed = false } = Astro.props;
+---
+
+<section class:list={["rv", { "rv-embed": embed }]} data-mode={mode}>
+  <!-- Trust status strip — hydrated client-side -->
+  <div id="rv-status" class="rv-status" role="status">
+    <span id="rv-status-icon" class="rv-status-icon" aria-hidden="true"></span>
+    <span id="rv-status-text" class="rv-status-text">Loading certificate…</span>
+  </div>
+
+  <div id="rv-card" class="doppelrand-shell rv-card">
+    <!-- Certificate header -->
+    <div class="rv-head">
+      <div class="rv-head-left">
+        <div class="rv-logo" aria-hidden="true">CT</div>
+        <div>
+          <div class="rv-eyebrow-row">
+            <span class="rv-eyebrow">CONTROLLER HEALTH CERTIFICATE</span>
+            <span id="rv-confidence" class="badge-pass rv-badge">High Confidence</span>
+          </div>
+          <h1 id="rv-device" class="rv-device">Loading controller…</h1>
+          <p class="rv-meta mono">
+            Report ID: <span id="rv-uuid" class="rv-accent">{uuid}</span>
+            <span class="rv-dot">•</span> Protocol v<span id="rv-version">2.4.0</span>
+          </p>
+        </div>
+      </div>
+      <div class="rv-head-right">
+        <div class="rv-muted">Tested</div>
+        <div id="rv-timestamp" class="rv-date mono">—</div>
+      </div>
+    </div>
+
+    <!-- Hero score + metrics -->
+    <div class="rv-hero">
+      <div class="rv-score-card card-gradient">
+        <span class="rv-muted mono rv-label">Health Score</span>
+        <div id="rv-score" class="rv-score text-gradient">—</div>
+        <div id="rv-grade" class="badge-pass rv-grade">—</div>
+      </div>
+
+      <div class="rv-metrics">
+        <div class="rv-metric card-base">
+          <span class="rv-muted">Left Stick Drift</span>
+          <span id="rv-drift-l" class="rv-metric-value emerald mono">—</span>
+          <span class="rv-muted rv-micro">Resting zero-point error</span>
+        </div>
+        <div class="rv-metric card-base">
+          <span class="rv-muted">Right Stick Drift</span>
+          <span id="rv-drift-r" class="rv-metric-value emerald mono">—</span>
+          <span class="rv-muted rv-micro">Resting zero-point error</span>
+        </div>
+        <div class="rv-metric card-base">
+          <span class="rv-muted">Circularity Error</span>
+          <span id="rv-circ" class="rv-metric-value accent mono">—</span>
+          <span class="rv-muted rv-micro">360° axis linearity</span>
+        </div>
+        <div class="rv-metric card-base">
+          <span class="rv-muted">Recommended Deadzone</span>
+          <span id="rv-deadzone" class="rv-metric-value mono">—</span>
+          <span class="rv-muted rv-micro">In-game threshold</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Telemetry breakdown -->
+    <div class="rv-block">
+      <h2 class="rv-block-title">Hardware telemetry breakdown</h2>
+      <div class="rv-grid3">
+        <div class="rv-cell card-base">
+          <div class="rv-cell-head">
+            <span class="rv-cell-name">Face buttons</span>
+            <span id="rv-buttons" class="rv-cell-status emerald mono">—</span>
+          </div>
+          <p class="rv-cell-sub">Face action buttons, bumpers &amp; D-pad — ghosting &amp; missed actuation check.</p>
+        </div>
+        <div class="rv-cell card-base">
+          <div class="rv-cell-head">
+            <span class="rv-cell-name">Analog triggers</span>
+            <span id="rv-triggers" class="rv-cell-status emerald mono">—</span>
+          </div>
+          <p class="rv-cell-sub">L2/R2 analog travel verified for smooth 0% → 100% linearity.</p>
+        </div>
+        <div class="rv-cell card-base">
+          <div class="rv-cell-head">
+            <span class="rv-cell-name">Haptics &amp; vibration</span>
+            <span id="rv-vibration" class="rv-cell-status emerald mono">—</span>
+          </div>
+          <p class="rv-cell-sub">Dual rumble motors &amp; haptic feedback actuators.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Environment -->
+    <div class="rv-env">
+      <h2 class="rv-env-title">Testing environment</h2>
+      <div class="rv-env-grid mono">
+        <div><span class="rv-muted">Browser</span><span id="rv-browser" class="rv-env-val">—</span></div>
+        <div><span class="rv-muted">OS</span><span id="rv-os" class="rv-env-val">—</span></div>
+        <div><span class="rv-muted">Connection</span><span id="rv-connection" class="rv-env-val">—</span></div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="rv-actions hide-on-print">
+      <button type="button" id="rv-print" class="btn-secondary rv-action">Print / PDF</button>
+      <button type="button" id="rv-share" class="btn-secondary rv-action">Copy share link</button>
+      <button type="button" id="rv-save" class="btn-primary rv-action">Save to Passport</button>
+    </div>
+  </div>
+
+  <div id="rv-toast" class="rv-toast" role="status" hidden></div>
+</section>
+
+<script>
+  import {
+    decodeShareQuery,
+    buildShareUrl,
+    computeHealthGrade,
+    payloadToReport,
+    type ShareReportPayload,
+  } from "../../../lib/share";
+  import { getPassportHistory, saveToPassport } from "../../../lib/passport";
+  import type { EvidenceReport } from "../../../lib/report";
+
+  const section = document.querySelector<HTMLElement>(".rv[data-mode]");
+  const mode = (section?.dataset.mode as "url" | "local" | "demo") || "demo";
+
+  function q(id: string): HTMLElement | null {
+    return document.getElementById(id);
+  }
+  function qs(id: string): HTMLElement | null {
+    return q("rv-" + id);
+  }
+
+  function badgeClass(kind: "pass" | "warning" | "fail"): string {
+    return kind === "pass" ? "badge-pass" : kind === "warning" ? "badge-warning" : "badge-fail";
+  }
+
+  function setStatus(kind: "ok" | "warn" | "info" | "error", text: string) {
+    const el = q("rv-status");
+    if (!el) return;
+    const icon = q("rv-status-icon");
+    const txt = q("rv-status-text");
+    if (icon) icon.textContent = kind === "ok" ? "✓" : kind === "warn" ? "⚠" : kind === "error" ? "✕" : "ℹ";
+    el.className = "rv-status rv-status-" + kind;
+    if (txt) txt.textContent = text;
+  }
+
+  function render(report: EvidenceReport, status: { kind: "ok" | "warn" | "info" | "error"; text: string }) {
+    const sticks = report.tests.sticks;
+    const driftMax = Math.max(sticks?.driftX ?? 0, sticks?.driftY ?? 0);
+    const grade = computeHealthGrade(report);
+
+    const setText = (id: string, val: string) => {
+      const el = qs(id);
+      if (el) el.textContent = val;
+    };
+
+    setText("device", report.device.name);
+    setText("uuid", report.id);
+    setText("version", report.protocolVersion || "2.4.0");
+    setText("timestamp", new Date(report.timestamp).toISOString().replace("T", " ").substring(0, 16) + " UTC");
+    setText("score", String(grade.score));
+    setText("drift-l", (sticks?.driftX ?? 0).toFixed(2) + "%");
+    setText("drift-r", (sticks?.driftY ?? 0).toFixed(2) + "%");
+    setText("circ", (sticks?.circularityError ?? 0).toFixed(1) + "%");
+    setText("deadzone", ((sticks?.deadzoneRecommendation ?? 0.02) * 100).toFixed(1) + "%");
+    setText("browser", report.environment?.browser || "Unknown");
+    setText("os", report.environment?.os || "Unknown");
+    setText("connection", report.environment?.connection || "unknown");
+
+    const gradeEl = q("rv-grade");
+    if (gradeEl) {
+      gradeEl.textContent = grade.grade;
+      gradeEl.className = "rv-grade " + badgeClass(grade.gradeKind);
+    }
+
+    // Telemetry status cells
+    const buttonsOk = !report.tests.buttons
+      ? true
+      : report.tests.buttons.facePassed && report.tests.buttons.bumpersPassed !== false;
+    const triggersOk = !report.tests.triggers ? true : report.tests.triggers.l2Passed && report.tests.triggers.r2Passed !== false;
+    const vibOk = !report.tests.vibration ? true : report.tests.vibration.status === "passed";
+
+    const statusOf = (id: string, ok: boolean, fail: string) => {
+      const el = qs(id);
+      if (!el) return;
+      el.textContent = ok ? "PASSED" : fail;
+      el.className = "rv-cell-status mono " + (ok ? "emerald" : "fail");
+    };
+    statusOf("buttons", !!buttonsOk, "FLAGGED");
+    statusOf("triggers", !!triggersOk, "FAULT");
+    statusOf("vibration", !!vibOk, "CHECK");
+
+    const confEl = q("rv-confidence");
+    if (confEl) {
+      const kind = report.confidence === "high" ? "pass" : report.confidence === "repeat-test-recommended" ? "warning" : "fail";
+      confEl.textContent =
+        report.confidence === "high"
+          ? "High Confidence"
+          : report.confidence === "repeat-test-recommended"
+            ? "Repeat test recommended"
+            : report.confidence === "browser-limitation"
+              ? "Browser limitation"
+              : "Unsupported";
+      confEl.className = "badge-" + kind + " rv-badge";
+    }
+
+    setStatus(status.kind, status.text);
+
+    // Wire actions
+    const printBtn = q("rv-print");
+    if (printBtn) printBtn.addEventListener("click", () => window.print());
+
+    const shareBtn = q("rv-share");
+    if (shareBtn) {
+      shareBtn.addEventListener("click", async () => {
+        const url = buildShareUrl(report);
+        let okCopy = false;
+        try {
+          if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(url);
+            okCopy = true;
+          }
+        } catch {}
+        if (!okCopy) {
+          try {
+            const ta = document.createElement("textarea");
+            ta.value = url;
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+            okCopy = true;
+          } catch {}
+        }
+        showToast(okCopy ? "Share link copied to clipboard" : "Select this page's URL and copy manually");
+      });
+    }
+
+    const saveBtn = q("rv-save");
+    if (saveBtn) {
+      saveBtn.addEventListener("click", () => {
+        try {
+          saveToPassport(report);
+          showToast("Report saved to your local Passport history");
+        } catch {
+          showToast("Could not save to Passport on this device");
+        }
+      });
+    }
+  }
+
+  function showToast(msg: string) {
+    const el = q("rv-toast");
+    if (!el) return;
+    el.textContent = msg;
+    el.hidden = false;
+    setTimeout(() => (el.hidden = true), 3000);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const embedMode = params.get("embed") === "1" || params.get("embed") === "true";
+    if (embedMode) {
+      document.body.classList.add("embed-mode");
+      document.querySelectorAll("header, footer, .hide-on-print, .hide-on-embed, .rv-status").forEach((el) => {
+        if (el instanceof HTMLElement) el.style.display = "none";
+      });
+    }
+
+    if (mode === "url") {
+      const d = params.get("d");
+      const c = params.get("c");
+      const decoded = decodeShareQuery(d, c);
+
+      if (decoded.ok && decoded.payload) {
+        const report = payloadToReport(decoded.payload);
+        render(report, {
+          kind: "ok",
+          text: "Self-verifying share link — checksum verified intact",
+        });
+      } else if (decoded.corrupt) {
+        setStatus("warn", "This link appears corrupted or truncated — ask the sender to re-share it");
+      } else {
+        setStatus("error", "No valid report payload in this link");
+      }
+    } else if (mode === "local") {
+      const uuid = window.location.pathname.split("/").filter(Boolean).pop() || "demo";
+      let reportData: EvidenceReport | null = null;
+      try {
+        const cached = localStorage.getItem("ct_report_" + uuid);
+        if (cached) reportData = JSON.parse(cached);
+      } catch {}
+      if (!reportData) {
+        try {
+          const history = getPassportHistory();
+          for (const deviceId in history) {
+            const found = history[deviceId].reports.find((r: any) => r.id === uuid);
+            if (found) {
+              reportData = found;
+              break;
+            }
+          }
+        } catch {}
+      }
+      if (reportData) {
+        render(reportData, { kind: "info", text: "Stored locally on this device" });
+      } else {
+        setStatus("error", "Report not found on this device");
+      }
+    } else {
+      // demo
+      const demo: EvidenceReport = {
+        id: "demo-9f82a10b-4c3e-41a2",
+        timestamp: Date.now() - 3600000,
+        protocolVersion: "2.4.0",
+        device: {
+          name: "PS5 DualSense Wireless Controller",
+          vendorId: "0x054c",
+          productId: "0x0ce6",
+          mappedModelKey: "ps5-dualsense",
+        },
+        environment: { browser: "Chrome 122", os: "macOS", connection: "usb" },
+        capabilities: { gamepad: "supported", haptics: "partial", webhid: "supported" },
+        tests: {
+          buttons: { facePassed: true, bumpersPassed: true },
+          sticks: { driftX: 0.08, driftY: 0.12, circularityError: 4.2, deadzoneRecommendation: 0.02 },
+          triggers: { l2Passed: true, r2Passed: true },
+          vibration: { status: "passed" },
+        },
+        confidence: "high",
+        limitations: [],
+      };
+      render(demo, { kind: "info", text: "Demo certificate — generate your own with a diagnostic test" });
+    }
+  });
+</script>
+
+<style>
+  .rv {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    width: 100%;
+  }
+
+  .rv-status {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.75rem;
+    border: 1px solid transparent;
+  }
+
+  .rv-status-icon {
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .rv-status-ok {
+    color: var(--color-pass, #10b981);
+    background: rgba(16, 185, 129, 0.08);
+    border-color: rgba(16, 185, 129, 0.25);
+  }
+  .rv-status-warn {
+    color: var(--color-warning, #f59e0b);
+    background: rgba(245, 158, 11, 0.08);
+    border-color: rgba(245, 158, 11, 0.25);
+  }
+  .rv-status-error {
+    color: var(--color-fail, #ef4444);
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.25);
+  }
+  .rv-status-info {
+    color: var(--color-accent, #2563eb);
+    background: rgba(37, 99, 235, 0.08);
+    border-color: rgba(37, 99, 235, 0.25);
+  }
+
+  .rv-card {
+    padding: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .rv-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    border-bottom: 1px solid var(--color-border-subtle, rgba(148, 163, 184, 0.2));
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .rv-head-left {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .rv-logo {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.75rem;
+    background: rgba(37, 99, 235, 0.15);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    color: var(--color-accent, #2563eb);
+    font-weight: 800;
+    font-size: 1.125rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rv-eyebrow-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .rv-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-accent, #2563eb);
+  }
+
+  .rv-badge {
+    font-size: 0.6875rem;
+    padding: 0.125rem 0.5rem;
+    font-family: var(--font-mono);
+  }
+
+  .rv-device {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0.25rem 0 0.125rem;
+    letter-spacing: -0.02em;
+  }
+
+  .rv-meta {
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+
+  .rv-dot {
+    margin: 0 0.375rem;
+    opacity: 0.5;
+  }
+
+  .rv-head-right {
+    text-align: right;
+  }
+
+  .rv-date {
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .rv-hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .rv-score-card {
+    padding: 1.5rem;
+    border-radius: 0.875rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .rv-score {
+    font-family: var(--font-mono);
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    margin: 0.375rem 0;
+  }
+
+  .rv-grade {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+  }
+
+  .rv-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.875rem;
+  }
+
+  .rv-metric {
+    padding: 1rem;
+    border-radius: 0.875rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .rv-metric-value {
+    font-family: var(--font-mono);
+    font-size: 1.375rem;
+    font-weight: 700;
+  }
+
+  .rv-label {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .rv-micro {
+    font-size: 0.6875rem;
+  }
+
+  .rv-block {
+    margin-bottom: 1.5rem;
+  }
+
+  .rv-block-title,
+  .rv-env-title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-secondary);
+    margin-bottom: 0.75rem;
+  }
+
+  .rv-grid3 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+
+  .rv-cell {
+    padding: 1rem;
+    border-radius: 0.875rem;
+  }
+
+  .rv-cell-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.375rem;
+  }
+
+  .rv-cell-name {
+    font-weight: 700;
+    font-size: 0.9375rem;
+  }
+
+  .rv-cell-status {
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  .rv-cell-sub {
+    font-size: 0.8125rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .rv-env {
+    padding: 1rem;
+    border-radius: 0.875rem;
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle, rgba(148, 163, 184, 0.2));
+    margin-bottom: 1.5rem;
+  }
+
+  .rv-env-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    font-size: 0.75rem;
+  }
+
+  .rv-env-val {
+    display: block;
+    font-weight: 600;
+    margin-top: 0.125rem;
+  }
+
+  .rv-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .rv-action {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .rv-toast {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    background: var(--color-surface-4);
+    border: 1px solid var(--color-accent, #2563eb);
+    color: var(--color-text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    z-index: 50;
+  }
+
+  .rv-embed .rv-head-right,
+  .rv-embed .rv-env,
+  .rv-embed .rv-actions {
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .rv-grid3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .rv-hero {
+      grid-template-columns: 1fr 2fr;
+    }
+    .rv-actions {
+      flex-direction: row;
+    }
+  }
+
+  @media print {
+    .rv-status {
+      display: none;
+    }
+  }
+</style>

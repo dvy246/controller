@@ -53,10 +53,10 @@ const schema = {
 
     <!-- Header -->
     <div class="mb-8 text-center sm:text-left">
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+      <h1 class="text-h1">
         Gaming Audio Benchmark: {formattedFeature}
       </h1>
-      <p class="mt-2 text-base text-slate-300 max-w-3xl">
+      <p class="mt-2 text-secondary max-w-3xl">
         Benchmark your headset's binaural 3D driver resolution, positional footstep tracking, and input-to-sound latency directly in browser.
       </p>
     </div>
@@ -66,18 +66,18 @@ const schema = {
 
     <!-- AEO/GEO FAQ -->
     <section class="mt-16 bg-surface-1 p-6 sm:p-8 rounded-2xl border border-surface-3">
-      <h2 class="text-2xl font-bold text-white mb-6">Gaming Audio & Latency FAQ</h2>
+      <h2 class="text-h2 mb-6">Gaming Audio & Latency FAQ</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-300">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-secondary">
         <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
-          <h3 class="font-semibold text-white text-base mb-2">Why is Bluetooth audio latency bad for gaming?</h3>
+          <h3 class="font-semibold mb-2">Why is Bluetooth audio latency bad for gaming?</h3>
           <p>
             Standard Bluetooth (SBC/AAC codecs) introduces 150ms to 300ms of audio delay, causing footsteps and gunshot audio to lag behind on-screen actions. Dedicated 2.4GHz wireless headsets reduce latency under 20ms.
           </p>
         </div>
 
         <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
-          <h3 class="font-semibold text-white text-base mb-2">How does 3D Spatial Audio work?</h3>
+          <h3 class="font-semibold mb-2">How does 3D Spatial Audio work?</h3>
           <p>
             It uses Head-Related Transfer Functions (HRTF) to simulate sound timing and volume differences between your left and right ear, giving the illusion of 360-degree directionality.
           </p>

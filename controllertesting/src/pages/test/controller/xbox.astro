@@ -5,7 +5,7 @@
  */
 
 import ToolLayout from '../../../layouts/ToolLayout.astro';
-import Interactive3DVisualizer from '../../../components/tools/controller/Interactive3DVisualizer.astro';
+import Interactive2DVisualizer from '../../../components/tools/controller/Interactive2DVisualizer.astro';
 import DiagnosticResultsBento from '../../../components/seo/DiagnosticResultsBento.astro';
 import PremiumGuideCard from '../../../components/seo/PremiumGuideCard.astro';
 import PremiumFaqAccordion from '../../../components/seo/PremiumFaqAccordion.astro';
@@ -42,16 +42,7 @@ const faqs = [
 
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
-    <div class="doppelrand-shell xbox-brand-shell" data-model="xbox">
-      <Interactive3DVisualizer modelUrl="/models/xbox_controller.glb" isRigid={true} />
-    </div>
-    <style>
-      .xbox-brand-shell {
-        --ambient-glow: #107C10;
-        box-shadow: 0 0 60px rgba(16, 124, 16, 0.15);
-        border-color: rgba(16, 124, 16, 0.3);
-      }
-    </style>
+    <Interactive2DVisualizer isRigid={true} />
   </Fragment>
 
   {/* ── Results Slot ── */}
@@ -62,19 +53,19 @@ const faqs = [
   {/* ── Semantic SEO Content Slot ── */}
   <Fragment slot="content">
     <section class="max-w-4xl mx-auto mt-16 px-6">
-      <h2 class="text-[var(--text-h2)] font-extrabold tracking-tight mb-6">Advanced Xbox Controller Diagnostics</h2>
+      <h2 class="text-h2 mb-6">Advanced Xbox Controller Diagnostics</h2>
       <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-        The Microsoft Xbox Series X|S and Xbox Elite Series 2 controllers are renowned for their ergonomic design and asymmetrical thumbstick layout. However, they utilize standard ALPS potentiometer modules which are highly prone to mechanical wear over time. This wear manifests as <strong>stick drift</strong>, where the controller registers movement even when the thumbstick is physically centered. Our web-based diagnostic engine taps into the native Gamepad API to stream raw telemetry data directly from your Xbox controller, giving you sub-percent precision readings on axial offsets.
+        The Xbox Series X|S and Elite Series 2 pads handle well, but their sticks are the same ALPS potentiometers as everyone else's — and those wear. Wear shows up as <strong>stick drift</strong>: the controller reports movement while the thumbstick sits centered. Plug your controller in, and this tool reads the raw Gamepad API axes to give you a 0.1%-precision resting offset in under a minute.
       </p>
       
       <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Testing Impulse Triggers and Face Buttons</h3>
       <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-        Unique to the Xbox ecosystem are the localized "Impulse Triggers" which house independent rumble motors in the L2 and R2 triggers. Using our specialized haptic test suite, you can verify that both the primary asymmetrical rumble motors in the grips and the precise impulse motors in the triggers are firing correctly. Furthermore, this tool allows you to map the exact pressure curve of the Hall-effect analog triggers to ensure linear actuation from 0.0 to 1.0 without dead zones.
+        Xbox pads are unique for their "Impulse Triggers": independent rumble motors tucked inside the LT and RT triggers. Use the haptic test to confirm that the two grip motors and both trigger motors fire, and the trigger test to map the analog pressure curve from 0.0 to 1.0 for linear actuation with no dead spots.
       </p>
       
       <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Xbox Elite Series 2 Polling Rate Analysis</h3>
       <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed">
-        For competitive players using the Elite Series 2, maintaining a consistent polling rate is critical for input latency. While standard Xbox controllers typically poll at 125Hz (8ms latency) over Bluetooth, wired connections can yield different results. Our real-time Hz tracker continuously monitors the USB or Bluetooth report frequency to ensure your controller isn't dropping packets or experiencing aggressive jitter.
+        Elite Series 2 players should hold a consistent polling rate: input latency depends on it. Standard Xbox controllers poll at 125Hz (8ms) over Bluetooth, and wired connections behave differently. The Hz tracker monitors your USB or Bluetooth report frequency and flags dropped packets or jitter.
       </p>
     </section>
   </Fragment>
@@ -84,13 +75,9 @@ const faqs = [
     <PremiumGuideCard title="How can I check my Xbox controller for stick drift?">
       <p class="text-lg">You can check your Xbox controller for stick drift by connecting it to a PC or Mac and using a browser-based gamepad tester. The tool will display the exact axial offset of your analog sticks. Any constant input registering above five percent without touch indicates hardware drift.</p>
       
-      <h3 class="text-blue-400 mt-12 mb-4 text-2xl font-extrabold tracking-tight">Recommended Actions</h3>
-      <p class="text-lg">Always begin by using our free <a href="/test/controller/drift">drift diagnostic tool</a> to identify the exact cause of any input inconsistencies before attempting repairs.</p>
+      <h3 class="text-h3 text-accent mt-8 mb-4">Recommended Actions</h3>
+      <p class="text-lg">      Start with the <a href="/test/controller/drift">Stick Drift Test</a>. A resting offset above 2% is grounds for a warranty claim while the pad is still covered; below that, deadzone tuning usually masks the wear until you are ready to swap modules.</p>
     </PremiumGuideCard>
-
-    <div class="max-w-4xl mx-auto mt-32 mb-20 px-6">
-      <PremiumFaqAccordion faqs={faqs} title="Xbox Controller FAQs" subtitle="Common issues and questions about Microsoft's Xbox controllers." />
-    </div>
   </Fragment>
 
   {/* ── Related Tools Slot ── */}

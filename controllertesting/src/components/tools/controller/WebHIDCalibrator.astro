@@ -243,6 +243,14 @@
   const successState = document.getElementById('success-state');
   const canvas = document.getElementById('calibration-canvas') as HTMLCanvasElement;
   const ctx = canvas?.getContext('2d');
+
+  // High-DPI backing store (logical 400×400, sharp on retina)
+  if (canvas && ctx) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = 400 * dpr;
+    canvas.height = 400 * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
   
   let animationId: number;
   let pointX = 200;

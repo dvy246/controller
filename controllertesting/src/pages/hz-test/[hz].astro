@@ -53,11 +53,11 @@ const schema = {
 
     <!-- Header -->
     <div class="mb-8 text-center sm:text-left">
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+      <h1 class="text-h1">
         {numericHz}Hz Refresh Rate & Motion Blur Test
       </h1>
-      <p class="mt-2 text-base text-slate-300 max-w-3xl">
-        Benchmark your display's ability to render true <span class="text-blue-400 font-semibold">{numericHz} Hz</span> frame output without motion blur, pixel trail ghosting, or frame stuttering.
+      <p class="mt-2 text-secondary max-w-3xl">
+        Benchmark your display's ability to render true <span class="text-accent font-semibold">{numericHz} Hz</span> frame output without motion blur, pixel trail ghosting, or frame stuttering.
       </p>
     </div>
 
@@ -66,18 +66,18 @@ const schema = {
 
     <!-- AEO/GEO FAQ -->
     <section class="mt-16 bg-surface-1 p-6 sm:p-8 rounded-2xl border border-surface-3">
-      <h2 class="text-2xl font-bold text-white mb-6">Display Hz & Pixel Persistence FAQ</h2>
+      <h2 class="text-h2 mb-6">Display Hz & Pixel Persistence FAQ</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-300">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-secondary">
         <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
-          <h3 class="font-semibold text-white text-base mb-2">Why is my monitor locked at 60Hz instead of {numericHz}Hz?</h3>
+          <h3 class="font-semibold mb-2">Why is my monitor locked at 60Hz instead of {numericHz}Hz?</h3>
           <p>
             Make sure your display settings in Windows/macOS are explicitly set to {numericHz}Hz. Also verify that you are using a high-bandwidth Cable (DisplayPort 1.4+ or HDMI 2.1).
           </p>
         </div>
 
         <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
-          <h3 class="font-semibold text-white text-base mb-2">What causes monitor ghosting?</h3>
+          <h3 class="font-semibold mb-2">What causes monitor ghosting?</h3>
           <p>
             Ghosting occurs when monitor pixels fail to change colors fast enough to keep up with the refresh rate, leaving a visible trail behind moving objects. Adjusting your monitor's Overdrive setting can eliminate this artifact.
           </p>

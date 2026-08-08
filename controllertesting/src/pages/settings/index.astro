@@ -43,8 +43,8 @@ const breadcrumbs = [{ name: 'Home', url: '/' }, { name: 'Settings' }];
       <Breadcrumbs items={breadcrumbs} />
 
       <header class="hub-hero">
-        <span class="badge-tag">Settings Hub</span>
-        <h1 class="hub-title">Game Controller Settings</h1>
+        <span class="badge-tag mb-3">Settings Hub</span>
+        <h1 class="text-h1 mb-2">Game Controller Settings</h1>
         <p class="hub-subtitle">
           Community-standard deadzone and sensitivity starting points for 10 competitive titles.
           Deadzone scales differ per game — every page shows the correct scale and a "test first" step.
@@ -53,11 +53,11 @@ const breadcrumbs = [{ name: 'Home', url: '/' }, { name: 'Settings' }];
 
       {games.map((game) => (
         <section class="game-block">
-          <h2 class="game-name">{game.name}</h2>
+          <h2 class="text-h2">{game.name}</h2>
           <div class="game-grid">
             {controllers.map((c) => (
               <a href={`/settings/${game.slug}/${c.slug}`} class="settings-card card-base card-hover">
-                <h3 class="settings-card-title">{game.name} on {c.name}</h3>
+                <h3 class="text-h3">{game.name} on {c.name}</h3>
                 <span class="settings-card-link">Deadzone &amp; sensitivity &rarr;</span>
               </a>
             ))}
@@ -83,14 +83,10 @@ const breadcrumbs = [{ name: 'Home', url: '/' }, { name: 'Settings' }];
 <style>
   .hub-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
   .hub-hero { margin-bottom: 2.5rem; }
-  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
-  .hub-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
   .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 70ch; }
   .game-block { margin-bottom: 2rem; }
-  .game-name { font-size: 1.375rem; font-weight: 800; margin-bottom: 0.875rem; }
   .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
   .settings-card { padding: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
-  .settings-card-title { font-size: 1rem; font-weight: 700; }
   .settings-card-link { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-accent); }
   .hub-note { padding: 2rem; }
   .hub-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.7; }

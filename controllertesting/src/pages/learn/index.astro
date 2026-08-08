@@ -16,45 +16,66 @@ const guides = [
     slug: 'what-is-stick-drift',
     title: 'What Is Stick Drift?',
     blurb: 'A controller stick moves or aims on its own, even when untouched. Learn what the drift percentage means and when it is worth fixing vs tuning around.',
-    icon: '◎',
+    icon: 'drift',
   },
   {
     slug: 'controller-deadzone-guide',
     title: 'Controller Deadzone Explained',
     blurb: 'A deadzone is the region of stick travel a game ignores. Here is how inner vs outer deadzones work and how to set them without guesswork.',
-    icon: '◯',
+    icon: 'deadzone',
   },
   {
     slug: 'gamepad-polling-rate-guide',
     title: 'Gamepad Polling Rate (Hz)',
     blurb: 'How often your controller reports its state to your device. 125Hz vs 250Hz vs 1000Hz — what changes in feel, and what does not.',
-    icon: '≋',
+    icon: 'hz',
   },
   {
     slug: 'controller-input-lag-guide',
     title: 'Controller Input Latency',
     blurb: 'Where the delay in input → pixels actually lives, and the part a controller can and cannot control.',
-    icon: '⏱',
+    icon: 'clock',
   },
   {
     slug: 'hall-effect-vs-potentiometer-guide',
     title: 'Hall-Effect vs Potentiometer Sticks',
     blurb: 'The two dominant stick sensors, and what our 140,000+ measurement dataset shows about how they age.',
-    icon: '⛭',
+    icon: 'magnet',
   },
   {
     slug: 'how-controllers-work',
     title: 'How Video Game Controllers Work',
     blurb: 'Sticks, triggers, buttons and the digital report your device actually receives — the 10-minute mental model.',
-    icon: '▤',
+    icon: 'chip',
   },
   {
     slug: 'controller-buying-guide',
     title: 'Controller Buying Guide (2026)',
     blurb: 'A decision framework tuned to what actually wears out — sensor type, polling, buttons, and sticks first.',
-    icon: '➜',
+    icon: 'cart',
   },
 ];
+
+function getLearnIcon(icon: string) {
+  switch (icon) {
+    case 'drift':
+      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>';
+    case 'deadzone':
+      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>';
+    case 'hz':
+      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3-4 3 3 4-6"/></svg>';
+    case 'clock':
+      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>';
+    case 'magnet':
+      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a6 6 0 0 0 12 0V3"/><path d="M6 3h4v6a2 2 0 0 0 4 0V3h4"/><path d="M8 15v4M16 15v4"/></svg>';
+    case 'chip':
+      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>';
+    case 'cart':
+      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/><path d="M2 3h3l2.5 12.5a2 2 0 0 0 2 1.5h7.7a2 2 0 0 0 2-1.6L21 7H6"/></svg>';
+    default:
+      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg>';
+  }
+}
 
 const breadcrumbs = [{ name: 'Learn', url: '/learn' }];
 const itemListSchema = {
@@ -106,7 +127,7 @@ const faqSchema = {
 
       <header class="learn-hero">
         <span class="badge-tag">Learn · No invented figures</span>
-        <h1 class="learn-title">Learn how controllers really work</h1>
+        <h1 class="text-h1 mb-2">Learn how controllers really work</h1>
         <p class="learn-subtitle">
           Short, honest explainers that go straight from a question to a test you can run in your browser.
           Where numbers appear they come from our published measurement dataset — not from a marketing page.
@@ -117,7 +138,7 @@ const faqSchema = {
         {guides.map((g) => (
           <a href={`/learn/${g.slug}`} class="learn-card card-base card-hover">
             <div class="learn-card-top">
-              <span class="learn-icon" aria-hidden="true">{g.icon}</span>
+              <span class="learn-icon" aria-hidden="true" set:html={getLearnIcon(g.icon)} />
               <h2 class="learn-card-title">{g.title}</h2>
             </div>
             <p class="learn-card-desc">{g.blurb}</p>
@@ -147,19 +168,20 @@ const faqSchema = {
 <style>
   .learn-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
   .learn-hero { margin-bottom: 2.5rem; max-width: 720px; }
-  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
-  .learn-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .learn-hero .badge-tag { margin-bottom: 0.75rem; }
   .learn-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
   .learn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2.5rem; }
-  .learn-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
+  .learn-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; cursor: pointer; }
+  .learn-card:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
   .learn-card-top { display: flex; align-items: center; gap: 0.75rem; }
-  .learn-icon { font-size: 1.25rem; color: var(--color-accent); }
+  .learn-icon { font-size: 1.25rem; color: var(--color-accent); display: flex; }
+  .learn-icon svg { flex-shrink: 0; }
   .learn-card-title { font-size: 1.125rem; font-weight: 700; color: var(--color-text-primary); }
   .learn-card-desc { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; flex: 1; }
   .learn-card-link { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--color-accent); letter-spacing: 0.04em; }
   .learn-cta { padding: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
   .learn-cta-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-  .section-title { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
+  .section-title { margin-bottom: 0.5rem; }
   @media (max-width: 900px) { .learn-grid { grid-template-columns: 1fr; } }
   @media (max-width: 640px) { .learn-cta { flex-direction: column; align-items: flex-start; } }
 </style>

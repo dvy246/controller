@@ -8,6 +8,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/global/Header.astro';
 import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -27,7 +28,7 @@ const breadcrumbs = [
       <span class="hero-badge">THROTTLE CONTROL GAME</span>
       <h1 class="hero-title text-gradient">Trigger Racer</h1>
       <p class="hero-desc">
-        Squeeze your R2 / RT analog trigger to match target throttle percentage zones without overshooting into red RPM limits.
+        Squeeze R2 / RT to hold the throttle in the green zone. Overshoot into red and you lose the gear.
       </p>
     </div>
 
@@ -40,8 +41,21 @@ const breadcrumbs = [
 
       <canvas id="trig-canvas" width="700" height="300"></canvas>
 
+      <p class="racer-hint">Gamepad: squeeze R2 / RT to match the green zone · Keyboard: hold ↑ / W to rev, ↓ / S to release</p>
+
       <div class="game-controls">
         <button type="button" class="btn-primary" id="btn-start-trig">Start Race</button>
+      </div>
+
+      <div class="game-over-panel glass-panel" id="trig-over" role="status" hidden>
+        <span class="over-eyebrow">Race Complete</span>
+        <div class="over-score mono text-gradient" id="trig-over-score">0</div>
+        <p class="over-sub">Final score</p>
+        <ArcadeRewardsLine baseId="trig" xp={150} />
+        <div class="over-actions">
+          <button type="button" class="btn-primary" id="btn-trig-again">Play Again</button>
+          <a href="/games" class="btn-secondary">Back to Arcade</a>
+        </div>
       </div>
     </div>
   </div>
@@ -49,7 +63,11 @@ const breadcrumbs = [
 </BaseLayout>
 
 <script>
-  import { addXP } from '../../lib/rewards';
+  import {
+    claimArcadeXp,
+    getArcadeRewardEls,
+    renderArcadeRewards,
+  } from '../../lib/arcadeRewards';
 
   document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('trig-canvas') as HTMLCanvasElement;
@@ -57,9 +75,64 @@ const breadcrumbs = [
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const overPanel = document.getElementById('trig-over') as HTMLElement | null;
+    const overScoreEl = document.getElementById('trig-over-score') as HTMLElement | null;
+
     let isPlaying = false;
     let score = 0;
     let targetPct = 50;
+    let keyboardVal = 0;
+
+    const keys = new Set<string>();
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (['ArrowUp', 'ArrowDown'].includes(e.code)) e.preventDefault();
+      keys.add(e.code);
+    });
+    window.addEventListener('keyup', (e: KeyboardEvent) => keys.delete(e.code));
+
+    function readTriggerPct(): number {
+      if (keys.has('ArrowUp') || keys.has('KeyW')) keyboardVal = Math.min(100, keyboardVal + 3);
+      if (keys.has('ArrowDown') || keys.has('KeyS')) keyboardVal = Math.max(0, keyboardVal - 3);
+      if (keys.has('ArrowUp') || keys.has('KeyW') || keys.has('ArrowDown') || keys.has('KeyS')) {
+        return keyboardVal;
+      }
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      const gp = gamepads[0];
+      if (gp && gp.buttons[7]) {
+        return gp.buttons[7].value * 100;
+      }
+      return 0;
+    }
+
+    function endGame() {
+      isPlaying = false;
+      const result = claimArcadeXp('trig', 150);
+      renderArcadeRewards(
+        getArcadeRewardEls('trig'),
+        result
+          ? { kind: 'award', result, amount: 150 }
+          : { kind: 'claimed', amount: 150 },
+      );
+      const st = document.getElementById('trig-status');
+      if (st) st.textContent = 'RACE COMPLETED!';
+      if (overScoreEl) overScoreEl.textContent = String(score);
+      if (overPanel) overPanel.hidden = false;
+    }
+
+    function startRace() {
+      if (isPlaying) return;
+      score = 0;
+      isPlaying = true;
+      keyboardVal = 0;
+      targetPct = Math.floor(Math.random() * 60) + 20;
+      const zEl = document.getElementById('trig-zone');
+      if (zEl) zEl.textContent = `${targetPct}%`;
+      const st = document.getElementById('trig-status');
+      if (st) st.textContent = 'RACING';
+      const scEl = document.getElementById('trig-score');
+      if (scEl) scEl.textContent = '0';
+      if (overPanel) overPanel.hidden = true;
+    }
 
     function loop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -77,12 +150,7 @@ const breadcrumbs = [
       ctx.strokeRect(0, zoneY - 20, canvas.width, 40);
 
       // Read trigger input
-      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-      const gp = gamepads[0];
-      let currentVal = 0;
-      if (gp && gp.buttons[7]) {
-        currentVal = gp.buttons[7].value * 100;
-      }
+      const currentVal = readTriggerPct();
 
       // Player Tachometer bar
       const playerY = canvas.height - (currentVal / 100) * canvas.height;
@@ -97,26 +165,16 @@ const breadcrumbs = [
         }
 
         if (score >= 1000) {
-          isPlaying = false;
-          addXP(150);
-          const st = document.getElementById('trig-status');
-          if (st) st.textContent = 'RACE COMPLETED! (+150 XP)';
-        } else {
-          requestAnimationFrame(loop);
+          endGame();
+          return;
         }
       }
+
+      requestAnimationFrame(loop);
     }
 
-    document.getElementById('btn-start-trig')?.addEventListener('click', () => {
-      score = 0;
-      isPlaying = true;
-      targetPct = Math.floor(Math.random() * 60) + 20;
-      const zEl = document.getElementById('trig-zone');
-      if (zEl) zEl.textContent = `${targetPct}%`;
-      const st = document.getElementById('trig-status');
-      if (st) st.textContent = 'RACING';
-      loop();
-    });
+    document.getElementById('btn-start-trig')?.addEventListener('click', startRace);
+    document.getElementById('btn-trig-again')?.addEventListener('click', startRace);
 
     loop();
   });
@@ -130,6 +188,17 @@ const breadcrumbs = [
   .hero-desc { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
   .canvas-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
   .game-score-bar { width: 100%; display: flex; justify-content: space-between; font-size: 1rem; font-weight: 600; }
-  #trig-canvas { border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); max-width: 100%; }
+  #trig-canvas { width: 100%; max-width: 700px; aspect-ratio: 7 / 3; height: auto; display: block; border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); background: var(--color-surface-1); touch-action: manipulation; user-select: none; }
+  .racer-hint { font-family: var(--font-mono); font-size: var(--text-micro); color: var(--color-text-tertiary); text-align: center; margin: 0; }
   .game-controls { display: flex; justify-content: center; width: 100%; margin-top: 0.5rem; }
+  .game-controls .btn-primary { touch-action: manipulation; }
+  .game-over-panel { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 100%; max-width: 480px; margin-inline: auto; padding: 2rem; text-align: center; }
+  .game-over-panel[hidden] { display: none; }
+  .over-eyebrow { font-family: var(--font-mono); font-size: var(--text-micro); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-tertiary); }
+  .over-score { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1; }
+  .over-sub { margin: 0; font-size: var(--text-small); color: var(--color-text-secondary); }
+  .over-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 0.5rem; }
+  .over-actions .btn-primary,
+  .over-actions .btn-secondary { touch-action: manipulation; }
+  @media (max-width: 768px) { .game-score-bar { flex-direction: column; gap: 0.375rem; } }
 </style>

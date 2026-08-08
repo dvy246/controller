@@ -44,19 +44,31 @@ const faqs = [
 
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Grade Threshold Scale</h2>
+      <h2 class="section-title-sm">Grade Threshold Scale</h2>
       <div class="results-legend-grid">
         <div class="legend-card legend-pass">
-          <strong class="legend-title">95 – 100 (Grade A+)</strong>
-          <p class="legend-text">Tournament Grade. Zero drift, flawless circularity, 1000Hz response capability.</p>
+          <div class="legend-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <span class="legend-grade">95–100 · Grade A+</span>
+          <strong class="legend-title">Tournament Grade</strong>
+          <p class="legend-text">Zero drift, flawless circularity, 1000Hz response capability. Ready for competitive play.</p>
         </div>
         <div class="legend-card legend-warning">
-          <strong class="legend-title">75 – 94 (Grade B)</strong>
-          <p class="legend-text">Standard Play Condition. Minor drift or trigger wear manageable with 5% deadzone.</p>
+          <div class="legend-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <span class="legend-grade">75–94 · Grade B</span>
+          <strong class="legend-title">Standard Play Condition</strong>
+          <p class="legend-text">Minor drift or trigger wear manageable with 5% deadzone adjustment.</p>
         </div>
         <div class="legend-card legend-fail">
-          <strong class="legend-title">&lt; 75 (Grade C / F)</strong>
-          <p class="legend-text">Hardware Repair Recommended. Potentiometer replacement or deadzone tuning needed.</p>
+          <div class="legend-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          </div>
+          <span class="legend-grade">&lt; 75 · Grade C / F</span>
+          <strong class="legend-title">Repair Recommended</strong>
+          <p class="legend-text">Potentiometer replacement or deadzone tuning needed immediately.</p>
         </div>
       </div>
     </div>
@@ -100,21 +112,123 @@ const faqs = [
 
 <style>
   .results-summary { display: flex; flex-direction: column; gap: var(--spacing-card-sm); }
-  .results-legend-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-card-sm); }
-  .legend-card { padding: var(--spacing-card-sm); border-radius: var(--radius-sm); display: flex; flex-direction: column; gap: 0.375rem; }
-  .legend-pass { background: var(--color-pass-bg); border: 1px solid var(--color-pass); }
-  .legend-pass .legend-title { color: var(--color-pass); }
-  .legend-warning { background: var(--color-warning-bg); border: 1px solid var(--color-warning); }
-  .legend-warning .legend-title { color: var(--color-warning); }
-  .legend-fail { background: var(--color-fail-bg); border: 1px solid var(--color-fail); }
-  .legend-fail .legend-title { color: var(--color-fail); }
-  .legend-title { font-family: var(--font-mono); font-size: var(--text-small); }
-  .legend-text { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.5; }
-  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-card); flex-wrap: wrap; }
+  
+  .section-title-sm {
+    font-size: clamp(1.125rem, 2vw, 1.375rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+    margin-bottom: 1.25rem;
+    text-wrap: balance;
+  }
+  
+  .results-legend-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  
+  .legend-card {
+    padding: 1.25rem;
+    border-radius: var(--radius-card);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    position: relative;
+    overflow: hidden;
+    transition:
+      transform var(--duration-fast) var(--ease-spring),
+      box-shadow var(--duration-fast) var(--ease-smooth);
+  }
+  
+  .legend-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+  }
+  
+  .legend-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    flex-shrink: 0;
+  }
+  
+  .legend-pass {
+    background: var(--color-pass-bg);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+  .legend-pass .legend-icon {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--color-pass);
+  }
+  .legend-pass .legend-grade {
+    color: var(--color-pass);
+  }
+  
+  .legend-warning {
+    background: var(--color-warning-bg);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+  .legend-warning .legend-icon {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--color-warning);
+  }
+  .legend-warning .legend-grade {
+    color: var(--color-warning);
+  }
+  
+  .legend-fail {
+    background: var(--color-fail-bg);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+  .legend-fail .legend-icon {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--color-fail);
+  }
+  .legend-fail .legend-grade {
+    color: var(--color-fail);
+  }
+  
+  .legend-grade {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    text-wrap: balance;
+  }
+  
+  .legend-title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    text-wrap: balance;
+  }
+  
+  .legend-text {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+  }
+  
+  .export-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-card);
+    flex-wrap: wrap;
+  }
   .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
   .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  
   .prose { line-height: 1.7; color: var(--color-text-secondary); }
   .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
   .prose p { margin-bottom: 1rem; }
-  @media (max-width: 768px) { .results-legend-grid { grid-template-columns: 1fr; } }
+  
+  @media (max-width: 768px) {
+    .results-legend-grid { grid-template-columns: 1fr; }
+  }
 </style>

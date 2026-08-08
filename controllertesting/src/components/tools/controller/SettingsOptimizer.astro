@@ -149,22 +149,22 @@ const { gameName, gameRange, controllerName } = Astro.props;
     background: var(--color-surface-1);
   }
   .zone-pass {
-    border-color: rgba(16, 185, 129, 0.4);
+    border-color: color-mix(in srgb, var(--color-pass) 40%, transparent);
   }
   .zone-pass .opt-zone-label {
     background: var(--color-pass);
   }
   .zone-warn {
-    border-color: rgba(245, 158, 11, 0.4);
+    border-color: color-mix(in srgb, var(--color-warning) 40%, transparent);
   }
   .zone-warn .opt-zone-label {
     background: var(--color-warning);
   }
   .zone-fail {
-    border-color: rgba(239, 68, 68, 0.4);
+    border-color: color-mix(in srgb, var(--color-fail) 40%, transparent);
   }
   .zone-fail .opt-zone-label {
-    background: var(--color-danger);
+    background: var(--color-fail);
   }
   .opt-zone-label {
     align-self: stretch;

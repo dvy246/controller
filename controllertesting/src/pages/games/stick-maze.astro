@@ -8,6 +8,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/global/Header.astro';
 import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -27,7 +28,7 @@ const breadcrumbs = [
       <span class="hero-badge">PRECISION ARCADE GAME</span>
       <h1 class="hero-title text-gradient">Stick Maze Runner</h1>
       <p class="hero-desc">
-        Use your left or right analog stick to navigate the orb through the vector corridor to the finish zone without touching the walls.
+        Steer the orb through the corridor with either stick. Reach the finish zone without touching the walls.
       </p>
     </div>
 
@@ -40,8 +41,20 @@ const breadcrumbs = [
 
       <canvas id="maze-canvas" width="700" height="400"></canvas>
 
+      <p class="maze-hint">Gamepad: left or right stick to move · Keyboard: arrow keys / WASD</p>
+
       <div class="game-controls">
         <button type="button" class="btn-primary" id="btn-start-maze">Start Run</button>
+      </div>
+
+      <div class="game-over-panel glass-panel" id="maze-over" role="status" hidden>
+        <span class="over-eyebrow" id="maze-over-title">Stage Clear</span>
+        <div class="over-score mono text-gradient" id="maze-over-score">0</div>
+        <ArcadeRewardsLine baseId="maze" xp={100} />
+        <div class="over-actions">
+          <button type="button" class="btn-primary" id="btn-maze-again">Play Again</button>
+          <a href="/games" class="btn-secondary">Back to Arcade</a>
+        </div>
       </div>
     </div>
   </div>
@@ -49,7 +62,11 @@ const breadcrumbs = [
 </BaseLayout>
 
 <script>
-  import { addXP } from '../../lib/rewards';
+  import {
+    claimArcadeXp,
+    getArcadeRewardEls,
+    renderArcadeRewards,
+  } from '../../lib/arcadeRewards';
 
   document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('maze-canvas') as HTMLCanvasElement;
@@ -57,72 +74,182 @@ const breadcrumbs = [
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const overPanel = document.getElementById('maze-over') as HTMLElement | null;
+    const overTitleEl = document.getElementById('maze-over-title') as HTMLElement | null;
+    const overScoreEl = document.getElementById('maze-over-score') as HTMLElement | null;
+
+    // Logical design space — rendering is scaled to any canvas/container size.
+    const LOGICAL_W = 700;
+    const LOGICAL_H = 400;
+    const BALL_RADIUS = 12;
+    const BORDER = 20;
+    const OBSTACLES = [
+      { x: 200, y: BORDER, w: 30, h: 260 },
+      { x: 400, y: 120, w: 30, h: 260 },
+    ];
+    const FINISH = { x: 620, y: 160, w: 40, h: 80 };
+
     let ballX = 50;
     let ballY = 200;
     let score = 0;
-    let level = 1;
     let isPlaying = false;
 
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const keys = new Set<string>();
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) {
+        e.preventDefault();
+      }
+      keys.add(e.code);
+    });
+    window.addEventListener('keyup', (e: KeyboardEvent) => keys.delete(e.code));
 
-      // Background
-      ctx.fillStyle = '#0c0c14';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      // Corridor Walls
-      ctx.strokeStyle = '#2563eb';
-      ctx.lineWidth = 4;
-      ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
-
-      // Obstacles
-      ctx.fillStyle = '#ef4444';
-      ctx.fillRect(200, 20, 30, 260);
-      ctx.fillRect(400, 120, 30, 260);
-
-      // Finish zone
-      ctx.fillStyle = '#10b981';
-      ctx.fillRect(620, 160, 40, 80);
-
-      // Ball
-      ctx.beginPath();
-      ctx.arc(ballX, ballY, 12, 0, Math.PI * 2);
-      ctx.fillStyle = '#3b82f6';
-      ctx.fill();
-      ctx.closePath();
-
-      if (isPlaying) {
-        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-        const gp = gamepads[0];
-        if (gp) {
-          const axisX = gp.axes[0] || 0;
-          const axisY = gp.axes[1] || 0;
-          ballX += axisX * 4;
-          ballY += axisY * 4;
-        }
-
-        // Boundary checks
-        if (ballX > 620 && ballY > 160 && ballY < 240) {
-          isPlaying = false;
-          score += 500;
-          addXP(100);
-          const st = document.getElementById('maze-status');
-          if (st) st.textContent = 'STAGE CLEAR! (+100 XP)';
-        }
-
-        requestAnimationFrame(draw);
+    function syncCanvasSize() {
+      const cssW = canvas.clientWidth || LOGICAL_W;
+      const cssH = cssW * (LOGICAL_H / LOGICAL_W);
+      canvas.style.height = `${cssH}px`;
+      const dpr = window.devicePixelRatio || 1;
+      const w = Math.max(1, Math.round(cssW * dpr));
+      const h = Math.max(1, Math.round(cssH * dpr));
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
       }
     }
 
-    document.getElementById('btn-start-maze')?.addEventListener('click', () => {
+    window.addEventListener('resize', syncCanvasSize);
+
+    function circleRectHit(cx: number, cy: number, r: number, rect: { x: number; y: number; w: number; h: number }) {
+      const nx = Math.max(rect.x, Math.min(cx, rect.x + rect.w));
+      const ny = Math.max(rect.y, Math.min(cy, rect.y + rect.h));
+      const dx = cx - nx;
+      const dy = cy - ny;
+      return dx * dx + dy * dy < r * r;
+    }
+
+    function readInput(): { dx: number; dy: number } {
+      let dx = 0;
+      let dy = 0;
+      if (keys.has('ArrowLeft') || keys.has('KeyA')) dx -= 1;
+      if (keys.has('ArrowRight') || keys.has('KeyD')) dx += 1;
+      if (keys.has('ArrowUp') || keys.has('KeyW')) dy -= 1;
+      if (keys.has('ArrowDown') || keys.has('KeyS')) dy += 1;
+
+      if (dx === 0 && dy === 0) {
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        const gp = gamepads[0];
+        if (gp) {
+          dx = gp.axes[0] || 0;
+          dy = gp.axes[1] || 0;
+        }
+      }
+      return { dx, dy };
+    }
+
+    function endGame(won: boolean) {
+      isPlaying = false;
+      const st = document.getElementById('maze-status');
+      if (won) {
+        score += 500;
+        const result = claimArcadeXp('maze', 100);
+        renderArcadeRewards(
+          getArcadeRewardEls('maze'),
+          result
+            ? { kind: 'award', result, amount: 100 }
+            : { kind: 'claimed', amount: 100 },
+        );
+        if (st) st.textContent = 'STAGE CLEAR!';
+        if (overTitleEl) overTitleEl.textContent = 'Stage Clear';
+        if (overScoreEl) overScoreEl.textContent = String(score);
+      } else {
+        renderArcadeRewards(getArcadeRewardEls('maze'), {
+          kind: 'fail',
+          text: 'No XP — hit the wall',
+        });
+        if (st) st.textContent = 'WALL HIT';
+        if (overTitleEl) overTitleEl.textContent = 'Wall Hit';
+        if (overScoreEl) overScoreEl.textContent = String(score);
+      }
+      const scoreEl = document.getElementById('maze-score');
+      if (scoreEl) scoreEl.textContent = String(score);
+      if (overPanel) overPanel.hidden = false;
+    }
+
+    function startRun() {
+      if (isPlaying) return;
       ballX = 50;
       ballY = 200;
       isPlaying = true;
       const st = document.getElementById('maze-status');
       if (st) st.textContent = 'RUNNING';
-      draw();
-    });
+      if (overPanel) overPanel.hidden = true;
+      syncCanvasSize();
+    }
 
+    function draw() {
+      ctx.setTransform(canvas.width / LOGICAL_W, 0, 0, canvas.height / LOGICAL_H, 0, 0);
+
+      // Background
+      ctx.fillStyle = '#0c0c14';
+      ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
+
+      // Corridor Walls
+      ctx.strokeStyle = '#2563eb';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(BORDER, BORDER, LOGICAL_W - BORDER * 2, LOGICAL_H - BORDER * 2);
+
+      // Obstacles
+      ctx.fillStyle = '#ef4444';
+      OBSTACLES.forEach((o) => ctx.fillRect(o.x, o.y, o.w, o.h));
+
+      // Finish zone
+      ctx.fillStyle = '#10b981';
+      ctx.fillRect(FINISH.x, FINISH.y, FINISH.w, FINISH.h);
+
+      // Ball
+      ctx.beginPath();
+      ctx.arc(ballX, ballY, BALL_RADIUS, 0, Math.PI * 2);
+      ctx.fillStyle = '#3b82f6';
+      ctx.fill();
+      ctx.closePath();
+
+      if (isPlaying) {
+        const { dx, dy } = readInput();
+        ballX += dx * 4;
+        ballY += dy * 4;
+
+        // Boundary check (wall hit)
+        if (
+          ballX - BALL_RADIUS < BORDER ||
+          ballX + BALL_RADIUS > LOGICAL_W - BORDER ||
+          ballY - BALL_RADIUS < BORDER ||
+          ballY + BALL_RADIUS > LOGICAL_H - BORDER
+        ) {
+          endGame(false);
+          return;
+        }
+
+        // Obstacle check
+        for (const o of OBSTACLES) {
+          if (circleRectHit(ballX, ballY, BALL_RADIUS, o)) {
+            endGame(false);
+            return;
+          }
+        }
+
+        // Finish check
+        if (circleRectHit(ballX, ballY, BALL_RADIUS, FINISH)) {
+          endGame(true);
+          return;
+        }
+      }
+
+      rafId =       requestAnimationFrame(draw);
+    }
+
+    document.getElementById('btn-start-maze')?.addEventListener('click', startRun);
+    document.getElementById('btn-maze-again')?.addEventListener('click', startRun);
+
+    syncCanvasSize();
     draw();
   });
 </script>
@@ -135,6 +262,16 @@ const breadcrumbs = [
   .hero-desc { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
   .canvas-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
   .game-score-bar { width: 100%; display: flex; justify-content: space-between; font-size: 1rem; font-weight: 600; }
-  #maze-canvas { border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); max-width: 100%; }
+  #maze-canvas { width: 100%; max-width: 700px; aspect-ratio: 7 / 4; height: auto; display: block; border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); background: var(--color-surface-1); touch-action: manipulation; user-select: none; }
+  .maze-hint { font-family: var(--font-mono); font-size: var(--text-micro); color: var(--color-text-tertiary); text-align: center; margin: 0; }
   .game-controls { display: flex; justify-content: center; width: 100%; margin-top: 0.5rem; }
+  .game-controls .btn-primary { touch-action: manipulation; }
+  .game-over-panel { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 100%; max-width: 480px; margin-inline: auto; padding: 2rem; text-align: center; }
+  .game-over-panel[hidden] { display: none; }
+  .over-eyebrow { font-family: var(--font-mono); font-size: var(--text-micro); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-tertiary); }
+  .over-score { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1; }
+  .over-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 0.5rem; }
+  .over-actions .btn-primary,
+  .over-actions .btn-secondary { touch-action: manipulation; }
+  @media (max-width: 768px) { .game-score-bar { flex-direction: column; gap: 0.375rem; } }
 </style>

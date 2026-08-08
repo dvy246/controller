@@ -8,6 +8,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/global/Header.astro';
 import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -39,7 +40,7 @@ const schema = {
         <span class="badge-tag">Gamepad Aim Trainer</span>
         <h1 class="game-title">Stick Sniper Aim Trainer</h1>
         <p class="game-subtitle">
-          Use your right analog stick to aim crosshairs and press R2 / RT trigger to shoot targets before they disappear.
+          Aim with the right stick. Fire with R2 / RT. Hit the targets before they disappear.
         </p>
       </header>
 
@@ -51,6 +52,18 @@ const schema = {
           <div class="g-stat"><span class="g-label">TIME LEFT</span><span class="g-val mono" id="g-time-val">30s</span></div>
           <button type="button" class="btn-primary" id="btn-start-game">Start 30s Aim Test</button>
         </div>
+        <p class="game-hint">Gamepad: right stick to aim, R2 / RT to shoot · Keyboard: arrow keys / WASD to aim, Space to shoot</p>
+      </div>
+
+      <div class="game-over-panel glass-panel" id="sniper-over" role="status" hidden>
+        <span class="over-eyebrow">Round Complete</span>
+        <div class="over-score mono text-gradient" id="over-score-val">0</div>
+        <p class="over-sub">Final score</p>
+        <ArcadeRewardsLine baseId="sniper" xp={50} />
+        <div class="over-actions">
+          <button type="button" class="btn-primary" id="btn-play-again">Play Again</button>
+          <a href="/games" class="btn-secondary">Back to Arcade</a>
+        </div>
       </div>
     </div>
   </main>
@@ -60,13 +73,23 @@ const schema = {
 
 <script>
   import { parseGamepadState } from '../../lib/gamepad';
-  import { addPoints } from '../../lib/rewards';
+  import {
+    claimArcadeXp,
+    getArcadeRewardEls,
+    renderArcadeRewards,
+  } from '../../lib/arcadeRewards';
 
   document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('sniper-canvas') as HTMLCanvasElement;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    const overPanel = document.getElementById('sniper-over') as HTMLElement | null;
+    const overScoreEl = document.getElementById('over-score-val') as HTMLElement | null;
+    const scoreEl = document.getElementById('g-score-val') as HTMLElement | null;
+    const accEl = document.getElementById('g-acc-val') as HTMLElement | null;
+    const timeEl = document.getElementById('g-time-val') as HTMLElement | null;
 
     let isPlaying = false;
     let score = 0;
@@ -80,11 +103,59 @@ const schema = {
 
     let targetX = 200 + Math.random() * 400;
     let targetY = 100 + Math.random() * 250;
-    let targetRadius = 24;
+    const targetRadius = 24;
+
+    const keys = new Set<string>();
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space', 'Enter'].includes(e.code)) {
+        e.preventDefault();
+      }
+      keys.add(e.code);
+    });
+    window.addEventListener('keyup', (e: KeyboardEvent) => keys.delete(e.code));
 
     function resetTarget() {
       targetX = 60 + Math.random() * (canvas.width - 120);
       targetY = 60 + Math.random() * (canvas.height - 120);
+    }
+
+    function updateHud() {
+      if (scoreEl) scoreEl.textContent = String(score);
+      if (accEl) accEl.textContent = `${Math.round((hits / Math.max(1, shots)) * 100)}%`;
+      if (timeEl) timeEl.textContent = `${timeLeft}s`;
+    }
+
+    function endGame() {
+      isPlaying = false;
+      if (timerId) clearInterval(timerId);
+      timerId = null;
+      const result = claimArcadeXp('sniper', 50);
+      renderArcadeRewards(
+        getArcadeRewardEls('sniper'),
+        result
+          ? { kind: 'award', result, amount: 50 }
+          : { kind: 'claimed', amount: 50 },
+      );
+      updateHud();
+      if (overScoreEl) overScoreEl.textContent = String(score);
+      if (overPanel) overPanel.hidden = false;
+    }
+
+    function startGame() {
+      if (isPlaying) return;
+      isPlaying = true;
+      score = 0;
+      shots = 0;
+      hits = 0;
+      timeLeft = 30;
+      if (overPanel) overPanel.hidden = true;
+      updateHud();
+
+      timerId = window.setInterval(() => {
+        timeLeft--;
+        if (timeEl) timeEl.textContent = `${timeLeft}s`;
+        if (timeLeft <= 0) endGame();
+      }, 1000);
     }
 
     function render() {
@@ -120,7 +191,10 @@ const schema = {
       ctx.beginPath(); ctx.moveTo(crosshairX, crosshairY - 20); ctx.lineTo(crosshairX, crosshairY + 20); ctx.stroke();
 
       if (isPlaying) {
-        // Poll Gamepad
+        let dx = 0;
+        let dy = 0;
+        let shoot = false;
+
         const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
         let activeGp: Gamepad | null = null;
         for (let i = 0; i < gamepads.length; i++) {
@@ -129,30 +203,32 @@ const schema = {
 
         if (activeGp) {
           const state = parseGamepadState(activeGp);
-          const rx = state.rightStick.x;
-          const ry = state.rightStick.y;
+          dx = state.rightStick.x;
+          dy = state.rightStick.y;
+          shoot = state.triggers.r2 > 0.5;
+        } else {
+          if (keys.has('ArrowLeft') || keys.has('KeyA')) dx = -1;
+          if (keys.has('ArrowRight') || keys.has('KeyD')) dx = 1;
+          if (keys.has('ArrowUp') || keys.has('KeyW')) dy = -1;
+          if (keys.has('ArrowDown') || keys.has('KeyS')) dy = 1;
+          shoot = keys.has('Space') || keys.has('Enter');
+        }
 
-          crosshairX += rx * 10;
-          crosshairY += ry * 10;
+        crosshairX += dx * 10;
+        crosshairY += dy * 10;
 
-          crosshairX = Math.max(10, Math.min(canvas.width - 10, crosshairX));
-          crosshairY = Math.max(10, Math.min(canvas.height - 10, crosshairY));
+        crosshairX = Math.max(10, Math.min(canvas.width - 10, crosshairX));
+        crosshairY = Math.max(10, Math.min(canvas.height - 10, crosshairY));
 
-          // Shoot trigger (R2 or RT)
-          if (state.triggers.r2 > 0.5) {
-            const dist = Math.sqrt(Math.pow(crosshairX - targetX, 2) + Math.pow(crosshairY - targetY, 2));
-            shots++;
-            if (dist <= targetRadius) {
-              hits++;
-              score += 100;
-              resetTarget();
-            }
-            const acc = Math.round((hits / Math.max(1, shots)) * 100);
-            const scoreEl = document.getElementById('g-score-val');
-            const accEl = document.getElementById('g-acc-val');
-            if (scoreEl) scoreEl.textContent = String(score);
-            if (accEl) accEl.textContent = `${acc}%`;
+        if (shoot) {
+          const dist = Math.sqrt(Math.pow(crosshairX - targetX, 2) + Math.pow(crosshairY - targetY, 2));
+          shots++;
+          if (dist <= targetRadius) {
+            hits++;
+            score += 100;
+            resetTarget();
           }
+          updateHud();
         }
       }
 
@@ -161,41 +237,31 @@ const schema = {
 
     render();
 
-    document.getElementById('btn-start-game')?.addEventListener('click', () => {
-      if (isPlaying) return;
-      isPlaying = true;
-      score = 0;
-      shots = 0;
-      hits = 0;
-      timeLeft = 30;
-
-      timerId = window.setInterval(() => {
-        timeLeft--;
-        const timeEl = document.getElementById('g-time-val');
-        if (timeEl) timeEl.textContent = `${timeLeft}s`;
-
-        if (timeLeft <= 0) {
-          isPlaying = false;
-          if (timerId) clearInterval(timerId);
-          addPoints(50);
-          alert(`Game Over! Final Score: ${score}. You earned +50 Arcade XP!`);
-        }
-      }, 1000);
-    });
+    document.getElementById('btn-start-game')?.addEventListener('click', startGame);
+    document.getElementById('btn-play-again')?.addEventListener('click', startGame);
   });
 </script>
 
 <style>
   .game-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
   .game-header { margin-bottom: 2rem; }
-  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
   .game-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
   .game-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
   .game-canvas-card { padding: 1rem; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
-  #sniper-canvas { width: 100%; max-width: 800px; height: auto; background: var(--color-surface-1); border-radius: var(--radius-sm); border: 1px solid var(--color-border-subtle); }
+  #sniper-canvas { width: 100%; max-width: 800px; height: auto; aspect-ratio: 16 / 9; display: block; background: var(--color-surface-1); border-radius: var(--radius-sm); border: 1px solid var(--color-border-subtle); touch-action: manipulation; user-select: none; }
   .game-overlay-bar { width: 100%; max-width: 800px; display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: var(--color-surface-2); border-radius: var(--radius-sm); }
+  .game-overlay-bar .btn-primary { touch-action: manipulation; }
+  .game-hint { font-family: var(--font-mono); font-size: var(--text-micro); color: var(--color-text-tertiary); text-align: center; margin: 0; }
   .g-stat { display: flex; flex-direction: column; gap: 0.1rem; }
   .g-label { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: var(--color-text-tertiary); }
   .g-val { font-size: 1.25rem; font-weight: 700; }
+  .game-over-panel { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 100%; max-width: 480px; margin-inline: auto; padding: 2rem; text-align: center; }
+  .game-over-panel[hidden] { display: none; }
+  .over-eyebrow { font-family: var(--font-mono); font-size: var(--text-micro); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-tertiary); }
+  .over-score { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1; }
+  .over-sub { margin: 0; font-size: var(--text-small); color: var(--color-text-secondary); }
+  .over-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 0.5rem; }
+  .over-actions .btn-primary,
+  .over-actions .btn-secondary { touch-action: manipulation; }
   @media (max-width: 768px) { .game-overlay-bar { flex-wrap: wrap; gap: 1rem; } }
 </style>

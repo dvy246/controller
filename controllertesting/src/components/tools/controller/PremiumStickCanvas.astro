@@ -5,56 +5,56 @@
  * Uses a static SVG background with high-visibility grid strokes and a transparent Canvas foreground for motion trails.
  */
 ---
-<div class="sticks-container relative w-full h-full flex items-center justify-center min-h-[190px] select-none overflow-hidden">
+<div class="sticks-container relative w-full flex flex-col items-center justify-between select-none overflow-hidden pb-1">
   
-  <!-- High-Visibility Static Grid Background -->
-  <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <!-- Subtle Radial Backdrop Gradient for Stick Circles -->
-      <radialGradient id="stick-bg-grad-l" cx="25%" cy="50%" r="20%">
-        <stop offset="0%" stop-color="rgba(16, 185, 129, 0.08)"/>
-        <stop offset="100%" stop-color="rgba(0, 0, 0, 0)"/>
-      </radialGradient>
-      <radialGradient id="stick-bg-grad-r" cx="75%" cy="50%" r="20%">
-        <stop offset="0%" stop-color="rgba(37, 99, 235, 0.08)"/>
-        <stop offset="100%" stop-color="rgba(0, 0, 0, 0)"/>
-      </radialGradient>
-    </defs>
+  <!-- High-Visibility Static Grid Background & Dynamic Motion Trails Canvas -->
+  <div class="relative w-full h-[150px] flex items-center justify-center">
+    <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 180" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="stick-bg-grad-l" cx="25%" cy="50%" r="20%">
+          <stop offset="0%" stop-color="rgba(16, 185, 129, 0.08)"/>
+          <stop offset="100%" stop-color="rgba(0, 0, 0, 0)"/>
+        </radialGradient>
+        <radialGradient id="stick-bg-grad-r" cx="75%" cy="50%" r="20%">
+          <stop offset="0%" stop-color="rgba(37, 99, 235, 0.08)"/>
+          <stop offset="100%" stop-color="rgba(0, 0, 0, 0)"/>
+        </radialGradient>
+      </defs>
 
-    <rect width="400" height="200" fill="url(#stick-bg-grad-l)" />
-    <rect width="400" height="200" fill="url(#stick-bg-grad-r)" />
+      <rect width="400" height="180" fill="url(#stick-bg-grad-l)" />
+      <rect width="400" height="180" fill="url(#stick-bg-grad-r)" />
 
-    <!-- Left Stick Grid -->
-    <g stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.5" fill="none">
-      <circle cx="100" cy="100" r="80" fill="rgba(255, 255, 255, 0.03)" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.5" />
-      <circle cx="100" cy="100" r="40" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" stroke-dasharray="3,3" />
-      <circle cx="100" cy="100" r="8" stroke="rgba(245, 158, 11, 0.6)" stroke-width="1.5" fill="rgba(245, 158, 11, 0.1)" /> <!-- Deadzone -->
-      <line x1="100" y1="15" x2="100" y2="185" stroke="rgba(255, 255, 255, 0.18)" stroke-width="1" />
-      <line x1="15" y1="100" x2="185" y2="100" stroke="rgba(255, 255, 255, 0.18)" stroke-width="1" />
-      <text x="100" y="28" fill="rgba(16, 185, 129, 0.7)" font-family="monospace" font-size="9" font-weight="bold" text-anchor="middle">L-STICK</text>
-    </g>
+      <!-- Left Stick Grid -->
+      <g stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.5" fill="none">
+        <circle cx="100" cy="90" r="70" fill="rgba(255, 255, 255, 0.03)" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.5" />
+        <circle cx="100" cy="90" r="35" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" stroke-dasharray="3,3" />
+        <circle cx="100" cy="90" r="8" stroke="rgba(245, 158, 11, 0.6)" stroke-width="1.5" fill="rgba(245, 158, 11, 0.1)" />
+        <line x1="100" y1="10" x2="100" y2="170" stroke="rgba(255, 255, 255, 0.18)" stroke-width="1" />
+        <line x1="20" y1="90" x2="180" y2="90" stroke="rgba(255, 255, 255, 0.18)" stroke-width="1" />
+        <text x="100" y="22" fill="rgba(16, 185, 129, 0.7)" font-family="monospace" font-size="9" font-weight="bold" text-anchor="middle">L-STICK</text>
+      </g>
 
-    <!-- Right Stick Grid -->
-    <g stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.5" fill="none">
-      <circle cx="300" cy="100" r="80" fill="rgba(255, 255, 255, 0.03)" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.5" />
-      <circle cx="300" cy="100" r="40" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" stroke-dasharray="3,3" />
-      <circle cx="300" cy="100" r="8" stroke="rgba(245, 158, 11, 0.6)" stroke-width="1.5" fill="rgba(245, 158, 11, 0.1)" /> <!-- Deadzone -->
-      <line x1="300" y1="15" x2="300" y2="185" stroke="rgba(255, 255, 255, 0.18)" stroke-width="1" />
-      <line x1="215" y1="100" x2="385" y2="100" stroke="rgba(255, 255, 255, 0.18)" stroke-width="1" />
-      <text x="300" y="28" fill="rgba(96, 165, 250, 0.7)" font-family="monospace" font-size="9" font-weight="bold" text-anchor="middle">R-STICK</text>
-    </g>
-  </svg>
+      <!-- Right Stick Grid -->
+      <g stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.5" fill="none">
+        <circle cx="300" cy="90" r="70" fill="rgba(255, 255, 255, 0.03)" stroke="rgba(255, 255, 255, 0.2)" stroke-width="1.5" />
+        <circle cx="300" cy="90" r="35" stroke="rgba(255, 255, 255, 0.08)" stroke-width="1" stroke-dasharray="3,3" />
+        <circle cx="300" cy="90" r="8" stroke="rgba(245, 158, 11, 0.6)" stroke-width="1.5" fill="rgba(245, 158, 11, 0.1)" />
+        <line x1="300" y1="10" x2="300" y2="170" stroke="rgba(255, 255, 255, 0.18)" stroke-width="1" />
+        <line x1="220" y1="90" x2="380" y2="90" stroke="rgba(255, 255, 255, 0.18)" stroke-width="1" />
+        <text x="300" y="22" fill="rgba(96, 165, 250, 0.7)" font-family="monospace" font-size="9" font-weight="bold" text-anchor="middle">R-STICK</text>
+      </g>
+    </svg>
 
-  <!-- Dynamic Motion Trails Canvas -->
-  <canvas id="premium-sticks" width="400" height="200" class="w-full max-w-full relative z-10 block pointer-events-none"></canvas>
+    <canvas id="premium-sticks" width="400" height="180" class="w-full max-w-full relative z-10 block pointer-events-none" aria-hidden="true"></canvas>
+  </div>
 
-  <!-- Coordinates Display Container (Strict grid-cols-2 with whitespace-nowrap) -->
-  <div class="absolute bottom-1.5 inset-x-0 grid grid-cols-2 gap-2 px-2 pointer-events-none z-20 w-full">
+  <!-- Coordinates Display Container -->
+  <div class="w-full grid grid-cols-2 gap-2 px-1 z-20 pointer-events-none mt-1">
     <div class="flex justify-center items-center overflow-hidden">
-      <span class="font-mono text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap inline-block text-center select-none shadow-md border border-emerald-500/30 bg-black/80 text-emerald-400 backdrop-blur-sm" id="stick-l-val">X: 0.000 Y: 0.000</span>
+      <span class="font-mono text-[9px] font-bold px-2 py-0.5 rounded whitespace-nowrap inline-block text-center select-none shadow-md border border-emerald-500/30 bg-black/80 text-emerald-400 backdrop-blur-sm" id="stick-l-val">X: 0.000 Y: 0.000</span>
     </div>
     <div class="flex justify-center items-center overflow-hidden">
-      <span class="font-mono text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap inline-block text-center select-none shadow-md border border-blue-500/30 bg-black/80 text-blue-400 backdrop-blur-sm" id="stick-r-val">X: 0.000 Y: 0.000</span>
+      <span class="font-mono text-[9px] font-bold px-2 py-0.5 rounded whitespace-nowrap inline-block text-center select-none shadow-md border border-blue-500/30 bg-black/80 text-blue-400 backdrop-blur-sm" id="stick-r-val">X: 0.000 Y: 0.000</span>
     </div>
   </div>
 </div>
@@ -65,11 +65,20 @@
   document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('premium-sticks') as HTMLCanvasElement | null;
     if (!canvas) return;
+
+    // Hi-DPI backing store: keep logical 400x200 drawing space, scale for retina (capped at 2x)
+    const LOGICAL_W = 400;
+    const LOGICAL_H = 200;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = LOGICAL_W * dpr;
+    canvas.height = LOGICAL_H * dpr;
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const W = canvas.width;
-    const H = canvas.height;
+    const W = LOGICAL_W;
+    const H = LOGICAL_H;
     const R = 80;
     const CX_L = W / 4;
     const CY_L = H / 2;

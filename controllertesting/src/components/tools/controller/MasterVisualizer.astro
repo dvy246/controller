@@ -1,0 +1,642 @@
+---
+/**
+ * MasterVisualizer.astro
+ * Pro Max 2D Unified Controller Visualizer Dashboard
+ * Uses CSS custom properties for 144Hz zero-latency rendering without DOM thrashing.
+ * Automatically morphs layout between PlayStation, Xbox, and Nintendo based on Gamepad API.
+ */
+---
+<div class="master-visualizer" id="master-visualizer-root" data-model="unknown">
+  
+  <!-- Left Side: Massive SVG Visualizer -->
+  <div class="visualizer-stage">
+    
+    <div class="stage-header">
+      <div class="flex items-center gap-2">
+        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--color-accent)]"><rect x="2" y="6" width="20" height="12" rx="0"/><path d="M12 12h.01"/><path d="M16 12h.01"/><path d="M8 12h.01"/></svg>
+        <h2 class="stage-title text-zinc-100 font-bold text-lg tracking-tight m-0">Interactive Visualizer</h2>
+      </div>
+      <div class="status-indicator">
+        <span class="status-dot" id="mv-status-dot"></span>
+        <span class="status-text font-mono text-xs uppercase tracking-widest text-zinc-400" id="mv-status-text">Disconnected</span>
+      </div>
+    </div>
+
+    <!-- Massive Unified SVG Canvas -->
+    <div class="svg-viewport flex items-center justify-center w-full h-full p-4 relative z-10 min-h-[400px]">
+      
+      <!-- The SVG uses CSS variables (--lx, --ly, --l2, --btn-0, etc.) passed directly to transforms and opacities -->
+      <svg id="mv-svg" viewBox="0 0 800 500" class="w-full max-w-[650px] max-h-[450px] transition-transform duration-300 drop-shadow-xl" xmlns="http://www.w3.org/2000/svg">
+        
+        <defs>
+          <linearGradient id="body-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#18181b"/>
+            <stop offset="100%" stop-color="#09090b"/>
+          </linearGradient>
+          <filter id="btn-glow">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+          </filter>
+        </defs>
+
+        <!-- Base Body - Generic shape that morphs via CSS based on data-model -->
+        <g id="controller-body" class="transition-all duration-500">
+          <!-- Main Shell -->
+          <path id="shell-path" d="M 180,120 
+                   C 280,110 520,110 620,120 
+                   C 680,125 730,150 750,220 
+                   C 780,300 780,380 750,440 
+                   C 720,500 660,500 630,460 
+                   C 600,420 580,380 540,380 
+                   C 500,380 300,380 260,380 
+                   C 220,380 200,420 170,460 
+                   C 140,500 80,500 50,440 
+                   C 20,380 20,300 50,220 
+                   C 70,150 120,125 180,120 Z" 
+                fill="url(#body-grad)" stroke="rgba(255,255,255,0.08)" stroke-width="2.5" />
+          
+          <!-- Inner Plate -->
+          <path d="M 280,160 C 520,160 520,160 520,160 C 560,200 560,320 520,360 C 480,380 320,380 280,360 C 240,320 240,200 280,160 Z" 
+                fill="#121215" stroke="rgba(255,255,255,0.03)" stroke-width="2" />
+        </g>
+
+        <!-- L2/R2 Triggers (Analog fill bars) -->
+        <g id="triggers">
+          <!-- L2 -->
+          <rect x="200" y="30" width="80" height="70" rx="0" fill="#1f1f22" stroke="rgba(255,255,255,0.06)" stroke-width="2"/>
+          <!-- L2 Fill (Driven by --l2) -->
+          <rect x="202" y="32" width="76" height="66" rx="0" class="trigger-fill l2-fill" fill="var(--color-accent)"/>
+          
+          <!-- R2 -->
+          <rect x="520" y="30" width="80" height="70" rx="0" fill="#1f1f22" stroke="rgba(255,255,255,0.06)" stroke-width="2"/>
+          <!-- R2 Fill (Driven by --r2) -->
+          <rect x="522" y="32" width="76" height="66" rx="0" class="trigger-fill r2-fill" fill="var(--color-accent)"/>
+        </g>
+
+        <!-- Bumpers L1/R1 -->
+        <g id="bumpers">
+          <!-- L1 (Btn 4) -->
+          <path id="btn-4" class="btn-node" d="M 180,105 C 230,95 280,105 280,105 L 280,130 C 280,130 230,120 180,130 Z" fill="#27272a" stroke="rgba(255,255,255,0.1)" stroke-width="2" />
+          <!-- R1 (Btn 5) -->
+          <path id="btn-5" class="btn-node" d="M 620,105 C 570,95 520,105 520,105 L 520,130 C 520,130 570,120 620,130 Z" fill="#27272a" stroke="rgba(255,255,255,0.1)" stroke-width="2" />
+        </g>
+
+        <!-- Action Buttons (Right) -->
+        <!-- Standard layout: A=0(Bot), B=1(Right), X=2(Left), Y=3(Top) -->
+        <!-- PlayStation layout: Cross=0, Circle=1, Square=2, Triangle=3 -->
+        <!-- Nintendo layout: B=0(Bot), A=1(Right), Y=2(Left), X=3(Top) -->
+        <g id="action-buttons" transform="translate(580, 240)">
+          <!-- Top Button (Y / Triangle / X) -->
+          <circle id="btn-3" class="btn-node" cx="0" cy="-40" r="16" fill="#1f1f22" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+          <text class="btn-label label-y" x="0" y="-34">Y</text>
+          <text class="btn-label label-triangle" x="0" y="-34">△</text>
+          <text class="btn-label label-nx" x="0" y="-34">X</text>
+          
+          <!-- Bottom Button (A / Cross / B) -->
+          <circle id="btn-0" class="btn-node" cx="0" cy="40" r="16" fill="#1f1f22" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+          <text class="btn-label label-a" x="0" y="46">A</text>
+          <text class="btn-label label-cross" x="0" y="46">✕</text>
+          <text class="btn-label label-nb" x="0" y="46">B</text>
+
+          <!-- Left Button (X / Square / Y) -->
+          <circle id="btn-2" class="btn-node" cx="-40" cy="0" r="16" fill="#1f1f22" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+          <text class="btn-label label-x" x="-40" y="6">X</text>
+          <text class="btn-label label-square" x="-40" y="6">□</text>
+          <text class="btn-label label-ny" x="-40" y="6">Y</text>
+
+          <!-- Right Button (B / Circle / A) -->
+          <circle id="btn-1" class="btn-node" cx="40" cy="0" r="16" fill="#1f1f22" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+          <text class="btn-label label-b" x="40" y="6">B</text>
+          <text class="btn-label label-circle" x="40" y="6">◯</text>
+          <text class="btn-label label-na" x="40" y="6">A</text>
+        </g>
+
+        <!-- D-Pad (Directional) -->
+        <g id="dpad" transform="translate(220, 240)">
+          <path id="btn-12" class="btn-node dpad-node" d="M -14,-14 L 14,-14 L 14,-46 C 14,-50 8,-54 0,-54 C -8,-54 -14,-50 -14,-46 Z" fill="#1f1f22" stroke="rgba(255,255,255,0.15)" stroke-width="2" />
+          <path id="btn-13" class="btn-node dpad-node" d="M -14,14 L 14,14 L 14,46 C 14,50 8,54 0,54 C -8,54 -14,50 -14,46 Z" fill="#1f1f22" stroke="rgba(255,255,255,0.15)" stroke-width="2" />
+          <path id="btn-14" class="btn-node dpad-node" d="M -14,-14 L -14,14 L -46,14 C -50,14 -54,8 -54,0 C -54,-8 -50,-14 -46,-14 Z" fill="#1f1f22" stroke="rgba(255,255,255,0.15)" stroke-width="2" />
+          <path id="btn-15" class="btn-node dpad-node" d="M 14,-14 L 14,14 L 46,14 C 50,14 54,8 54,0 C 54,-8 50,-14 46,-14 Z" fill="#1f1f22" stroke="rgba(255,255,255,0.15)" stroke-width="2" />
+          <!-- Center block -->
+          <rect x="-14" y="-14" width="28" height="28" fill="#1f1f22" stroke="none" />
+        </g>
+
+        <!-- Analog Sticks -->
+        <!-- Left Stick (L3 - Btn 10). Position dynamically changes based on model -->
+        <g id="stick-left-group" class="stick-group transition-all duration-500">
+          <!-- Base ring -->
+          <circle cx="0" cy="0" r="45" fill="#0c0c0e" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1" stroke-dasharray="4 4"/>
+          <!-- Moving cap (driven by --lx, --ly) -->
+          <g class="stick-cap stick-cap-left">
+            <circle id="btn-10" class="btn-node" cx="0" cy="0" r="35" fill="#27272a" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+            <circle cx="0" cy="0" r="10" fill="#18181b" />
+          </g>
+        </g>
+
+        <!-- Right Stick (R3 - Btn 11). Position dynamically changes based on model -->
+        <g id="stick-right-group" class="stick-group transition-all duration-500">
+          <circle cx="0" cy="0" r="45" fill="#0c0c0e" stroke="rgba(255,255,255,0.05)" stroke-width="2"/>
+          <circle cx="0" cy="0" r="45" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1" stroke-dasharray="4 4"/>
+          <g class="stick-cap stick-cap-right">
+            <circle id="btn-11" class="btn-node" cx="0" cy="0" r="35" fill="#27272a" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+            <circle cx="0" cy="0" r="10" fill="#18181b" />
+          </g>
+        </g>
+
+        <!-- Center Meta Buttons -->
+        <!-- Options/Menu (Btn 9) -->
+        <rect id="btn-9" class="btn-node" x="480" y="180" width="20" height="20" rx="0" fill="#1f1f22" stroke="rgba(255,255,255,0.1)" stroke-width="2" />
+        <!-- Share/View (Btn 8) -->
+        <rect id="btn-8" class="btn-node" x="300" y="180" width="20" height="20" rx="0" fill="#1f1f22" stroke="rgba(255,255,255,0.1)" stroke-width="2" />
+        <!-- Home/PS/Xbox (Btn 16) -->
+        <circle id="btn-16" class="btn-node" cx="400" cy="240" r="18" fill="#1f1f22" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+        <!-- Touchpad (PS Only - Btn 17) -->
+        <rect id="btn-17" class="btn-node touchpad-node transition-opacity duration-300" x="320" y="140" width="160" height="80" rx="0" fill="#18181b" stroke="rgba(255,255,255,0.1)" stroke-width="2" />
+
+      </svg>
+    </div>
+  </div>
+
+  <!-- Right Side: Live Metrics Dashboard -->
+  <div class="metrics-sidebar">
+    <div class="metrics-grid">
+      
+      <!-- Telemetry Info -->
+      <div class="metric-card">
+        <h3 class="metric-title">Connection</h3>
+        <div class="font-mono font-bold text-sm text-[var(--color-accent)] truncate" id="mv-model-name">None</div>
+        <div class="flex justify-between mt-2">
+          <span class="text-xs text-zinc-500 uppercase">Rate</span>
+          <span class="font-mono text-sm text-zinc-100 font-bold" id="mv-hz">0 Hz</span>
+        </div>
+      </div>
+
+      <!-- Left Stick Values -->
+      <div class="metric-card">
+        <h3 class="metric-title">Left Stick</h3>
+        <div class="flex justify-between mt-1">
+          <span class="text-xs text-zinc-500 font-mono">X</span>
+          <span class="font-mono text-sm text-zinc-100" id="mv-lx">0.0000</span>
+        </div>
+        <div class="flex justify-between mt-1">
+          <span class="text-xs text-zinc-500 font-mono">Y</span>
+          <span class="font-mono text-sm text-zinc-100" id="mv-ly">0.0000</span>
+        </div>
+        <div class="flex justify-between mt-2 pt-2 border-t border-zinc-800">
+          <span class="text-xs text-zinc-500 font-mono">Drift</span>
+          <span class="font-mono text-sm text-emerald-400" id="mv-ldrift">0.0%</span>
+        </div>
+      </div>
+
+      <!-- Right Stick Values -->
+      <div class="metric-card">
+        <h3 class="metric-title">Right Stick</h3>
+        <div class="flex justify-between mt-1">
+          <span class="text-xs text-zinc-500 font-mono">X</span>
+          <span class="font-mono text-sm text-zinc-100" id="mv-rx">0.0000</span>
+        </div>
+        <div class="flex justify-between mt-1">
+          <span class="text-xs text-zinc-500 font-mono">Y</span>
+          <span class="font-mono text-sm text-zinc-100" id="mv-ry">0.0000</span>
+        </div>
+        <div class="flex justify-between mt-2 pt-2 border-t border-zinc-800">
+          <span class="text-xs text-zinc-500 font-mono">Drift</span>
+          <span class="font-mono text-sm text-emerald-400" id="mv-rdrift">0.0%</span>
+        </div>
+      </div>
+
+      <!-- Triggers -->
+      <div class="metric-card">
+        <h3 class="metric-title">Analog Triggers</h3>
+        <div class="flex justify-between mt-1">
+          <span class="text-xs text-zinc-500 font-mono">L2</span>
+          <span class="font-mono text-sm text-zinc-100" id="mv-l2">0.0000</span>
+        </div>
+        <div class="flex justify-between mt-1">
+          <span class="text-xs text-zinc-500 font-mono">R2</span>
+          <span class="font-mono text-sm text-zinc-100" id="mv-r2">0.0000</span>
+        </div>
+      </div>
+
+      <!-- Vibration Array -->
+      <div class="metric-card col-span-full">
+        <h3 class="metric-title flex justify-between items-center m-0 mb-3">
+          <span>Haptic Actuators</span>
+          <span class="text-[0.65rem] text-zinc-500 font-normal normal-case">Dual Motor</span>
+        </h3>
+        <div class="grid grid-cols-4 gap-2">
+          <button class="vibe-btn" data-vibe="heavy">Hvy</button>
+          <button class="vibe-btn" data-vibe="light">Lgt</button>
+          <button class="vibe-btn" data-vibe="burst">Brst</button>
+          <button class="vibe-btn" data-vibe="pulse">Pls</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  /* 
+   * CORE ARCHITECTURE: Pro Max Dark Layout
+   * No overlapping, strict alignment, solid neutral colors.
+   */
+  .master-visualizer {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    width: 100%;
+    min-height: 540px;
+    background: #09090b; /* Zinc 950 */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0px;
+    overflow: hidden;
+    box-shadow: none;
+  }
+
+  @media (min-width: 1024px) {
+    .master-visualizer {
+      grid-template-columns: 1fr 340px;
+    }
+  }
+
+  /* Left SVG Stage */
+  .visualizer-stage {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: #09090b;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .stage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #18181b;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #3f3f46;
+  }
+  .status-dot.active {
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+  }
+
+  /* Right Metrics Sidebar */
+  .metrics-sidebar {
+    background: #121215;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    align-content: center;
+  }
+
+  @media (min-width: 1024px) {
+    .metrics-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .col-span-full {
+      grid-column: 1 / -1;
+    }
+    /* Make Connection take full width on desktop */
+    .metric-card:first-child {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .metric-card {
+    background: #18181b;
+    border: 1px solid #333;
+    border-radius: 0px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-family: var(--font-mono);
+  }
+
+  .metric-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #a1a1aa; /* Zinc 400 */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.75rem 0;
+  }
+
+  /* SVG Zero-Latency CSS System */
+  .btn-node {
+    transition: fill 0.05s ease, stroke 0.05s ease, transform 0.05s ease-out;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+  
+  .btn-label {
+    fill: #a1a1aa;
+    font-family: var(--font-mono, monospace);
+    font-size: 14px;
+    font-weight: 800;
+    text-anchor: middle;
+    pointer-events: none;
+    opacity: 0; /* Hidden by default, driven by model logic */
+  }
+
+  /* Active State Injection */
+  .active-node {
+    fill: var(--color-accent, #2563eb) !important;
+    stroke: #60a5fa !important;
+    transform: scale(0.92);
+  }
+
+  /* Trigger CSS Properties (driven by JS) */
+  .trigger-fill {
+    transform-origin: bottom;
+    /* We animate scaleY via JS CSS vars */
+    transform: scaleY(var(--tfill, 0));
+    opacity: 0.8;
+  }
+  .l2-fill { --tfill: 0; }
+  .r2-fill { --tfill: 0; }
+
+  /* Stick CSS Properties (driven by JS) */
+  .stick-cap {
+    /* Transform updated by JS var(--lx), var(--ly) */
+    transform: translate(calc(var(--sx, 0) * 20px), calc(var(--sy, 0) * 20px));
+  }
+  .stick-cap-left { --sx: 0; --sy: 0; }
+  .stick-cap-right { --sx: 0; --sy: 0; }
+
+  /* Controller Model Switching CSS Logic */
+  
+  /* 1. PlayStation (Symmetric sticks, shapes) */
+  [data-model="playstation"] .label-cross,
+  [data-model="playstation"] .label-circle,
+  [data-model="playstation"] .label-square,
+  [data-model="playstation"] .label-triangle {
+    opacity: 1;
+  }
+  [data-model="playstation"] #stick-left-group { transform: translate(300px, 320px); }
+  [data-model="playstation"] #stick-right-group { transform: translate(500px, 320px); }
+  [data-model="playstation"] #dpad { transform: translate(160px, 240px); }
+  [data-model="playstation"] .touchpad-node { opacity: 1; }
+
+  /* 2. Xbox (Asymmetric sticks, Xbox layout) */
+  [data-model="xbox"] .label-a,
+  [data-model="xbox"] .label-b,
+  [data-model="xbox"] .label-x,
+  [data-model="xbox"] .label-y {
+    opacity: 1;
+  }
+  [data-model="xbox"] #stick-left-group { transform: translate(220px, 200px); }
+  [data-model="xbox"] #stick-right-group { transform: translate(450px, 320px); }
+  [data-model="xbox"] #dpad { transform: translate(320px, 320px); }
+  [data-model="xbox"] .touchpad-node { opacity: 0; }
+
+  /* 3. Nintendo Switch (Asymmetric, reversed layout) */
+  [data-model="switch"] .label-na,
+  [data-model="switch"] .label-nb,
+  [data-model="switch"] .label-nx,
+  [data-model="switch"] .label-ny {
+    opacity: 1;
+  }
+  [data-model="switch"] #stick-left-group { transform: translate(220px, 200px); }
+  [data-model="switch"] #stick-right-group { transform: translate(450px, 320px); }
+  [data-model="switch"] #dpad { transform: translate(320px, 320px); }
+  [data-model="switch"] .touchpad-node { opacity: 0; }
+
+  /* Fallback (Generic Symmetric) */
+  [data-model="unknown"] .label-a,
+  [data-model="unknown"] .label-b,
+  [data-model="unknown"] .label-x,
+  [data-model="unknown"] .label-y {
+    opacity: 1;
+  }
+  [data-model="unknown"] #stick-left-group { transform: translate(300px, 320px); }
+  [data-model="unknown"] #stick-right-group { transform: translate(500px, 320px); }
+  [data-model="unknown"] #dpad { transform: translate(160px, 240px); }
+  [data-model="unknown"] .touchpad-node { opacity: 0; }
+
+  /* Buttons */
+  .vibe-btn {
+    background: #27272a;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #e4e4e7;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.5rem 0.25rem;
+    border-radius: 0px;
+    font-family: var(--font-mono);
+    transition: background 0.2s, border-color 0.2s;
+    cursor: pointer;
+  }
+  .vibe-btn:hover {
+    background: #3f3f46;
+    border-color: var(--color-accent, #2563eb);
+  }
+</style>
+
+<script>
+  import { GamepadLoop } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const root = document.getElementById('master-visualizer-root');
+    if (!root) return;
+    
+    const svg = document.getElementById('mv-svg');
+    const statusDot = document.getElementById('mv-status-dot');
+    const statusText = document.getElementById('mv-status-text');
+    
+    // Metric Elements
+    const mModel = document.getElementById('mv-model-name');
+    const mHz = document.getElementById('mv-hz');
+    const mLx = document.getElementById('mv-lx');
+    const mLy = document.getElementById('mv-ly');
+    const mRx = document.getElementById('mv-rx');
+    const mRy = document.getElementById('mv-ry');
+    const mLDrift = document.getElementById('mv-ldrift');
+    const mRDrift = document.getElementById('mv-rdrift');
+    const mL2 = document.getElementById('mv-l2');
+    const mR2 = document.getElementById('mv-r2');
+    
+    const l2Fill = document.querySelector('.l2-fill') as HTMLElement;
+    const r2Fill = document.querySelector('.r2-fill') as HTMLElement;
+    const stickCapLeft = document.querySelector('.stick-cap-left') as HTMLElement;
+    const stickCapRight = document.querySelector('.stick-cap-right') as HTMLElement;
+
+    // SVG Button Node Cache (0 to 17)
+    const btnNodes = new Array(18);
+    for (let i = 0; i < 18; i++) {
+      btnNodes[i] = document.getElementById(`btn-${i}`);
+    }
+
+    let frameCount = 0;
+    let lastHzCalc = performance.now();
+    let currentBrand = 'unknown';
+
+    function getHardwareBrand(model: string): string {
+      const lower = model.toLowerCase();
+      if (lower.includes('playstation') || lower.includes('dualsense') || lower.includes('dualshock')) return 'playstation';
+      if (lower.includes('xbox')) return 'xbox';
+      if (lower.includes('switch') || lower.includes('joy-con')) return 'switch';
+      return 'unknown';
+    }
+
+    function getColorForDrift(drift: number) {
+      if (drift > 10) return '#ef4444'; // Red
+      if (drift > 2) return '#f59e0b'; // Amber
+      return '#34d399'; // Emerald
+    }
+
+    GamepadLoop.subscribe((state) => {
+      // 1. Calculate Hz
+      const now = performance.now();
+      frameCount++;
+      if (now - lastHzCalc >= 1000) {
+        if (mHz) mHz.innerText = `${Math.round((frameCount * 1000) / (now - lastHzCalc))} Hz`;
+        frameCount = 0;
+        lastHzCalc = now;
+      }
+
+      if (state && state.connected) {
+        // Status updates
+        if (statusDot) statusDot.className = 'status-dot active';
+        if (statusText) statusText.innerText = 'Connected';
+        
+        // Model identification and SVG morphing
+        const brand = getHardwareBrand(state.detectedModel);
+        if (brand !== currentBrand && root) {
+          root.setAttribute('data-model', brand);
+          currentBrand = brand;
+        }
+        if (mModel) mModel.innerText = state.detectedModel;
+
+        // 2. High-Performance SVG Rendering via CSS Variables
+        if (stickCapLeft) {
+          stickCapLeft.style.setProperty('--sx', state.leftStick.x.toString());
+          stickCapLeft.style.setProperty('--sy', state.leftStick.y.toString());
+        }
+        if (stickCapRight) {
+          stickCapRight.style.setProperty('--sx', state.rightStick.x.toString());
+          stickCapRight.style.setProperty('--sy', state.rightStick.y.toString());
+        }
+        if (l2Fill) l2Fill.style.setProperty('--tfill', state.triggers.l2.toString());
+        if (r2Fill) r2Fill.style.setProperty('--tfill', state.triggers.r2.toString());
+
+        // 3. Button Active States (Direct DOM class toggle, optimized)
+        for (let i = 0; i < state.buttons.length; i++) {
+          if (i < 18) {
+            const node = btnNodes[i];
+            if (node) {
+              const pressed = state.buttons[i].pressed;
+              const hasClass = node.classList.contains('active-node');
+              if (pressed && !hasClass) {
+                node.classList.add('active-node');
+              } else if (!pressed && hasClass) {
+                node.classList.remove('active-node');
+              }
+            }
+          }
+        }
+
+        // 4. Update Metrics Sidebar Text
+        if (mLx) mLx.innerText = state.leftStick.x.toFixed(4);
+        if (mLy) mLy.innerText = state.leftStick.y.toFixed(4);
+        if (mRx) mRx.innerText = state.rightStick.x.toFixed(4);
+        if (mRy) mRy.innerText = state.rightStick.y.toFixed(4);
+        
+        if (mLDrift) {
+          mLDrift.innerText = `${state.leftStick.driftPct}%`;
+          mLDrift.style.color = getColorForDrift(state.leftStick.driftPct);
+        }
+        if (mRDrift) {
+          mRDrift.innerText = `${state.rightStick.driftPct}%`;
+          mRDrift.style.color = getColorForDrift(state.rightStick.driftPct);
+        }
+
+        if (mL2) mL2.innerText = state.triggers.l2.toFixed(4);
+        if (mR2) mR2.innerText = state.triggers.r2.toFixed(4);
+
+      } else {
+        // Disconnected state
+        if (statusDot) statusDot.className = 'status-dot';
+        if (statusText) statusText.innerText = 'Disconnected';
+        if (mModel) mModel.innerText = 'NO DEVICE';
+        if (mHz) mHz.innerText = '0 Hz';
+        
+        if (root) root.setAttribute('data-model', 'unknown');
+        
+        // Reset variables
+        if (stickCapLeft) {
+          stickCapLeft.style.setProperty('--sx', '0');
+          stickCapLeft.style.setProperty('--sy', '0');
+        }
+        if (stickCapRight) {
+          stickCapRight.style.setProperty('--sx', '0');
+          stickCapRight.style.setProperty('--sy', '0');
+        }
+        if (l2Fill) l2Fill.style.setProperty('--tfill', '0');
+        if (r2Fill) r2Fill.style.setProperty('--tfill', '0');
+
+        for (let i = 0; i < 18; i++) {
+          if (btnNodes[i]) btnNodes[i].classList.remove('active-node');
+        }
+      }
+    });
+
+    // Vibration API Handlers
+    const vibeBtns = document.querySelectorAll('.vibe-btn');
+    vibeBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const type = (e.currentTarget as HTMLElement).getAttribute('data-vibe');
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        let activeGp: any = null;
+        for (let i = 0; i < gamepads.length; i++) {
+          if (gamepads[i]?.connected) { activeGp = gamepads[i]; break; }
+        }
+        if (activeGp && activeGp.vibrationActuator) {
+          let duration = 200, strong = 0, weak = 0;
+          if (type === 'heavy') { strong = 1.0; weak = 0.2; duration = 400; }
+          if (type === 'light') { strong = 0.1; weak = 0.8; duration = 300; }
+          if (type === 'burst') { strong = 1.0; weak = 1.0; duration = 100; }
+          if (type === 'pulse') { strong = 0.5; weak = 0.5; duration = 500; }
+          
+          try {
+            activeGp.vibrationActuator.playEffect("dual-rumble", {
+              startDelay: 0,
+              duration: duration,
+              weakMagnitude: weak,
+              strongMagnitude: strong
+            });
+          } catch (err) {
+            console.warn("Vibration API failed", err);
+          }
+        }
+      });
+    });
+  });
+</script>

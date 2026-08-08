@@ -7,9 +7,10 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/global/Header.astro';
 import Footer from '../components/global/Footer.astro';
+import WaitlistForm from '../components/global/WaitlistForm.astro';
 
-const title = "Controller Diagnostic API for Sellers | B2B Refurbisher Tools";
-const description = "Embed verifiable controller diagnostic reports into your eBay, BackMarket, or custom storefront. Boost buyer trust with our Controller Diagnostic API for sellers.";
+const title = "Controller Diagnostic Report Embed for Sellers | B2B Refurbisher Tools";
+const description = "Embed self-verifying controller diagnostic reports into your eBay, BackMarket, or custom storefront. Boost buyer trust — no account or backend required.";
 
 const breadcrumbs = [
   { name: 'Home', url: 'https://controllertesting.com/' },
@@ -19,7 +20,7 @@ const breadcrumbs = [
 const faqs = [
   {
     question: "How do I embed a diagnostic report on my eBay listing?",
-    answer: "Generate a report using our Full Diagnostic tool, copy the provided iframe code, and paste it into the HTML description of your eBay listing."
+    answer: "Generate a report using our Full Diagnostic tool, copy the provided self-verifying share link, and embed it on your listing. The report travels inside the link itself, so any buyer — on any device, in any browser — can open it without an account."
   },
   {
     question: "Is the Controller Diagnostic API free for sellers?",
@@ -27,7 +28,7 @@ const faqs = [
   },
   {
     question: "Do buyers need to create an account to view the report?",
-    answer: "No. Reports are hosted securely and accessible via a unique UUID link or embedded iframe without any login required."
+    answer: "No. Reports travel inside the share link itself (a self-verifying payload with a checksum), so they open for any viewer with no login, no server lookup, and no stored database entry."
   }
 ];
 
@@ -42,10 +43,10 @@ const schema = [
   {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
-    name: 'Controller Diagnostic API',
+    name: 'Controller Diagnostic Report Embed',
     applicationCategory: 'DeveloperApplication',
     operatingSystem: 'Web',
-    description: 'B2B tool for controller refurbishers to embed diagnostic reports into ecommerce listings.'
+    description: 'B2B tool for controller refurbishers to embed self-verifying diagnostic reports into ecommerce listings.'
   }
 ];
 ---
@@ -63,10 +64,10 @@ const schema = [
     <section class="hero b2b-hero py-20">
       <div class="hero-inner text-center max-w-3xl mx-auto">
         <h1 class="text-4xl md:text-5xl font-bold mb-6">
-          Controller Diagnostic API for Sellers
+          Controller Diagnostic Reports for Sellers
         </h1>
-        <p class="text-lg text-stone-300 mb-8">
-          Increase buyer trust and reduce returns on eBay, BackMarket, and custom storefronts by embedding verifiable diagnostic reports directly into your listings.
+        <p class="text-lg text-secondary mb-8">
+          Increase buyer trust and reduce returns on eBay, BackMarket, and custom storefronts by embedding verifiable diagnostic reports directly into your listings — no account or backend required.
         </p>
         <div class="flex justify-center gap-4">
           <a href="/test/controller/full-diagnostic" class="btn-primary">Generate a Report</a>
@@ -77,35 +78,44 @@ const schema = [
 
     <section id="documentation" class="py-16">
       <div class="max-w-4xl mx-auto">
-        <h2 class="text-3xl font-bold mb-8 text-center border-b border-stone-800 pb-4">Integration Documentation</h2>
+        <h2 class="text-3xl font-bold mb-8 text-center border-b border-surface-3 pb-4">Integration Documentation</h2>
         
         <div class="card-base mb-8">
-          <h3 class="text-xl font-semibold mb-4 text-emerald-400">Step 1: Generate a Report</h3>
-          <p class="mb-4 text-stone-300">
-            Connect the refurbished controller and run the <strong>Full Diagnostic</strong> test. Once completed, a unique <code>UUID</code> will be generated for the hardware evidence report.
+          <h3 class="text-h3 font-semibold mb-4 text-pass">Step 1: Generate a Report</h3>
+          <p class="mb-4 text-secondary">
+            Connect the refurbished controller and run the <strong>Full Diagnostic</strong> test. Once completed, a health score and report are generated for the hardware evidence.
           </p>
         </div>
 
         <div class="card-base mb-8">
-          <h3 class="text-xl font-semibold mb-4 text-blue-400">Step 2: Copy the iframe Embed Code</h3>
-          <p class="mb-4 text-stone-300">
-            Use the generated <code>UUID</code> to create an iframe embed. Replace <code>YOUR_UUID_HERE</code> with the actual report ID.
+          <h3 class="text-h3 font-semibold mb-4 text-accent">Step 2: Copy the Share Link</h3>
+          <p class="mb-4 text-secondary">
+            Use the <strong>Copy Share Link</strong> button on your report. The entire report is encoded into the link itself (with a checksum), so it opens for any buyer on any device with no login.
           </p>
-          <pre class="bg-stone-900 p-4 rounded-md border border-stone-800 overflow-x-auto text-sm text-stone-300 font-mono">
+          <p class="mb-4 text-secondary">
+            Share links look like this:
+          </p>
+          <pre class="bg-surface-1 p-4 rounded-md border border-surface-3 overflow-x-auto text-sm text-secondary font-mono">
+https://controllertesting.com/verify?d=eyJ2Ijo...&amp;c=8f3a1c0d
+          </pre>
+        </div>
+
+        <div class="card-base mb-8">
+          <h3 class="text-h3 font-semibold mb-4 text-warning">Step 3: Embed in Your Listing</h3>
+          <p class="mb-4 text-secondary">
+            Paste the share link into your listing description, or embed it as an iframe:
+          </p>
+          <pre class="bg-surface-1 p-4 rounded-md border border-surface-3 overflow-x-auto text-sm text-secondary font-mono">
 &lt;iframe 
-  src="https://controllertesting.com/report/YOUR_UUID_HERE?embed=true" 
+  src="https://controllertesting.com/verify?d=YOUR_PAYLOAD&amp;c=YOUR_CHECKSUM&amp;embed=1" 
   width="100%" 
   height="600" 
   frameborder="0" 
   title="Controller Diagnostic Report"&gt;
 &lt;/iframe&gt;
           </pre>
-        </div>
-
-        <div class="card-base mb-8">
-          <h3 class="text-xl font-semibold mb-4 text-amber-400">Step 3: Paste into Your Listing</h3>
-          <p class="mb-4 text-stone-300">
-            Switch your ecommerce listing editor (e.g., eBay description editor) to HTML mode and paste the iframe snippet. The live report card will now display directly to your buyers.
+          <p class="mt-4 text-secondary">
+            The <code>embed=1</code> parameter strips the site navigation so only the certificate card renders inside the frame.
           </p>
         </div>
       </div>
@@ -117,16 +127,28 @@ const schema = [
         <div class="faq-list space-y-4">
           {faqs.map((faq) => (
             <details class="faq-item group card-base cursor-pointer">
-              <summary class="font-semibold text-lg flex justify-between items-center outline-none">
+              <summary class="font-semibold text-lg flex justify-between items-center">
                 {faq.question}
-                <span class="transition-transform group-open:rotate-45 text-emerald-400">+</span>
+                <span class="transition-transform group-open:rotate-45 text-pass">+</span>
               </summary>
-              <p class="mt-4 text-stone-400 leading-relaxed">
+              <p class="mt-4 text-tertiary leading-relaxed">
                 {faq.answer}
               </p>
             </details>
           ))}
         </div>
+      </div>
+    </section>
+
+    <section class="py-16">
+      <div class="max-w-2xl mx-auto">
+        <WaitlistForm
+          context="b2b-api"
+          product="api"
+          showShopName
+          heading="Premium seller tools are on the roadmap"
+          subheading="Branded certificates, batch testing, and the repair-shop dashboard. Join the waitlist and we'll email you first — free reports and embeds stay free forever."
+        />
       </div>
     </section>
 

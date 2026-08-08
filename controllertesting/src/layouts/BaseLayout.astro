@@ -126,16 +126,25 @@ const schemas = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    {/* ── Theme flash prevention — must run BEFORE any CSS renders ── */}
+    {/* ── Theme flash prevention ── */}
     <script is:inline>
       (function () {
         try {
           var t = localStorage.getItem('ct-theme');
-          var d = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          document.documentElement.setAttribute('data-theme', t || (d ? 'dark' : 'light'));
+          var theme = t || 'dark';
+          document.documentElement.setAttribute('data-theme', theme);
         } catch (e) {}
       })();
     </script>
+
+    {/* ── Token-gated Cloudflare Web Analytics ── */}
+    {import.meta.env?.PUBLIC_CF_ANALYTICS_TOKEN && (
+      <script
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon={`{"token": "${import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN}"}`}
+      />
+    )}
 
     {/* ── Core SEO ── */}
     <title>{title}</title>
@@ -203,59 +212,21 @@ const schemas = [
     <slot name="head" />
   </head>
   <body>
-    <!--
-      THESIS: A controller test should feel like a precision instrument, not a generic gaming landing page.
-      OWN-WORLD: Matte void surfaces, cobalt signal accents, fine telemetry marks, and one tactile hardware image.
-      STORY: See the controller in a live-ready state, understand the proof, and start a diagnostic immediately.
-      FIRST VIEWPORT: Left-aligned promise and diagnostic CTA; supplied controller photograph on the right with a compact readout.
-      FORM: Existing asymmetric split hero, refined with an image-led hardware stage and transform-only motion.
-      FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
-    -->
+    {/* ── Accessible Skip to Main Content Link (Vercel Guidelines) ── */}
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-[var(--color-accent)] focus:text-white focus:rounded-lg focus:shadow-xl font-semibold text-sm">
+      Skip to main content
+    </a>
+
     <slot />
 
     <GlobalSearch />
 
-    {/* ── Theme toggle script — event delegation, no DOMContentLoaded ── */}
+    {/* ── Scroll-reveal + global scripts ──
+         Theme toggle intentionally lives ONLY in Header.astro
+         (#theme-toggle + .theme-switch). A duplicate handler here caused
+         a double-toggle bug (dark→light→dark per click) making the toggle
+         appear broken. Do not re-add. */}
     <script is:inline>
-      document.body.addEventListener('click', function(e) {
-        var btn = e.target.closest('#theme-toggle');
-        if (!btn) return;
-        var current = document.documentElement.getAttribute('data-theme') || 'dark';
-        var next = current === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
-        btn.setAttribute('aria-checked', String(next === 'dark'));
-        try { localStorage.setItem('ct-theme', next); } catch(e) {}
-      });
-
-      // High-performance Vanilla JS 3D tilt & gradient spotlight (Zero React/Framer overhead)
-      document.addEventListener('mousemove', function(e) {
-        var card = e.target.closest('.card-hover');
-        if (!card) return;
-        
-        var rect = card.getBoundingClientRect();
-        var x = e.clientX - rect.left;
-        var y = e.clientY - rect.top;
-        
-        var centerX = rect.width / 2;
-        var centerY = rect.height / 2;
-        var rotateX = ((y - centerY) / centerY) * -4; // Max 4 deg tilt
-        var rotateY = ((x - centerX) / centerX) * 4;
-        
-        card.style.setProperty('--mouse-x', x + 'px');
-        card.style.setProperty('--mouse-y', y + 'px');
-        card.style.setProperty('--tilt-x', rotateX + 'deg');
-        card.style.setProperty('--tilt-y', rotateY + 'deg');
-      });
-
-      document.addEventListener('mouseout', function(e) {
-        var card = e.target.closest('.card-hover');
-        if (!card) return;
-        if (!card.contains(e.relatedTarget)) {
-          card.style.setProperty('--tilt-x', '0deg');
-          card.style.setProperty('--tilt-y', '0deg');
-        }
-      });
-
       // High-performance compositor-only IntersectionObserver for [data-reveal]
       if ('IntersectionObserver' in window) {
         var revealObserver = new IntersectionObserver(function(entries, observer) {

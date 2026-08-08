@@ -8,6 +8,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/global/Header.astro';
 import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -27,7 +28,7 @@ const breadcrumbs = [
       <span class="hero-badge">REFLEX REACTION GAME</span>
       <h1 class="hero-title text-gradient">Quick Draw Challenge</h1>
       <p class="hero-desc">
-        Wait for the signal to turn green, then press any button on your controller as fast as possible to measure your reaction delay in milliseconds.
+        Wait for green, then press any button on your controller. Your reaction delay in milliseconds is your score.
       </p>
     </div>
 
@@ -36,12 +37,25 @@ const breadcrumbs = [
         <span class="signal-text" id="signal-text">WAIT FOR GREEN SIGNAL...</span>
       </div>
 
-      <div class="reaction-result" id="reaction-result">
+      <div class="reaction-result" id="reaction-result" aria-live="polite">
         Reaction Time: <span class="mono text-gradient" id="reaction-time">-- ms</span>
       </div>
 
+      <p class="draw-hint">Gamepad: press any button when the signal turns green · Keyboard: Space / Enter</p>
+
       <div class="game-controls">
         <button type="button" class="btn-primary" id="btn-start-draw">Start Quick Draw</button>
+      </div>
+
+      <div class="game-over-panel glass-panel" id="draw-over" role="status" hidden>
+        <span class="over-eyebrow" id="draw-over-title">Reaction Recorded</span>
+        <div class="over-score mono text-gradient" id="draw-over-ms">-- ms</div>
+        <p class="over-sub">Reaction time</p>
+        <ArcadeRewardsLine baseId="draw" xp={75} />
+        <div class="over-actions">
+          <button type="button" class="btn-primary" id="btn-draw-again">Play Again</button>
+          <a href="/games" class="btn-secondary">Back to Arcade</a>
+        </div>
       </div>
     </div>
   </div>
@@ -49,61 +63,110 @@ const breadcrumbs = [
 </BaseLayout>
 
 <script>
-  import { addXP } from '../../lib/rewards';
+  import {
+    claimArcadeXp,
+    getArcadeRewardEls,
+    renderArcadeRewards,
+  } from '../../lib/arcadeRewards';
 
   document.addEventListener('DOMContentLoaded', () => {
     let startTime = 0;
-    let timerId: any = null;
+    let timerId: number | null = null;
     let isWaitingSignal = false;
     let isReadyToShoot = false;
 
     const box = document.getElementById('signal-box');
     const text = document.getElementById('signal-text');
     const resultTime = document.getElementById('reaction-time');
+    const overPanel = document.getElementById('draw-over') as HTMLElement | null;
+    const overTitleEl = document.getElementById('draw-over-title') as HTMLElement | null;
+    const overMsEl = document.getElementById('draw-over-ms') as HTMLElement | null;
+
+    function showResult(ms: number) {
+      const result = claimArcadeXp('draw', 75);
+      renderArcadeRewards(
+        getArcadeRewardEls('draw'),
+        result
+          ? { kind: 'award', result, amount: 75 }
+          : { kind: 'claimed', amount: 75 },
+      );
+      if (resultTime) resultTime.textContent = `${ms} ms`;
+      if (overTitleEl) overTitleEl.textContent = 'Reaction Recorded';
+      if (overMsEl) overMsEl.textContent = `${ms} ms`;
+      if (overPanel) overPanel.hidden = false;
+    }
+
+    function showFalseStart() {
+      renderArcadeRewards(getArcadeRewardEls('draw'), {
+        kind: 'fail',
+        text: 'No XP — too early',
+      });
+      if (overTitleEl) overTitleEl.textContent = 'False Start';
+      if (overMsEl) overMsEl.textContent = '-- ms';
+      if (overPanel) overPanel.hidden = false;
+    }
+
+    function resolveHit() {
+      if (!isReadyToShoot) return;
+      const ms = Math.round(performance.now() - startTime);
+      isReadyToShoot = false;
+      if (box) box.className = 'signal-box hit';
+      if (text) text.textContent = `FIRE! (${ms}ms)`;
+      showResult(ms);
+    }
+
+    function resolveFalseStart() {
+      if (!isWaitingSignal) return;
+      if (timerId) clearTimeout(timerId);
+      timerId = null;
+      isWaitingSignal = false;
+      if (box) box.className = 'signal-box false-start';
+      if (text) text.textContent = 'TOO EARLY! FALSE START';
+      showFalseStart();
+    }
+
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.code === 'Space' || e.code === 'Enter') {
+        e.preventDefault();
+        if (isWaitingSignal) resolveFalseStart();
+        else resolveHit();
+      }
+    });
 
     function checkGamepad() {
-      if (!isReadyToShoot && !isWaitingSignal) return;
-
-      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-      let pressed = false;
-      for (let i = 0; i < gamepads.length; i++) {
-        if (gamepads[i] && gamepads[i]?.connected) {
-          if (gamepads[i]?.buttons.some((b) => b.pressed)) {
-            pressed = true;
-            break;
+      if (isReadyToShoot || isWaitingSignal) {
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        let pressed = false;
+        for (let i = 0; i < gamepads.length; i++) {
+          if (gamepads[i] && gamepads[i]?.connected) {
+            if (gamepads[i]?.buttons.some((b) => b.pressed)) {
+              pressed = true;
+              break;
+            }
           }
         }
-      }
 
-      if (pressed) {
-        if (isWaitingSignal) { // Too early false start
-          clearTimeout(timerId);
-          isWaitingSignal = false;
-          if (box) box.className = 'signal-box false-start';
-          if (text) text.textContent = 'TOO EARLY! FALSE START ❌';
-        } else if (isReadyToShoot) { // Valid hit
-          const ms = Math.round(performance.now() - startTime);
-          isReadyToShoot = false;
-          if (box) box.className = 'signal-box hit';
-          if (text) text.textContent = `FIRE! (${ms}ms)`;
-          if (resultTime) resultTime.textContent = `${ms} ms`;
-          addXP(75);
+        if (pressed) {
+          if (isWaitingSignal) resolveFalseStart();
+          else resolveHit();
         }
       }
 
       requestAnimationFrame(checkGamepad);
     }
 
-    document.getElementById('btn-start-draw')?.addEventListener('click', () => {
+    function startDraw() {
+      if (timerId) clearTimeout(timerId);
       if (box) box.className = 'signal-box waiting';
       if (text) text.textContent = 'STANDBY... WAIT FOR GREEN!';
       if (resultTime) resultTime.textContent = '-- ms';
+      if (overPanel) overPanel.hidden = true;
 
       isWaitingSignal = true;
       isReadyToShoot = false;
 
       const delay = Math.random() * 3000 + 2000;
-      timerId = setTimeout(() => {
+      timerId = window.setTimeout(() => {
         isWaitingSignal = false;
         isReadyToShoot = true;
         startTime = performance.now();
@@ -112,7 +175,10 @@ const breadcrumbs = [
       }, delay);
 
       checkGamepad();
-    });
+    }
+
+    document.getElementById('btn-start-draw')?.addEventListener('click', startDraw);
+    document.getElementById('btn-draw-again')?.addEventListener('click', startDraw);
   });
 </script>
 
@@ -122,13 +188,23 @@ const breadcrumbs = [
   .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
   .hero-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.15; }
   .hero-desc { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
-  .canvas-card { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; align-items: center; }
-  .signal-box { width: 100%; height: 220px; border-radius: var(--radius-card); border: 2px solid var(--color-border-default); background: var(--color-surface-1); display: flex; align-items: center; justify-content: center; transition: background 0.15s, border-color 0.15s; }
+  .canvas-card { padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem; align-items: center; }
+  .signal-box { width: 100%; height: 220px; border-radius: var(--radius-card); border: 2px solid var(--color-border-default); background: var(--color-surface-1); display: flex; align-items: center; justify-content: center; transition: background 0.15s, border-color 0.15s; touch-action: manipulation; user-select: none; }
   .signal-box.waiting { background: rgba(245, 158, 11, 0.1); border-color: var(--color-warning); }
   .signal-box.ready { background: rgba(16, 185, 129, 0.2); border-color: var(--color-pass); }
   .signal-box.false-start { background: rgba(239, 68, 68, 0.2); border-color: var(--color-fail); }
   .signal-box.hit { background: rgba(37, 99, 235, 0.2); border-color: var(--color-accent); }
   .signal-text { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 800; }
   .reaction-result { font-size: 1.25rem; font-weight: 700; color: var(--color-text-secondary); }
+  .draw-hint { font-family: var(--font-mono); font-size: var(--text-micro); color: var(--color-text-tertiary); text-align: center; margin: 0; }
   .game-controls { display: flex; justify-content: center; width: 100%; }
+  .game-controls .btn-primary { touch-action: manipulation; }
+  .game-over-panel { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 100%; max-width: 480px; margin-inline: auto; padding: 2rem; text-align: center; }
+  .game-over-panel[hidden] { display: none; }
+  .over-eyebrow { font-family: var(--font-mono); font-size: var(--text-micro); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-tertiary); }
+  .over-score { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1; }
+  .over-sub { margin: 0; font-size: var(--text-small); color: var(--color-text-secondary); }
+  .over-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 0.5rem; }
+  .over-actions .btn-primary,
+  .over-actions .btn-secondary { touch-action: manipulation; }
 </style>

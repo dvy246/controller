@@ -24,7 +24,7 @@ const breadcrumbs = [
   <div class="error-container">
     <Breadcrumbs items={breadcrumbs} />
     <div class="error-badge">ERROR 500</div>
-    <h1 class="error-title text-gradient">System Interruption</h1>
+    <h1 class="text-h1 text-gradient">System Interruption</h1>
     <p class="error-desc">
       An unexpected internal error occurred while processing your request. Please try refreshing the page or navigating back to our diagnostic tools.
     </p>
@@ -55,16 +55,11 @@ const breadcrumbs = [
     font-size: var(--text-small);
     font-weight: 700;
     color: var(--color-warning);
-    background: rgba(245, 158, 11, 0.1);
-    border: 1px solid rgba(245, 158, 11, 0.2);
+    background: color-mix(in srgb, var(--color-warning) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-warning) 20%, transparent);
     padding: 0.25rem 0.75rem;
     border-radius: var(--radius-pill);
     letter-spacing: 0.05em;
-  }
-  .error-title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 800;
-    line-height: 1.1;
   }
   .error-desc {
     font-size: 1.125rem;
@@ -78,22 +73,5 @@ const breadcrumbs = [
     margin-top: 0.5rem;
     flex-wrap: wrap;
     justify-content: center;
-  }
-  .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.75rem 1.5rem;
-    background: var(--color-surface-2);
-    color: var(--color-text-primary);
-    border: 1px solid var(--color-border-default);
-    border-radius: var(--radius-sm);
-    font-weight: 600;
-    text-decoration: none;
-    transition: background 0.15s, border-color 0.15s;
-  }
-  .btn-secondary:hover {
-    background: var(--color-surface-3);
-    border-color: var(--color-accent);
   }
 </style>

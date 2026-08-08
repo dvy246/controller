@@ -9,7 +9,7 @@
   <div class="tester-status-bar">
     <div class="status-indicator">
       <span class="status-dot" id="ps-cal-dot"></span>
-      <span class="status-text" id="ps-cal-text">Connect PS5 DualSense or PS4 DualShock 4 via USB to enable WebHID calibration...</span>
+      <span class="status-text" id="ps-cal-text" aria-live="polite">Connect PS5 DualSense or PS4 DualShock 4 via USB to enable WebHID calibration...</span>
     </div>
     <div class="controller-name" id="ps-cal-model">No WebHID Controller Connected</div>
   </div>
@@ -108,10 +108,8 @@
 
 <style>
   .ps-cal-tool { display: flex; flex-direction: column; gap: 1.5rem; }
-  .tester-status-bar { display: flex; align-items: center; justify-content: space-between; padding: 0.875rem 1.25rem; background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); }
+  .ps-cal-tool .tester-status-bar { margin-top: 0; }
   .status-indicator { display: flex; align-items: center; gap: 0.625rem; }
-  .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-neutral); }
-  .status-dot.active { background: var(--color-pass); box-shadow: 0 0 8px var(--color-pass); }
   .status-text { font-size: var(--text-small); color: var(--color-text-secondary); }
   .controller-name { font-family: var(--font-mono); font-size: var(--text-small); font-weight: 600; color: var(--color-accent); }
   .cal-main-card { background: var(--color-surface-2); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-card); padding: 1.75rem; display: flex; flex-direction: column; gap: 1.5rem; }

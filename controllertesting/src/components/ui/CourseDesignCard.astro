@@ -1,0 +1,137 @@
+---
+// Define the interface for the card data
+export interface CardData {
+  id: number;
+  colorClass: 'green' | 'orange' | 'red' | 'blue' | string;
+  date: string;
+  title: string;
+  description: string;
+  progressPercent: string;
+  progressValue: string;
+  imgSrc1?: string;
+  imgAlt1?: string;
+  imgSrc2?: string;
+  imgAlt2?: string;
+  countdownText: string;
+}
+
+export interface Props {
+  data: CardData;
+}
+
+const { data } = Astro.props;
+const {
+  colorClass,
+  date,
+  title,
+  description,
+  progressPercent,
+  progressValue,
+  imgSrc1,
+  imgAlt1,
+  imgSrc2,
+  imgAlt2,
+  countdownText,
+} = data;
+
+// Map the generic color string to premium Tailwind semantic classes
+const colorMap: Record<string, { bg: string, text: string, border: string, ring: string, progress: string }> = {
+  green: {
+    bg: 'bg-emerald-500/10',
+    text: 'text-emerald-400',
+    border: 'border-emerald-500/20',
+    ring: 'ring-emerald-500/30',
+    progress: 'bg-emerald-500',
+  },
+  orange: {
+    bg: 'bg-amber-500/10',
+    text: 'text-amber-400',
+    border: 'border-amber-500/20',
+    ring: 'ring-amber-500/30',
+    progress: 'bg-amber-500',
+  },
+  red: {
+    bg: 'bg-rose-500/10',
+    text: 'text-rose-400',
+    border: 'border-rose-500/20',
+    ring: 'ring-rose-500/30',
+    progress: 'bg-rose-500',
+  },
+  blue: {
+    bg: 'bg-blue-500/10',
+    text: 'text-blue-400',
+    border: 'border-blue-500/20',
+    ring: 'ring-blue-500/30',
+    progress: 'bg-blue-500',
+  }
+};
+
+// Fallback to blue if color not found
+const theme = colorMap[colorClass] || colorMap.blue;
+---
+
+<article class={`course-card card-gradient card-hover flex flex-col justify-between h-full group/card transition-all duration-300 ${theme.border}`}>
+  {/* Header */}
+  <header class="flex justify-between items-center mb-6">
+    <time class={`text-xs font-mono font-bold tracking-widest px-2.5 py-1 rounded-full border ${theme.bg} ${theme.text} ${theme.border}`}>
+      {date}
+    </time>
+    <button aria-label="More options" class="text-secondary hover:text-primary transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+        <path fill-rule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0" clip-rule="evenodd" />
+      </svg>
+    </button>
+  </header>
+
+  {/* Body */}
+  <div class="card-body flex-1 mb-6">
+    <h3 class="text-xl font-bold tracking-tight text-primary capitalize mb-2">{title}</h3>
+    <p class="text-secondary text-sm leading-relaxed mb-6">{description}</p>
+    
+    <div class="progress-container flex flex-col gap-2">
+      <div class="flex justify-between items-center text-xs font-medium text-secondary">
+        <span class="tracking-wider uppercase">Progress</span>
+        <span class="font-mono text-primary">{progressValue}</span>
+      </div>
+      <div class="w-full h-1.5 bg-[var(--color-border-subtle)] rounded-full overflow-hidden">
+        <div class={`h-full ${theme.progress} rounded-full transition-all duration-1000 ease-out`} style={`width: ${progressPercent};`}></div>
+      </div>
+    </div>
+  </div>
+
+  {/* Footer */}
+  <footer class="flex items-center justify-between pt-5 border-t border-[var(--color-border-subtle)]">
+    <div class="flex items-center -space-x-3">
+      {imgSrc1 && (
+        <img 
+          src={imgSrc1} 
+          alt={imgAlt1 || 'user avatar'} 
+          class={`w-8 h-8 rounded-full border-2 border-[var(--color-surface-1)] object-cover ring-2 ${theme.ring} ring-offset-0`}
+          loading="lazy"
+        />
+      )}
+      {imgSrc2 && (
+        <img 
+          src={imgSrc2} 
+          alt={imgAlt2 || 'user avatar'} 
+          class={`w-8 h-8 rounded-full border-2 border-[var(--color-surface-1)] object-cover ring-2 ${theme.ring} ring-offset-0`}
+          loading="lazy"
+        />
+      )}
+      <a href="#" class="w-8 h-8 rounded-full border-2 border-[var(--color-border-strong)] bg-[var(--color-surface-2)] flex items-center justify-center text-secondary hover:text-primary hover:bg-[var(--color-surface-3)] transition-colors z-10" aria-label="Add user">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+          <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+        </svg>
+      </a>
+    </div>
+    <a href="#" class={`text-xs font-semibold ${theme.text} hover:opacity-80 transition-opacity`}>
+      {countdownText}
+    </a>
+  </footer>
+</article>
+
+<style>
+  .course-card {
+    padding: 1.75rem;
+  }
+</style>

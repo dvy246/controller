@@ -5,16 +5,16 @@
  * Features neon pressure gradients, scale tick marks, and zero-latency scaleY transforms.
  */
 ---
-<div class="triggers-container w-full h-full flex justify-around items-center px-4 py-2 select-none">
+<div class="triggers-container w-full h-full flex justify-around items-center px-2 py-1 select-none">
   
-  <!-- L2 Trigger -->
-  <div class="trigger-col flex flex-col items-center gap-2">
-    <div class="trigger-label font-mono font-bold text-xs text-stone-400 dark:text-stone-400 tracking-wider">L2 TRIGGER</div>
-    <div class="trigger-bar-wrapper relative w-16 h-36 bg-black/60 rounded-2xl overflow-hidden border border-white/10 shadow-inner backdrop-blur-md">
+  <!-- L2 / LT Trigger -->
+  <div class="trigger-col flex flex-col items-center gap-1.5">
+    <div class="trigger-label font-mono font-bold text-[10px] text-stone-400 tracking-wider">LT / L2</div>
+    <div class="trigger-bar-wrapper relative w-14 h-28 bg-black/60 rounded-xl overflow-hidden border border-white/10 shadow-inner backdrop-blur-md">
       <div id="l2-fill" class="trigger-fill absolute bottom-0 left-0 w-full bg-gradient-to-t from-blue-600 via-indigo-500 to-blue-400 origin-bottom shadow-[0_0_15px_rgba(37,99,235,0.6)]" style="height: 100%; transform: scaleY(0)"></div>
       
       <!-- Scale Tick Marks -->
-      <div class="absolute inset-0 pointer-events-none flex flex-col justify-between py-3 px-1">
+      <div class="absolute inset-0 pointer-events-none flex flex-col justify-between py-2 px-1">
         <div class="w-full h-px bg-white/20"></div>
         <div class="w-full h-px bg-white/10"></div>
         <div class="w-full h-px bg-white/20"></div>
@@ -22,17 +22,17 @@
         <div class="w-full h-px bg-white/20"></div>
       </div>
     </div>
-    <span class="trigger-value font-mono font-bold text-xs text-emerald-400 px-2 py-0.5 rounded bg-black/70 border border-emerald-500/30 shadow-sm" id="l2-val">0.000</span>
+    <span class="trigger-value font-mono font-bold text-[10px] text-emerald-400 px-2 py-0.5 rounded bg-black/70 border border-emerald-500/30 shadow-sm" id="l2-val">0.000</span>
   </div>
 
-  <!-- R2 Trigger -->
-  <div class="trigger-col flex flex-col items-center gap-2">
-    <div class="trigger-label font-mono font-bold text-xs text-stone-400 dark:text-stone-400 tracking-wider">R2 TRIGGER</div>
-    <div class="trigger-bar-wrapper relative w-16 h-36 bg-black/60 rounded-2xl overflow-hidden border border-white/10 shadow-inner backdrop-blur-md">
+  <!-- R2 / RT Trigger -->
+  <div class="trigger-col flex flex-col items-center gap-1.5">
+    <div class="trigger-label font-mono font-bold text-[10px] text-stone-400 tracking-wider">RT / R2</div>
+    <div class="trigger-bar-wrapper relative w-14 h-28 bg-black/60 rounded-xl overflow-hidden border border-white/10 shadow-inner backdrop-blur-md">
       <div id="r2-fill" class="trigger-fill absolute bottom-0 left-0 w-full bg-gradient-to-t from-blue-600 via-indigo-500 to-blue-400 origin-bottom shadow-[0_0_15px_rgba(37,99,235,0.6)]" style="height: 100%; transform: scaleY(0)"></div>
       
       <!-- Scale Tick Marks -->
-      <div class="absolute inset-0 pointer-events-none flex flex-col justify-between py-3 px-1">
+      <div class="absolute inset-0 pointer-events-none flex flex-col justify-between py-2 px-1">
         <div class="w-full h-px bg-white/20"></div>
         <div class="w-full h-px bg-white/10"></div>
         <div class="w-full h-px bg-white/20"></div>
@@ -40,7 +40,7 @@
         <div class="w-full h-px bg-white/20"></div>
       </div>
     </div>
-    <span class="trigger-value font-mono font-bold text-xs text-blue-400 px-2 py-0.5 rounded bg-black/70 border border-blue-500/30 shadow-sm" id="r2-val">0.000</span>
+    <span class="trigger-value font-mono font-bold text-[10px] text-blue-400 px-2 py-0.5 rounded bg-black/70 border border-blue-500/30 shadow-sm" id="r2-val">0.000</span>
   </div>
 
 </div>

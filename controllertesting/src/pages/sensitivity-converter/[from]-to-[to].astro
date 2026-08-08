@@ -65,11 +65,11 @@ const schema = {
 
     <!-- Header -->
     <div class="mb-8 text-center sm:text-left">
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+      <h1 class="text-h1">
         {fromName} to {toName} Sensitivity Converter
       </h1>
-      <p class="mt-2 text-base text-slate-300 max-w-3xl">
-        Maintain your exact muscle memory when switching from <span class="text-blue-400 font-semibold">{fromName}</span> to <span class="text-emerald-400 font-semibold">{toName}</span>. Calculates exact sensitivity values, 360-degree rotation distance, and hardware eDPI.
+      <p class="mt-2 text-secondary max-w-3xl">
+        Maintain your exact muscle memory when switching from <span class="text-accent font-semibold">{fromName}</span> to <span class="text-pass font-semibold">{toName}</span>. Calculates exact sensitivity values, 360-degree rotation distance, and hardware eDPI.
       </p>
     </div>
 
@@ -78,18 +78,18 @@ const schema = {
 
     <!-- AEO/GEO FAQ -->
     <section class="mt-16 bg-surface-1 p-6 sm:p-8 rounded-2xl border border-surface-3">
-      <h2 class="text-2xl font-bold text-white mb-6">Sensitivity Conversion & Motor Memory Guide</h2>
+      <h2 class="text-h2 mb-6">Sensitivity Conversion & Motor Memory Guide</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-slate-300">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-secondary">
         <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
-          <h3 class="font-semibold text-white text-base mb-2">Why does sensitivity differ between {fromName} and {toName}?</h3>
+          <h3 class="font-semibold mb-2">Why does sensitivity differ between {fromName} and {toName}?</h3>
           <p>
             Different game engines use different <strong>Yaw multipliers</strong> (the angular degree change per mouse counts or analog stick tick). For instance, Valorant uses a yaw of 0.07 while CS2 uses 0.022. Direct numerical sensitivity numbers are non-transferable without conversion.
           </p>
         </div>
 
         <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
-          <h3 class="font-semibold text-white text-base mb-2">What is cm/360° distance?</h3>
+          <h3 class="font-semibold mb-2">What is cm/360° distance?</h3>
           <p>
             It is the physical distance (in centimeters or inches) your hand must move across the mousepad to rotate your in-game camera 360 degrees. Matching cm/360° distance ensures 1:1 muscle memory transfer.
           </p>

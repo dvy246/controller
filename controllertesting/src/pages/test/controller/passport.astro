@@ -62,6 +62,7 @@ const description = "View your longitudinal controller diagnostic history, track
 
 <script>
   import { getPassportHistory, compareReports } from '../../../lib/passport';
+  import { buildShareUrl } from '../../../lib/share';
   import type { PassportRecord } from '../../../lib/passport';
   import type { EvidenceReport } from '../../../lib/report';
 
@@ -160,7 +161,7 @@ const description = "View your longitudinal controller diagnostic history, track
         ${diffHtml}
         
         <div class="device-actions mt-4">
-          <a href="/report/${latest.id}" class="btn-secondary w-full justify-center">View Latest Report</a>
+          <a href="${buildShareUrl(latest)}" class="btn-secondary w-full justify-center" target="_blank" rel="noopener">View Shareable Report</a>
         </div>
       `;
       container.appendChild(card);

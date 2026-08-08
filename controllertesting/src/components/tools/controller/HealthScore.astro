@@ -51,26 +51,30 @@
          <div class="hs-cat-box">
             <div class="cat-header">
                <span>Stick Drift</span>
-               <span id="sub-drift-score" class="mono text-accent">100%</span>
+               <span id="sub-drift-score" class="mono text-accent tabular-nums">100%</span>
             </div>
+            <div class="cat-bar" aria-hidden="true"><div class="cat-bar-fill" id="bar-drift" style="width:100%"></div></div>
          </div>
          <div class="hs-cat-box">
             <div class="cat-header">
                <span>Circularity</span>
-               <span id="sub-circ-score" class="mono text-accent">95%</span>
+               <span id="sub-circ-score" class="mono text-accent tabular-nums">95%</span>
             </div>
+            <div class="cat-bar" aria-hidden="true"><div class="cat-bar-fill" id="bar-circ" style="width:95%"></div></div>
          </div>
          <div class="hs-cat-box">
             <div class="cat-header">
                <span>Triggers</span>
-               <span id="sub-trig-score" class="mono text-accent">100%</span>
+               <span id="sub-trig-score" class="mono text-accent tabular-nums">100%</span>
             </div>
+            <div class="cat-bar" aria-hidden="true"><div class="cat-bar-fill" id="bar-trig" style="width:100%"></div></div>
          </div>
          <div class="hs-cat-box">
             <div class="cat-header">
                <span>Buttons</span>
-               <span id="sub-btn-score" class="mono text-accent">100%</span>
+               <span id="sub-btn-score" class="mono text-accent tabular-nums">100%</span>
             </div>
+            <div class="cat-bar" aria-hidden="true"><div class="cat-bar-fill" id="bar-btn" style="width:100%"></div></div>
          </div>
       </div>
       
@@ -81,6 +85,7 @@
     
     <div class="wizard-actions result-actions">
       <button id="btn-download" class="btn-primary">Download Report Card</button>
+      <button id="btn-share-hs" class="btn-secondary">Copy Share Link</button>
       <button id="btn-restart" class="btn-secondary">Test Again</button>
     </div>
   </div>
@@ -135,7 +140,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    padding: 1rem 0;
   }
   .hs-metadata {
     display: flex;
@@ -151,35 +157,57 @@
     font-size: clamp(4rem, 8vw, 6rem);
     font-weight: 800;
     font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
     line-height: 1;
-    color: var(--color-text-primary);
+    /* Do NOT set color here — .text-gradient sets it via background-clip */
   }
   .hs-grade-tag {
     font-size: 1rem;
-    padding: 0.25rem 1rem;
+    padding: 0.35rem 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
   }
   .hs-breakdown-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--spacing-gap);
+    gap: 0.75rem;
   }
   .hs-cat-box {
-    background: var(--color-surface-1);
+    background: var(--color-surface-2);
     padding: var(--spacing-card-sm);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-card);
     border: 1px solid var(--color-border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
   .cat-header {
     display: flex;
     justify-content: space-between;
+    align-items: baseline;
     font-weight: 600;
     font-size: 0.875rem;
+  }
+  .cat-bar {
+    height: 4px;
+    background: var(--color-surface-3);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+  }
+  .cat-bar-fill {
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: var(--radius-pill);
+    width: 0%;
+    transition: width 0.6s var(--ease-smooth);
   }
   .report-footer {
     text-align: center;
     font-size: var(--text-micro);
     color: var(--color-text-tertiary);
     margin-top: 1rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
   @media (max-width: 640px) {
     .hs-breakdown-grid { grid-template-columns: 1fr; }
@@ -191,11 +219,13 @@
   import { parseGamepadState } from '../../../lib/gamepad';
   import { generateUUID, detectEnvironment } from '../../../lib/report';
   import { saveToPassport } from '../../../lib/passport';
+  import { buildShareUrl } from '../../../lib/share';
 
   let isTesting = false;
   let simulate = false;
   let activeGpId = '';
   let maxDrift = 0;
+  let lastReport: any = null;
 
   const btnStart = document.getElementById('btn-start');
   const btnSimulate = document.getElementById('btn-simulate');
@@ -211,6 +241,26 @@
   btnStart?.addEventListener('click', () => runTest(false));
   btnSimulate?.addEventListener('click', () => runTest(true));
   btnRestart?.addEventListener('click', resetTest);
+
+  document.getElementById('btn-share-hs')?.addEventListener('click', async () => {
+    if (!lastReport) {
+      alert('Run the Health Score test first to generate a certificate.');
+      return;
+    }
+    const url = buildShareUrl(lastReport);
+    let okCopy = false;
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+        okCopy = true;
+      }
+    } catch {}
+    if (okCopy) {
+      alert('Share link copied to clipboard! It opens on any device.');
+    } else {
+      window.open(url, '_blank', 'noopener');
+    }
+  });
 
   btnDownload?.addEventListener('click', async () => {
     // @ts-ignore
@@ -373,6 +423,7 @@
       // We will only save if telemetry consent is granted or local-only passport is used
       // For Passport, it's local-only.
       saveToPassport(reportData as any);
+      lastReport = reportData;
     } catch (err) {
       console.warn("Could not save to passport.", err);
     }

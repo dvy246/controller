@@ -50,7 +50,7 @@ const schemaData = {
     <Breadcrumbs items={breadcrumbs} />
     
     <header class="report-hero card-base card-gradient text-center">
-      <div class="badge-tag mb-4 inline-flex items-center gap-2">
+      <div class="badge-tag live-badge mb-4 items-center gap-2">
         <span class="live-dot"></span>
         Baseline Reference Dataset • {modelData.samples.toLocaleString()} Documented Results • Snapshot {reliabilityData.updatedAt}
       </div>
@@ -85,14 +85,14 @@ const schemaData = {
 
     <section class="percentile-section card-base mb-12">
       <h2 class="text-h2 mb-6">Drift Magnitude Percentiles</h2>
-      <div class="table-container">
+      <div class="table-container" aria-label="Drift magnitude percentile thresholds for {modelData.name}">
         <table class="data-table">
           <thead>
             <tr>
-              <th>Tier</th>
-              <th>Drift Threshold (%)</th>
-              <th>Percentile Standing</th>
-              <th>Recommended Action</th>
+              <th scope="col">Tier</th>
+              <th scope="col">Drift Threshold (%)</th>
+              <th scope="col">Percentile Standing</th>
+              <th scope="col">Recommended Action</th>
             </tr>
           </thead>
           <tbody>
@@ -136,7 +136,7 @@ const schemaData = {
         <p>
           <strong>About this data:</strong> this is a static baseline snapshot (compiled {reliabilityData.updatedAt}), not live telemetry.
           Figures are aggregated reference values; your individual controller may perform better or worse.
-          For a measurement of your own hardware, run the <a href="/test/controller/drift" class="text-accent underline hover:text-white transition-colors">Stick Drift Detector</a> or the <a href="/test/controller/circularity" class="text-accent underline hover:text-white transition-colors">Circularity Test</a>.
+          For a measurement of your own hardware, run the <a href="/test/controller/drift" class="text-accent underline hover:text-[var(--color-accent-hover)] transition-colors">Stick Drift Detector</a> or the <a href="/test/controller/circularity" class="text-accent underline hover:text-[var(--color-accent-hover)] transition-colors">Circularity Test</a>.
         </p>
       </div>
     </section>
@@ -148,7 +148,7 @@ const schemaData = {
 <style>
   .reliability-report-page {
     padding-top: 80px;
-    padding-bottom: var(--spacing-section-lg);
+    padding-bottom: var(--spacing-section);
   }
 
   .report-hero {
@@ -156,17 +156,10 @@ const schemaData = {
     padding: 4rem 2rem;
   }
 
-  .badge-tag {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  .live-badge {
     color: var(--color-pass);
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.2);
-    padding: 0.35rem 1rem;
-    border-radius: var(--radius-pill);
+    background: color-mix(in srgb, var(--color-pass) 10%, transparent);
+    border-color: color-mix(in srgb, var(--color-pass) 22%, transparent);
   }
 
   .live-dot {
@@ -178,9 +171,13 @@ const schemaData = {
   }
 
   @keyframes pulse {
-    0% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-    70% { opacity: 0.4; box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-    100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    0% { opacity: 1; box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-pass) 70%, transparent); }
+    70% { opacity: 0.4; box-shadow: 0 0 0 6px color-mix(in srgb, var(--color-pass) 0%, transparent); }
+    100% { opacity: 1; box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-pass) 0%, transparent); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .live-dot { animation: none; }
   }
 
   .metrics-grid {
@@ -251,6 +248,8 @@ const schemaData = {
 
   .data-table tr:last-child td { border-bottom: none; }
   .data-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+  .data-table .mono { font-variant-numeric: tabular-nums; }
 
   .issues-list {
     list-style: none;

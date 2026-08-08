@@ -371,8 +371,8 @@ const articleSchema = {
       <Breadcrumbs items={breadcrumbs} />
 
       <header class="learn-hero">
-        <span class="badge-tag">Learn guide</span>
-        <h1 class="learn-title">{article.title}</h1>
+        <span class="badge-tag mb-3">Learn guide</span>
+        <h1 class="text-h1 mb-2">{article.title}</h1>
         <p class="learn-subtitle">{article.subtitle}</p>
       </header>
 
@@ -387,7 +387,7 @@ const articleSchema = {
         ))}
       </div>
 
-      <div class="learn-faq card-base">
+      <div class="learn-faq">
         <h2 class="section-title">Quick answers</h2>
         {article.faqs.map((f) => (
           <div class="faq-item">
@@ -414,15 +414,13 @@ const articleSchema = {
 <style>
   .learn-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
   .learn-hero { margin-bottom: 2.5rem; max-width: 760px; }
-  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
-  .learn-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
   .learn-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
   .learn-body { padding: 2rem; display: flex; flex-direction: column; gap: 2rem; margin-bottom: 1.5rem; }
   .learn-section { display: flex; flex-direction: column; gap: 0.75rem; }
-  .section-title { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
   .learn-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.7; margin: 0; }
-  .learn-faq { padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 1.5rem; }
-  .faq-item { display: flex; flex-direction: column; gap: 0.375rem; }
+  .learn-faq { display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 1.5rem; }
+  .faq-item { display: flex; flex-direction: column; gap: 0.375rem; border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 1.25rem; }
+  .faq-item:last-child { border-bottom: none; padding-bottom: 0; }
   .faq-q { font-size: 1rem; font-weight: 700; color: var(--color-text-primary); }
   .learn-related { padding: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
   .learn-related-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }

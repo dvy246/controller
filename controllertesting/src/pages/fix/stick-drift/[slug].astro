@@ -261,8 +261,8 @@ const reliabilitySnippet = guide.reliabilitySlug
       <Breadcrumbs items={breadcrumbs} />
 
       <header class="guide-hero">
-        <span class="badge-tag">Repair Guide · {guide.sensor}</span>
-        <h1 class="guide-title">How to Fix {guide.name} Stick Drift</h1>
+        <span class="badge-tag mb-3">Repair Guide · {guide.sensor}</span>
+        <h1 class="text-h1 mb-2">How to Fix {guide.name} Stick Drift</h1>
         <p class="guide-subtitle">
           {guide.intro}
         </p>
@@ -319,12 +319,9 @@ const reliabilitySnippet = guide.reliabilitySlug
 <style>
   .guide-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
   .guide-hero { margin-bottom: 2.5rem; }
-  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
-  .guide-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
   .guide-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
   .guide-body { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 1.5rem; }
   .guide-step { display: flex; flex-direction: column; gap: 0.5rem; }
-  .section-title { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
   .guide-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
   .guide-cta { padding: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
   .guide-cta-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; }

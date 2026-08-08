@@ -1,7 +1,7 @@
 ---
 export interface Props {
   imageSrc: string;
-  brand: 'xbox' | 'switch';
+  brand: 'xbox' | 'switch' | 'playstation';
 }
 
 const { imageSrc, brand } = Astro.props;
@@ -15,6 +15,10 @@ const config = {
   switch: {
     leftStick: { left: '12%', top: '28%' },
     rightStick: { left: '88%', top: '66%' }
+  },
+  playstation: {
+    leftStick: { left: '35%', top: '60%' },
+    rightStick: { left: '65%', top: '60%' }
   }
 };
 
@@ -72,8 +76,9 @@ const currentConfig = config[brand];
     const controllerWrapper = document.getElementById('controller-wrapper');
     
     // Set brand specific glow
-    const brand = container?.querySelector('img')?.alt.includes('xbox') ? 'xbox' : 'switch';
-    const glowColor = brand === 'xbox' ? 'rgba(16,124,16,0.6)' : 'rgba(227,0,11,0.6)';
+    const imgAlt = container?.querySelector('img')?.alt || '';
+    const brand = imgAlt.includes('xbox') ? 'xbox' : imgAlt.includes('playstation') ? 'playstation' : 'switch';
+    const glowColor = brand === 'xbox' ? 'rgba(16,124,16,0.6)' : brand === 'playstation' ? 'rgba(37,99,235,0.6)' : 'rgba(227,0,11,0.6)';
     
     if (leftStickCap) leftStickCap.style.setProperty('--glow-color', glowColor);
     if (rightStickCap) rightStickCap.style.setProperty('--glow-color', glowColor);

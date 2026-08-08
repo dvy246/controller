@@ -19,7 +19,8 @@
       </div>
       <div class="flex items-center gap-2">
         <button type="button" id="btn-sim-mode" class="btn-secondary">
-          ⚡ Run 60s Simulation
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5 inline" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Run 60s Simulation
         </button>
       </div>
     </div>
@@ -32,11 +33,11 @@
             <circle cx="50" cy="50" r="46" stroke="var(--color-surface-3)" stroke-width="6" fill="none" />
             <circle id="timer-ring" cx="50" cy="50" r="46" stroke="var(--color-accent)" stroke-width="6" fill="none" stroke-dasharray="289" stroke-dashoffset="0" stroke-linecap="round" style="transition: stroke-dashoffset 0.2s linear;" />
           </svg>
-          <span class="absolute font-mono text-2xl font-extrabold text-primary" id="timer-text">60s</span>
+          <span class="absolute font-mono text-2xl font-extrabold text-primary tabular-nums" id="timer-text" aria-live="polite">60s</span>
         </div>
 
         <div class="text-left">
-          <span class="text-xs font-mono text-accent uppercase tracking-wider block font-bold mb-1" id="phase-badge">READY TO START</span>
+          <span class="text-xs font-mono text-accent uppercase tracking-wider block font-bold mb-1" id="phase-badge" aria-live="polite">READY TO START</span>
           <h3 class="text-2xl font-bold text-primary tracking-tight" id="phase-title">Express 60s Hardware Check</h3>
           <p class="text-sm text-secondary mt-1 leading-relaxed" id="phase-desc">Click "Start 60s Check" or press any gamepad button to begin.</p>
         </div>
@@ -56,7 +57,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
           <div class="stick-box p-6 rounded-2xl card-gradient border border-surface-3 text-center shadow-lg">
             <span class="text-xs text-secondary font-mono block mb-1 uppercase tracking-widest">Left Stick Drift</span>
-            <span class="text-3xl font-bold font-mono text-emerald tracking-tight" id="qh-drift-left">0.00%</span>
+            <span class="text-3xl font-bold font-mono text-emerald tracking-tight tabular-nums" id="qh-drift-left" aria-live="polite">0.00%</span>
             <div class="stick-crosshair-wrap mt-4 relative w-36 h-36 mx-auto border-2 border-surface-3 rounded-full bg-surface-1 shadow-inner overflow-hidden">
               <div class="absolute inset-0 bg-radial from-accent/10 to-transparent pointer-events-none"></div>
               <div id="crosshair-left" class="w-4 h-4 bg-accent rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-75 shadow-[0_0_15px_rgba(37,99,235,0.8)]"></div>
@@ -65,7 +66,7 @@
 
           <div class="stick-box p-6 rounded-2xl card-gradient border border-surface-3 text-center shadow-lg">
             <span class="text-xs text-secondary font-mono block mb-1 uppercase tracking-widest">Right Stick Drift</span>
-            <span class="text-3xl font-bold font-mono text-emerald tracking-tight" id="qh-drift-right">0.00%</span>
+            <span class="text-3xl font-bold font-mono text-emerald tracking-tight tabular-nums" id="qh-drift-right" aria-live="polite">0.00%</span>
             <div class="stick-crosshair-wrap mt-4 relative w-36 h-36 mx-auto border-2 border-surface-3 rounded-full bg-surface-1 shadow-inner overflow-hidden">
               <div class="absolute inset-0 bg-radial from-accent/10 to-transparent pointer-events-none"></div>
               <div id="crosshair-right" class="w-4 h-4 bg-accent rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-75 shadow-[0_0_15px_rgba(37,99,235,0.8)]"></div>
@@ -120,7 +121,7 @@
         <div class="p-8 w-full rounded-3xl card-gradient border border-surface-3 shadow-2xl text-center">
           <span class="text-sm font-mono text-secondary uppercase tracking-widest block mb-2 font-semibold">EXPRESS HEALTH SCORE</span>
           <div class="text-6xl font-extrabold font-mono text-gradient my-4" id="qh-score-num">96</div>
-          <span id="qh-grade-badge" class="badge-pass text-sm px-4 py-1.5 font-mono font-bold rounded-full inline-block mb-6 shadow-md">GRADE A+ (PASSED)</span>
+          <span id="qh-grade-badge" class="badge-pass text-sm inline-block mb-6 shadow-md">GRADE A+ (PASSED)</span>
 
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm font-mono text-left bg-surface-1 p-5 rounded-2xl border border-surface-3 mb-6 shadow-inner">
             <div>
@@ -143,10 +144,16 @@
 
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
             <button type="button" id="btn-save-qh-passport" class="btn-primary">
-              🛡️ Save to Passport
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5 inline" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+              Save to Passport
+            </button>
+            <button type="button" id="btn-share-qh-cert" class="btn-secondary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5 inline" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Copy Share Link
             </button>
             <a href="/passport" class="btn-secondary">
-              📄 Resale Certificate
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5 inline" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+              Resale Certificate
             </a>
           </div>
         </div>
@@ -159,6 +166,7 @@
   import { parseGamepadState } from '../../../lib/gamepad';
   import { saveToPassport } from '../../../lib/passport';
   import { addPoints } from '../../../lib/rewards';
+  import { buildShareUrl } from '../../../lib/share';
   import { generateUUID, detectEnvironment, checkCapabilities } from '../../../lib/report';
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -166,6 +174,7 @@
     let secondsLeft = 60;
     let timerInterval: any = null;
     let isSimulating = false;
+    let lastReport: any = null;
 
     let maxLeftDrift = 0;
     let maxRightDrift = 0;
@@ -348,7 +357,8 @@
       if (scoreEl) scoreEl.textContent = String(score);
       if (badgeEl) {
         badgeEl.textContent = grade;
-        badgeEl.className = `${badgeClass} text-xs px-3 py-1 font-mono font-bold rounded-full inline-block mb-4`;
+        // Global .badge-pass / .badge-warning provide all visual styling
+        badgeEl.className = `${badgeClass} text-xs inline-block mb-4`;
       }
       if (sDrift) sDrift.textContent = `${overallDrift.toFixed(2)}%`;
       if (sBtn) sBtn.textContent = `${pressedButtons.size} Buttons Pressed`;
@@ -374,6 +384,7 @@
 
       saveToPassport(report);
       addPoints(50);
+      lastReport = report;
     }
 
     btnStart?.addEventListener('click', () => {
@@ -387,7 +398,7 @@
 
     document.getElementById('btn-sim-mode')?.addEventListener('click', () => {
       isSimulating = true;
-      if (connStatus) connStatus.textContent = 'Simulation Mode Active ⚡';
+      if (connStatus) connStatus.textContent = 'Simulation Mode Active';
       maxLeftDrift = 0;
       maxRightDrift = 0;
       pressedButtons.clear();
@@ -399,6 +410,26 @@
     document.getElementById('btn-save-qh-passport')?.addEventListener('click', () => {
       alert('Quick Health check results saved to your local Passport history!');
     });
+
+    document.getElementById('btn-share-qh-cert')?.addEventListener('click', async () => {
+      if (!lastReport) {
+        alert('Run a Quick Health check first to generate a certificate.');
+        return;
+      }
+      const url = buildShareUrl(lastReport);
+      let okCopy = false;
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(url);
+          okCopy = true;
+        }
+      } catch {}
+      if (okCopy) {
+        alert('Share link copied to clipboard! It opens on any device.');
+      } else {
+        window.open(url, '_blank', 'noopener');
+      }
+    });
   });
 </script>
 
@@ -409,20 +440,9 @@
   .btn-chip {
     transition: all 0.15s ease;
   }
-  .text-emerald {
-    color: #10B981;
+  .btn-chip:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
   }
-  .border-emerald {
-    border-color: #10B981;
-  }
-  .badge-pass {
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    color: #10B981;
-  }
-  .badge-warning {
-    background: rgba(245, 158, 11, 0.15);
-    border: 1px solid rgba(245, 158, 11, 0.3);
-    color: #F59E0B;
-  }
+  /* .text-emerald/.border-emerald/.badge-pass/.badge-warning are global tokens/classes */
 </style>

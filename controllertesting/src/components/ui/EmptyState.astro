@@ -1,0 +1,92 @@
+---
+/**
+ * EmptyState.astro — Unified Diagnostic Waiting & Idle State Primitive
+ * Location: src/components/ui/EmptyState.astro
+ *
+ * Specification: explorer_design_system/handoff.md § 4.7
+ * Renders smooth pulsing accent ring for waiting/disconnected states,
+ * centered icon, title, description, and primary CTA trigger.
+ */
+import Button from './Button.astro';
+
+export interface Props {
+  title: string;
+  description: string;
+  icon?: string;
+  status?: 'waiting' | 'disconnected' | 'error';
+  actionText?: string;
+  actionHref?: string;
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  title,
+  description,
+  icon,
+  status = 'waiting',
+  actionText,
+  actionHref,
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const statusStyles = {
+  waiting: {
+    ring: 'bg-[var(--color-accent)]',
+    iconColor: 'text-[var(--color-accent)]',
+    pulse: true,
+  },
+  disconnected: {
+    ring: 'bg-[var(--color-warning)]',
+    iconColor: 'text-[var(--color-warning)]',
+    pulse: true,
+  },
+  error: {
+    ring: 'bg-[var(--color-fail)]',
+    iconColor: 'text-[var(--color-fail)]',
+    pulse: false,
+  },
+};
+
+const currentStatus = statusStyles[status];
+---
+
+<div
+  class:list={[
+    'empty-state-card flex flex-col items-center justify-center text-center p-10 rounded-xl bg-[var(--color-surface-1)] border border-[var(--color-border-subtle)] min-h-[320px]',
+    className,
+  ]}
+  {...rest}
+>
+  <div class="relative flex items-center justify-center w-16 h-16 mb-5 rounded-full bg-[var(--color-surface-3)] border border-[var(--color-border-default)]">
+    {currentStatus.pulse && (
+      <span class:list={['absolute inset-0 rounded-full animate-ping opacity-25', currentStatus.ring]}></span>
+    )}
+    
+    <div class:list={['relative z-10 flex items-center justify-center w-8 h-8', currentStatus.iconColor]}>
+      {icon ? (
+        <Fragment set:html={icon} />
+      ) : Astro.slots.has('icon') ? (
+        <slot name="icon" />
+      ) : (
+        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+        </svg>
+      )}
+    </div>
+  </div>
+
+  <h3 class="text-[var(--text-h3)] font-bold text-[var(--color-text-primary)] mb-2 tracking-tight">
+    {title}
+  </h3>
+  <p class="text-[var(--text-small)] text-[var(--color-text-secondary)] max-w-md mb-6 leading-relaxed">
+    {description}
+  </p>
+
+  {actionText && (
+    <Button href={actionHref || '#'} variant="primary" size="md">
+      {actionText}
+    </Button>
+  )}
+</div>

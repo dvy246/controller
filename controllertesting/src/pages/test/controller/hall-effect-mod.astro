@@ -24,9 +24,9 @@ const breadcrumbs = [
     </div>
     
     <div class="relative z-10 max-w-2xl">
-      <h2 class="text-3xl font-extrabold text-primary mb-2">Hall Effect Mod Verifier</h2>
+      <h2 class="text-h2 mb-2">Hall Effect Mod Verifier</h2>
       <p class="text-secondary mb-6 text-sm leading-relaxed">
-        Replacing ALPS potentiometers with electromagnetic Hall effect sensors? Use this tool to benchmark your controller before the mod, and verify zero-drift perfection after the mod. Generate a cryptographic certificate to prove the mod's success.
+        Replacing ALPS potentiometers with electromagnetic Hall effect sensors? Benchmark your controller before the mod, then verify the result after. The certificate proves the swap worked — drift, circularity, and linearity on record.
       </p>
     </div>
 
@@ -71,13 +71,13 @@ const breadcrumbs = [
     </div>
 
     <div id="certificate-section" class="hidden text-center pt-6 border-t border-surface-3">
-      <h3 class="text-xl font-bold text-emerald mb-2 flex items-center justify-center gap-2">
+      <h3 class="text-h3 text-pass mb-2 flex items-center justify-center gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z" />
         </svg>
         Mod Verification Successful!
       </h3>
-      <p class="text-sm text-secondary mb-6">Your Hall effect sensors show an average drift of <span id="cert-drift-val" class="font-bold text-primary">0.02%</span>, a massive improvement from the baseline.</p>
+      <p class="text-sm text-secondary mb-6">Your Hall effect sensors show an average drift of <span id="cert-drift-val" class="font-bold text-primary">0.02%</span>, down from the pre-mod baseline.</p>
       
       <button class="btn-primary flex items-center justify-center mx-auto cursor-pointer focus-ring transition-colors duration-200">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
@@ -115,7 +115,7 @@ const breadcrumbs = [
         
         if (btnPre) {
           btnPre.textContent = 'Baseline Loaded ✓';
-          btnPre.className = 'w-full py-2 rounded-lg text-sm font-bold bg-surface-2 text-emerald border border-emerald/30';
+          btnPre.className = 'w-full py-2 rounded-lg text-sm font-bold bg-surface-2 text-pass border border-pass/30';
         }
         
         baselineDone = true;
@@ -140,7 +140,7 @@ const breadcrumbs = [
           if (preCirc) preCirc.textContent = circVal + '%';
           
           btnPre.textContent = 'Baseline Recorded ✓';
-          btnPre.className = 'w-full py-2 rounded-lg text-sm font-bold bg-surface-2 text-emerald border border-emerald/30';
+          btnPre.className = 'w-full py-2 rounded-lg text-sm font-bold bg-surface-2 text-pass border border-pass/30';
           
           // Save to localStorage
           localStorage.setItem('hall_mod_baseline', JSON.stringify({ drift: driftVal, circ: circVal }));

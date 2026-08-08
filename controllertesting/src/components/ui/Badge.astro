@@ -1,0 +1,68 @@
+---
+/**
+ * Badge.astro — Standardized Telemetry & Status Badge Primitive
+ * Location: src/components/ui/Badge.astro
+ *
+ * Specification: explorer_design_system/handoff.md § 4.7
+ * Enforces font-mono, font-bold, uppercase, tracking-[0.05em], rounded-full,
+ * optional pulse indicator, icon support, and WCAG AA status color contrasts.
+ */
+export interface Props {
+  variant?: 'pass' | 'warning' | 'fail' | 'info' | 'neutral' | 'accent';
+  size?: 'sm' | 'md';
+  pulse?: boolean;
+  icon?: string;
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  variant = 'neutral',
+  size = 'md',
+  pulse = false,
+  icon,
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const baseStyles = 'inline-flex items-center gap-2 font-mono font-bold uppercase tracking-[0.05em] rounded-none border leading-none select-none shrink-0';
+
+const sizeStyles = {
+  sm: 'text-[var(--text-micro)] px-2.5 py-1',
+  md: 'text-[var(--text-micro)] px-3 py-1.5',
+};
+
+const variantStyles = {
+  pass: 'bg-[var(--color-pass-bg)] text-[var(--color-pass)] border-[var(--color-pass)]',
+  warning: 'bg-[var(--color-warning-bg)] text-[var(--color-warning)] border-[var(--color-warning)]',
+  fail: 'bg-[var(--color-fail-bg)] text-[var(--color-fail)] border-[var(--color-fail)]',
+  info: 'bg-[var(--color-info-bg)] text-[var(--color-info)] border-[var(--color-info)]',
+  neutral: 'bg-[var(--color-neutral-bg)] text-[var(--color-text-secondary)] border-[var(--color-border-default)]',
+  accent: 'bg-[rgba(37,99,235,0.12)] text-[var(--color-accent)] border-[var(--color-accent)]',
+};
+---
+
+<span
+  class:list={[
+    baseStyles,
+    sizeStyles[size],
+    variantStyles[variant],
+    className,
+  ]}
+  {...rest}
+>
+  {pulse && (
+    <span class="relative flex h-2 w-2 shrink-0">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 bg-current"></span>
+      <span class="relative inline-flex rounded-full h-2 w-2 bg-current"></span>
+    </span>
+  )}
+
+  {(icon || Astro.slots.has('icon')) && (
+    <span class="flex items-center justify-center shrink-0 text-current">
+      {icon ? <Fragment set:html={icon} /> : <slot name="icon" />}
+    </span>
+  )}
+
+  <slot />
+</span>

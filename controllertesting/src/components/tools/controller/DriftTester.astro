@@ -27,7 +27,7 @@
     {/* Left Analog Stick */}
     <div class="stick-card card-gradient card-hover group/stick">
       <div class="stick-card-header">
-        <h3 class="stick-title text-stone-100 font-bold tracking-tight">Left Analog Stick</h3>
+        <h3 class="stick-title text-primary font-bold tracking-tight">Left Analog Stick</h3>
         <span class="drift-value font-mono text-2xl" id="left-drift-val">0.0%</span>
       </div>
 
@@ -38,15 +38,15 @@
 
       <div class="stick-metrics">
         <div class="metric">
-          <span class="m-label uppercase tracking-widest text-xs text-stone-400">X Axis</span>
-          <span class="m-val mono text-stone-100" id="left-x-val">0.0000</span>
+          <span class="m-label uppercase tracking-widest text-xs text-secondary">X Axis</span>
+          <span class="m-val mono text-primary" id="left-x-val">0.0000</span>
         </div>
         <div class="metric">
-          <span class="m-label uppercase tracking-widest text-xs text-stone-400">Y Axis</span>
-          <span class="m-val mono text-stone-100" id="left-y-val">0.0000</span>
+          <span class="m-label uppercase tracking-widest text-xs text-secondary">Y Axis</span>
+          <span class="m-val mono text-primary" id="left-y-val">0.0000</span>
         </div>
         <div class="metric">
-          <span class="m-label uppercase tracking-widest text-xs text-stone-400">Status</span>
+          <span class="m-label uppercase tracking-widest text-xs text-secondary">Status</span>
           <span class="m-val badge-pass inline-flex" id="left-status-badge">Healthy</span>
         </div>
       </div>
@@ -55,7 +55,7 @@
     {/* Right Analog Stick */}
     <div class="stick-card card-gradient card-hover group/stick">
       <div class="stick-card-header">
-        <h3 class="stick-title text-stone-100 font-bold tracking-tight">Right Analog Stick</h3>
+        <h3 class="stick-title text-primary font-bold tracking-tight">Right Analog Stick</h3>
         <span class="drift-value font-mono text-2xl" id="right-drift-val">0.0%</span>
       </div>
 
@@ -66,15 +66,15 @@
 
       <div class="stick-metrics">
         <div class="metric">
-          <span class="m-label uppercase tracking-widest text-xs text-stone-400">X Axis</span>
-          <span class="m-val mono text-stone-100" id="right-x-val">0.0000</span>
+          <span class="m-label uppercase tracking-widest text-xs text-secondary">X Axis</span>
+          <span class="m-val mono text-primary" id="right-x-val">0.0000</span>
         </div>
         <div class="metric">
-          <span class="m-label uppercase tracking-widest text-xs text-stone-400">Y Axis</span>
-          <span class="m-val mono text-stone-100" id="right-y-val">0.0000</span>
+          <span class="m-label uppercase tracking-widest text-xs text-secondary">Y Axis</span>
+          <span class="m-val mono text-primary" id="right-y-val">0.0000</span>
         </div>
         <div class="metric">
-          <span class="m-label uppercase tracking-widest text-xs text-stone-400">Status</span>
+          <span class="m-label uppercase tracking-widest text-xs text-secondary">Status</span>
           <span class="m-val badge-pass inline-flex" id="right-status-badge">Healthy</span>
         </div>
       </div>
@@ -178,6 +178,15 @@
 
     const leftCtx = leftCanvas.getContext('2d');
     const rightCtx = rightCanvas.getContext('2d');
+
+    // High-DPI backing store (logical 280×280, sharp on retina)
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    leftCanvas.width = 280 * dpr;
+    leftCanvas.height = 280 * dpr;
+    rightCanvas.width = 280 * dpr;
+    rightCanvas.height = 280 * dpr;
+    leftCtx?.setTransform(dpr, 0, 0, dpr, 0, 0);
+    rightCtx?.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     const leftXVal = document.getElementById('left-x-val');
     const leftYVal = document.getElementById('left-y-val');
@@ -522,20 +531,11 @@
     transition: all 0.2s;
     cursor: pointer;
   }
-  .btn-primary {
-    background: #fff;
-    color: #000;
-    border: none;
-  }
-  .btn-primary:hover {
-    background: #f0f0f0;
-    transform: scale(1.02);
-  }
-  .btn-secondary {
-    color: #fff;
-  }
-  .btn-secondary:hover {
-    background: rgba(255,255,255,0.1);
+  #left-stick-canvas,
+  #right-stick-canvas {
+    width: 280px;
+    height: 280px;
+    max-width: 100%;
   }
 
   @media (max-width: 768px) {

@@ -18,6 +18,8 @@ const { embedSrc } = Astro.props;
     title="3D Controller Model" 
     allow="autoplay; fullscreen; xr-spatial-tracking; execution-while-out-of-viewport; execution-while-not-rendered; web-share" 
     allowfullscreen
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
     src={embedSrc}
     class="sketchfab-iframe"
   ></iframe>
@@ -26,7 +28,7 @@ const { embedSrc } = Astro.props;
   <div class="telemetry-hud" id="telemetry-hud">
     <div class="status-indicator">
       <span class="status-dot" id="status-dot"></span>
-      <span id="status-text">Awaiting Gamepad</span>
+      <span id="status-text" aria-live="polite">Awaiting Gamepad</span>
     </div>
     <div class="telemetry-dashboard" id="telemetry-data" style="display: none;">
       
@@ -35,11 +37,11 @@ const { embedSrc } = Astro.props;
         <div class="telemetry-label">ANALOG STICKS</div>
         <div class="telemetry-row">
           <span class="telemetry-key">LS</span>
-          <span class="telemetry-val" id="ls-val">0.00, 0.00</span>
+          <span class="telemetry-val tabular-nums" id="ls-val">0.00, 0.00</span>
         </div>
         <div class="telemetry-row">
           <span class="telemetry-key">RS</span>
-          <span class="telemetry-val" id="rs-val">0.00, 0.00</span>
+          <span class="telemetry-val tabular-nums" id="rs-val">0.00, 0.00</span>
         </div>
       </div>
       
@@ -63,7 +65,7 @@ const { embedSrc } = Astro.props;
       <!-- Active Buttons -->
       <div class="telemetry-section">
         <div class="telemetry-label">ACTIVE INPUTS</div>
-        <div class="telemetry-buttons" id="active-buttons">
+        <div class="telemetry-buttons" id="active-buttons" aria-live="polite">
           <span class="telemetry-empty">None</span>
         </div>
       </div>
@@ -76,13 +78,16 @@ const { embedSrc } = Astro.props;
   .sketchfab-wrapper {
     position: relative;
     width: 100%;
-    height: 100%;
-    min-height: 500px;
+    aspect-ratio: 16 / 10;
+    min-height: 420px;
+    max-height: 720px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    border-radius: 12px;
+    border-radius: var(--radius-card);
+    border: 1px solid var(--color-border-subtle);
+    background: var(--color-surface-1);
   }
 
   .sketchfab-iframe {
@@ -127,17 +132,8 @@ const { embedSrc } = Astro.props;
     box-shadow: 0 4px 20px rgba(0,0,0,0.5);
   }
 
-  .status-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.2);
-    transition: all 0.3s ease;
-  }
-  .status-dot.connected { 
-    background: var(--color-pass, #10b981); 
-    box-shadow: 0 0 12px rgba(16, 185, 129, 0.8); 
-  }
+  /* .status-dot styling is global; overlay-specific spacing only */
+  .status-indicator .status-dot { width: 8px; height: 8px; }
 
   .telemetry-dashboard {
     background: rgba(6, 6, 11, 0.6);
@@ -146,7 +142,10 @@ const { embedSrc } = Astro.props;
     border-radius: 16px;
     padding: 16px 20px;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 24px;
+    max-width: min(92vw, 480px);
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
   }
 
@@ -257,7 +256,8 @@ const { embedSrc } = Astro.props;
       
       if (activeGp && statusDot && statusText && telemetryData) {
         const state = parseGamepadState(activeGp);
-        statusDot.classList.add('connected');
+        statusDot.setAttribute('data-status', 'pass');
+        statusDot.classList.add('active');
         statusText.style.color = '#fff';
         statusText.textContent = `Connected: ${state.detectedModel || 'Gamepad'}`;
         
@@ -295,7 +295,8 @@ const { embedSrc } = Astro.props;
         }
 
       } else if (statusDot && statusText && telemetryData) {
-        statusDot.classList.remove('connected');
+        statusDot.classList.remove('active');
+        statusDot.removeAttribute('data-status');
         statusText.style.color = 'rgba(255,255,255,0.6)';
         statusText.textContent = 'Awaiting Gamepad';
         telemetryData.style.display = 'none';

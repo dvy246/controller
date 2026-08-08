@@ -36,8 +36,8 @@ const breadcrumbs = [{ name: 'Home', url: '/' }, { name: 'Controller Profiles' }
       <Breadcrumbs items={breadcrumbs} />
 
       <header class="hub-hero">
-        <span class="badge-tag">Hardware Reference</span>
-        <h1 class="hub-title">Controller Profiles</h1>
+        <span class="badge-tag mb-3">Hardware Reference</span>
+        <h1 class="text-h1 mb-2">Controller Profiles</h1>
         <p class="hub-subtitle">
           Sensor types, known failure modes, and the right diagnostic for each controller.
           Reliability claims only appear where our baseline dataset has the model — no invented numbers.
@@ -62,8 +62,6 @@ const breadcrumbs = [{ name: 'Home', url: '/' }, { name: 'Controller Profiles' }
 <style>
   .hub-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
   .hub-hero { margin-bottom: 2.5rem; }
-  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
-  .hub-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
   .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 70ch; }
   .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
   .profile-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }

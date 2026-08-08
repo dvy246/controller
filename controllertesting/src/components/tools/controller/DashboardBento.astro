@@ -36,7 +36,7 @@ import DiagnosticSequence from './DiagnosticSequence.astro';
           <h2 class="cell-title">Controller Visualizer</h2>
         </div>
       </div>
-      <div class="cell-content flex items-center justify-center min-h-[400px]">
+      <div class="cell-content flex flex-col justify-center flex-1 w-full h-full min-h-[300px] lg:min-h-0">
         <InteractiveSilhouette />
       </div>
     </div>
@@ -52,7 +52,7 @@ import DiagnosticSequence from './DiagnosticSequence.astro';
           </div>
         </div>
       </div>
-      <div class="cell-content min-h-[220px]">
+      <div class="cell-content flex-1 flex flex-col min-h-[200px] lg:min-h-0">
         <PremiumStickCanvas />
       </div>
     </div>
@@ -68,7 +68,7 @@ import DiagnosticSequence from './DiagnosticSequence.astro';
           </div>
         </div>
       </div>
-      <div class="cell-content min-h-[220px]">
+      <div class="cell-content flex-1 flex flex-col min-h-[200px] lg:min-h-0">
         <TriggerBars />
       </div>
     </div>
@@ -84,7 +84,7 @@ import DiagnosticSequence from './DiagnosticSequence.astro';
           </div>
         </div>
       </div>
-      <div class="cell-content min-h-[220px] font-mono text-xs text-stone-400 overflow-hidden">
+      <div class="cell-content flex-1 min-h-[150px] lg:min-h-0 font-mono text-xs text-stone-400 overflow-hidden">
         <div id="raw-data-output" class="pt-2">NO CONTROLLER DETECTED</div>
       </div>
     </div>
@@ -100,7 +100,7 @@ import DiagnosticSequence from './DiagnosticSequence.astro';
           </div>
         </div>
       </div>
-      <div class="cell-content min-h-[220px] flex flex-col justify-end pb-4">
+      <div class="cell-content flex-1 flex flex-col justify-end pb-4 min-h-[150px] lg:min-h-0">
         <div class="grid grid-cols-2 gap-3">
           <button class="vibe-btn glass-panel text-xs font-bold uppercase tracking-wider py-3 rounded-lg hover:bg-white/5 transition-colors border border-white/5">Heavy</button>
           <button class="vibe-btn glass-panel text-xs font-bold uppercase tracking-wider py-3 rounded-lg hover:bg-white/5 transition-colors border border-white/5">Light</button>
@@ -150,14 +150,14 @@ import DiagnosticSequence from './DiagnosticSequence.astro';
   .bento-grid {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
-    gap: 1rem;
+    gap: 1.25rem;
     width: 100%;
   }
 
   @media (min-width: 1024px) {
     .bento-grid {
       grid-template-columns: repeat(12, 1fr);
-      grid-auto-rows: minmax(min-content, max-content);
+      grid-auto-rows: 1fr;
     }
 
     .bento-visualizer {

@@ -50,7 +50,7 @@ const schemaData = [
 
       <header class="hub-hero">
         <span class="badge-tag">Baseline Reference Dataset</span>
-        <h1 class="hub-title">Controller Reliability Data</h1>
+        <h1 class="text-h1 mb-2">Controller Reliability Data</h1>
         <p class="hub-subtitle">
           Baseline stick drift and sensor wear figures by model — compiled from {reliabilityData.totalSamplesMeasured.toLocaleString()}
           documented test results, snapshot {reliabilityData.updatedAt}. Baselines, not promises about any individual unit.
@@ -105,11 +105,11 @@ const schemaData = [
 <style>
   .hub-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
   .hub-hero { margin-bottom: 2.5rem; }
-  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
-  .hub-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-hero .badge-tag { margin-bottom: 0.75rem; }
   .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 70ch; }
-  .model-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
-  .model-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .model-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+  .model-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; cursor: pointer; }
+  .model-card:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
   .model-name { font-size: 1.125rem; font-weight: 800; }
   .model-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
   .stat { display: flex; flex-direction: column; gap: 0.25rem; background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 0.75rem; }

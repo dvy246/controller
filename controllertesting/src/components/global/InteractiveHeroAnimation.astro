@@ -250,6 +250,14 @@
 
     var isReduced = window.matchMedia('(prefers-color-scheme: dark)').matches && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // High-DPI backing store (logical 600×340, sharp on retina)
+    var LOGICAL_W = 600;
+    var LOGICAL_H = 340;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = LOGICAL_W * dpr;
+    canvas.height = LOGICAL_H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
     // Target positions for L and R stick crosshairs
     var targetL = { x: 180, y: 150, currentX: 180, currentY: 150 };
     var targetR = { x: 420, y: 150, currentX: 420, currentY: 150 };
@@ -265,8 +273,8 @@
     function handlePointer(e) {
       if (isReduced) return;
       var rect = canvas.getBoundingClientRect();
-      var mouseX = ((e.clientX || (e.touches && e.touches[0].clientX)) - rect.left) * (canvas.width / rect.width);
-      var mouseY = ((e.clientY || (e.touches && e.touches[0].clientY)) - rect.top) * (canvas.height / rect.height);
+      var mouseX = ((e.clientX || (e.touches && e.touches[0].clientX)) - rect.left) * (LOGICAL_W / rect.width);
+      var mouseY = ((e.clientY || (e.touches && e.touches[0].clientY)) - rect.top) * (LOGICAL_H / rect.height);
 
       // Left stick tracks mouse directly within radius 45px
       var dx = mouseX - baseL.x;
@@ -321,22 +329,22 @@
 
       // Clear canvas
       ctx.fillStyle = isLight ? '#FAFAFC' : '#050507';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, LOGICAL_W, LOGICAL_H);
 
       // 1. Draw Grid Lines
       ctx.strokeStyle = isLight ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.04)';
       ctx.lineWidth = 1;
 
-      for (var x = 0; x < canvas.width; x += 30) {
+      for (var x = 0; x < LOGICAL_W; x += 30) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
+        ctx.lineTo(x, LOGICAL_H);
         ctx.stroke();
       }
-      for (var y = 0; y < canvas.height; y += 30) {
+      for (var y = 0; y < LOGICAL_H; y += 30) {
         ctx.beginPath();
         ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
+        ctx.lineTo(LOGICAL_W, y);
         ctx.stroke();
       }
 
@@ -402,7 +410,7 @@
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       var waveY = 280;
-      for (var i = 0; i < canvas.width; i += 4) {
+      for (var i = 0; i < LOGICAL_W; i += 4) {
         var sinVal = Math.sin((i + frame * 4) * 0.03) * 12 * Math.cos((frame + i) * 0.01);
         if (i === 0) ctx.moveTo(i, waveY + sinVal);
         else ctx.lineTo(i, waveY + sinVal);

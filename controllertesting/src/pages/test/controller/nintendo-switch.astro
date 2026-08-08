@@ -5,7 +5,7 @@
  */
 
 import ToolLayout from '../../../layouts/ToolLayout.astro';
-import Interactive3DVisualizer from '../../../components/tools/controller/Interactive3DVisualizer.astro';
+import Interactive2DVisualizer from '../../../components/tools/controller/Interactive2DVisualizer.astro';
 import DiagnosticResultsBento from '../../../components/seo/DiagnosticResultsBento.astro';
 import PremiumGuideCard from '../../../components/seo/PremiumGuideCard.astro';
 import PremiumFaqAccordion from '../../../components/seo/PremiumFaqAccordion.astro';
@@ -46,16 +46,7 @@ const faqs = [
 
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
-    <div class="doppelrand-shell nintendo-brand-shell" data-model="switch">
-      <Interactive3DVisualizer modelUrl="/models/switch_controller.glb" isRigid={true} />
-    </div>
-    <style>
-      .nintendo-brand-shell {
-        --ambient-glow: #E60012;
-        box-shadow: 0 0 60px rgba(230, 0, 18, 0.15);
-        border-color: rgba(230, 0, 18, 0.3);
-      }
-    </style>
+    <Interactive2DVisualizer isRigid={true} />
   </Fragment>
 
   {/* ── Results Slot ── */}
@@ -66,19 +57,19 @@ const faqs = [
   {/* ── Semantic SEO Content Slot ── */}
   <Fragment slot="content">
     <section class="max-w-4xl mx-auto mt-16 px-6">
-      <h2 class="text-[var(--text-h2)] font-extrabold tracking-tight mb-6">Comprehensive Nintendo Switch Hardware Diagnostics</h2>
+      <h2 class="text-h2 mb-6">Comprehensive Nintendo Switch Hardware Diagnostics</h2>
       <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-        The Nintendo Switch ecosystem features two distinct controller paradigms: the modular Joy-Cons designed for portable and motion-heavy gaming, and the traditional Pro Controller built for competitive accuracy. Our unified Nintendo diagnostic engine automatically detects which device you have connected and streams raw Gamepad API telemetry directly to your browser—allowing you to test for drift, button failure, and gyro miscalibration without needing a Switch console or third-party software.
+        The Switch family has two very different controllers: modular Joy-Cons for portable play and the Pro Controller for longer sessions. This tool detects whichever one you connect and tests both through the Gamepad API — drift, buttons, and gyro — no Switch console or third-party software required.
       </p>
       
       <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Quantifying Joy-Con Drift</h3>
       <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-        Because the Joy-Cons use extremely thin, proprietary graphite contact pads instead of full-size ALPS potentiometers, they are highly susceptible to early mechanical failure known as <strong>stick drift</strong>. Our visualizer maps the precise X and Y coordinate drift on a digital canvas. If your resting position shows a variance greater than 5%, you have confirmed hardware drift and can confidently proceed with a Nintendo RMA or a DIY Hall-effect stick replacement.
+        Joy-Cons use extremely thin, proprietary graphite pads instead of full-size ALPS potentiometers, so <strong>stick drift</strong> hits them earlier. The visualizer plots the resting X and Y position of each stick on a canvas. If a stick rests above 2% variance, that is confirmed hardware drift — proceed with a Nintendo RMA or a DIY Hall-effect stick replacement.
       </p>
       
       <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Validating Pro Controller Precision</h3>
       <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed">
-        The Switch Pro Controller uses a completely different set of internal components, including standard analog potentiometer joysticks, digital shoulder triggers, and a high-resolution 6-axis IMU. Use our suite to verify that the D-Pad isn't accidentally registering diagonal inputs (a common design flaw in early batches) and that the HD Rumble actuators are firing symmetrically on both grips.
+        The Pro Controller is a different machine: standard analog potentiometer sticks, digital shoulder triggers, and a 6-axis IMU. Use the suite to confirm the D-Pad is not registering accidental diagonals — a known issue in early batches — and that both HD Rumble actuators fire symmetrically.
       </p>
     </section>
   </Fragment>
@@ -88,13 +79,9 @@ const faqs = [
     <PremiumGuideCard title="What is the best way to fix Nintendo Switch controller drift?">
       <p class="text-lg">To fix Nintendo Switch controller drift permanently, replace the faulty potentiometer stick with a Hall-effect sensor module. For a temporary fix, use electronic contact cleaner under the rubber stick skirt to remove debris. Always re-calibrate your controller in system settings afterward to ensure accurate input.</p>
       
-      <h3 class="text-blue-400 mt-12 mb-4 text-2xl font-extrabold tracking-tight">Recommended Actions</h3>
-      <p class="text-lg">Always begin by using our free <a href="/test/controller/drift">drift diagnostic tool</a> to identify the exact cause of any input inconsistencies before attempting repairs.</p>
+      <h3 class="text-h3 text-accent mt-8 mb-4">Recommended Actions</h3>
+      <p class="text-lg">      Start with the <a href="/test/controller/drift">Stick Drift Test</a>. It works with both Joy-Cons and the Pro Controller — the reading tells you whether to file an RMA or swap in Hall-effect modules.</p>
     </PremiumGuideCard>
-
-    <div class="max-w-4xl mx-auto mt-32 mb-20 px-6">
-      <PremiumFaqAccordion faqs={faqs} title="Nintendo Switch FAQs" subtitle="Common issues and questions about Nintendo Joy-Cons and Pro Controllers." />
-    </div>
   </Fragment>
 
   {/* ── Related Tools Slot ── */}

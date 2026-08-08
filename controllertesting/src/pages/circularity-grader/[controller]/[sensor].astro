@@ -93,6 +93,7 @@ const schema = {
   breadcrumbs={breadcrumbs}
   faqs={faqs}
   schema={schema}
+  telemetryEnabled
 >
   <Fragment slot="tool">
     <CircularityGrader />
@@ -101,12 +102,12 @@ const schema = {
   <Fragment slot="results">
     <div class="prose max-w-none p-6">
       <h2 class="text-xl font-bold mb-4">Understanding Your Grade</h2>
-      <p class="text-stone-300">
+      <p class="text-secondary">
         Your grade evaluates the geometric perfection of the thumbstick module's outer boundary. 
         <strong>A+ (Esports Ready)</strong> means the stick achieves a flawless circle, critical for consistent diagonal movement in games like Apex Legends and Rocket League. 
         <strong>F (Defective)</strong> indicates severe asymmetry, meaning diagonal inputs will hit their max value prematurely or not at all.
       </p>
-      <p class="text-stone-300 mt-2">
+      <p class="text-secondary mt-2">
         Since you're using a <strong>{controllerName}</strong> with a <strong>{sensorName}</strong> module, you can expect the underlying tech to be {sensorBias}.
       </p>
     </div>
@@ -117,7 +118,7 @@ const schema = {
     <p>
       Thumbstick circularity isn't just about drawing a circle. It's about diagonal reach. 
       When a stick has poor circularity (a squircle or oval shape), pushing it to the top-right corner might 
-      result in <code class="bg-stone-800 px-1 py-0.5 rounded">X: 0.8, Y: 0.8</code> instead of <code class="bg-stone-800 px-1 py-0.5 rounded">X: 1.0, Y: 1.0</code>. 
+      result in <code class="bg-surface-3 px-1 py-0.5 rounded">X: 0.8, Y: 0.8</code> instead of <code class="bg-surface-3 px-1 py-0.5 rounded">X: 1.0, Y: 1.0</code>. 
       This directly limits your maximum turning speed when aiming diagonally or performing quick movement tech in competitive games.
     </p>
 

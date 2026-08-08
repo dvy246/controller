@@ -10,7 +10,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: (page) => {
-        const excludePaths = ['/404', '/500', '/api/', '/admin/', '/embed/'];
+        const excludePaths = ['/404', '/500', '/api/', '/admin/', '/embed/', '/report/'];
         return !excludePaths.some(p => page.includes(p));
       },
       serialize: (item) => {

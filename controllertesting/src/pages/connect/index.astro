@@ -52,7 +52,7 @@ const itemListSchema = {
 
       <header class="hub-hero">
         <span class="badge-tag">Connect &amp; Pair</span>
-        <h1 class="hub-title">Connect your controller on any device</h1>
+        <h1 class="text-h1 mb-2">Connect your controller on any device</h1>
         <p class="hub-subtitle">
           Which controller, connected to which platform? Pick a pad below, then pick your PC, Mac, or Steam Deck.
           Every guide ends with a verification test so you know it actually worked.
@@ -60,7 +60,7 @@ const itemListSchema = {
       </header>
 
       <div class="hub-grid card-base">
-        <div class="hub-row hub-head">
+        <div class="hub-row hub-row-head">
           <span class="hub-cell">Controller</span>
           {platforms.map((p) => <span class="hub-cell">{p.name}</span>)}
         </div>
@@ -98,8 +98,7 @@ const itemListSchema = {
 <style>
   .connect-hub { padding-top: 80px; padding-bottom: var(--spacing-section); }
   .hub-hero { margin-bottom: 2.5rem; max-width: 720px; }
-  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
-  .hub-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-hero .badge-tag { margin-bottom: 0.75rem; }
   .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
   .hub-grid { padding: 1.5rem; margin-bottom: 2.5rem; overflow-x: auto; }
   .hub-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 1rem; padding: 0.875rem 0; border-top: 1px solid var(--color-border-subtle); align-items: center; }
@@ -109,9 +108,10 @@ const itemListSchema = {
   .hub-tag { font-family: var(--font-mono); font-size: 0.625rem; color: var(--color-text-tertiary); }
   .hub-link { color: var(--color-accent); font-weight: 600; text-decoration: none; white-space: nowrap; }
   .hub-link:hover { text-decoration: underline; }
+  .hub-link:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
   .hub-cta { padding: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
   .hub-cta-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-  .section-title { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
+  .section-title { margin-bottom: 0.5rem; }
   @media (max-width: 720px) { .hub-grid { font-size: 0.875rem; } }
   @media (max-width: 640px) { .hub-cta { flex-direction: column; align-items: flex-start; } }
 </style>

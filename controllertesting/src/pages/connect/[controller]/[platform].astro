@@ -130,8 +130,8 @@ const howToSchema = {
       <Breadcrumbs items={breadcrumbs} />
 
       <header class="connect-hero">
-        <span class="badge-tag">Connect &amp; Pair · {controller.protocol}</span>
-        <h1 class="connect-title">Connect {controller.name} to {platform.name}</h1>
+        <span class="badge-tag mb-3">Connect &amp; Pair · {controller.protocol}</span>
+        <h1 class="text-h1 mb-2">Connect {controller.name} to {platform.name}</h1>
         <p class="connect-subtitle">
           {controller.protocol} pairing in a few steps {controller.note}
         </p>
@@ -159,7 +159,7 @@ const howToSchema = {
         </div>
       </div>
 
-      <div class="connect-faq card-base">
+      <div class="connect-faq">
         <h2 class="section-title">Quick answers</h2>
         {faqs.map((f) => (
           <div class="faq-item">
@@ -177,18 +177,16 @@ const howToSchema = {
 <style>
   .connect-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
   .connect-hero { margin-bottom: 2.5rem; max-width: 760px; }
-  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
-  .connect-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
   .connect-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
   .connect-body { padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 1.5rem; }
-  .section-title { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
   .connect-step { display: flex; gap: 1rem; align-items: flex-start; }
-  .connect-num { flex: 0 0 auto; width: 28px; height: 28px; border-radius: 999px; background: rgba(37, 99, 235, 0.12); color: var(--color-accent); font-family: var(--font-mono); font-weight: 700; font-size: 0.875rem; display: inline-flex; align-items: center; justify-content: center; }
+  .connect-num { flex: 0 0 auto; width: 28px; height: 28px; border-radius: 999px; background: color-mix(in srgb, var(--color-accent) 12%, transparent); color: var(--color-accent); font-family: var(--font-mono); font-weight: 700; font-size: 0.875rem; display: inline-flex; align-items: center; justify-content: center; }
   .connect-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.7; margin: 0; }
   .connect-tip { background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1rem 1.25rem; display: flex; flex-direction: column; gap: 0.375rem; }
   .connect-tip-label { color: var(--color-text-primary); }
   .connect-cta { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }
-  .connect-faq { padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
-  .faq-item { display: flex; flex-direction: column; gap: 0.375rem; }
+  .connect-faq { display: flex; flex-direction: column; gap: 1.25rem; }
+  .faq-item { display: flex; flex-direction: column; gap: 0.375rem; border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 1.25rem; }
+  .faq-item:last-child { border-bottom: none; padding-bottom: 0; }
   .faq-q { font-size: 1rem; font-weight: 700; color: var(--color-text-primary); }
 </style>

@@ -46,7 +46,7 @@ const widgets = [
     id: 'health',
     num: '04',
     title: 'Controller Health Score™ Widget',
-    desc: 'Generates a 0–100 hardware health grade with a printable PDF report card. Perfect for used controller listings.',
+    desc: 'Generates a 0–100 hardware health grade with a printable PDF report card. Handy for used-controller listings and resale descriptions.',
     tag: 'Premium',
     icon: `<svg width="24" height="24" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
     code: `<iframe src="https://controllertesting.com/embed/health" width="100%" height="500" frameborder="0" allow="gamepad; hid" title="Controller Health Score Widget"></iframe>\n<div style="text-align:right; font-size:12px; font-family:system-ui, -apple-system, sans-serif;">\n  Powered by <a href="https://controllertesting.com/test/controller/health-score" target="_blank" style="color:#2563EB; font-weight:600; text-decoration:none;">ControllerTesting.com Health Score Generator</a>\n</div>`,
@@ -73,7 +73,7 @@ const widgets = [
     id: 'vibration',
     num: '07',
     title: 'Vibration (Rumble) Tester Widget',
-    desc: 'Dual haptic rumble motor pulse tester. Perfect for used hardware listings and unboxing content.',
+    desc: 'Dual haptic rumble motor pulse tester. Fits used-hardware listings and unboxing videos.',
     tag: 'Hardware',
     icon: `<svg width="24" height="24" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v18M15 3v18M3 8v8M21 8v8"/></svg>`,
     code: `<iframe src="https://controllertesting.com/embed/vibration" width="100%" height="450" frameborder="0" allow="gamepad; hid" title="Vibration Tester Widget"></iframe>\n<div style="text-align:right; font-size:12px; font-family:system-ui, -apple-system, sans-serif;">\n  Powered by <a href="https://controllertesting.com/test/controller/vibration" target="_blank" style="color:#2563EB; font-weight:600; text-decoration:none;">ControllerTesting.com Vibration Tester</a>\n</div>`,
@@ -100,7 +100,7 @@ const widgets = [
     id: 'dpad',
     num: '10',
     title: 'D-Pad Tester Widget',
-    desc: '8-way directional pad precision tester. Perfect for fighting game communities and retro hardware content.',
+    desc: '8-way directional pad precision tester. Fits fighting-game communities and retro-hardware articles.',
     tag: 'Fighting',
     icon: `<svg width="24" height="24" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20M7 7l10 10M17 7L7 17"/></svg>`,
     code: `<iframe src="https://controllertesting.com/embed/dpad" width="100%" height="450" frameborder="0" allow="gamepad; hid" title="D-Pad Tester Widget"></iframe>\n<div style="text-align:right; font-size:12px; font-family:system-ui, -apple-system, sans-serif;">\n  Powered by <a href="https://controllertesting.com/test/controller/dpad" target="_blank" style="color:#2563EB; font-weight:600; text-decoration:none;">ControllerTesting.com D-Pad Tester</a>\n</div>`,
@@ -127,7 +127,7 @@ const widgets = [
     id: 'touchpad',
     num: '13',
     title: 'Touchpad Tester Widget',
-    desc: 'PS5 DualSense multi-touch trackpad visualizer. Perfect for PlayStation-focused hardware content.',
+    desc: 'PS5 DualSense multi-touch trackpad visualizer. Works well in PlayStation hardware roundups.',
     tag: 'PlayStation',
     icon: `<svg width="24" height="24" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M6 10h5M6 14h8"/></svg>`,
     code: `<iframe src="https://controllertesting.com/embed/touchpad" width="100%" height="450" frameborder="0" allow="gamepad" title="Touchpad Tester Widget"></iframe>\n<div style="text-align:right; font-size:12px; font-family:system-ui, -apple-system, sans-serif;">\n  Powered by <a href="https://controllertesting.com/test/controller/touchpad" target="_blank" style="color:#2563EB; font-weight:600; text-decoration:none;">ControllerTesting.com Touchpad Tester</a>\n</div>`,
@@ -191,8 +191,8 @@ const faqs = [
       <!-- Hero -->
       <section class="embeds-hero">
         <div class="hero-text-col">
-          <span class="hero-eyebrow">Widget Suite for Webmasters</span>
-          <h1 class="hero-title text-display">Embed Interactive Controller<br/>Diagnostic Widgets</h1>
+          <span class="section-eyebrow">Widget Suite for Webmasters</span>
+          <h1 class="hero-title text-h1">Embed Interactive Controller<br/>Diagnostic Widgets</h1>
           <p class="hero-desc text-lead">
             Enhance your gaming blog, hardware reviews, or e-commerce store with zero-dependency, real-time gamepad testing tools. Free for commercial and personal websites.
           </p>
@@ -236,7 +236,7 @@ const faqs = [
                 <div class="widget-icon-wrap" aria-hidden="true" set:html={w.icon} />
                 <div class="widget-meta">
                   <span class="widget-num">{w.num}</span>
-                  <span class="widget-tag">{w.tag}</span>
+                  <span class="badge-tag">{w.tag}</span>
                 </div>
               </div>
               <h3 class="widget-title">{w.title}</h3>
@@ -264,7 +264,7 @@ const faqs = [
 
       <!-- FAQ section -->
       <section class="faq-section card-base" aria-labelledby="faq-heading">
-        <h2 class="section-heading" id="faq-heading">Frequently Asked Questions</h2>
+        <h2 class="section-title" id="faq-heading">Frequently Asked Questions</h2>
         <div class="faq-list" role="list">
           {faqs.map((faq) => (
             <div class="faq-item" role="listitem">
@@ -307,10 +307,6 @@ const faqs = [
     padding-bottom: var(--spacing-section);
   }
   .container-site {
-    width: 100%;
-    max-width: 1280px;
-    margin-inline: auto;
-    padding-inline: 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 4rem;
@@ -328,14 +324,6 @@ const faqs = [
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-  }
-  .hero-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--color-accent);
   }
   .hero-title {
     font-weight: 800;
@@ -377,7 +365,7 @@ const faqs = [
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-card);
     overflow: hidden;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+    box-shadow: var(--shadow-lg);
   }
   .preview-bar {
     display: flex;
@@ -437,6 +425,9 @@ const faqs = [
     box-shadow: 0 0 12px rgba(37,99,235,0.7);
     animation: drift-move 3s ease-in-out infinite;
   }
+  @media (prefers-reduced-motion: reduce) {
+    .drift-ring-outer, .drift-dot { animation: none; }
+  }
   @keyframes drift-spin { to { transform: rotate(360deg); } }
   @keyframes drift-move {
     0%,100% { transform: translate(0,0); }
@@ -458,8 +449,8 @@ const faqs = [
     color: var(--color-text-secondary);
   }
   .preview-chip.pass {
-    background: rgba(16,185,129,0.12);
-    border-color: rgba(16,185,129,0.3);
+    background: var(--color-pass-bg);
+    border-color: var(--color-pass);
     color: var(--color-pass);
   }
 
@@ -467,7 +458,7 @@ const faqs = [
   .widgets-section { display: flex; flex-direction: column; gap: 1.5rem; }
   .widgets-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr));
     gap: 1.5rem;
     width: 100%;
   }
@@ -500,18 +491,6 @@ const faqs = [
     font-weight: 700;
     color: var(--color-text-tertiary);
     letter-spacing: 0.05em;
-  }
-  .widget-tag {
-    font-family: var(--font-mono);
-    font-size: 0.55rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    background: rgba(37,99,235,0.12);
-    color: var(--color-accent);
-    border: 1px solid rgba(37,99,235,0.2);
-    padding: 0.2em 0.55em;
-    border-radius: 3px;
   }
   .widget-title {
     font-size: 1.125rem;
@@ -579,7 +558,8 @@ const faqs = [
     transition: background-color var(--duration-fast) var(--ease-smooth), border-color var(--duration-fast) var(--ease-smooth), color var(--duration-fast) var(--ease-smooth);
   }
   .copy-btn:hover { background-color: var(--color-accent); border-color: var(--color-accent); color: var(--color-text-inverse); }
-  .copy-btn.copied { background-color: rgba(16,185,129,0.15); border-color: var(--color-pass); color: var(--color-pass); }
+  .copy-btn:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+  .copy-btn.copied { background-color: var(--color-pass-bg); border-color: var(--color-pass); color: var(--color-pass); }
 
   /* ── FAQ ── */
   .faq-section {
@@ -587,12 +567,6 @@ const faqs = [
     display: flex;
     flex-direction: column;
     gap: 2rem;
-  }
-  .section-heading {
-    font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--color-text-primary);
   }
   .faq-list { display: flex; flex-direction: column; gap: 1.5rem; }
   .faq-item {
@@ -613,13 +587,6 @@ const faqs = [
     font-size: var(--text-small);
     color: var(--color-text-secondary);
     line-height: 1.65;
-  }
-
-  /* ── Screen reader only ── */
-  .sr-only {
-    position: absolute; width: 1px; height: 1px;
-    padding: 0; margin: -1px; overflow: hidden;
-    clip: rect(0,0,0,0); white-space: nowrap; border: 0;
   }
 
   /* ── Responsive ── */

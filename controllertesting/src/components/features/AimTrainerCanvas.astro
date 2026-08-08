@@ -86,38 +86,46 @@ const { device, game } = Astro.props;
 
   let target = { x: 0, y: 0, r: 25 };
 
+  let logicalW = 800;
+  let logicalH = 450;
+
   function resizeCanvas() {
     if (!canvas) return;
-    canvas.width = canvas.parentElement?.clientWidth || 800;
-    canvas.height = canvas.parentElement?.clientHeight || 450;
+    logicalW = canvas.parentElement?.clientWidth || 800;
+    logicalH = canvas.parentElement?.clientHeight || 450;
+    // High-DPI backing store (CSS size × dpr, capped at 2)
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = logicalW * dpr;
+    canvas.height = logicalH * dpr;
+    ctx?.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 
   function spawnTarget() {
     if (!canvas) return;
     const padding = 50;
-    target.x = padding + Math.random() * (canvas.width - padding * 2);
-    target.y = padding + Math.random() * (canvas.height - padding * 2);
+    target.x = padding + Math.random() * (logicalW - padding * 2);
+    target.y = padding + Math.random() * (logicalH - padding * 2);
   }
 
   function draw() {
     if (!ctx || !canvas) return;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, logicalW, logicalH);
 
     if (isRunning) {
       // Draw grid background
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
       ctx.lineWidth = 1;
       const gridSize = 40;
-      for (let x = 0; x < canvas.width; x += gridSize) {
+      for (let x = 0; x < logicalW; x += gridSize) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
+        ctx.lineTo(x, logicalH);
         ctx.stroke();
       }
-      for (let y = 0; y < canvas.height; y += gridSize) {
+      for (let y = 0; y < logicalH; y += gridSize) {
         ctx.beginPath();
         ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
+        ctx.lineTo(logicalW, y);
         ctx.stroke();
       }
 
@@ -201,8 +209,8 @@ const { device, game } = Astro.props;
   canvas?.addEventListener('click', (e) => {
     if (!isRunning || !canvas) return;
     const rect = canvas.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
+    const clickX = (e.clientX - rect.left) * (logicalW / rect.width);
+    const clickY = (e.clientY - rect.top) * (logicalH / rect.height);
 
     totalClicks++;
     const dist = Math.hypot(clickX - target.x, clickY - target.y);

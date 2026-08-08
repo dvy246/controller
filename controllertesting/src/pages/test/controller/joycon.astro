@@ -5,7 +5,7 @@
  */
 
 import ToolLayout from '../../../layouts/ToolLayout.astro';
-import Interactive3DVisualizer from '../../../components/tools/controller/Interactive3DVisualizer.astro';
+import Interactive2DVisualizer from '../../../components/tools/controller/Interactive2DVisualizer.astro';
 import DiagnosticResultsBento from '../../../components/seo/DiagnosticResultsBento.astro';
 import PremiumGuideCard from '../../../components/seo/PremiumGuideCard.astro';
 import PremiumFaqAccordion from '../../../components/seo/PremiumFaqAccordion.astro';
@@ -38,16 +38,7 @@ const faqs = [
 
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
-    <div class="doppelrand-shell nintendo-brand-shell" data-model="switch">
-      <Interactive3DVisualizer />
-    </div>
-    <style>
-      .nintendo-brand-shell {
-        --ambient-glow: #E60012;
-        box-shadow: 0 0 60px rgba(230, 0, 18, 0.15);
-        border-color: rgba(230, 0, 18, 0.3);
-      }
-    </style>
+    <Interactive2DVisualizer isRigid={true} />
   </Fragment>
 
   {/* ── Results Slot ── */}
@@ -58,19 +49,19 @@ const faqs = [
   {/* ── Semantic SEO Content Slot ── */}
   <Fragment slot="content">
     <section class="max-w-4xl mx-auto mt-16 px-6">
-      <h2 class="text-[var(--text-h2)] font-extrabold tracking-tight mb-6">Joy-Con Drift & Hardware Diagnostics</h2>
+      <h2 class="text-h2 mb-6">Joy-Con Drift & Hardware Diagnostics</h2>
       <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-        The Nintendo Switch Joy-Cons are infamous for "Joy-Con Drift", a widespread hardware failure caused by the rapid degradation of the ultra-thin graphite contact pads inside their proprietary flat-profile joystick modules. Because they lack the bulk of traditional ALPS potentiometers, they wear down significantly faster. Our browser-based diagnostic engine allows you to connect your left or right Joy-Con via Bluetooth to a PC, Mac, or Android device to instantly measure the exact severity of the drift before sending it to Nintendo for RMA.
+        "Joy-Con Drift" is the most documented controller failure in gaming. Nintendo's compact stick modules use ultra-thin graphite pads instead of full-size ALPS potentiometers, and those pads wear faster. Pair a Joy-Con to a PC, Mac, or Android device, and this tool measures the drift severity in minutes — the number you want before you file a free Nintendo RMA.
       </p>
       
       <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Testing the SL/SR Rail Buttons</h3>
       <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-        Another common failure point on the Joy-Con is the internal ribbon cable connecting the SL and SR shoulder buttons on the pairing rail. Repeatedly sliding the Joy-Con on and off the Switch console can crimp or sever this ribbon cable, causing the SL/SR buttons and the pairing LEDs to fail. You can use our button matrix to test these hidden rail buttons directly to confirm if the ribbon cable is compromised.
+        The second common failure is the SL and SR rail buttons. Sliding a Joy-Con on and off the console repeatedly can crimp or sever the ribbon cable behind those buttons, taking out the pairing LEDs with them. Test the rail buttons in the button matrix to confirm whether the ribbon is compromised.
       </p>
       
       <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Motion Controls and HD Rumble</h3>
       <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed">
-        Despite their small size, each Joy-Con packs a dense array of technology including a high-fidelity linear resonant actuator (LRA) for HD Rumble, an IR motion camera (Right Joy-Con), and a 6-axis gyroscope. Use our dedicated motion testing tools to ensure the IMU is perfectly calibrated for games that require precise swing or tilt mechanics, like Switch Sports or Mario Kart 8 Deluxe.
+        Small as they are, Joy-Cons pack a linear resonant actuator (LRA) for HD Rumble, a 6-axis gyroscope, and an IR motion camera in the right unit. Use the motion tools to confirm the IMU calibration holds for swing and tilt games like Switch Sports or Mario Kart 8 Deluxe.
       </p>
     </section>
   </Fragment>
@@ -80,13 +71,9 @@ const faqs = [
     <PremiumGuideCard title="How do you accurately test a Joy-Con for drift?">
       <p class="text-lg">To accurately test a Joy-Con for drift, pair it via Bluetooth to a computer and launch an online gamepad diagnostic tool. Leave the thumbstick untouched. If the crosshair moves or shows an input value greater than two percent, your Joy-Con has a physical drift issue.</p>
       
-      <h3 class="text-blue-400 mt-12 mb-4 text-2xl font-extrabold tracking-tight">Recommended Actions</h3>
-      <p class="text-lg">Always begin by using our free <a href="/test/controller/drift">drift diagnostic tool</a> to identify the exact cause of any input inconsistencies before attempting repairs.</p>
+      <h3 class="text-h3 text-accent mt-8 mb-4">Recommended Actions</h3>
+      <p class="text-lg">      Start with the <a href="/test/controller/drift">Stick Drift Test</a> to get a numeric reading. If a stick rests above 2%, skip the cleaning cycle and file a free Nintendo repair — Joy-Con graphite pads rarely recover, and Nintendo fixes them at no cost in the US and EU.</p>
     </PremiumGuideCard>
-
-    <div class="max-w-4xl mx-auto mt-32 mb-20 px-6">
-      <PremiumFaqAccordion faqs={faqs} title="Nintendo Joy-Con FAQs" subtitle="Common issues and questions about Nintendo's Joy-Con controllers." />
-    </div>
   </Fragment>
 
   {/* ── Related Tools Slot ── */}

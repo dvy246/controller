@@ -1,0 +1,99 @@
+---
+/**
+ * Button.astro — Standard Primary/Secondary/Ghost/Danger Action Primitive
+ * Location: src/components/ui/Button.astro
+ *
+ * Specification: explorer_design_system/handoff.md § 4.7
+ * Features: Button-in-Button trailing icon wrapper (.btn-icon-wrap), exponential ease physics,
+ * WCAG AA contrast, 44px min tap target compliance (md/lg), pill shape (rounded-full),
+ * and polymorphic tag switching (<a> vs <button>).
+ */
+export interface Props {
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  icon?: string; // Inline SVG markup or icon identifier
+  disabled?: boolean;
+  fullWidth?: boolean;
+  class?: string;
+  target?: string;
+  rel?: string;
+  [key: string]: any;
+}
+
+const {
+  variant = 'primary',
+  size = 'md',
+  href,
+  type = 'button',
+  icon,
+  disabled = false,
+  fullWidth = false,
+  class: className = '',
+  target,
+  rel,
+  ...rest
+} = Astro.props;
+
+const isLink = Boolean(href && href.trim().length > 0);
+const Element = isLink ? 'a' : 'button';
+
+// Computed security rel for external links
+const computedRel = isLink && target === '_blank' ? (rel || 'noopener noreferrer') : rel;
+
+const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-full transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent)] active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none cursor-pointer';
+
+const sizeStyles = {
+  sm: 'text-[0.875rem] py-1.5 px-4 gap-2 min-h-[36px]',
+  md: 'text-[1rem] py-2.5 px-6 gap-2.5 min-h-[44px]',
+  lg: 'text-[var(--text-body)] py-3.5 px-8 gap-3 min-h-[52px]',
+};
+
+const variantStyles = {
+  primary: 'bg-[var(--color-accent)] text-[var(--color-text-inverse)] hover:bg-[var(--color-accent-hover)] hover:shadow-[0_4px_16px_var(--color-accent-glow)] border border-transparent',
+  secondary: 'bg-transparent text-[var(--color-text-primary)] border border-[var(--color-border-default)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] hover:bg-[rgba(37,99,235,0.08)]',
+  ghost: 'bg-transparent text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-3)] border border-transparent',
+  danger: 'bg-[var(--color-fail-bg)] text-[var(--color-fail)] border border-[var(--color-fail)] hover:bg-[var(--color-fail)] hover:text-white',
+};
+
+const iconWrapSizes = {
+  sm: 'w-5 h-5',
+  md: 'w-6 h-6',
+  lg: 'w-7 h-7',
+};
+---
+
+<Element
+  href={isLink && !disabled ? href : undefined}
+  type={!isLink ? type : undefined}
+  disabled={!isLink ? disabled : undefined}
+  aria-disabled={isLink && disabled ? 'true' : undefined}
+  target={isLink ? target : undefined}
+  rel={computedRel}
+  class:list={[
+    baseStyles,
+    sizeStyles[size],
+    variantStyles[variant],
+    fullWidth ? 'w-full' : '',
+    icon || Astro.slots.has('icon') ? 'pr-2.5' : '',
+    className,
+  ]}
+  {...rest}
+>
+  <slot />
+
+  {(icon || Astro.slots.has('icon')) && (
+    <span
+      class:list={[
+        'btn-icon-wrap flex items-center justify-center rounded-full shrink-0',
+        'bg-black/15 dark:bg-[var(--color-surface-3)] text-current',
+        'transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)]',
+        'group-hover:translate-x-1 group-hover:-translate-y-[0.5px] group-hover:scale-105',
+        iconWrapSizes[size],
+      ]}
+    >
+      {icon ? <Fragment set:html={icon} /> : <slot name="icon" />}
+    </span>
+  )}
+</Element>

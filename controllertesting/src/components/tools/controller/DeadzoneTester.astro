@@ -112,6 +112,15 @@
     const leftCtx = leftCanvas.getContext('2d');
     const rightCtx = rightCanvas.getContext('2d');
 
+    // High-DPI backing store (logical 280×280, sharp on retina)
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    leftCanvas.width = 280 * dpr;
+    leftCanvas.height = 280 * dpr;
+    rightCanvas.width = 280 * dpr;
+    rightCanvas.height = 280 * dpr;
+    leftCtx?.setTransform(dpr, 0, 0, dpr, 0, 0);
+    rightCtx?.setTransform(dpr, 0, 0, dpr, 0, 0);
+
     function renderDeadzone(
       ctx: CanvasRenderingContext2D | null,
       x: number,
@@ -355,6 +364,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  #left-dz-canvas,
+  #right-dz-canvas {
+    width: 280px;
+    height: 280px;
+    max-width: 100%;
   }
 
   .dz-metrics {

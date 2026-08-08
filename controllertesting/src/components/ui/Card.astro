@@ -1,0 +1,53 @@
+---
+/**
+ * Card.astro — Doppelrand & Standard Container Primitive
+ * Location: src/components/ui/Card.astro
+ *
+ * Specification: explorer_design_system/handoff.md § 4.7
+ * Renders outer .doppelrand-shell (24px radius, 6px padding) and inner .doppelrand-core (18px radius, 24px padding).
+ * Standard card radius is 20px (rounded-xl).
+ */
+export interface Props {
+  variant?: 'doppelrand' | 'base' | 'elevated' | 'tool' | 'gradient';
+  hover?: boolean;
+  class?: string;
+  [key: string]: any;
+}
+
+const {
+  variant = 'base',
+  hover = true,
+  class: className = '',
+  ...rest
+} = Astro.props;
+---
+
+{variant === 'doppelrand' ? (
+  <div
+    class:list={[
+      'doppelrand-shell p-1.5 rounded-[var(--radius-outer)] bg-[rgba(24,24,27,0.5)] border border-[var(--color-border-default)] shadow-lg backdrop-blur-md',
+      hover && 'hover:border-[rgba(37,99,235,0.35)] hover:-translate-y-1 hover:shadow-xl transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
+      className,
+    ]}
+    {...rest}
+  >
+    <div class="doppelrand-core rounded-[var(--radius-inner)] bg-[var(--color-surface-1)] border border-[var(--color-border-subtle)] p-6">
+      <slot />
+    </div>
+  </div>
+) : (
+  <div
+    class:list={[
+      'card-base relative overflow-hidden rounded-xl p-6 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
+      variant === 'base' && 'bg-[var(--color-surface-2)] border border-[var(--color-border-subtle)] shadow-[var(--shadow-card)]',
+      variant === 'elevated' && 'bg-[var(--color-surface-3)] border border-[var(--color-border-default)] shadow-md',
+      variant === 'tool' && 'bg-[var(--color-surface-1)] border border-[var(--color-border-subtle)] p-8',
+      variant === 'gradient' && 'card-gradient bg-gradient-to-br from-[var(--color-surface-3)] to-[var(--color-surface-2)] border border-[rgba(37,99,235,0.18)]',
+      hover && 'card-hover hover:border-[rgba(37,99,235,0.35)] hover:-translate-y-1 hover:shadow-xl',
+      className,
+    ]}
+    {...rest}
+  >
+    <slot />
+  </div>
+)}

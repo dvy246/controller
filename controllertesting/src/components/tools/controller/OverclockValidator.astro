@@ -141,12 +141,12 @@
     
     setupCanvas() {
       if (!this.canvas || !this.ctx) return;
-      // High-DPI canvas
-      const dpr = window.devicePixelRatio || 1;
+      // High-DPI canvas (setTransform avoids compounding scale() on resize)
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const rect = this.canvas.getBoundingClientRect();
       this.canvas.width = rect.width * dpr;
       this.canvas.height = rect.height * dpr;
-      this.ctx.scale(dpr, dpr);
+      this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       this.canvasWidth = rect.width;
       this.canvasHeight = rect.height;
       this.drawCanvasBackground();

@@ -1,0 +1,143 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+import WaitlistForm from '../components/global/WaitlistForm.astro';
+
+const canonicalUrl = "https://controllertesting.com/shop";
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Repair Shop Suite' }
+];
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Controller Testing Repair Shop Suite",
+  "url": canonicalUrl,
+  "description": "Hardware diagnostic verification, branded repair certificates, and Hall-effect calibration tools for controller repair shops and refurbishers.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web"
+};
+---
+
+<BaseLayout
+  title="Controller Repair Shop & Refurbisher Suite — Verified Hardware Certificates"
+  description="Empower your controller repair shop or refurbishing business with self-verifying hardware health certificates, branded diagnostic reports, and zero-point calibration tools."
+  canonical={canonicalUrl}
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+
+  <Header />
+
+  <main class="shop-page container-site pt-24 pb-16">
+    <div class="mb-6">
+      <Breadcrumbs items={breadcrumbs} />
+    </div>
+
+    <!-- Hero Header -->
+    <header class="hero-header text-center mb-16">
+      <div class="shop-badge inline-flex items-center gap-2 px-3 py-1 rounded-full mb-4">
+        <span class="pulse-dot"></span>
+        REPAIR SHOP & REFURBISHER SUITE
+      </div>
+      <h1 class="text-hero text-gradient mb-6">
+        Turn Repairs Into Verified Trust
+      </h1>
+      <p class="hero-sub text-lg text-secondary max-w-3xl mx-auto leading-relaxed">
+        Stop losing sales to "stick drift" skepticism. Issue self-verifying digital health certificates for every repaired or refurbished controller, complete with stick drift vectors, circularity linearity, and button actuation proof.
+      </p>
+    </header>
+
+    <!-- Bento Value Props -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+      <div class="card-base p-8 flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-accent-glow flex items-center justify-center mb-6 text-accent">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h2 class="text-xl font-bold mb-3">Branded Verification Certificates</h2>
+          <p class="text-secondary text-sm leading-relaxed">
+            Attach branded certificate URLs to your eBay, Mercari, Reverb, or shop listings. Buyers verify stick drift accuracy without creating an account.
+          </p>
+        </div>
+        <span class="text-xs font-mono text-accent font-semibold mt-6">Zero-Server Checksum</span>
+      </div>
+
+      <div class="card-base p-8 flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-emerald-bg flex items-center justify-center mb-6 text-emerald">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h2 class="text-xl font-bold mb-3">Hall-Effect Zero-Point Sampling</h2>
+          <p class="text-secondary text-sm leading-relaxed">
+            Perform low-level WebHID calibration for PS5 DualSense and Xbox controllers after Hall-effect stick swaps directly in the browser.
+          </p>
+        </div>
+        <span class="text-xs font-mono text-emerald font-semibold mt-6">WebHID Hardware API</span>
+      </div>
+
+      <div class="card-base p-8 flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-warning-bg flex items-center justify-center mb-6 text-warning">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <h2 class="text-xl font-bold mb-3">Printable Customer Handout PDFs</h2>
+          <p class="text-secondary text-sm leading-relaxed">
+            Print clean, one-page hardware diagnostic inspection cards to include inside repair customer return packages.
+          </p>
+        </div>
+        <span class="text-xs font-mono text-warning font-semibold mt-6">1-Click PDF Generation</span>
+      </div>
+    </section>
+
+    <!-- Waitlist Section -->
+    <section class="max-w-3xl mx-auto">
+      <WaitlistForm
+        context="shop-landing"
+        product="shop-plan"
+        showShopName={true}
+        heading="Apply for Early Access — Controller Repair Shop Suite"
+        subheading="We are rolling out shop accounts with custom logo branding, bulk certificate generation, and shop verification badges. Join the waitlist for priority access."
+        cta="Apply for Shop Access"
+      />
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .shop-badge {
+    background: rgba(37, 99, 235, 0.1);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 6px var(--color-accent);
+  }
+  .bg-accent-glow {
+    background: rgba(37, 99, 235, 0.12);
+  }
+  .bg-emerald-bg {
+    background: rgba(16, 185, 129, 0.12);
+  }
+  .bg-warning-bg {
+    background: rgba(245, 158, 11, 0.12);
+  }
+  .text-emerald {
+    color: var(--color-pass, #10b981);
+  }
+  .text-warning {
+    color: var(--color-warning, #f59e0b);
+  }
+</style>

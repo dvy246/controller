@@ -42,7 +42,7 @@
       {/* ── Nav columns ── */}
       <nav class="footer-nav" aria-label="Footer navigation">
         <div class="footer-col">
-          <h3 class="footer-col-title">Controller Tests</h3>
+          <h3 class="footer-col-title">Controller Tests <span class="footer-col-icon">▼</span></h3>
           <ul role="list">
             <li><a href="/test/controller/drift">Stick Drift Test</a></li>
             <li><a href="/test/controller/full-diagnostic">Full Diagnostic</a></li>
@@ -54,7 +54,7 @@
           </ul>
         </div>
         <div class="footer-col">
-          <h3 class="footer-col-title">More Tests</h3>
+          <h3 class="footer-col-title">More Tests <span class="footer-col-icon">▼</span></h3>
           <ul role="list">
             <li><a href="/test/mouse">Mouse Tests</a></li>
             <li><a href="/test/keyboard">Keyboard Tests</a></li>
@@ -65,7 +65,7 @@
           </ul>
         </div>
         <div class="footer-col">
-          <h3 class="footer-col-title">Fix &amp; Optimize</h3>
+          <h3 class="footer-col-title">Fix &amp; Optimize <span class="footer-col-icon">▼</span></h3>
           <ul role="list">
             <li><a href="/warranty">Warranty Assistant</a></li>
             <li><a href="/fix-or-replace">Fix vs Replace Calc</a></li>
@@ -76,7 +76,7 @@
           </ul>
         </div>
         <div class="footer-col">
-          <h3 class="footer-col-title">Compare &amp; Data</h3>
+          <h3 class="footer-col-title">Compare &amp; Data <span class="footer-col-icon">▼</span></h3>
           <ul role="list">
             <li><a href="/compare/dualsense-vs-xbox-series">DualSense vs Xbox Series</a></li>
             <li><a href="/compare/dualsense-edge-vs-xbox-elite-2">Edge vs Elite Series 2</a></li>
@@ -88,8 +88,11 @@
           </ul>
         </div>
         <div class="footer-col">
-          <h3 class="footer-col-title">Learn &amp; Connect</h3>
+          <h3 class="footer-col-title">Learn &amp; Connect <span class="footer-col-icon">▼</span></h3>
           <ul role="list">
+            <li><a href="/shop">Repair Shop Suite</a></li>
+            <li><a href="/verify">Verify Certificate</a></li>
+            <li><a href="/passport">Controller Passport</a></li>
             <li><a href="/learn">Controller Guides</a></li>
             <li><a href="/connect">Connect &amp; Pair</a></li>
             <li><a href="/learn/hall-effect-vs-potentiometer-guide">Hall Effect vs Potentiometer</a></li>
@@ -230,7 +233,6 @@
     line-height: 1.6;
   }
 
-  /* ── Responsive ── */
   @media (max-width: 1024px) {
     .footer-top {
       grid-template-columns: 1fr;
@@ -239,8 +241,61 @@
     .footer-nav { grid-template-columns: repeat(2, 1fr); }
   }
 
+  .footer-col-icon {
+    display: none;
+    font-size: 0.6rem;
+    transition: transform var(--duration-fast);
+  }
+
   @media (max-width: 640px) {
-    .footer-nav { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    .footer-nav { 
+      grid-template-columns: 1fr; 
+      gap: 0; 
+    }
     .footer-inner { padding-inline: 1rem; }
+    
+    .footer-col {
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+    .footer-col:last-child {
+      border-bottom: none;
+    }
+    
+    .footer-col-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 0;
+      margin-bottom: 0;
+      cursor: pointer;
+    }
+    
+    .footer-col-icon {
+      display: block;
+    }
+    
+    .footer-col ul {
+      display: none;
+      padding-bottom: 1.25rem;
+    }
+    
+    .footer-col.is-open ul {
+      display: flex;
+    }
+    
+    .footer-col.is-open .footer-col-icon {
+      transform: rotate(180deg);
+    }
   }
 </style>
+
+<script>
+  document.querySelectorAll('.footer-col-title').forEach(title => {
+    title.addEventListener('click', () => {
+      const col = title.parentElement;
+      if (window.innerWidth <= 640 && col) {
+        col.classList.toggle('is-open');
+      }
+    });
+  });
+</script>

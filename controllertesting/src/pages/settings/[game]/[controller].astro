@@ -174,8 +174,8 @@ const faqs = [
 ---
 
 <ToolLayout
-  title={`Best ${game.name} Controller Settings for ${controller.name} (2026) | ControllerTesting.com`}
-  description={`Deadzone, response curve, and sensitivity starting points for ${game.name} using the ${controller.name}. ${game.deadzoneScale} scale — test your stick before tuning.`}
+  title={`Best ${game.name} Settings for ${controller.name} (2026)`}
+  description={`Optimal deadzone & sensitivity for ${game.name} on ${controller.name}. Measure your stick drift before tuning your ${game.deadzoneScale}.`}
   toolName={`${game.name} Controller Settings`}
   category="Game Settings"
   categoryUrl="/settings"
@@ -242,7 +242,7 @@ const faqs = [
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Measure your stick drift now</h3>
+        <h3 class="text-h3">Measure your stick drift now</h3>
         <p class="export-desc">Get your exact drift % (0.1% precision) before applying {game.name} settings.</p>
       </div>
       <div class="export-buttons">
@@ -294,7 +294,6 @@ const faqs = [
   .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
   .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
   .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
-  .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
   .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
   @media (max-width: 768px) { .settings-grid { grid-template-columns: 1fr; } }
 </style>

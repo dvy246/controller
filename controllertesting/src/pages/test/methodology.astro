@@ -45,7 +45,7 @@ const schema = {
     
     <article class="prose max-w-none">
       <header class="methodology-hero">
-        <span class="eyebrow badge-info mb-4 inline-block">Whitepaper</span>
+        <span class="badge-info mb-4">Whitepaper</span>
         <h1 class="text-h1">Engineering Rigor &amp; Testing Methodology</h1>
         <p class="text-lead text-secondary mt-4 max-w-prose">
           We believe in transparency. To bridge the trust gap in hardware diagnostics, we are open-sourcing our exact mathematical algorithms, API constraints, and hardware telemetry architecture.
@@ -58,7 +58,7 @@ const schema = {
           <section class="method-section card-base card-gradient mb-8">
             <div class="section-header">
               <div class="icon-box text-accent">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
               </div>
               <h2 class="text-h3 m-0">1. Data Architecture: The Web Gamepad API</h2>
             </div>
@@ -66,11 +66,11 @@ const schema = {
               <p>
                 Our entire diagnostic suite operates on the <a href="https://w3c.github.io/gamepad/" target="_blank" rel="noopener">W3C Gamepad API</a> standard. This is a low-level browser interface that reads direct USB/Bluetooth HID reports without requiring driver installation.
               </p>
-              <h3 class="text-h5 mt-6 mb-2 text-primary">The Polling Rate Limitation</h3>
+              <h3 class="text-h3 mt-6 mb-2 text-primary">The Polling Rate Limitation</h3>
               <p>
                 Because we rely on the browser's <code>requestAnimationFrame</code> loop (tied to your monitor's refresh rate, typically 60Hz to 240Hz), <strong>we cannot natively measure 1000Hz polling rates</strong> with the standard Gamepad API alone. True 1000Hz+ measurement requires our experimental WebHID bridge, currently available only in the Polling Rate tool.
               </p>
-              <h3 class="text-h5 mt-6 mb-2 text-primary">Connection Variance</h3>
+              <h3 class="text-h3 mt-6 mb-2 text-primary">Connection Variance</h3>
               <p>
                 Wired (USB) connections bypass the Bluetooth stack protocol overhead. A controller tested over Bluetooth may show artificially lower resolution or higher latency. <strong>Always test via USB-C</strong> when conducting RMA-level diagnostic evidence generation.
               </p>
@@ -80,7 +80,7 @@ const schema = {
           <section class="method-section card-base mb-8">
             <div class="section-header">
               <div class="icon-box text-accent">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
               </div>
               <h2 class="text-h3 m-0">2. Stick Drift Calculation Math</h2>
             </div>
@@ -105,7 +105,7 @@ const schema = {
           <section class="method-section card-base mb-8">
             <div class="section-header">
               <div class="icon-box text-accent">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12A10 10 0 1 1 12 2a10 10 0 0 1 10 10z"></path><path d="M12 2v20"></path><path d="M2 12h20"></path></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 12A10 10 0 1 1 12 2a10 10 0 0 1 10 10z"></path><path d="M12 2v20"></path><path d="M2 12h20"></path></svg>
               </div>
               <h2 class="text-h3 m-0">3. Circularity Error Algorithm</h2>
             </div>
@@ -125,7 +125,7 @@ const schema = {
           <section class="method-section card-base card-hover mb-8">
             <div class="section-header">
               <div class="icon-box text-accent">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
               </div>
               <h2 class="text-h3 m-0">4. Telemetry & Data Integrity</h2>
             </div>
@@ -151,20 +151,11 @@ const schema = {
 <style>
   .methodology-page {
     padding-top: 80px;
-    padding-bottom: var(--spacing-section-lg);
+    padding-bottom: var(--spacing-section);
   }
 
   .methodology-hero {
     margin-bottom: 4rem;
-  }
-
-  .eyebrow {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    padding: 0.25em 0.75em;
   }
 
   .content-grid {

@@ -41,63 +41,63 @@ const reportTitle = `Reliability Dataset Report — ${new Date(reliabilityData.u
       <Breadcrumbs items={breadcrumbs} />
 
       <header class="mb-12">
-        <span class="badge-tag">Monthly Dataset Report · Snapshot {reliabilityData.updatedAt}</span>
-        <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-stone-100 mt-4 mb-3">{reportTitle}</h1>
-        <p class="text-stone-400 text-lg max-w-3xl leading-relaxed">
+        <span class="badge-tag mb-3">Monthly Dataset Report · Snapshot {reliabilityData.updatedAt}</span>
+        <h1 class="text-h1 mb-3">{reportTitle}</h1>
+        <p class="text-secondary text-lg max-w-3xl leading-relaxed">
           This report summarizes the current reliability baseline for game controllers: average stick drift
           magnitude after 12 months of use, circularity error, and average lifespan before drift onset.
           All figures come from documented diagnostic results collected through our drift and circularity tools.
         </p>
-        <p class="text-stone-500 text-sm mt-3">
+        <p class="text-tertiary text-sm mt-3">
           This is a static baseline snapshot — not live telemetry. Individual units vary; use these figures to
           compare models, not to predict your specific controller.
         </p>
       </header>
 
       <section class="card-base p-6 mb-8">
-        <h2 class="text-xl font-bold text-stone-100 mb-4">Dataset at a glance</h2>
+        <h2 class="section-title mb-4">Dataset at a glance</h2>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-          <div class="p-4 rounded-xl bg-stone-900/60 border border-stone-800">
-            <div class="text-3xl font-bold text-blue-400">{reliabilityData.totalSamplesMeasured.toLocaleString()}</div>
-            <div class="text-stone-500 text-sm mt-1">Documented results</div>
+          <div class="p-4 rounded-xl bg-surface-1 border border-border-subtle">
+            <div class="text-3xl font-bold text-accent">{reliabilityData.totalSamplesMeasured.toLocaleString()}</div>
+            <div class="text-tertiary text-sm mt-1">Documented results</div>
           </div>
-          <div class="p-4 rounded-xl bg-stone-900/60 border border-stone-800">
-            <div class="text-3xl font-bold text-blue-400">{models.length}</div>
-            <div class="text-stone-500 text-sm mt-1">Controller models</div>
+          <div class="p-4 rounded-xl bg-surface-1 border border-border-subtle">
+            <div class="text-3xl font-bold text-accent">{models.length}</div>
+            <div class="text-tertiary text-sm mt-1">Controller models</div>
           </div>
-          <div class="p-4 rounded-xl bg-stone-900/60 border border-stone-800">
-            <div class="text-3xl font-bold text-emerald-400">0.1%</div>
-            <div class="text-stone-500 text-sm mt-1">Lowest avg 12-mo drift (Hall effect)</div>
+          <div class="p-4 rounded-xl bg-surface-1 border border-border-subtle">
+            <div class="text-3xl font-bold text-pass">0.1%</div>
+            <div class="text-tertiary text-sm mt-1">Lowest avg 12-mo drift (Hall effect)</div>
           </div>
-          <div class="p-4 rounded-xl bg-stone-900/60 border border-stone-800">
-            <div class="text-3xl font-bold text-amber-400">5.2%</div>
-            <div class="text-stone-500 text-sm mt-1">Highest avg 12-mo drift (potentiometer)</div>
+          <div class="p-4 rounded-xl bg-surface-1 border border-border-subtle">
+            <div class="text-3xl font-bold text-warning">5.2%</div>
+            <div class="text-tertiary text-sm mt-1">Highest avg 12-mo drift (potentiometer)</div>
           </div>
         </div>
       </section>
 
-      <section class="card-base p-6 mb-8 overflow-x-auto">
-        <h2 class="text-xl font-bold text-stone-100 mb-4">Per-model baseline</h2>
+      <section class="card-base p-6 mb-8 overflow-x-auto" aria-label="Per-model baseline table">
+        <h2 class="section-title mb-4">Per-model baseline</h2>
         <table class="w-full text-sm text-left">
           <thead>
-            <tr class="text-stone-500 border-b border-stone-800">
-              <th class="py-2 pr-4">Controller</th>
-              <th class="py-2 pr-4">Samples</th>
-              <th class="py-2 pr-4">Avg drift after 12 mo</th>
-              <th class="py-2 pr-4">Avg circularity error</th>
-              <th class="py-2 pr-4">Avg lifespan before drift</th>
+            <tr class="text-tertiary border-b border-border-subtle">
+              <th scope="col" class="py-2 pr-4">Controller</th>
+              <th scope="col" class="py-2 pr-4">Samples</th>
+              <th scope="col" class="py-2 pr-4">Avg drift after 12 mo</th>
+              <th scope="col" class="py-2 pr-4">Avg circularity error</th>
+              <th scope="col" class="py-2 pr-4">Avg lifespan before drift</th>
             </tr>
           </thead>
           <tbody>
             {models.map(([key, m]) => (
-              <tr class="border-b border-stone-800/60">
-                <td class="py-2.5 pr-4 text-stone-200">
-                  <a href={`/reliability/${key}`} class="text-blue-400 hover:underline">{m.name}</a>
+              <tr class="border-b border-border-subtle">
+                <td class="py-2.5 pr-4 text-primary">
+                  <a href={`/reliability/${key}`} class="text-accent hover:underline">{m.name}</a>
                 </td>
-                <td class="py-2.5 pr-4 text-stone-400">{m.samples.toLocaleString()}</td>
-                <td class="py-2.5 pr-4 text-stone-400">{m.avgDriftAfter12MonthsPercent}%</td>
-                <td class="py-2.5 pr-4 text-stone-400">{m.avgCircularityErrorPercent}%</td>
-                <td class="py-2.5 pr-4 text-stone-400">{m.avgLifespanMonthsBeforeDrift} months</td>
+                <td class="py-2.5 pr-4 text-secondary mono tabular-nums">{m.samples.toLocaleString()}</td>
+                <td class="py-2.5 pr-4 text-secondary mono tabular-nums">{m.avgDriftAfter12MonthsPercent}%</td>
+                <td class="py-2.5 pr-4 text-secondary mono tabular-nums">{m.avgCircularityErrorPercent}%</td>
+                <td class="py-2.5 pr-4 text-secondary mono tabular-nums">{m.avgLifespanMonthsBeforeDrift} months</td>
               </tr>
             ))}
           </tbody>
@@ -105,30 +105,30 @@ const reportTitle = `Reliability Dataset Report — ${new Date(reliabilityData.u
       </section>
 
       <section class="card-base p-6 mb-8">
-        <h2 class="text-xl font-bold text-stone-100 mb-4">Key findings — August 2026</h2>
-        <ul class="space-y-3 text-stone-400 leading-relaxed">
-          <li><strong class="text-stone-200">Hall-effect sensors dominate drift resistance.</strong> The hall-effect
+        <h2 class="section-title mb-4">Key findings — August 2026</h2>
+        <ul class="space-y-3 text-secondary leading-relaxed">
+          <li><strong class="text-primary">Hall-effect sensors dominate drift resistance.</strong> The hall-effect
             reference model shows 0.1% average drift after 12 months versus 3.1–5.2% for potentiometer-based models —
             a 30–50× gap, and an average lifespan before drift onset of 36 months versus 9–14.</li>
-          <li><strong class="text-stone-200">Xbox Wireless is the most drift-prone tracked model</strong> at 5.2%
+          <li><strong class="text-primary">Xbox Wireless is the most drift-prone tracked model</strong> at 5.2%
             average drift after 12 months, followed by DualSense at 4.8%.</li>
-          <li><strong class="text-stone-200">Circularity error tracks sensor type, not brand.</strong> Hall-effect
+          <li><strong class="text-primary">Circularity error tracks sensor type, not brand.</strong> Hall-effect
             models average 4.2% error vs 6.8–8.4% for potentiometer models.</li>
-          <li><strong class="text-stone-200">We still cannot publish figures</strong> for DualSense Edge, SCUF, Razer,
+          <li><strong class="text-primary">We still cannot publish figures</strong> for DualSense Edge, SCUF, Razer,
             or 8BitDo-specific models — our dataset has no baseline for them yet, and we will not invent numbers.</li>
         </ul>
       </section>
 
       <section class="card-base p-6">
-        <h2 class="text-xl font-bold text-stone-100 mb-4">About this dataset</h2>
-        <p class="text-stone-400 leading-relaxed mb-3">
+        <h2 class="section-title mb-4">About this dataset</h2>
+        <p class="text-secondary leading-relaxed mb-3">
           Figures are compiled from documented diagnostic runs of the Stick Drift Detector and Circularity Test.
-          Measurements follow our published <a href="/test/methodology" class="text-blue-400 hover:underline">testing methodology</a>.
+          Measurements follow our published <a href="/test/methodology" class="text-accent hover:underline">testing methodology</a>.
           Results are stored locally and shared only with explicit consent.
         </p>
-        <p class="text-stone-400 leading-relaxed">
+        <p class="text-secondary leading-relaxed">
           This report is updated as new baseline data is compiled. Previous editions will be archived here for
-          comparison. Questions or corrections? See the <a href="/reliability" class="text-blue-400 hover:underline">reliability hub</a>.
+          comparison. Questions or corrections? See the <a href="/reliability" class="text-accent hover:underline">reliability hub</a>.
         </p>
       </section>
     </div>
@@ -136,7 +136,3 @@ const reportTitle = `Reliability Dataset Report — ${new Date(reliabilityData.u
 
   <Footer />
 </BaseLayout>
-
-<style>
-  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); border: 1px solid rgba(37, 99, 235, 0.2); }
-</style>

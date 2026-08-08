@@ -56,8 +56,8 @@ function barWidth(value: number, max: number): number {
 
       <!-- Hero -->
       <header class="dash-hero">
-        <span class="badge-tag">Aggregate Dataset Dashboard</span>
-        <h1 class="dash-title">Controller Reliability Dashboard</h1>
+        <span class="badge-tag mb-3">Aggregate Dataset Dashboard</span>
+        <h1 class="text-h1 mb-2">Controller Reliability Dashboard</h1>
         <p class="dash-subtitle">
           {totalSamples.toLocaleString()} documented test results across {models.length} tracked controller
           models (snapshot {reliabilityData.updatedAt}). Every bar on this page is rendered directly from the
@@ -209,15 +209,15 @@ function barWidth(value: number, max: number): number {
           The tier cutoffs used by the <a href="/test/controller/health-score" class="hub-link">Health Score</a> and
           drift percentile math. Thresholds are drift % at rest.
         </p>
-        <div class="table-scroll">
+        <div class="table-scroll" aria-label="Drift magnitude percentile thresholds by model">
           <table class="threshold-table">
             <thead>
               <tr>
-                <th>Model</th>
-                <th>Excellent</th>
-                <th>Good</th>
-                <th>Average</th>
-                <th>Poor</th>
+                <th scope="col">Model</th>
+                <th scope="col">Excellent</th>
+                <th scope="col">Good</th>
+                <th scope="col">Average</th>
+                <th scope="col">Poor</th>
               </tr>
             </thead>
             <tbody>
@@ -268,22 +268,15 @@ function barWidth(value: number, max: number): number {
     display: flex; flex-direction: column; gap: 1.5rem;
   }
 
-  .badge-tag {
-    display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700;
-    text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1);
-    padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem;
-    border: 1px solid rgba(37, 99, 235, 0.2);
-  }
-  .dash-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
   .dash-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 70ch; }
 
   /* Headline strip */
   .stat-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
   .stat-tile { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.25rem; }
-  .stat-tile.highlight { border-color: rgba(16, 185, 129, 0.35); }
+  .stat-tile.highlight { border-color: color-mix(in srgb, var(--color-pass) 35%, transparent); }
   .stat-tile-label { font-family: var(--font-mono); font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-tertiary); }
   .stat-tile-value { font-family: var(--font-mono); font-size: 1.75rem; font-weight: 800; color: var(--color-text-primary); }
-  .stat-tile.highlight .stat-tile-value { color: #10B981; }
+  .stat-tile.highlight .stat-tile-value { color: var(--color-pass); }
   .stat-tile-note { font-size: 0.6875rem; color: var(--color-text-tertiary); }
 
   /* Chart cards */
@@ -306,11 +299,11 @@ function barWidth(value: number, max: number): number {
     border: 1px solid var(--color-border-subtle); border-radius: 999px; overflow: hidden;
   }
   .chart-fill { display: block; height: 100%; border-radius: 999px; transition: width 0.4s ease; }
-  .fill-drift { background: linear-gradient(90deg, #2563EB, #7C3AED); }
-  .fill-circ { background: linear-gradient(90deg, #F59E0B, #EF4444); }
-  .fill-life { background: linear-gradient(90deg, #10B981, #2563EB); }
+  .fill-drift { background: linear-gradient(90deg, var(--color-accent), #7C3AED); }
+  .fill-circ { background: linear-gradient(90deg, var(--color-warning), var(--color-fail)); }
+  .fill-life { background: linear-gradient(90deg, var(--color-pass), var(--color-accent)); }
   .fill-sample { background: var(--color-accent); }
-  .fill-hall { background: linear-gradient(90deg, #10B981, #34D399); }
+  .fill-hall { background: linear-gradient(90deg, var(--color-pass), #34D399); }
   .chart-value { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 700; color: var(--color-text-primary); text-align: right; }
 
   /* Threshold table */
@@ -324,10 +317,10 @@ function barWidth(value: number, max: number): number {
   }
   .threshold-table td { padding: 0.625rem 0.875rem; border-bottom: 1px solid var(--color-border-subtle); }
   .td-model { font-weight: 600; color: var(--color-text-primary); white-space: nowrap; }
-  .mono { font-family: var(--font-mono); font-weight: 700; }
-  .pass { color: #10B981; }
-  .warn { color: #F59E0B; }
-  .fail { color: #EF4444; }
+  .mono { font-family: var(--font-mono); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .pass { color: var(--color-pass); }
+  .warn { color: var(--color-warning); }
+  .fail { color: var(--color-fail); }
 
   /* Note */
   .note-card { padding: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }

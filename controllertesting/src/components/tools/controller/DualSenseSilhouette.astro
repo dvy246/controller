@@ -1,0 +1,262 @@
+---
+/**
+ * DualSenseSilhouette.astro
+ * Hyper-Premium Realistic 2D PS5 DualSense Visualizer SVG.
+ * Features realistic multi-layer SVG geometry, satin white/black textures, 
+ * neon LED lightbars, glassmorphic face buttons, and 0-latency Gamepad API mapping.
+ */
+---
+<div class="dualsense-svg-wrapper relative w-full flex items-center justify-center select-none">
+  <svg viewBox="0 0 1000 650" class="w-full h-auto max-h-[460px] filter drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Soft Outer Shell Gradient (White Satin) -->
+      <linearGradient id="shell-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#FFFFFF" />
+        <stop offset="60%" stop-color="#E5E7EB" />
+        <stop offset="100%" stop-color="#D1D5DB" />
+      </linearGradient>
+
+      <!-- Inner Black Grip Base Gradient -->
+      <linearGradient id="inner-dark-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#1F2430" />
+        <stop offset="50%" stop-color="#12151E" />
+        <stop offset="100%" stop-color="#0A0C12" />
+      </linearGradient>
+
+      <!-- Touchpad Gradient -->
+      <linearGradient id="touchpad-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#F9FAFB" />
+        <stop offset="100%" stop-color="#E5E7EB" />
+      </linearGradient>
+
+      <!-- Button Base Gradient -->
+      <radialGradient id="button-gloss" cx="30%" cy="30%" r="70%">
+        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" />
+        <stop offset="70%" stop-color="#E2E8F0" stop-opacity="0.6" />
+        <stop offset="100%" stop-color="#CBD5E1" stop-opacity="0.4" />
+      </radialGradient>
+
+      <!-- Thumbstick Dome Gradient -->
+      <radialGradient id="stick-dome-grad" cx="35%" cy="35%" r="65%">
+        <stop offset="0%" stop-color="#374151" />
+        <stop offset="55%" stop-color="#1F2937" />
+        <stop offset="100%" stop-color="#111827" />
+      </radialGradient>
+
+      <!-- Blue LED Glow Filter -->
+      <filter id="led-glow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="6" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+
+      <!-- Button Active Neon Glow -->
+      <filter id="btn-active-glow" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="8" result="blur" />
+        <feComponentTransfer in="blur" result="brightBlur">
+          <feFuncA type="linear" slope="2.5" />
+        </feComponentTransfer>
+        <feMerge>
+          <feMergeNode in="brightBlur" />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+    </defs>
+
+    <!-- Outer Shadow Silhouette -->
+    <path d="M 220,100 C 320,70 680,70 780,100 C 840,120 940,240 920,480 C 910,560 840,610 770,590 C 710,570 660,460 620,440 C 560,430 440,430 380,440 C 340,460 290,570 230,590 C 160,610 90,560 80,480 C 60,240 160,120 220,100 Z" fill="#000000" opacity="0.6" />
+
+    <!-- Left Outer Handle / Shell Wing -->
+    <path d="M 220,105 C 320,78 480,75 490,75 L 485,340 C 420,350 320,380 230,585 C 165,605 95,555 85,475 C 65,245 160,125 220,105 Z" fill="url(#shell-gradient)" stroke="#9CA3AF" stroke-width="2" />
+
+    <!-- Right Outer Handle / Shell Wing -->
+    <path d="M 780,105 C 680,78 520,75 510,75 L 515,340 C 580,350 680,380 770,585 C 835,605 905,555 915,475 C 935,245 840,125 780,105 Z" fill="url(#shell-gradient)" stroke="#9CA3AF" stroke-width="2" />
+
+    <!-- Middle Satin Black Core Body -->
+    <path d="M 330,170 C 420,150 580,150 670,170 C 720,200 750,300 730,420 C 710,470 650,470 620,430 C 550,410 450,410 380,430 C 350,470 290,470 270,420 C 250,300 280,200 330,170 Z" fill="url(#inner-dark-gradient)" stroke="#374151" stroke-width="3" />
+
+    <!-- Dual Lightbar Neon Strips -->
+    <path id="lightbar-left" d="M 335,145 C 340,210 350,270 365,305" fill="none" stroke="#3B82F6" stroke-width="5" stroke-linecap="round" filter="url(#led-glow)" />
+    <path id="lightbar-right" d="M 665,145 C 660,210 650,270 635,305" fill="none" stroke="#3B82F6" stroke-width="5" stroke-linecap="round" filter="url(#led-glow)" />
+
+    <!-- Touchpad Panel -->
+    <g id="touchpad-group" class="cursor-pointer">
+      <path id="btn-17" d="M 345,110 L 655,110 C 665,110 675,120 670,160 L 650,285 C 645,300 635,305 620,305 L 380,305 C 365,305 355,300 350,285 L 330,160 C 325,120 335,110 345,110 Z" fill="url(#touchpad-gradient)" stroke="#9CA3AF" stroke-width="2" />
+      <rect x="495" y="125" width="10" height="2" rx="1" fill="#9CA3AF" opacity="0.6" />
+    </g>
+
+    <!-- Player LEDs -->
+    <g id="player-leds">
+      <circle cx="485" cy="322" r="2.5" fill="#3B82F6" filter="url(#led-glow)" />
+      <circle cx="500" cy="322" r="3.5" fill="#3B82F6" filter="url(#led-glow)" />
+      <circle cx="515" cy="322" r="2.5" fill="#3B82F6" filter="url(#led-glow)" />
+    </g>
+
+    <!-- Speaker Micro-Grille -->
+    <g id="speaker-dots" fill="#4B5563" opacity="0.7">
+      <circle cx="490" cy="345" r="1.5" /><circle cx="500" cy="345" r="1.5" /><circle cx="510" cy="345" r="1.5" />
+      <circle cx="485" cy="352" r="1.5" /><circle cx="495" cy="352" r="1.5" /><circle cx="505" cy="352" r="1.5" /><circle cx="515" cy="352" r="1.5" />
+      <circle cx="490" cy="359" r="1.5" /><circle cx="500" cy="359" r="1.5" /><circle cx="510" cy="359" r="1.5" />
+    </g>
+
+    <!-- PS Button -->
+    <g id="btn-16" class="btn-element cursor-pointer" data-button-id="16">
+      <path d="M 488,382 C 495,378 505,378 512,382 L 515,402 C 505,407 495,407 485,402 Z" fill="#1E2937" stroke="#4B5563" stroke-width="2" />
+      <path d="M 497,386 L 497,398 M 497,389 C 502,387 505,390 502,393 C 499,395 497,395 497,395" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" />
+    </g>
+
+    <!-- Create / Share Button -->
+    <g id="btn-8" class="btn-element cursor-pointer" data-button-id="8">
+      <path d="M 312,135 C 315,130 325,130 328,135 L 322,170 C 319,173 311,173 308,168 Z" fill="#374151" stroke="#6B7280" stroke-width="1.5" />
+      <line x1="314" y1="145" x2="314" y2="157" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" />
+      <line x1="318" y1="145" x2="318" y2="157" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" />
+      <line x1="322" y1="145" x2="322" y2="157" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" />
+    </g>
+
+    <!-- Options Button -->
+    <g id="btn-9" class="btn-element cursor-pointer" data-button-id="9">
+      <path d="M 688,135 C 685,130 675,130 672,135 L 678,170 C 681,173 689,173 692,168 Z" fill="#374151" stroke="#6B7280" stroke-width="1.5" />
+      <line x1="678" y1="146" x2="686" y2="146" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" />
+      <line x1="678" y1="151" x2="686" y2="151" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" />
+      <line x1="678" y1="156" x2="686" y2="156" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" />
+    </g>
+
+    <!-- Mute Button -->
+    <g id="btn-18" class="btn-element cursor-pointer" data-button-id="18">
+      <path d="M 488,418 H 512 V 426 C 512,429 508,432 500,432 C 492,432 488,429 488,426 Z" fill="#374151" stroke="#4B5563" stroke-width="1.5" />
+    </g>
+
+    <!-- D-PAD ASSEMBLY -->
+    <g id="dpad-assembly">
+      <circle cx="230" cy="245" r="75" fill="#1E2937" stroke="#374151" stroke-width="2" />
+      <g id="btn-12" class="btn-element cursor-pointer" data-button-id="12">
+        <path d="M 213,180 C 213,175 247,175 247,180 L 243,230 H 217 Z" fill="url(#touchpad-gradient)" stroke="#9CA3AF" stroke-width="1.5" />
+        <path d="M 230,188 L 222,200 H 238 Z" fill="#6B7280" />
+      </g>
+      <g id="btn-13" class="btn-element cursor-pointer" data-button-id="13">
+        <path d="M 213,310 C 213,315 247,315 247,310 L 243,260 H 217 Z" fill="url(#touchpad-gradient)" stroke="#9CA3AF" stroke-width="1.5" />
+        <path d="M 230,302 L 222,290 H 238 Z" fill="#6B7280" />
+      </g>
+      <g id="btn-14" class="btn-element cursor-pointer" data-button-id="14">
+        <path d="M 165,228 C 160,228 160,262 165,262 L 215,258 V 232 Z" fill="url(#touchpad-gradient)" stroke="#9CA3AF" stroke-width="1.5" />
+        <path d="M 173,245 L 185,237 V 253 Z" fill="#6B7280" />
+      </g>
+      <g id="btn-15" class="btn-element cursor-pointer" data-button-id="15">
+        <path d="M 295,228 C 300,228 300,262 295,262 L 245,258 V 232 Z" fill="url(#touchpad-gradient)" stroke="#9CA3AF" stroke-width="1.5" />
+        <path d="M 287,245 L 275,237 V 253 Z" fill="#6B7280" />
+      </g>
+    </g>
+
+    <!-- ACTION FACE BUTTONS -->
+    <g id="action-buttons-assembly">
+      <circle cx="770" cy="245" r="75" fill="#1E2937" stroke="#374151" stroke-width="2" />
+      <g id="btn-3" class="btn-element cursor-pointer" data-button-id="3">
+        <circle cx="770" cy="190" r="22" fill="url(#button-gloss)" stroke="#9CA3AF" stroke-width="2" />
+        <polygon points="770,178 759,197 781,197" fill="none" stroke="#10B981" stroke-width="3.5" stroke-linejoin="round" />
+      </g>
+      <g id="btn-1" class="btn-element cursor-pointer" data-button-id="1">
+        <circle cx="825" cy="245" r="22" fill="url(#button-gloss)" stroke="#9CA3AF" stroke-width="2" />
+        <circle cx="825" cy="245" r="10" fill="none" stroke="#EF4444" stroke-width="3.5" />
+      </g>
+      <g id="btn-0" class="btn-element cursor-pointer" data-button-id="0">
+        <circle cx="770" cy="300" r="22" fill="url(#button-gloss)" stroke="#9CA3AF" stroke-width="2" />
+        <path d="M 761,291 L 779,309 M 779,291 L 761,309" stroke="#3B82F6" stroke-width="3.5" stroke-linecap="round" />
+      </g>
+      <g id="btn-2" class="btn-element cursor-pointer" data-button-id="2">
+        <circle cx="715" cy="245" r="22" fill="url(#button-gloss)" stroke="#9CA3AF" stroke-width="2" />
+        <rect x="706" y="236" width="18" height="18" fill="none" stroke="#EC4899" stroke-width="3.5" rx="2" />
+      </g>
+    </g>
+
+    <!-- LEFT ANALOG THUMBSTICK -->
+    <g id="left-stick-container">
+      <circle cx="360" cy="410" r="70" fill="#0F172A" stroke="#334155" stroke-width="3" />
+      <circle cx="360" cy="410" r="62" fill="none" stroke="#1E2937" stroke-width="2" stroke-dasharray="4 4" />
+      <g id="left-stick-cap" class="transition-transform duration-75 ease-out cursor-pointer" data-button-id="10">
+        <circle id="btn-10" cx="360" cy="410" r="48" fill="url(#stick-dome-grad)" stroke="#475569" stroke-width="3" />
+        <circle cx="360" cy="410" r="38" fill="none" stroke="#374151" stroke-width="2" />
+        <circle cx="360" cy="410" r="28" fill="#1F2937" opacity="0.8" />
+      </g>
+    </g>
+
+    <!-- RIGHT ANALOG THUMBSTICK -->
+    <g id="right-stick-container">
+      <circle cx="640" cy="410" r="70" fill="#0F172A" stroke="#334155" stroke-width="3" />
+      <circle cx="640" cy="410" r="62" fill="none" stroke="#1E2937" stroke-width="2" stroke-dasharray="4 4" />
+      <g id="right-stick-cap" class="transition-transform duration-75 ease-out cursor-pointer" data-button-id="11">
+        <circle id="btn-11" cx="640" cy="410" r="48" fill="url(#stick-dome-grad)" stroke="#475569" stroke-width="3" />
+        <circle cx="640" cy="410" r="38" fill="none" stroke="#374151" stroke-width="2" />
+        <circle cx="640" cy="410" r="28" fill="#1F2937" opacity="0.8" />
+      </g>
+    </g>
+
+    <!-- SHOULDER BUTTONS & TRIGGERS -->
+    <g id="btn-4" class="btn-element cursor-pointer" data-button-id="4">
+      <path d="M 200,85 C 240,65 310,65 330,75 L 320,98 C 300,90 240,90 210,102 Z" fill="#374151" stroke="#6B7280" stroke-width="1.5" />
+      <text x="260" y="86" fill="#9CA3AF" font-size="12" font-weight="bold" font-family="sans-serif">L1</text>
+    </g>
+    <g id="btn-5" class="btn-element cursor-pointer" data-button-id="5">
+      <path d="M 800,85 C 760,65 690,65 670,75 L 680,98 C 700,90 760,90 790,102 Z" fill="#374151" stroke="#6B7280" stroke-width="1.5" />
+      <text x="730" y="86" fill="#9CA3AF" font-size="12" font-weight="bold" font-family="sans-serif">R1</text>
+    </g>
+    <g id="l2-trigger-group">
+      <path d="M 170,55 C 200,35 270,35 300,45 L 290,62 C 265,55 210,55 185,70 Z" fill="#1F2937" stroke="#4B5563" stroke-width="1.5" />
+      <path id="btn-6" d="M 170,55 C 200,35 270,35 300,45 L 290,62 C 265,55 210,55 185,70 Z" fill="#3B82F6" opacity="0.0" />
+      <text x="225" y="50" fill="#6B7280" font-size="11" font-weight="bold" font-family="sans-serif">L2 <tspan id="l2-val-text" fill="#3B82F6">0%</tspan></text>
+    </g>
+    <g id="r2-trigger-group">
+      <path d="M 830,55 C 800,35 730,35 700,45 L 710,62 C 735,55 790,55 815,70 Z" fill="#1F2937" stroke="#4B5563" stroke-width="1.5" />
+      <path id="btn-7" d="M 830,55 C 800,35 730,35 700,45 L 710,62 C 735,55 790,55 815,70 Z" fill="#3B82F6" opacity="0.0" />
+      <text x="755" y="50" fill="#6B7280" font-size="11" font-weight="bold" font-family="sans-serif">R2 <tspan id="r2-val-text" fill="#3B82F6">0%</tspan></text>
+    </g>
+  </svg>
+</div>
+
+<script>
+  import { GamepadLoop } from '../../../lib/gamepad';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const leftStickCap = document.getElementById('left-stick-cap');
+    const rightStickCap = document.getElementById('right-stick-cap');
+    const l2ValText = document.getElementById('l2-val-text');
+    const r2ValText = document.getElementById('r2-val-text');
+
+    GamepadLoop.subscribe((state) => {
+      if (!state || !state.connected) {
+        if (leftStickCap) leftStickCap.style.transform = 'translate(0px, 0px)';
+        if (rightStickCap) rightStickCap.style.transform = 'translate(0px, 0px)';
+        return;
+      }
+
+      // Buttons (0-18)
+      state.buttons.forEach((pressed, idx) => {
+        const btnEl = document.getElementById(`btn-${idx}`);
+        if (btnEl) {
+          if (idx === 6) { // L2
+            const val = state.triggers ? state.triggers.l2 : (pressed ? 1 : 0);
+            btnEl.setAttribute('opacity', (val * 0.85).toString());
+            if (l2ValText) l2ValText.textContent = `${Math.round(val * 100)}%`;
+          } else if (idx === 7) { // R2
+            const val = state.triggers ? state.triggers.r2 : (pressed ? 1 : 0);
+            btnEl.setAttribute('opacity', (val * 0.85).toString());
+            if (r2ValText) r2ValText.textContent = `${Math.round(val * 100)}%`;
+          } else if (pressed) {
+            btnEl.classList.add('active-btn-glow');
+            btnEl.style.filter = "url(#btn-active-glow)";
+          } else {
+            btnEl.classList.remove('active-btn-glow');
+            btnEl.style.filter = "none";
+          }
+        }
+      });
+
+      // Sticks
+      const lx = state.leftStick ? state.leftStick.x : 0;
+      const ly = state.leftStick ? state.leftStick.y : 0;
+      const rx = state.rightStick ? state.rightStick.x : 0;
+      const ry = state.rightStick ? state.rightStick.y : 0;
+
+      if (leftStickCap) leftStickCap.style.transform = `translate(${lx * 22}px, ${ly * 22}px)`;
+      if (rightStickCap) rightStickCap.style.transform = `translate(${rx * 22}px, ${ry * 22}px)`;
+    });
+  });
+</script>

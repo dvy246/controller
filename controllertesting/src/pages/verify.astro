@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+import ReportViewer from '../components/features/verify/ReportViewer.astro';
+import WaitlistForm from '../components/global/WaitlistForm.astro';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Controller Passport', url: '/passport' },
+  { name: 'Shareable Report' },
+];
+
+const title = "Shareable Controller Health Certificate | ControllerTesting.com";
+const description =
+  "A self-verifying controller health certificate. View stick drift, circularity, buttons, triggers, and vibration results shared from any diagnostic test — no account, no server lookup.";
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  noindex={true}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main class="container-site page-layout pt-24 pb-16">
+    <div class="mb-6 hide-on-print hide-on-embed">
+      <Breadcrumbs items={breadcrumbs} />
+    </div>
+
+    <header class="verify-intro hide-on-embed">
+      <span class="verify-eyebrow mono">CONTROLLER HEALTH CERTIFICATE</span>
+      <h1 class="verify-title">Controller health certificate</h1>
+      <p class="verify-sub">
+        This page renders a diagnostic certificate shared from ControllerTesting.com.
+        The report travels inside the link itself — it opens on any device, in any
+        browser, with no account or server lookup. The link checksum confirms the
+        data arrived intact.
+      </p>
+    </header>
+
+    <ReportViewer mode="url" />
+
+    <div class="hide-on-embed verify-waitlist">
+      <WaitlistForm
+        context="verify"
+        product="notify"
+        compact
+        heading="Want to send branded, shareable certificates?"
+        subheading="Free reports stay free forever. PDF exports, seller-branded certificates, and the repair-shop suite are on the roadmap — join the waitlist and we'll email you first."
+      />
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .verify-intro {
+    margin-bottom: 1.5rem;
+  }
+
+  .verify-eyebrow {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-accent, #2563eb);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .verify-title {
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+
+  .verify-sub {
+    max-width: 62ch;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+  }
+
+  .verify-waitlist {
+    margin-top: 1.75rem;
+    max-width: 42rem;
+  }
+</style>

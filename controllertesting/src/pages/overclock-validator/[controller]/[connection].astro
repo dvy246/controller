@@ -92,11 +92,11 @@ const faqSchema = {
 
   <div class="max-w-6xl mx-auto px-4 py-8">
     <div class="text-center mb-10">
-      <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight mb-4 font-geist">
-        {controllerName} <span class="text-blue-500">Overclock Validator</span>
+      <h1 class="text-h1 mb-4">
+        {controllerName} <span class="text-accent">Overclock Validator</span>
       </h1>
       <p class="text-lg text-surface-content-muted max-w-2xl mx-auto">
-        Testing connection type: <strong class="text-white bg-surface-2 px-2 py-1 rounded-md">{connectionName}</strong>. 
+        Testing connection type: <strong class="bg-surface-2 px-2 py-1 rounded-md">{connectionName}</strong>. 
         Move your analog sticks continuously to generate real-time polling data and verify your hidusbf target.
       </p>
     </div>
@@ -105,8 +105,8 @@ const faqSchema = {
       <OverclockValidator />
     </div>
     
-    <div class="prose prose-invert prose-blue max-w-3xl mx-auto mt-16">
-      <h2 class="font-geist text-2xl font-bold mb-4">About Controller Overclocking</h2>
+    <div class="prose max-w-3xl mx-auto mt-16">
+      <h2 class="text-h2 mb-4">About Controller Overclocking</h2>
       
       <div class="bg-surface-1 border border-surface-2 rounded-xl p-6 mb-8">
         <h3 class="text-xl font-bold mb-2">How to use this validator</h3>
@@ -120,14 +120,14 @@ const faqSchema = {
 
       <div class="space-y-6">
         <div>
-          <h3 class="text-lg font-bold text-white mb-2">Is 1000Hz (1ms) always better?</h3>
+          <h3 class="font-bold mb-2">Is 1000Hz (1ms) always better?</h3>
           <p class="text-surface-content">
             Not necessarily. While 1000Hz reduces average input latency by a few milliseconds compared to 250Hz, it demands more CPU cycles. The key metric is <strong>stability (Jitter)</strong>. An overclock that results in severe frame pacing spikes can feel worse than a rock-solid lower polling rate.
           </p>
         </div>
 
         <div>
-          <h3 class="text-lg font-bold text-white mb-2">Does hidusbf work on Bluetooth?</h3>
+          <h3 class="font-bold mb-2">Does hidusbf work on Bluetooth?</h3>
           <p class="text-surface-content">
             No, the popular LordOfMice hidusbf utility only overrides USB device descriptor limits. Overclocking Bluetooth requires changing the polling interval in your OS Bluetooth stack or using custom dongles.
           </p>

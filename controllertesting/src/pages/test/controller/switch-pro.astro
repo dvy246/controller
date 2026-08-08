@@ -5,7 +5,7 @@
  */
 
 import ToolLayout from '../../../layouts/ToolLayout.astro';
-import Interactive3DVisualizer from '../../../components/tools/controller/Interactive3DVisualizer.astro';
+import Interactive2DVisualizer from '../../../components/tools/controller/Interactive2DVisualizer.astro';
 import DiagnosticResultsBento from '../../../components/seo/DiagnosticResultsBento.astro';
 import PremiumGuideCard from '../../../components/seo/PremiumGuideCard.astro';
 import PremiumFaqAccordion from '../../../components/seo/PremiumFaqAccordion.astro';
@@ -38,16 +38,7 @@ const faqs = [
 
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
-    <div class="doppelrand-shell nintendo-brand-shell" data-model="switch">
-      <Interactive3DVisualizer />
-    </div>
-    <style>
-      .nintendo-brand-shell {
-        --ambient-glow: #E60012;
-        box-shadow: 0 0 60px rgba(230, 0, 18, 0.15);
-        border-color: rgba(230, 0, 18, 0.3);
-      }
-    </style>
+    <Interactive2DVisualizer isRigid={true} />
   </Fragment>
 
   {/* ── Results Slot ── */}
@@ -58,19 +49,19 @@ const faqs = [
   {/* ── Semantic SEO Content Slot ── */}
   <Fragment slot="content">
     <section class="max-w-4xl mx-auto mt-16 px-6">
-      <h2 class="text-[var(--text-h2)] font-extrabold tracking-tight mb-6">Switch Pro Controller Technical Diagnostics</h2>
+      <h2 class="text-h2 mb-6">Switch Pro Controller Technical Diagnostics</h2>
       <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-        The Nintendo Switch Pro Controller is highly regarded for its ergonomic design and battery life, but its joystick modules still rely on traditional carbon-film potentiometers. Over time, friction degrades these tracks, leading to <strong>stick drift</strong>. Our diagnostic suite connects to the Pro Controller via Bluetooth or USB, allowing you to instantly visualize exactly how much axial offset the left and right analog sticks are experiencing without needing a dedicated app.
+        The Pro Controller is comfortable and long-lived — except for its sticks. The joystick modules use carbon-film potentiometers, and friction wears those tracks into <strong>stick drift</strong> over time. Connect the pad over Bluetooth or USB, and this tool shows the resting offset of each stick the moment it connects. No dedicated app required.
       </p>
       
       <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Digital Triggers and Face Buttons</h3>
       <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-        Unlike the PS5 or Xbox controllers, the Switch Pro Controller uses <strong>digital triggers (ZL/ZR)</strong> rather than analog sliders. This means they are either fully pressed (1.0) or fully released (0.0). You can use our button matrix to ensure these triggers, alongside the oversized ABXY face buttons and the notoriously finicky D-Pad, are responding instantly without any mechanical switch bounce (double-clicking).
+        Unlike PS5 or Xbox pads, the Pro Controller uses <strong>digital ZL/ZR triggers</strong>, not analog sliders — each reads 1.0 fully pressed or 0.0 released. Use the button matrix to check those, the ABXY face buttons, and the D-pad (whose diagonals are a known weak point) for bounce-free registration.
       </p>
       
       <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">HD Rumble and Gyroscope Sensors</h3>
       <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed">
-        The Switch Pro Controller also features linear resonant actuators (LRA) for Nintendo's proprietary "HD Rumble" and a high-precision 6-axis IMU (gyroscope and accelerometer) for motion controls in games like Splatoon and Zelda. Our advanced haptic and gyroscope tools allow you to stream telemetry directly from these sensors to verify they haven't been damaged by drops or firmware glitches.
+        The Pro Controller also packs linear resonant actuators (LRA) for Nintendo's "HD Rumble" and a 6-axis IMU for motion aiming in Splatoon and Zelda. The haptic and gyro tools stream those sensors so you can confirm they survived drops and firmware updates intact.
       </p>
     </section>
   </Fragment>
@@ -80,13 +71,9 @@ const faqs = [
     <PremiumGuideCard title="How to calibrate a Switch Pro Controller on PC?">
       <p class="text-lg">To calibrate a Switch Pro Controller on a PC, connect it via USB or Bluetooth. Open the Windows joy.cpl settings or Steam's controller configuration to adjust deadzones. For precise hardware-level testing, use a web-based tester to verify analog stick circularity and center offsets.</p>
       
-      <h3 class="text-blue-400 mt-12 mb-4 text-2xl font-extrabold tracking-tight">Recommended Actions</h3>
-      <p class="text-lg">Always begin by using our free <a href="/test/controller/drift">drift diagnostic tool</a> to identify the exact cause of any input inconsistencies before attempting repairs.</p>
+      <h3 class="text-h3 text-accent mt-8 mb-4">Recommended Actions</h3>
+      <p class="text-lg">      Start with the <a href="/test/controller/drift">Stick Drift Test</a>. Sticks resting in the 2–10% band usually respond to contact cleaner and a deadzone bump; above 10%, plan a module swap rather than repeated cleaning.</p>
     </PremiumGuideCard>
-
-    <div class="max-w-4xl mx-auto mt-32 mb-20 px-6">
-      <PremiumFaqAccordion faqs={faqs} title="Switch Pro Controller FAQs" subtitle="Common issues and questions about Nintendo's Pro Controller." />
-    </div>
   </Fragment>
 
   {/* ── Related Tools Slot ── */}

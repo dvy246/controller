@@ -144,8 +144,8 @@ const faqs = [
   <div class="compare-container">
     <div class="hero-card card-base">
       <Breadcrumbs items={breadcrumbs} />
-      <span class="hero-badge">HARDWARE HEAD-TO-HEAD</span>
-      <h1 class="hero-title text-gradient">{comp.title}</h1>
+      <span class="section-eyebrow">Hardware Head-to-Head</span>
+      <h1 class="text-h1 text-gradient">{comp.title}</h1>
       <p class="hero-desc">
         Head-to-head comparison of input latency, polling rates, thumbstick sensors, and drift resistance between {comp.cA.name} and {comp.cB.name}.
       </p>
@@ -223,7 +223,7 @@ const faqs = [
     </p>
 
     {/* FAQ Section */}
-    <div class="faq-section card-base">
+    <div class="faq-section">
       <h2 class="section-title">Comparison FAQs</h2>
       <div class="faq-list">
         {faqs.map((faq) => (
@@ -241,8 +241,6 @@ const faqs = [
 <style>
   .compare-container { max-width: 1100px; padding-top: calc(var(--header-height, 64px) + 2rem); margin: 0 auto 2rem; padding-left: 1.5rem; padding-right: 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
   .hero-card { padding: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
-  .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
-  .hero-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.15; }
   .hero-desc { font-size: 1.125rem; color: var(--color-text-secondary); max-width: 720px; line-height: 1.6; }
   .comparison-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
   .comp-card { padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
@@ -251,7 +249,7 @@ const faqs = [
   .specs-list { display: flex; flex-direction: column; gap: 0.75rem; background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1.25rem; }
   .spec-row { display: flex; justify-content: space-between; font-size: var(--text-small); color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 0.5rem; }
   .spec-row span.mono { font-weight: 600; color: var(--color-text-primary); }
-  .faq-section { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  .faq-section { display: flex; flex-direction: column; gap: 1.5rem; }
   .faq-list { display: flex; flex-direction: column; gap: 1.25rem; }
   .faq-item { display: flex; flex-direction: column; gap: 0.375rem; border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 1rem; }
   .faq-question { font-size: 1.125rem; font-weight: 700; color: var(--color-text-primary); }
@@ -259,7 +257,7 @@ const faqs = [
   .source-note { font-size: var(--text-micro); color: var(--color-text-tertiary); line-height: 1.6; border-left: 2px solid var(--color-border-subtle); padding-left: 1rem; }
   .rel-card { padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
   .rel-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-  .rel-badge { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700; color: var(--color-emerald, #10B981); letter-spacing: 0.08em; }
+  .rel-badge { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700; color: var(--color-pass); letter-spacing: 0.08em; }
   .rel-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
   .rel-link { font-size: var(--text-small); font-weight: 600; color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; }
   .rel-pending { font-size: var(--text-small); color: var(--color-text-tertiary); font-style: italic; }

@@ -70,7 +70,7 @@ const schemaData = [
 
       <header class="hub-hero">
         <span class="badge-tag">Repair Hub</span>
-        <h1 class="hub-title">Controller Repair Guides</h1>
+        <h1 class="text-h1 mb-2">Controller Repair Guides</h1>
         <p class="hub-subtitle">
           The full diagnose → fix → verify loop. Every guide starts with a real measurement, ends with a re-test —
           no blind disassembly, no guesswork.
@@ -119,20 +119,21 @@ const schemaData = [
 <style>
   .hub-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
   .hub-hero { margin-bottom: 2.5rem; }
-  .badge-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); background: rgba(37, 99, 235, 0.1); padding: 0.25em 0.75em; border-radius: var(--radius-pill); margin-bottom: 0.75rem; border: 1px solid rgba(37, 99, 235, 0.2); }
-  .hub-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-hero .badge-tag { margin-bottom: 0.75rem; }
   .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
-  .hub-categories { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
-  .cat-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .hub-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+  .cat-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; cursor: pointer; }
+  .cat-card:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
   .cat-badge { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--color-accent); letter-spacing: 0.08em; }
   .cat-title { font-size: 1.25rem; font-weight: 800; }
   .cat-desc { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; flex-grow: 1; }
   .cat-count { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-text-tertiary); }
   .hub-list { padding: 2rem; margin-bottom: 1.5rem; }
-  .section-title { font-size: var(--text-h2); font-weight: 700; margin-bottom: 1.25rem; }
+  .section-title { margin-bottom: 1.25rem; }
   .guide-list { list-style: none; display: flex; flex-direction: column; }
   .guide-link { display: flex; justify-content: space-between; align-items: center; padding: 0.875rem 0; border-bottom: 1px solid var(--color-border-subtle); color: var(--color-text-secondary); text-decoration: none; transition: color var(--duration-fast); }
   .guide-link:hover { color: var(--color-accent); }
+  .guide-link:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
   .guide-name { font-size: 1rem; }
   .guide-arrow { color: var(--color-text-tertiary); }
   .hub-note { padding: 2rem; }
