@@ -5,49 +5,21 @@
  * Premium floating 3D controller implementation for the right column of the hero.
  */
 ---
-<div class="controller-3d-wrapper relative w-full h-full min-h-[420px] lg:min-h-[480px] flex items-center justify-center" id="hero-container">
+<div class="controller-3d-wrapper relative w-full h-full min-h-[440px] lg:min-h-[500px] flex items-center justify-center" id="hero-container">
   
-  <!-- Instant SVG Visualizer (Guaranteed 0ms load time so hero is NEVER empty) -->
-  <div class="instant-hero-visual absolute inset-0 flex items-center justify-center p-4 select-none">
-    <div class="relative w-full max-w-[420px] aspect-[4/3] flex items-center justify-center">
-      <!-- Glow Aura -->
-      <div class="absolute inset-0 bg-gradient-to-tr from-blue-600/20 via-indigo-500/10 to-transparent blur-3xl rounded-full pointer-events-none"></div>
-      
-      <!-- DualSense SVG Illustration -->
-      <svg class="w-full h-full text-stone-300 drop-shadow-[0_15px_35px_rgba(0,0,0,0.6)] animate-pulse-subtle" viewBox="0 0 500 360" fill="none">
-        <path d="M150 70 C190 65 210 95 250 95 C290 95 310 65 350 70 C410 78 445 130 435 240 C428 300 395 325 360 325 C335 325 315 285 300 245 C280 240 220 240 200 245 C185 285 165 325 140 325 C105 325 72 300 65 240 C55 130 90 78 150 70 Z" fill="#141416" stroke="#2D2D32" stroke-width="3"/>
-        <path d="M170 100 L330 100 M175 102 L325 102" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
-        <rect x="185" y="108" width="130" height="68" rx="8" fill="#1A1A1E" stroke="#333338" stroke-width="1.5"/>
-        <text x="250" y="146" font-family="monospace" font-size="10" fill="#666" text-anchor="middle" letter-spacing="2">TOUCHPAD</text>
-        <circle cx="140" cy="145" r="26" fill="#1C1C20" stroke="#333" stroke-width="1.5"/>
-        <path d="M140 127 V163 M122 145 H158" stroke="#555" stroke-width="4" stroke-linecap="round"/>
-        <circle cx="360" cy="145" r="26" fill="#1C1C20" stroke="#333" stroke-width="1.5"/>
-        <text x="360" y="132" font-family="sans-serif" font-size="11" font-weight="bold" fill="#38BDF8" text-anchor="middle">△</text>
-        <text x="375" y="149" font-family="sans-serif" font-size="11" font-weight="bold" fill="#F43F5E" text-anchor="middle">○</text>
-        <text x="360" y="165" font-family="sans-serif" font-size="11" font-weight="bold" fill="#818CF8" text-anchor="middle">✕</text>
-        <text x="345" y="149" font-family="sans-serif" font-size="11" font-weight="bold" fill="#C084FC" text-anchor="middle">□</text>
-        <circle cx="190" cy="225" r="28" fill="#111" stroke="#333" stroke-width="2"/>
-        <circle cx="190" cy="225" r="20" fill="#1F1F24" stroke="#444" stroke-width="1"/>
-        <text x="190" y="228" font-family="monospace" font-size="9" fill="#555" text-anchor="middle">L3</text>
-        <circle cx="310" cy="225" r="28" fill="#111" stroke="#333" stroke-width="2"/>
-        <circle cx="310" cy="225" r="20" fill="#1F1F24" stroke="#444" stroke-width="1"/>
-        <text x="310" y="228" font-family="monospace" font-size="9" fill="#555" text-anchor="middle">R3</text>
-        <circle cx="250" cy="210" r="10" fill="#1A1A1E" stroke="#3B82F6" stroke-width="1.5"/>
-        <path d="M246 210 L250 205 L254 210 M250 205 V214" stroke="#3B82F6" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-    </div>
-  </div>
+  <!-- Subtle Glow Aura behind 3D canvas -->
+  <div class="absolute inset-0 bg-gradient-to-tr from-blue-600/15 via-indigo-500/10 to-transparent blur-3xl rounded-full pointer-events-none"></div>
 
-  <!-- Loading State -->
-  <div class="loading-spinner hidden" id="loading-spinner">
+  <!-- Loading State Spinner -->
+  <div class="loading-spinner active" id="loading-spinner">
     <div class="spinner-ring"></div>
-    <span class="loading-text">INITIALIZING 3D ENGINE...</span>
+    <span class="loading-text">LOADING 3D PS5 DUALSENSE...</span>
   </div>
 
-  <!-- 3D Canvas -->
+  <!-- 3D WebGL Canvas -->
   <canvas id="webgl-canvas" class="webgl-canvas"></canvas>
   
-  <!-- Subtle Tech Overlay / Badge -->
+  <!-- Telemetry HUD Badge -->
   <div class="telemetry-hud" id="telemetry-hud">
     <div class="status-indicator">
       <span class="status-dot" id="status-dot"></span>
@@ -69,7 +41,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Removed the ugly radial gradient and box-shadow to let it float naturally */
   }
 
   .loading-spinner {
@@ -101,7 +72,7 @@
   .loading-text {
     font-family: var(--font-mono, monospace);
     font-size: 0.7rem;
-    color: rgba(255,255,255,0.4);
+    color: rgba(255,255,255,0.6);
     letter-spacing: 0.15em;
   }
 
@@ -114,22 +85,14 @@
     inset: 0;
     width: 100% !important;
     height: 100% !important;
-    z-index: 1;
-    outline: none;
-    opacity: 0;
-    transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1);
-    /* Allow touches to pass through empty space if needed, though orbit controls needs it */
-  }
-
-  .webgl-canvas.loaded {
-    opacity: 1;
     z-index: 2;
+    outline: none;
+    opacity: 1;
   }
 
-  /* Premium HUD styling */
   .telemetry-hud {
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 10;
@@ -138,8 +101,7 @@
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    opacity: 0;
-    transition: opacity 1s ease 0.5s;
+    opacity: 1;
   }
   
   .webgl-canvas.loaded ~ .telemetry-hud {
@@ -186,13 +148,11 @@
 
 <script>
   // @ts-ignore
-  import * as THREE from 'https://esm.sh/three@0.160.0';
+  import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
   // @ts-ignore
-  import { GLTFLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
+  import { GLTFLoader } from 'https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js';
   // @ts-ignore
-  import { DRACOLoader } from 'https://esm.sh/three@0.160.0/examples/jsm/loaders/DRACOLoader.js';
-  // @ts-ignore
-  import { OrbitControls } from 'https://esm.sh/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+  import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
   import { parseGamepadState } from '../../lib/gamepad.ts';
 
   const startHero3D = () => {
@@ -225,18 +185,18 @@
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
         renderer.toneMappingExposure = 1.2;
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
         scene.add(ambientLight);
 
-        const keyLight = new THREE.DirectionalLight(0xffffff, 2);
+        const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
         keyLight.position.set(5, 5, 2);
         scene.add(keyLight);
 
-        const fillLight = new THREE.DirectionalLight(0x8b5cf6, 1.5);
+        const fillLight = new THREE.DirectionalLight(0x8b5cf6, 1.8);
         fillLight.position.set(-5, 0, 5);
         scene.add(fillLight);
         
-        const rimLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        const rimLight = new THREE.DirectionalLight(0xffffff, 1.8);
         rimLight.position.set(0, 5, -5);
         scene.add(rimLight);
 
@@ -261,10 +221,6 @@
 
     function loadControllerModel() {
       const loader = new GLTFLoader();
-      const dracoLoader = new DRACOLoader();
-      dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
-      loader.setDRACOLoader(dracoLoader);
-
       const modelPath = '/models/controller.glb';
 
       loader.load(
@@ -275,7 +231,7 @@
           controllerModel.traverse((child: any) => {
             if (child.isMesh && child.material) {
               if (child.material.isMeshStandardMaterial) {
-                child.material.envMapIntensity = 1.5;
+                child.material.envMapIntensity = 1.8;
                 child.material.needsUpdate = true;
               }
             }
