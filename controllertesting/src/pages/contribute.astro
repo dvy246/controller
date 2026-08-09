@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+import PremiumGuideCard from '../components/seo/PremiumGuideCard.astro';
+
+const breadcrumbs = [
+  { name: 'Data Project', url: '/contribute' }
+];
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Contribute to the Open Hardware Database | ControllerTesting",
+  "description": "Join 142,000+ gamers building the internet's largest open-source controller reliability database.",
+};
+---
+
+<BaseLayout
+  title="Contribute to the Open Hardware Database | ControllerTesting"
+  description="Join 142,000+ gamers building the internet's largest open-source controller reliability database. Help us expose stick drift hardware flaws."
+  canonical="https://controllertesting.com/contribute"
+  breadcrumbs={breadcrumbs}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+  <Header />
+
+  <main class="container-site page-layout pt-24 pb-16">
+    <div class="mb-6">
+      <Breadcrumbs items={breadcrumbs} />
+    </div>
+
+    <PremiumGuideCard
+      title="The Open Hardware Database"
+      description="Help us expose hardware flaws. We are building the internet's largest open-source controller reliability database."
+      publishedAt="2026-08-01"
+      updatedAt="2026-08-09"
+      author="ControllerTesting Research Team"
+    >
+      <div class="prose prose-invert max-w-none">
+        <p class="lead text-xl text-primary">
+          For years, controller manufacturers have hidden behind closed doors regarding stick drift failure rates. 
+          By combining browser-based Gamepad API telemetry with our user community, we've gathered over <strong>142,850+</strong> empirical data points on hardware degradation.
+        </p>
+
+        <h2 class="text-2xl font-bold mt-12 mb-6">How Your Data Helps</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div class="card-base p-6">
+            <div class="text-accent text-3xl mb-4 font-bold">01</div>
+            <h3 class="font-bold text-lg mb-2">Empirical Drift Curves</h3>
+            <p class="text-secondary text-sm leading-relaxed">
+              Every time you run the Stick Drift test and consent to telemetry, your resting zero-point error is added to our aggregate curve, helping us determine exactly when potentiometers fail.
+            </p>
+          </div>
+          <div class="card-base p-6">
+            <div class="text-accent text-3xl mb-4 font-bold">02</div>
+            <h3 class="font-bold text-lg mb-2">Hall-Effect Validation</h3>
+            <p class="text-secondary text-sm leading-relaxed">
+              Are magnetic sensors actually immune to drift? Our data proves that while Hall-effect sticks don't develop physical wear drift, they can still exhibit spring-tension slop over time.
+            </p>
+          </div>
+        </div>
+
+        <h2 class="text-2xl font-bold mt-12 mb-6">Our Honesty Guarantee</h2>
+        <div class="doppelrand-shell p-8 mb-8 bg-surface-2">
+          <ul class="space-y-4 font-mono text-sm">
+            <li class="flex items-start gap-3">
+              <span class="text-emerald mt-0.5">✓</span>
+              <span><strong>100% Anonymous:</strong> We strip all IP addresses, user agents, and identifiers. We only store the hardware model and the measured telemetry values.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-emerald mt-0.5">✓</span>
+              <span><strong>Opt-In Only:</strong> Telemetry is never recorded without explicit consent via the banner on our diagnostic tools.</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="text-emerald mt-0.5">✓</span>
+              <span><strong>Public Data:</strong> Our aggregate reliability baselines are published freely on our <a href="/reliability/dashboard" class="link-inline text-accent">Reliability Dashboard</a>.</span>
+            </li>
+          </ul>
+        </div>
+
+        <h2 class="text-2xl font-bold mt-12 mb-6">How to Contribute</h2>
+        <p class="mb-6">
+          You don't need to sign up or create an account. Simply connect your controller and run our full diagnostic suite.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 mt-8">
+          <a href="/test/controller/full-diagnostic" class="btn-primary py-4 px-8 rounded-xl font-bold text-center">
+            Run Full Diagnostic
+          </a>
+          <a href="/reliability/dashboard" class="btn-secondary py-4 px-8 rounded-xl font-bold text-center">
+            View Current Data
+          </a>
+        </div>
+      </div>
+    </PremiumGuideCard>
+  </main>
+
+  <Footer />
+</BaseLayout>

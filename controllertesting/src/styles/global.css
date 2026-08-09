@@ -130,6 +130,7 @@
   position: relative;
   width: 100%;
   overflow: visible;
+  overflow-x: clip;
 }
 
 .doppelrand-core {
@@ -1386,6 +1387,7 @@ svg {
 
 .btn-primary:hover {
   background: var(--color-accent-hover);
+  color: var(--color-text-inverse) !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px var(--color-accent-glow);
   text-decoration: none;

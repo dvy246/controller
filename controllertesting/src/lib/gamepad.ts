@@ -4,6 +4,8 @@
  * circularity error measurement, and controller model identification.
  */
 
+import { type ControllerIdentity, identifyControllerWithConfidence } from "./interpretation";
+
 export interface GamepadState {
   index: number;
   id: string;
@@ -34,6 +36,7 @@ export interface GamepadState {
     orientation: readonly [number, number, number, number] | null;
   };
   detectedModel: string;
+  identity: ControllerIdentity;
 }
 
 export function identifyController(id: string): string {
@@ -156,6 +159,7 @@ export function parseGamepadState(gp: Gamepad): GamepadState {
     triggers: { l2, r2 },
     pose,
     detectedModel: identifyController(gp.id),
+    identity: identifyControllerWithConfidence(gp.id),
   };
 }
 

@@ -21,6 +21,8 @@ import Breadcrumbs from '../components/global/Breadcrumbs.astro';
 import TelemetryConsent from '../components/global/TelemetryConsent.astro';
 import PremiumFaqAccordion from '../components/seo/PremiumFaqAccordion.astro';
 import HowToGetStarted from '../components/global/HowToGetStarted.astro';
+import InterlinkStrip from '../components/global/InterlinkStrip.astro';
+import { resolveGamesForTool } from '../data/arcadeInterlinks';
 
 export interface Props {
   title: string;
@@ -81,6 +83,8 @@ const allSchemas = [
   ...(faqSchema ? [faqSchema] : []),
   ...(Array.isArray(schema) ? schema : [schema]),
 ];
+
+const relatedGames = resolveGamesForTool(Astro.url.pathname);
 ---
 
 <BaseLayout
@@ -124,6 +128,11 @@ const allSchemas = [
         <section class="tool-results-card" aria-label="Test results summary" aria-live="polite">
           <slot name="results" />
         </section>
+      )}
+
+      {/* ── 4.1 Decision Strip Slot ── */}
+      {Astro.slots.has('decision-strip') && (
+        <slot name="decision-strip" />
       )}
 
       {/* ── 4.5. How to Get Started Section (Standardized sitewide) ── */}
@@ -218,6 +227,16 @@ const allSchemas = [
             <slot name="related-tools" />
           </div>
         </section>
+      )}
+
+      {/* ── 7.5. Related Games (auto from arcadeInterlinks registry) ── */}
+      {relatedGames.length > 0 && (
+        <InterlinkStrip
+          type="games"
+          title="Practice what you just tested"
+          subtitle="Turn your test results into skill. These arcade games train the exact inputs you just measured — drift, buttons, triggers, D-pad and reaction time."
+          links={relatedGames}
+        />
       )}
 
       {/* ── 8. SEO Educational Content ── */}

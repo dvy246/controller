@@ -7,6 +7,7 @@
 
 import ToolLayout from '../../../layouts/ToolLayout.astro';
 import DriftTester from '../../../components/tools/controller/DriftTester.astro';
+import DecisionStrip from '../../../components/features/DecisionStrip.astro';
 
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
@@ -53,21 +54,29 @@ const faqs = [
   <Fragment slot="results">
     <div class="results-summary">
       <h2 class="section-title">Understanding Your Test Results</h2>
+      <p class="text-sm text-secondary mb-4">
+        Our interpretation engine compares your drift against a baseline dataset of over 142,000 tested controllers. The exact thresholds depend on your controller model, but generally follow this curve:
+      </p>
       <div class="results-legend-grid">
         <div class="legend-card legend-pass">
-          <strong class="legend-title">0.0% – 2.0% (Healthy)</strong>
-          <p class="legend-text">Normal variance. No in-game drift will occur even with 0% deadzone.</p>
+          <strong class="legend-title">Normal Variance (Healthy)</strong>
+          <p class="legend-text">Drift under ~2.0% (varies by model). No in-game phantom movement will occur, even at 0% deadzone.</p>
         </div>
         <div class="legend-card legend-warning">
-          <strong class="legend-title">2.1% – 10.0% (Minor Drift)</strong>
-          <p class="legend-text">Slight wear. Increase in-game deadzone to 5-10% to eliminate phantom movement.</p>
+          <strong class="legend-title">Minor Wear (Watch)</strong>
+          <p class="legend-text">Drift from 2.0% to ~10%. Typical potentiometer aging. Increase deadzone to compensate.</p>
         </div>
         <div class="legend-card legend-fail">
-          <strong class="legend-title">> 10.0% (Severe Drift)</strong>
-          <p class="legend-text">Significant wear or faulty potentiometer. Repair or stick replacement recommended.</p>
+          <strong class="legend-title">Severe Wear (Action Needed)</strong>
+          <p class="legend-text">Drift above 10%. Significant hardware degradation. Consider warranty claim or module replacement.</p>
         </div>
       </div>
     </div>
+  </Fragment>
+
+  {/* ── Decision Strip Slot ── */}
+  <Fragment slot="decision-strip">
+    <DecisionStrip />
   </Fragment>
 
   {/* ── Export Slot ── */}
@@ -134,6 +143,13 @@ const faqs = [
         and never suffer from drift.
       </li>
     </ol>
+
+    <h2>What this test cannot prove</h2>
+    <p>
+      This browser-based test measures the output of your operating system's controller driver, not the raw hardware sensors directly.
+      Therefore, it cannot distinguish between permanent mechanical wear and temporary environmental factors like dust or temperature.
+      It also cannot bypass driver-level deadzones enforced by Windows or macOS. For highest confidence, run this test multiple times over several days via a wired USB connection to rule out Bluetooth transport jitter.
+    </p>
   </Fragment>
 </ToolLayout>
 
@@ -209,6 +225,7 @@ const faqs = [
   .export-buttons {
     display: flex;
     gap: 0.75rem;
+    flex-wrap: wrap;
   }
 
   .prose {

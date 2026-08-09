@@ -10,11 +10,15 @@ import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
 import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
 import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
+import InterlinkStrip from '../../components/global/InterlinkStrip.astro';
+import { resolveToolsForGame } from '../../data/arcadeInterlinks';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
   { name: 'Stick Maze Runner' },
 ];
+
+const relatedTools = resolveToolsForGame('stick-maze');
 ---
 
 <BaseLayout
@@ -78,6 +82,13 @@ const breadcrumbs = [
         'The finish zone is forgiving: touching its green edge counts as a stage clear.',
       ]}
     />
+
+      <InterlinkStrip
+        type="tools"
+        title="Verify with a diagnostic tool"
+        subtitle="Practice is one thing — confirmation is another. Run the matching hardware test to turn your score into a measurable verdict."
+        links={relatedTools}
+      />
   </div>
   <Footer />
 </BaseLayout>

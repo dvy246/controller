@@ -10,11 +10,15 @@ import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
 import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
 import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
+import InterlinkStrip from '../../components/global/InterlinkStrip.astro';
+import { resolveToolsForGame } from '../../data/arcadeInterlinks';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
   { name: 'Quick Draw' },
 ];
+
+const relatedTools = resolveToolsForGame('quick-draw');
 ---
 
 <BaseLayout
@@ -79,6 +83,13 @@ const breadcrumbs = [
         'The 2–5 second random window rewards sustained focus over predicting the moment.',
       ]}
     />
+
+      <InterlinkStrip
+        type="tools"
+        title="Verify with a diagnostic tool"
+        subtitle="Practice is one thing — confirmation is another. Run the matching hardware test to turn your score into a measurable verdict."
+        links={relatedTools}
+      />
   </div>
   <Footer />
 </BaseLayout>

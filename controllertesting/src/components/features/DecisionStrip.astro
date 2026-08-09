@@ -1,0 +1,289 @@
+---
+/**
+ * DecisionStrip.astro — Warranty & Repair Decision Stack
+ *
+ * Implements Phase 2 of the Moat: The Decision Stack.
+ * Competitors stop at showing a number. This component provides the "Now What?"
+ * using active verbs, clear visual hierarchy, and accessible markup.
+ *
+ * Design guidelines applied:
+ * - Semantic <a> tags for navigation
+ * - Active voice verbs ("Check Warranty", "Export Evidence")
+ * - Focus rings for keyboard accessibility
+ * - Minimalist glassmorphism with existing design tokens
+ */
+
+export interface Props {
+  id?: string;
+  class?: string;
+}
+
+const { id = "decision-strip", class: className = "" } = Astro.props;
+---
+
+<div id={id} class:list={["decision-strip", className]} style="display: none;" role="region" aria-label="Next steps">
+  <h2 class="decision-title">Recommended Next Steps</h2>
+  
+  <div class="decision-grid" id="decision-grid">
+    <!-- Cards are injected here via JS based on verdict -->
+  </div>
+</div>
+
+<style>
+  /* ══════════════════════════════════════════════════════════════
+     Decision Strip — Premium Card Navigation
+     ══════════════════════════════════════════════════════════════ */
+     
+  .decision-strip {
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-8);
+    animation: fade-in-up var(--duration-normal) var(--ease-spring);
+  }
+
+  .decision-title {
+    font-size: var(--text-h3);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  .decision-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-4);
+  }
+
+  /* ── Card Styles (shared structure for dynamic injection) ── */
+  :global(.decision-card) {
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-5);
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-card);
+    text-decoration: none;
+    transition: transform var(--duration-fast) var(--ease-spring),
+                border-color var(--duration-fast) var(--ease-smooth),
+                background var(--duration-fast) var(--ease-smooth);
+  }
+
+  :global(.decision-card:hover) {
+    transform: translateY(-2px);
+    border-color: var(--color-accent);
+    background: rgba(255, 255, 255, 0.03);
+  }
+  
+  :global(.decision-card:focus-visible) {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 4px;
+    border-radius: var(--radius-card);
+  }
+
+  :global(.decision-card-icon) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-3);
+  }
+
+  :global(.decision-card--primary) {
+    border-color: rgba(37, 99, 235, 0.3);
+    background: rgba(37, 99, 235, 0.05);
+  }
+  
+  :global(.decision-card--primary:hover) {
+    border-color: var(--color-accent);
+    background: rgba(37, 99, 235, 0.1);
+  }
+  
+  :global(.decision-card--primary .decision-card-icon) {
+    background: rgba(37, 99, 235, 0.15);
+    color: var(--color-accent-hover);
+  }
+
+  :global(.decision-card--secondary .decision-card-icon) {
+    background: var(--color-surface-3);
+    color: var(--color-text-primary);
+  }
+
+  :global(.decision-card-title) {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-2);
+  }
+
+  :global(.decision-card-desc) {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin-bottom: var(--space-4);
+    flex-grow: 1;
+  }
+
+  :global(.decision-card-cta) {
+    font-family: var(--font-mono);
+    font-size: var(--text-micro);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  :global(.decision-card:hover .decision-card-cta) {
+    color: var(--color-accent-hover);
+  }
+  
+  :global(.decision-card-cta svg) {
+    transition: transform var(--duration-fast) var(--ease-spring);
+  }
+  
+  :global(.decision-card:hover .decision-card-cta svg) {
+    transform: translateX(4px);
+  }
+
+  /* ── Light Theme ── */
+  [data-theme="light"] :global(.decision-card) {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  [data-theme="light"] :global(.decision-card:hover) {
+    border-color: var(--color-accent);
+    background: #fafafc;
+    box-shadow: var(--shadow-md);
+  }
+  
+  [data-theme="light"] :global(.decision-card--primary) {
+    background: rgba(37, 99, 235, 0.03);
+  }
+  
+  [data-theme="light"] :global(.decision-card--primary .decision-card-icon) {
+    background: rgba(37, 99, 235, 0.1);
+  }
+  
+  [data-theme="light"] :global(.decision-card--secondary .decision-card-icon) {
+    background: rgba(0, 0, 0, 0.05);
+    color: #0f172a;
+  }
+  
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .decision-strip {
+      animation: none;
+    }
+    :global(.decision-card) {
+      transition: none;
+    }
+    :global(.decision-card:hover .decision-card-cta svg) {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  // Expose a global function to update the decision strip from tool scripts
+  window.updateDecisionStrip = function(verdict: 'normal' | 'watch' | 'action-needed', modelKey: string | null) {
+    const strip = document.getElementById('decision-strip');
+    const grid = document.getElementById('decision-grid');
+    if (!strip || !grid) return;
+    
+    // SVGs for icons
+    const icons = {
+      shield: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+      wrench: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
+      file: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>',
+      arrowRight: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'
+    };
+    
+    let html = '';
+    
+    // Helper to generate card HTML
+    const createCard = (title: string, desc: string, cta: string, href: string, icon: string, isPrimary: boolean = false) => `
+      <a href="${href}" class="decision-card ${isPrimary ? 'decision-card--primary' : 'decision-card--secondary'}">
+        <div class="decision-card-icon" aria-hidden="true">${icon}</div>
+        <h3 class="decision-card-title">${title}</h3>
+        <p class="decision-card-desc">${desc}</p>
+        <span class="decision-card-cta">${cta} ${icons.arrowRight}</span>
+      </a>
+    `;
+
+    if (verdict === 'normal') {
+      html += createCard(
+        "Save to Controller Passport",
+        "Track this healthy baseline over time. We'll automatically detect changes if you test again later.",
+        "Save Snapshot",
+        "/passport",
+        icons.file,
+        true
+      );
+      html += createCard(
+        "Run Full Diagnostic",
+        "Stick drift is only one metric. Ensure your buttons, triggers, and vibration motors are fully operational.",
+        "Start Wizard",
+        "/test/controller/full-diagnostic",
+        icons.shield
+      );
+    } else if (verdict === 'watch') {
+      html += createCard(
+        "Check Warranty Coverage",
+        "Early stick drift is often covered under manufacturer warranty if your controller is less than a year old.",
+        "Verify Policy",
+        "/warranty",
+        icons.shield,
+        true
+      );
+      html += createCard(
+        "How to Fix Stick Drift",
+        "Minor wear can sometimes be corrected by cleaning the stick module or adjusting in-game deadzones.",
+        "View Guide",
+        "/fix/stick-drift",
+        icons.wrench
+      );
+    } else {
+      // action-needed
+      html += createCard(
+        "Export Claim Evidence",
+        "Generate a verified PDF report of this test to attach to your manufacturer RMA or warranty claim.",
+        "Export PDF",
+        "/test/controller/health-score",
+        icons.file,
+        true
+      );
+      html += createCard(
+        "Fix vs Replace Cost",
+        "Is it worth repairing this model? Compare the $8 parts cost against the replacement price.",
+        "Calculate Cost",
+        "/fix-or-replace",
+        icons.wrench
+      );
+      html += createCard(
+        "Check Warranty Coverage",
+        "Don't buy a new controller yet. Verify if you're eligible for a free replacement.",
+        "Verify Policy",
+        "/warranty",
+        icons.shield
+      );
+    }
+    
+    grid.innerHTML = html;
+    strip.style.display = 'block';
+  };
+</script>

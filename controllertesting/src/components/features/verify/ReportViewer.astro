@@ -42,7 +42,7 @@ const { mode, uuid = "demo", embed = false } = Astro.props;
           </div>
           <h1 id="rv-device" class="rv-device">Loading controller…</h1>
           <p class="rv-meta mono">
-            Report ID: <span id="rv-uuid" class="rv-accent">{uuid}</span>
+            Report ID: <span id="rv-uuid" class="rv-accent">{uuid === 'demo' ? 'demo' : (uuid || 'Loading...')}</span>
             <span class="rv-dot">•</span> Protocol v<span id="rv-version">2.4.0</span>
           </p>
         </div>
@@ -344,7 +344,12 @@ const { mode, uuid = "demo", embed = false } = Astro.props;
         setStatus("error", "No valid report payload in this link");
       }
     } else if (mode === "local") {
-      const uuid = window.location.pathname.split("/").filter(Boolean).pop() || "demo";
+      const hashParams = window.location.hash.substring(1);
+      const uuid = hashParams || "demo";
+      
+      const uuidEl = document.getElementById("rv-uuid");
+      if (uuidEl) uuidEl.textContent = uuid;
+      
       let reportData: EvidenceReport | null = null;
       try {
         const cached = localStorage.getItem("ct_report_" + uuid);

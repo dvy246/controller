@@ -1,0 +1,518 @@
+---
+/**
+ * /games/kart-drift — Kart Drift (Top-Down Racing)
+ * SEO Title: Kart Drift — Controller Racing & Drifting Game
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
+import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
+import InterlinkStrip from '../../components/global/InterlinkStrip.astro';
+import { resolveToolsForGame } from '../../data/arcadeInterlinks';
+
+const breadcrumbs = [
+  { name: 'Games Arcade', url: '/games' },
+  { name: 'Kart Drift' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoGame',
+  name: 'Kart Drift Top-Down Racer',
+  description: 'High-speed top-down racing. Master the art of the drift in this 3-lap time trial.',
+  gamePlatform: 'Web Browser',
+};
+
+const relatedTools = resolveToolsForGame('kart-drift');
+---
+
+<BaseLayout
+  title="Kart Drift — Controller Racing Game | ControllerTesting.com"
+  description="High-speed top-down racing. Master the art of the drift in this 3-lap time trial using your PS5, Xbox, or Switch controller."
+  schema={schema}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="game-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="game-header">
+        <span class="badge-tag">Arcade Racer</span>
+        <h1 class="game-title">Kart Drift</h1>
+        <p class="game-subtitle">
+          Accelerate with R2, Brake/Drift with L2, and steer with the Left Stick. Set the fastest 3-lap time!
+        </p>
+      </header>
+
+      <div class="game-canvas-card card-base">
+        <div class="game-settings-bar" id="kart-setup">
+          <div class="setting-group">
+            <label>Players:</label>
+            <select id="sel-players" class="glass-select">
+              <option value="1">1 Player (Time Trial)</option>
+              <option value="2">2 Players</option>
+              <option value="3">3 Players</option>
+              <option value="4">4 Players</option>
+            </select>
+          </div>
+          <div class="setting-group">
+            <label>Race Length:</label>
+            <select id="sel-laps" class="glass-select">
+              <option value="1">1 Lap</option>
+              <option value="3" selected>3 Laps</option>
+              <option value="5">5 Laps</option>
+            </select>
+          </div>
+          <button type="button" class="btn-primary" id="btn-start-game">Start Race</button>
+        </div>
+
+        <canvas id="kart-canvas" width="800" height="500" style="display:none;"></canvas>
+        <div class="game-overlay-bar" id="kart-hud" style="display:none;">
+          <div class="g-stat"><span class="g-label">LAPS</span><span class="g-val text-gradient" id="g-lap-val">1 / 3</span></div>
+          <div class="g-stat"><span class="g-label">TIME</span><span class="g-val mono" id="g-time-val">00:00.00</span></div>
+          <div class="g-stat"><span class="g-label">LEADER</span><span class="g-val mono text-accent" id="g-best-val">P1</span></div>
+          <button type="button" class="btn-secondary" id="btn-stop-game">End Race</button>
+        </div>
+        <p class="game-hint">Gamepad: R2 to Gas, L2 to Drift, Left Stick to Steer · P1 Keyboard: WASD · P2 Keyboard: Arrows</p>
+      </div>
+
+      <div class="game-over-panel glass-panel" id="kart-over" role="status" hidden>
+        <span class="over-eyebrow">Race Complete</span>
+        <div class="over-score mono text-gradient" id="over-time-val">00:00.00</div>
+        <p class="over-sub">Total Time (3 Laps)</p>
+        <ArcadeRewardsLine baseId="kart" xp={150} />
+        <div class="over-actions">
+          <button type="button" class="btn-primary" id="btn-play-again">Race Again</button>
+          <a href="/games" class="btn-secondary">Back to Arcade</a>
+        </div>
+      </div>
+
+      <GameHowToPlay
+        xp={150}
+        goal="Complete 3 laps around the neon circuit as fast as possible. Stay on the track to maintain your speed, and master the drift to take tight corners without slowing down."
+        controls={[
+          { action: 'R2 / RT', label: 'Accelerate' },
+          { action: 'L2 / LT', label: 'Brake / Drift' },
+          { action: 'Left Stick', label: 'Steer Left / Right' },
+          { action: 'W / S / A / D', label: 'Keyboard Controls' },
+        ]}
+        steps={[
+          'Press Start Time Trial to begin the countdown.',
+          'Hold R2 / RT to accelerate. Your kart will automatically grip the track.',
+          'When approaching a sharp turn, hold L2 / LT while steering to initiate a drift. Your kart will slide, allowing you to maintain RPMs through the corner.',
+          'Pass through all invisible checkpoints to register a lap. Complete 3 laps to finish.',
+        ]}
+        tips={[
+          'Driving on the dark grid outside the neon track will apply a massive speed penalty.',
+          'Drifting (L2) reduces your traction but increases your turn speed. Release L2 to snap back into full grip and boost out of the corner.',
+          'Smooth steering on the analog stick prevents speed bleeding.',
+        ]}
+      />
+      <InterlinkStrip
+        type="tools"
+        title="Verify your racing hardware"
+        subtitle="Drifting requires precise L2/R2 actuation and smooth analog stick curves. Verify your controller isn't holding you back."
+        links={relatedTools}
+      />
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { parseGamepadState } from '../../lib/gamepad';
+  import { claimArcadeXp, getArcadeRewardEls, renderArcadeRewards } from '../../lib/arcadeRewards';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const setupPanel = document.getElementById('kart-setup') as HTMLElement | null;
+    const canvas = document.getElementById('kart-canvas') as HTMLCanvasElement;
+    const hudPanel = document.getElementById('kart-hud') as HTMLElement | null;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const overPanel = document.getElementById('kart-over') as HTMLElement | null;
+    const overTimeEl = document.getElementById('over-time-val') as HTMLElement | null;
+    const overEyebrow = document.querySelector('.over-eyebrow') as HTMLElement | null;
+    const lapEl = document.getElementById('g-lap-val') as HTMLElement | null;
+    const timeEl = document.getElementById('g-time-val') as HTMLElement | null;
+    const bestEl = document.getElementById('g-best-val') as HTMLElement | null;
+
+    let isPlaying = false;
+    let raceStartTime = 0;
+    let totalLaps = 3;
+    let numPlayers = 1;
+    let renderTimer: number;
+    
+    // Track Definition (Center path)
+    const trackPoints = [
+      { x: 150, y: 400 }, // Start line
+      { x: 100, y: 150 },
+      { x: 250, y: 100 },
+      { x: 400, y: 250 },
+      { x: 550, y: 100 },
+      { x: 700, y: 150 },
+      { x: 700, y: 400 },
+      { x: 400, y: 400 },
+    ];
+    const TRACK_WIDTH = 100;
+    
+    interface Kart {
+      id: number;
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      angle: number;
+      checkpoint: number;
+      lap: number;
+      color: string;
+      flame: string;
+    }
+
+    let karts: Kart[] = [];
+    const colors = ['#ef4444', '#3b82f6', '#10b981', '#eab308'];
+    const flames = ['#fca5a5', '#93c5fd', '#6ee7b7', '#fde047'];
+
+    const keys = new Set<string>();
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space', 'Enter', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(e.code)) {
+        e.preventDefault();
+      }
+      keys.add(e.code);
+    });
+    window.addEventListener('keyup', (e: KeyboardEvent) => keys.delete(e.code));
+
+    function formatTime(ms: number) {
+      const totalDeci = Math.floor(ms / 10);
+      const minutes = Math.floor(totalDeci / 6000);
+      const seconds = Math.floor((totalDeci % 6000) / 100);
+      const centi = totalDeci % 100;
+      return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${centi.toString().padStart(2, '0')}`;
+    }
+
+    function resetKarts() {
+      karts = [];
+      for (let i = 0; i < numPlayers; i++) {
+        karts.push({
+          id: i + 1,
+          x: trackPoints[0].x - (i * 20), // stagger start positions
+          y: trackPoints[0].y + (i % 2 === 0 ? 15 : -15),
+          vx: 0, vy: 0,
+          angle: -Math.PI / 2,
+          checkpoint: 1,
+          lap: 1,
+          color: colors[i],
+          flame: flames[i],
+        });
+      }
+    }
+
+    function updateHud() {
+      if (!isPlaying) return;
+      const now = Date.now();
+      const elapsed = now - raceStartTime;
+      
+      let leader = karts[0];
+      for (const k of karts) {
+        if (k.lap > leader.lap || (k.lap === leader.lap && k.checkpoint > leader.checkpoint)) {
+          leader = k;
+        }
+      }
+      
+      if (lapEl) lapEl.textContent = `${Math.min(leader.lap, totalLaps)} / ${totalLaps}`;
+      if (bestEl) {
+        bestEl.textContent = `P${leader.id}`;
+        bestEl.style.color = leader.color;
+      }
+      if (timeEl) timeEl.textContent = formatTime(elapsed);
+    }
+
+    function endGame(winner: Kart | null) {
+      isPlaying = false;
+      if (renderTimer) cancelAnimationFrame(renderTimer);
+      const totalRaceTime = Date.now() - raceStartTime;
+      
+      if (setupPanel) setupPanel.style.display = 'flex';
+      if (canvas) canvas.style.display = 'none';
+      if (hudPanel) hudPanel.style.display = 'none';
+      
+      const result = claimArcadeXp('kart', 150);
+      renderArcadeRewards(
+        getArcadeRewardEls('kart'),
+        result
+          ? { kind: 'award', result, amount: 150 }
+          : { kind: 'claimed', amount: 150 },
+      );
+      
+      if (overEyebrow) {
+        overEyebrow.textContent = winner && numPlayers > 1 ? `PLAYER ${winner.id} WINS!` : 'Race Complete';
+        if (winner) overEyebrow.style.color = winner.color;
+      }
+      if (overTimeEl) overTimeEl.textContent = formatTime(totalRaceTime);
+      if (overPanel) overPanel.hidden = false;
+    }
+
+    function startGame() {
+      if (isPlaying) return;
+      
+      const selPlayers = document.getElementById('sel-players') as HTMLSelectElement;
+      const selLaps = document.getElementById('sel-laps') as HTMLSelectElement;
+      numPlayers = parseInt(selPlayers?.value || '1', 10);
+      totalLaps = parseInt(selLaps?.value || '3', 10);
+      
+      if (setupPanel) setupPanel.style.display = 'none';
+      if (canvas) canvas.style.display = 'block';
+      if (hudPanel) hudPanel.style.display = 'flex';
+
+      isPlaying = true;
+      resetKarts();
+      
+      const now = Date.now();
+      raceStartTime = now;
+      
+      if (overPanel) overPanel.hidden = true;
+      render();
+    }
+
+    // Distance from point to line segment
+    function dist2(v: {x:number,y:number}, w: {x:number,y:number}) { 
+      return (v.x - w.x)**2 + (v.y - w.y)**2; 
+    }
+    
+    function distToSegment(p: {x:number,y:number}, v: {x:number,y:number}, w: {x:number,y:number}) {
+      const l2 = dist2(v, w);
+      if (l2 === 0) return Math.sqrt(dist2(p, v));
+      let t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+      t = Math.max(0, Math.min(1, t));
+      return Math.sqrt(dist2(p, { x: v.x + t * (w.x - v.x), y: v.y + t * (w.y - v.y) }));
+    }
+
+    function isOnTrack(x: number, y: number) {
+      let minDist = 999999;
+      for (let i = 0; i < trackPoints.length; i++) {
+        const p1 = trackPoints[i];
+        const p2 = trackPoints[(i + 1) % trackPoints.length];
+        const d = distToSegment({x, y}, p1, p2);
+        if (d < minDist) minDist = d;
+      }
+      return minDist <= TRACK_WIDTH / 2;
+    }
+
+    function render() {
+      ctx.fillStyle = '#0a0d14';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw Grid Background
+      ctx.strokeStyle = '#1e2638';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < canvas.width; x += 50) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += 50) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+      }
+
+      // Draw Track Outer Glow
+      ctx.beginPath();
+      ctx.moveTo(trackPoints[0].x, trackPoints[0].y);
+      for (let i = 1; i < trackPoints.length; i++) ctx.lineTo(trackPoints[i].x, trackPoints[i].y);
+      ctx.closePath();
+      
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      
+      // Neon glow
+      ctx.strokeStyle = '#3b82f6'; // Blue accent
+      ctx.lineWidth = TRACK_WIDTH + 10;
+      ctx.stroke();
+
+      // Track Surface
+      ctx.strokeStyle = '#111827'; // Dark asphalt
+      ctx.lineWidth = TRACK_WIDTH;
+      ctx.stroke();
+      
+      // Track inner lines
+      ctx.strokeStyle = '#374151';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([20, 20]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Start/Finish Line
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.moveTo(trackPoints[0].x - 40, trackPoints[0].y);
+      ctx.stroke();
+
+      if (isPlaying) {
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+
+        for (let i = 0; i < karts.length; i++) {
+          const k = karts[i];
+          let accel = 0, brake = 0, steer = 0;
+          
+          let gp: Gamepad | null = null;
+          let gpIndex = 0;
+          for (let g of gamepads) {
+            if (g && g.connected) {
+              if (gpIndex === i) { gp = g; break; }
+              gpIndex++;
+            }
+          }
+
+          if (gp) {
+            const state = parseGamepadState(gp);
+            accel = state.triggers.r2;
+            brake = state.triggers.l2;
+            steer = Math.abs(state.leftStick.x) > 0.1 ? state.leftStick.x : 0;
+          } else {
+            // Fallbacks
+            if (i === 0) {
+              if (keys.has('KeyW')) accel = 1;
+              if (keys.has('KeyS')) brake = 1;
+              if (keys.has('KeyA')) steer = -1;
+              if (keys.has('KeyD')) steer = 1;
+            } else if (i === 1) {
+              if (keys.has('ArrowUp')) accel = 1;
+              if (keys.has('ArrowDown')) brake = 1;
+              if (keys.has('ArrowLeft')) steer = -1;
+              if (keys.has('ArrowRight')) steer = 1;
+            }
+          }
+
+          const onTrack = isOnTrack(k.x, k.y);
+          const maxSpeed = onTrack ? 14 : 4; 
+          const acceleration = 0.4 * accel;
+          const baseFriction = onTrack ? 0.88 : 0.70; 
+          
+          const isDrifting = brake > 0.1 && Math.abs(steer) > 0.2;
+          const friction = isDrifting ? 0.97 : baseFriction;
+          const turnSpeed = isDrifting ? 0.08 : 0.05;
+          
+          k.angle += steer * turnSpeed * (Math.sqrt(k.vx**2 + k.vy**2) > 1 ? 1 : 0);
+          
+          k.vx += Math.cos(k.angle) * acceleration;
+          k.vy += Math.sin(k.angle) * acceleration;
+          
+          if (brake > 0.1 && !isDrifting) {
+            k.vx *= 0.90;
+            k.vy *= 0.90;
+          }
+
+          k.vx *= friction;
+          k.vy *= friction;
+          
+          const speed = Math.sqrt(k.vx**2 + k.vy**2);
+          if (speed > maxSpeed) {
+            k.vx = (k.vx / speed) * maxSpeed;
+            k.vy = (k.vy / speed) * maxSpeed;
+          }
+
+          k.x += k.vx;
+          k.y += k.vy;
+          
+          k.x = Math.max(10, Math.min(canvas.width - 10, k.x));
+          k.y = Math.max(10, Math.min(canvas.height - 10, k.y));
+
+          // Checkpoints
+          const cp = trackPoints[k.checkpoint];
+          if (dist2(k, cp) < (TRACK_WIDTH/2)**2) {
+            k.checkpoint = (k.checkpoint + 1) % trackPoints.length;
+            if (k.checkpoint === 1) {
+              k.lap++;
+              if (k.lap > totalLaps) {
+                endGame(k);
+                return;
+              }
+            }
+          }
+        }
+      }
+
+      // Draw Karts
+      for (const k of karts) {
+        ctx.save();
+        ctx.translate(k.x, k.y);
+        ctx.rotate(k.angle);
+        
+        if (isPlaying) {
+          const speed = Math.sqrt(k.vx**2 + k.vy**2);
+          if (speed > 5) {
+            ctx.fillStyle = k.flame;
+            ctx.beginPath();
+            ctx.moveTo(-15, -4);
+            ctx.lineTo(-15 - (Math.random() * 10 + 5), 0);
+            ctx.lineTo(-15, 4);
+            ctx.fill();
+          }
+        }
+
+        ctx.fillStyle = k.color;
+        ctx.shadowColor = k.color;
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.roundRect(-12, -8, 24, 16, 4);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        
+        ctx.fillStyle = '#111827';
+        ctx.fillRect(2, -6, 6, 12);
+        
+        ctx.restore();
+      }
+
+      renderTimer = requestAnimationFrame(render);
+    }
+
+    render();
+
+    document.getElementById('btn-start-game')?.addEventListener('click', startGame);
+    document.getElementById('btn-play-again')?.addEventListener('click', () => {
+      if (overPanel) overPanel.hidden = true;
+      if (setupPanel) setupPanel.style.display = 'flex';
+      if (canvas) canvas.style.display = 'none';
+      if (hudPanel) hudPanel.style.display = 'none';
+    });
+    document.getElementById('btn-stop-game')?.addEventListener('click', () => endGame(null));
+  });
+</script>
+
+<style>
+  .game-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .game-header { margin-bottom: 2rem; }
+  .game-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .game-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
+  .game-canvas-card { padding: 1rem; display: flex; flex-direction: column; gap: 1rem; align-items: center; min-height: 500px; justify-content: center; background: var(--color-surface-1); border-radius: var(--radius-sm); border: 1px solid var(--color-border-subtle); }
+  
+  .game-settings-bar { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; width: 100%; max-width: 400px; padding: 2rem; background: var(--color-surface-2); border-radius: var(--radius-sm); border: 1px solid var(--color-border-subtle); }
+  .setting-group { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; }
+  .setting-group label { font-family: var(--font-mono); font-size: var(--text-small); color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; }
+  .glass-select { background: var(--color-surface-0); border: 1px solid var(--color-border-subtle); color: var(--color-text-primary); padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 1rem; outline: none; width: 100%; appearance: none; }
+  .glass-select:focus { border-color: var(--color-accent); box-shadow: 0 0 0 1px var(--color-accent); }
+  .game-settings-bar .btn-primary { width: 100%; margin-top: 1rem; }
+
+  #kart-canvas { width: 100%; max-width: 800px; height: auto; aspect-ratio: 16 / 10; display: block; border-radius: var(--radius-sm); touch-action: manipulation; user-select: none; }
+  .game-overlay-bar { width: 100%; max-width: 800px; display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: var(--color-surface-2); border-radius: var(--radius-sm); }
+  .game-overlay-bar .btn-primary { touch-action: manipulation; }
+  .game-hint { font-family: var(--font-mono); font-size: var(--text-micro); color: var(--color-text-tertiary); text-align: center; margin: 0; }
+  .g-stat { display: flex; flex-direction: column; gap: 0.1rem; }
+  .g-label { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: var(--color-text-tertiary); }
+  .g-val { font-size: 1.25rem; font-weight: 700; }
+  .game-over-panel { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 100%; max-width: 480px; margin-inline: auto; padding: 2rem; text-align: center; }
+  .game-over-panel[hidden] { display: none; }
+  .over-eyebrow { font-family: var(--font-mono); font-size: var(--text-micro); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-tertiary); }
+  .over-score { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1; }
+  .over-sub { margin: 0; font-size: var(--text-small); color: var(--color-text-secondary); }
+  .over-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 0.5rem; }
+  .over-actions .btn-primary,
+  .over-actions .btn-secondary { touch-action: manipulation; }
+  @media (max-width: 768px) { .game-overlay-bar { flex-wrap: wrap; gap: 1rem; } }
+</style>

@@ -5,21 +5,14 @@ import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
 import ReportViewer from '../../components/features/verify/ReportViewer.astro';
 
-export function getStaticPaths() {
-  return [
-    { params: { uuid: 'demo' } }
-  ];
-}
-
-const { uuid } = Astro.params;
 const breadcrumbs = [
   { name: 'Controller Passport', url: '/passport' },
-  { name: `Diagnostic Report ${uuid}` }
+  { name: `Diagnostic Report` }
 ];
 ---
 
 <BaseLayout
-  title={`Controller Diagnostic Report ${uuid} | ControllerTesting.com`}
+  title={`Controller Diagnostic Report | ControllerTesting.com`}
   description="Controller diagnostic report stored on this device. View stick drift %, circularity error, and button telemetry."
   noindex={true}
   breadcrumbs={breadcrumbs}
@@ -32,7 +25,7 @@ const breadcrumbs = [
     </div>
 
     <div class="max-w-4xl mx-auto">
-      <ReportViewer mode="local" uuid={uuid} />
+      <ReportViewer mode="local" />
     </div>
   </main>
 

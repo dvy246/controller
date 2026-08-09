@@ -6,6 +6,7 @@
  * 
  * UPGRADED: High-energy premium UI & dynamic hardware simulator overlay.
  */
+import InterpretationCard from '../../features/InterpretationCard.astro';
 ---
 <div class="doppelrand-shell group relative" id="drift-tester-root" data-model="none">
   <div class="doppelrand-core flex flex-col gap-8 relative z-10">
@@ -93,6 +94,8 @@
       Reset Canvas Trail
     </button>
   </div>
+  
+  <InterpretationCard />
   </div>
 </div>
 
@@ -100,6 +103,9 @@
   import { parseGamepadState } from '../../../lib/gamepad';
   import { recordTelemetry, mapGamepadToModelKey } from '../../../lib/telemetry';
   import { addPoints } from '../../../lib/rewards';
+  import { interpretDrift } from '../../../lib/interpretation';
+  import { saveToPassport } from '../../../lib/passport';
+  import { generateUUID, detectEnvironment, checkCapabilities } from '../../../lib/report';
 
   let lastTelemetryAt = 0;
   let lastSavedAt = 0;
@@ -143,6 +149,26 @@
       if (history.length > 100) history = history.slice(-100);
       localStorage.setItem('ct_drift_history', JSON.stringify(history));
       localStorage.setItem('ct_last_drift', JSON.stringify(entry));
+      
+      const report = {
+        id: generateUUID(),
+        timestamp: now,
+        protocolVersion: '2.4.0',
+        device: { name: state.detectedModel || 'Unknown Gamepad' },
+        environment: detectEnvironment(),
+        capabilities: checkCapabilities(),
+        tests: {
+          sticks: { 
+            driftX: Math.abs(state.leftStick.driftPct), 
+            driftY: Math.abs(state.rightStick.driftPct), 
+            circularityError: 0, 
+            deadzoneRecommendation: drift > 3 ? 0.05 : 0.02 
+          },
+        },
+        confidence: 'high' as const,
+        limitations: []
+      };
+      saveToPassport(report);
     } catch {
       /* storage unavailable — ignore */
     }
@@ -297,6 +323,30 @@
       ctx.stroke();
     }
 
+    let lastInterpUpdate = 0;
+    const interpCard = document.getElementById('interpretation-card');
+    const interpMetricLabel = document.getElementById('interp-metric-label');
+    const interpMetricValue = document.getElementById('interp-metric-value');
+    const interpMetricUnit = document.getElementById('interp-metric-unit');
+    const interpVerdictBadge = document.getElementById('interp-verdict-badge');
+    const interpVerdictText = document.getElementById('interp-verdict-text');
+    const interpExplanation = document.getElementById('interp-explanation');
+    const interpComparison = document.getElementById('interp-comparison');
+    const interpModelName = document.getElementById('interp-model-name');
+    const interpSampleCount = document.getElementById('interp-sample-count');
+    const interpPercentileFill = document.getElementById('interp-percentile-fill');
+    const interpPercentileMarker = document.getElementById('interp-percentile-marker');
+    const interpPercentileLabel = document.getElementById('interp-percentile-label');
+    const interpDatasetDate = document.getElementById('interp-dataset-date');
+    const interpConfidenceBadge = document.getElementById('interp-confidence-badge');
+    const interpConfidenceText = document.getElementById('interp-confidence-text');
+    const interpFactors = document.getElementById('interp-factors');
+    const interpImprove = document.getElementById('interp-improve');
+    const interpLimitationsList = document.getElementById('interp-limitations-list');
+    const interpNextSteps = document.getElementById('interp-next-steps');
+
+    let connectionTime = 0;
+
     function poll() {
       const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
       let activeGp: Gamepad | null = null;
@@ -371,6 +421,81 @@
           }
         }
 
+        // ── Interpretation Card Update (throttled) ──
+        const now = Date.now();
+        if (connectionTime === 0) connectionTime = now;
+        
+        if (now - lastInterpUpdate > 1000) {
+          lastInterpUpdate = now;
+          const maxDrift = Math.max(state.leftStick.driftPct, state.rightStick.driftPct);
+          const sampleDurationSec = Math.floor((now - connectionTime) / 1000);
+          
+          const interpretation = interpretDrift(maxDrift, state.identity, 'unknown', sampleDurationSec);
+          
+          if (interpCard) {
+            interpCard.style.display = 'block';
+            if (!interpCard.classList.contains('is-visible')) {
+              // Trigger reflow for animation
+              void interpCard.offsetWidth;
+              interpCard.classList.add('is-visible');
+            }
+            
+            if (interpMetricLabel) interpMetricLabel.textContent = interpretation.measurement.label;
+            if (interpMetricValue) interpMetricValue.textContent = interpretation.measurement.value;
+            if (interpMetricUnit) interpMetricUnit.textContent = interpretation.measurement.unit;
+            
+            if (interpVerdictBadge) {
+              interpVerdictBadge.setAttribute('data-verdict', interpretation.interpretation.verdict);
+              if (interpVerdictText) interpVerdictText.textContent = interpretation.interpretation.verdict;
+            }
+            
+            if (interpExplanation) interpExplanation.textContent = interpretation.interpretation.explanation;
+            
+            if (interpretation.comparison && interpComparison) {
+              interpComparison.style.display = 'block';
+              if (interpModelName) interpModelName.textContent = interpretation.comparison.modelName;
+              if (interpSampleCount) interpSampleCount.textContent = `N=${interpretation.comparison.sampleCount.toLocaleString()}`;
+              if (interpPercentileFill) interpPercentileFill.style.width = `${interpretation.comparison.percentile}%`;
+              if (interpPercentileMarker) interpPercentileMarker.style.left = `${interpretation.comparison.percentile}%`;
+              if (interpPercentileLabel) interpPercentileLabel.textContent = interpretation.comparison.betterThan;
+              if (interpDatasetDate) interpDatasetDate.textContent = `Dataset: ${interpretation.comparison.datasetDate}`;
+            } else if (interpComparison) {
+              interpComparison.style.display = 'none';
+            }
+            
+            if (interpConfidenceBadge) {
+              interpConfidenceBadge.setAttribute('data-level', interpretation.confidence.level);
+              if (interpConfidenceText) interpConfidenceText.textContent = `${interpretation.confidence.level.charAt(0).toUpperCase() + interpretation.confidence.level.slice(1)} confidence`;
+            }
+            
+            if (interpFactors) {
+              interpFactors.innerHTML = interpretation.confidence.factors.map(f => `<li>${f}</li>`).join('');
+            }
+            
+            if (interpImprove) interpImprove.textContent = interpretation.confidence.howToImprove;
+            
+            if (interpLimitationsList) {
+              interpLimitationsList.innerHTML = interpretation.limitations.map(l => `<li>${l}</li>`).join('');
+            }
+            
+            if (interpNextSteps) {
+              interpNextSteps.innerHTML = interpretation.nextSteps.map(step => {
+                const isPrimary = step.priority === 'primary';
+                const classes = isPrimary ? 'interp-step-primary' : 'interp-step-secondary';
+                if (step.href) {
+                  return `<a href="${step.href}" class="${classes}">${step.action}</a>`;
+                }
+                return `<button type="button" class="${classes}">${step.action}</button>`;
+              }).join('');
+            }
+            
+            // Wire to DecisionStrip if available
+            if (typeof window !== 'undefined' && (window as any).updateDecisionStrip) {
+              (window as any).updateDecisionStrip(interpretation.interpretation.verdict, state.detectedModel);
+            }
+          }
+        }
+
       } else {
         if (statusDot) statusDot.className = 'status-dot';
         if (statusText) statusText.textContent = 'Connect a controller and press any button...';
@@ -379,6 +504,9 @@
           rootEl.setAttribute('data-model', 'none');
           currentBrand = 'none';
         }
+        
+        connectionTime = 0;
+        if (interpCard) interpCard.style.display = 'none';
 
         renderStick(leftCtx, 0, 0, leftTrail, { hex: '255,255,255', brand: 'generic' });
         renderStick(rightCtx, 0, 0, rightTrail, { hex: '255,255,255', brand: 'generic' });

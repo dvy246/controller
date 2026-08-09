@@ -10,6 +10,8 @@ import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
 import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
 import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
+import InterlinkStrip from '../../components/global/InterlinkStrip.astro';
+import { resolveToolsForGame } from '../../data/arcadeInterlinks';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -23,6 +25,8 @@ const schema = {
   description: 'Twin-stick arena shooter for gamepads. Survive enemy waves and chase high scores.',
   gamePlatform: 'Web Browser',
 };
+
+const relatedTools = resolveToolsForGame('nova-blaster');
 ---
 
 <BaseLayout
@@ -92,6 +96,13 @@ const schema = {
         'Aim at the closest enemy cluster and strafe in a wide arc to keep them off your tail.',
       ]}
     />
+
+      <InterlinkStrip
+        type="tools"
+        title="Verify with a diagnostic tool"
+        subtitle="Practice is one thing — confirmation is another. Run the matching hardware test to turn your score into a measurable verdict."
+        links={relatedTools}
+      />
   </div>
   <Footer />
 </BaseLayout>

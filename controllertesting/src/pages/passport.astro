@@ -659,7 +659,21 @@ const schemaData = {
       const meta = document.createElement('p');
       meta.className = 'font-mono text-xs text-secondary mt-1';
       const grade = computeHealthGrade(last);
-      meta.textContent = `${record.reports.length} report${record.reports.length === 1 ? '' : 's'} · last inspected ${fmtDate(last.timestamp)}`;
+      
+      let trendHtml = '';
+      if (record.reports.length > 1) {
+        const currentDrift = Math.max(last.tests.sticks?.driftX || 0, last.tests.sticks?.driftY || 0);
+        const old = record.reports[record.reports.length - 1];
+        const oldDrift = Math.max(old.tests.sticks?.driftX || 0, old.tests.sticks?.driftY || 0);
+        const driftDiff = currentDrift - oldDrift;
+        if (Math.abs(driftDiff) >= 0.1) {
+          trendHtml = `<span class="ml-2 px-1.5 py-0.5 rounded text-[10px] ${driftDiff > 0 ? 'bg-red-500/10 text-red-400' : 'bg-emerald-500/10 text-emerald-400'}">Δ ${driftDiff > 0 ? '+' : ''}${driftDiff.toFixed(2)}% drift</span>`;
+        } else {
+          trendHtml = `<span class="ml-2 px-1.5 py-0.5 rounded text-[10px] bg-white/5 text-stone-400">Stable</span>`;
+        }
+      }
+      
+      meta.innerHTML = `${record.reports.length} report${record.reports.length === 1 ? '' : 's'} · last inspected ${fmtDate(last.timestamp)}${trendHtml}`;
 
       info.append(name, meta);
 

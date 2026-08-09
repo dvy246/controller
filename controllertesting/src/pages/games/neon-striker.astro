@@ -1,0 +1,422 @@
+---
+/**
+ * /games/neon-striker — Neon Striker (2-Player Game)
+ * SEO Title: Neon Striker — 2-Player Controller Arcade Game
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
+import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
+import InterlinkStrip from '../../components/global/InterlinkStrip.astro';
+import { resolveToolsForGame } from '../../data/arcadeInterlinks';
+
+const breadcrumbs = [
+  { name: 'Games Arcade', url: '/games' },
+  { name: 'Neon Striker' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoGame',
+  name: 'Neon Striker 2-Player Arcade Game',
+  description: 'Intense 2-player cybernetic air hockey. Requires two gamepads connected locally.',
+  gamePlatform: 'Web Browser',
+};
+
+const relatedTools = resolveToolsForGame('neon-striker');
+---
+
+<BaseLayout
+  title="Neon Striker — 2-Player Controller Arcade Game | ControllerTesting.com"
+  description="Intense 2-player cybernetic air hockey. Bring a second controller and battle it out in Neon Striker for PS5, Xbox, and Switch controllers."
+  schema={schema}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+
+  <main id="main-content" class="game-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="game-header">
+        <span class="badge-tag">2-Player Arcade</span>
+        <h1 class="game-title">Neon Striker</h1>
+        <p class="game-subtitle">
+          Cybernetic Air Hockey. Player 1 (Blue) vs Player 2 (Red). Move with the Left Stick, smash with R2 / RT.
+        </p>
+      </header>
+
+      <div class="game-canvas-card card-base">
+        <canvas id="striker-canvas" width="800" height="450"></canvas>
+        <div class="game-overlay-bar">
+          <div class="g-stat"><span class="g-label text-blue-400">P1 SCORE</span><span class="g-val text-gradient" id="g-p1-val">0</span></div>
+          <div class="g-stat"><span class="g-label text-red-400">P2 SCORE</span><span class="g-val text-gradient" id="g-p2-val">0</span></div>
+          <div class="g-stat"><span class="g-label">TIME LEFT</span><span class="g-val mono" id="g-time-val">60s</span></div>
+          <button type="button" class="btn-primary" id="btn-start-game">Start 60s Match</button>
+        </div>
+        <p class="game-hint">Gamepad: Left Stick to move, R2 / RT to smash · Keyboard: WASD (P1) vs Arrows (P2), Space / Enter to smash</p>
+      </div>
+
+      <div class="game-over-panel glass-panel" id="striker-over" role="status" hidden>
+        <span class="over-eyebrow">Match Complete</span>
+        <div class="over-score mono text-gradient" id="over-winner-val">TIE GAME</div>
+        <p class="over-sub">Final result</p>
+        <ArcadeRewardsLine baseId="striker" xp={150} />
+        <div class="over-actions">
+          <button type="button" class="btn-primary" id="btn-play-again">Rematch</button>
+          <a href="/games" class="btn-secondary">Back to Arcade</a>
+        </div>
+      </div>
+
+      <GameHowToPlay
+        xp={150}
+        goal="Score more goals than your opponent before the 60-second timer runs out. Use your paddle to hit the puck into the enemy goal."
+        controls={[
+          { action: 'Left Stick', label: 'Move paddle omni-directionally' },
+          { action: 'R2 / RT', label: 'Smash (Speed Boost)' },
+          { action: 'WASD', label: 'P1 Move (keyboard)' },
+          { action: 'Arrows', label: 'P2 Move (keyboard)' },
+        ]}
+        steps={[
+          'Connect two controllers. Press Start 60s Match to begin.',
+          'Player 1 (Blue) defends the left goal. Player 2 (Red) defends the right goal.',
+          'Use the left analog stick to move your paddle anywhere on your half of the arena.',
+          'Hold R2 / RT to temporarily double your speed, allowing you to smash the puck with intense force.',
+        ]}
+        tips={[
+          'Hitting the puck while moving adds your paddle\'s velocity to the puck.',
+          'The Smash boost (R2/RT) is powerful but makes your paddle harder to control.',
+          'Watch out for the corners — the puck can bounce wildly off the slanted walls.',
+        ]}
+      />
+      <InterlinkStrip
+        type="tools"
+        title="Verify your controllers"
+        subtitle="This game pushes two controllers to their limits. If you suspect an issue, run a multi-controller diagnostic."
+        links={relatedTools}
+      />
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { parseGamepadState } from '../../lib/gamepad';
+  import {
+    claimArcadeXp,
+    getArcadeRewardEls,
+    renderArcadeRewards,
+  } from '../../lib/arcadeRewards';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('striker-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const overPanel = document.getElementById('striker-over') as HTMLElement | null;
+    const winnerEl = document.getElementById('over-winner-val') as HTMLElement | null;
+    const p1ScoreEl = document.getElementById('g-p1-val') as HTMLElement | null;
+    const p2ScoreEl = document.getElementById('g-p2-val') as HTMLElement | null;
+    const timeEl = document.getElementById('g-time-val') as HTMLElement | null;
+
+    let isPlaying = false;
+    let p1Score = 0;
+    let p2Score = 0;
+    let timeLeft = 60;
+    let timerId: number | null = null;
+    
+    // Physics Constants
+    const PADDLE_RADIUS = 28;
+    const PUCK_RADIUS = 16;
+    const MAX_SPEED = 18;
+    const BASE_SPEED = 8;
+    const BOOST_SPEED = 16;
+    const FRICTION = 0.99;
+    const GOAL_TOP = canvas.height / 2 - 80;
+    const GOAL_BOTTOM = canvas.height / 2 + 80;
+
+    // Entities
+    let p1 = { x: 100, y: canvas.height / 2, vx: 0, vy: 0 };
+    let p2 = { x: canvas.width - 100, y: canvas.height / 2, vx: 0, vy: 0 };
+    let puck = { x: canvas.width / 2, y: canvas.height / 2, vx: 0, vy: 0 };
+
+    const keys = new Set<string>();
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space', 'Enter', 'KeyW', 'KeyA', 'KeyS', 'KeyD'].includes(e.code)) {
+        e.preventDefault();
+      }
+      keys.add(e.code);
+    });
+    window.addEventListener('keyup', (e: KeyboardEvent) => keys.delete(e.code));
+
+    function resetPuck(scorer: 1 | 2) {
+      puck = { x: canvas.width / 2, y: canvas.height / 2, vx: 0, vy: 0 };
+      p1 = { x: 100, y: canvas.height / 2, vx: 0, vy: 0 };
+      p2 = { x: canvas.width - 100, y: canvas.height / 2, vx: 0, vy: 0 };
+    }
+
+    function updateHud() {
+      if (p1ScoreEl) p1ScoreEl.textContent = String(p1Score);
+      if (p2ScoreEl) p2ScoreEl.textContent = String(p2Score);
+      if (timeEl) timeEl.textContent = `${timeLeft}s`;
+    }
+
+    function endGame() {
+      isPlaying = false;
+      if (timerId) clearInterval(timerId);
+      timerId = null;
+      const result = claimArcadeXp('striker', 150);
+      renderArcadeRewards(
+        getArcadeRewardEls('striker'),
+        result
+          ? { kind: 'award', result, amount: 150 }
+          : { kind: 'claimed', amount: 150 },
+      );
+      updateHud();
+      
+      if (winnerEl) {
+        if (p1Score > p2Score) {
+          winnerEl.textContent = 'P1 WINS!';
+          winnerEl.className = 'over-score mono text-blue-400';
+        } else if (p2Score > p1Score) {
+          winnerEl.textContent = 'P2 WINS!';
+          winnerEl.className = 'over-score mono text-red-400';
+        } else {
+          winnerEl.textContent = 'TIE GAME!';
+          winnerEl.className = 'over-score mono text-gray-300';
+        }
+      }
+      if (overPanel) overPanel.hidden = false;
+    }
+
+    function startGame() {
+      if (isPlaying) return;
+      isPlaying = true;
+      p1Score = 0;
+      p2Score = 0;
+      timeLeft = 60;
+      resetPuck(1);
+      if (overPanel) overPanel.hidden = true;
+      updateHud();
+
+      timerId = window.setInterval(() => {
+        timeLeft--;
+        if (timeEl) timeEl.textContent = `${timeLeft}s`;
+        if (timeLeft <= 0) endGame();
+      }, 1000);
+    }
+    
+    function circleCollision(c1: {x: number, y: number, r: number}, c2: {x: number, y: number, r: number}) {
+      const dx = c2.x - c1.x;
+      const dy = c2.y - c1.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < c1.r + c2.r) {
+        // Resolve overlap
+        const overlap = (c1.r + c2.r) - dist;
+        const nx = dx / dist;
+        const ny = dy / dist;
+        return { hit: true, nx, ny, overlap };
+      }
+      return { hit: false };
+    }
+
+    function render() {
+      // Draw Arena
+      ctx.fillStyle = '#0a0d14';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = '#1e2638';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
+      
+      // Center Line & Circle
+      ctx.beginPath(); ctx.moveTo(canvas.width / 2, 0); ctx.lineTo(canvas.width / 2, canvas.height); ctx.stroke();
+      ctx.beginPath(); ctx.arc(canvas.width / 2, canvas.height / 2, 60, 0, Math.PI * 2); ctx.stroke();
+
+      // Goals
+      ctx.fillStyle = '#1e2638';
+      ctx.fillRect(0, GOAL_TOP, 10, GOAL_BOTTOM - GOAL_TOP);
+      ctx.fillRect(canvas.width - 10, GOAL_TOP, 10, GOAL_BOTTOM - GOAL_TOP);
+      
+      ctx.fillStyle = 'rgba(59, 130, 246, 0.1)';
+      ctx.fillRect(0, 0, canvas.width / 2, canvas.height);
+      ctx.fillStyle = 'rgba(239, 68, 68, 0.1)';
+      ctx.fillRect(canvas.width / 2, 0, canvas.width / 2, canvas.height);
+
+      // Draw P1
+      ctx.fillStyle = '#2563eb';
+      ctx.beginPath(); ctx.arc(p1.x, p1.y, PADDLE_RADIUS, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#1d4ed8';
+      ctx.beginPath(); ctx.arc(p1.x, p1.y, PADDLE_RADIUS * 0.6, 0, Math.PI * 2); ctx.fill();
+
+      // Draw P2
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath(); ctx.arc(p2.x, p2.y, PADDLE_RADIUS, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#b91c1c';
+      ctx.beginPath(); ctx.arc(p2.x, p2.y, PADDLE_RADIUS * 0.6, 0, Math.PI * 2); ctx.fill();
+
+      // Draw Puck
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowColor = '#38bdf8';
+      ctx.shadowBlur = 15;
+      ctx.beginPath(); ctx.arc(puck.x, puck.y, PUCK_RADIUS, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+
+      if (isPlaying) {
+        let p1dx = 0, p1dy = 0, p1Boost = false;
+        let p2dx = 0, p2dy = 0, p2Boost = false;
+
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        let gp1: Gamepad | null = null;
+        let gp2: Gamepad | null = null;
+        
+        // Find first two connected gamepads
+        for (let i = 0; i < gamepads.length; i++) {
+          if (gamepads[i]?.connected) {
+            if (!gp1) gp1 = gamepads[i];
+            else if (!gp2) gp2 = gamepads[i];
+          }
+        }
+
+        if (gp1) {
+          const state1 = parseGamepadState(gp1);
+          p1dx = state1.leftStick.x;
+          p1dy = state1.leftStick.y;
+          p1Boost = state1.triggers.r2 > 0.5;
+        } else {
+          if (keys.has('KeyA')) p1dx = -1;
+          if (keys.has('KeyD')) p1dx = 1;
+          if (keys.has('KeyW')) p1dy = -1;
+          if (keys.has('KeyS')) p1dy = 1;
+          p1Boost = keys.has('Space');
+        }
+
+        if (gp2) {
+          const state2 = parseGamepadState(gp2);
+          p2dx = state2.leftStick.x;
+          p2dy = state2.leftStick.y;
+          p2Boost = state2.triggers.r2 > 0.5;
+        } else {
+          if (keys.has('ArrowLeft')) p2dx = -1;
+          if (keys.has('ArrowRight')) p2dx = 1;
+          if (keys.has('ArrowUp')) p2dy = -1;
+          if (keys.has('ArrowDown')) p2dy = 1;
+          p2Boost = keys.has('Enter');
+        }
+
+        const p1Speed = p1Boost ? BOOST_SPEED : BASE_SPEED;
+        const p2Speed = p2Boost ? BOOST_SPEED : BASE_SPEED;
+
+        p1.vx = p1dx * p1Speed;
+        p1.vy = p1dy * p1Speed;
+        p2.vx = p2dx * p2Speed;
+        p2.vy = p2dy * p2Speed;
+
+        p1.x += p1.vx;
+        p1.y += p1.vy;
+        p2.x += p2.vx;
+        p2.y += p2.vy;
+
+        // Boundaries P1
+        p1.x = Math.max(PADDLE_RADIUS, Math.min(canvas.width / 2 - PADDLE_RADIUS, p1.x));
+        p1.y = Math.max(PADDLE_RADIUS, Math.min(canvas.height - PADDLE_RADIUS, p1.y));
+        
+        // Boundaries P2
+        p2.x = Math.max(canvas.width / 2 + PADDLE_RADIUS, Math.min(canvas.width - PADDLE_RADIUS, p2.x));
+        p2.y = Math.max(PADDLE_RADIUS, Math.min(canvas.height - PADDLE_RADIUS, p2.y));
+
+        // Puck Physics
+        puck.x += puck.vx;
+        puck.y += puck.vy;
+        puck.vx *= FRICTION;
+        puck.vy *= FRICTION;
+
+        // Wall collisions for puck
+        if (puck.y - PUCK_RADIUS < 0) { puck.y = PUCK_RADIUS; puck.vy *= -1; }
+        if (puck.y + PUCK_RADIUS > canvas.height) { puck.y = canvas.height - PUCK_RADIUS; puck.vy *= -1; }
+        
+        // Goal logic
+        if (puck.x - PUCK_RADIUS < 0) {
+          if (puck.y > GOAL_TOP && puck.y < GOAL_BOTTOM) {
+            p2Score++;
+            updateHud();
+            resetPuck(2);
+          } else {
+            puck.x = PUCK_RADIUS;
+            puck.vx *= -1;
+          }
+        }
+        if (puck.x + PUCK_RADIUS > canvas.width) {
+          if (puck.y > GOAL_TOP && puck.y < GOAL_BOTTOM) {
+            p1Score++;
+            updateHud();
+            resetPuck(1);
+          } else {
+            puck.x = canvas.width - PUCK_RADIUS;
+            puck.vx *= -1;
+          }
+        }
+
+        // Collisions with paddles
+        const col1 = circleCollision({x: p1.x, y: p1.y, r: PADDLE_RADIUS}, {x: puck.x, y: puck.y, r: PUCK_RADIUS});
+        if (col1.hit) {
+          puck.x += col1.nx! * col1.overlap!;
+          puck.y += col1.ny! * col1.overlap!;
+          puck.vx = col1.nx! * 10 + p1.vx * 0.5;
+          puck.vy = col1.ny! * 10 + p1.vy * 0.5;
+        }
+
+        const col2 = circleCollision({x: p2.x, y: p2.y, r: PADDLE_RADIUS}, {x: puck.x, y: puck.y, r: PUCK_RADIUS});
+        if (col2.hit) {
+          puck.x += col2.nx! * col2.overlap!;
+          puck.y += col2.ny! * col2.overlap!;
+          puck.vx = col2.nx! * 10 + p2.vx * 0.5;
+          puck.vy = col2.ny! * 10 + p2.vy * 0.5;
+        }
+        
+        // Clamp Puck Speed
+        const speed = Math.sqrt(puck.vx * puck.vx + puck.vy * puck.vy);
+        if (speed > MAX_SPEED) {
+          puck.vx = (puck.vx / speed) * MAX_SPEED;
+          puck.vy = (puck.vy / speed) * MAX_SPEED;
+        }
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    render();
+
+    document.getElementById('btn-start-game')?.addEventListener('click', startGame);
+    document.getElementById('btn-play-again')?.addEventListener('click', startGame);
+  });
+</script>
+
+<style>
+  .game-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .game-header { margin-bottom: 2rem; }
+  .game-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .game-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
+  .game-canvas-card { padding: 1rem; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+  #striker-canvas { width: 100%; max-width: 800px; height: auto; aspect-ratio: 16 / 9; display: block; background: var(--color-surface-1); border-radius: var(--radius-sm); border: 1px solid var(--color-border-subtle); touch-action: manipulation; user-select: none; }
+  .game-overlay-bar { width: 100%; max-width: 800px; display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background: var(--color-surface-2); border-radius: var(--radius-sm); }
+  .game-overlay-bar .btn-primary { touch-action: manipulation; }
+  .game-hint { font-family: var(--font-mono); font-size: var(--text-micro); color: var(--color-text-tertiary); text-align: center; margin: 0; }
+  .g-stat { display: flex; flex-direction: column; gap: 0.1rem; }
+  .g-label { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; }
+  .g-val { font-size: 1.25rem; font-weight: 700; }
+  .game-over-panel { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 100%; max-width: 480px; margin-inline: auto; padding: 2rem; text-align: center; }
+  .game-over-panel[hidden] { display: none; }
+  .over-eyebrow { font-family: var(--font-mono); font-size: var(--text-micro); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-tertiary); }
+  .over-score { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1; }
+  .over-sub { margin: 0; font-size: var(--text-small); color: var(--color-text-secondary); }
+  .over-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 0.5rem; }
+  .over-actions .btn-primary,
+  .over-actions .btn-secondary { touch-action: manipulation; }
+  @media (max-width: 768px) { .game-overlay-bar { flex-wrap: wrap; gap: 1rem; } }
+</style>

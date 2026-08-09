@@ -1,0 +1,702 @@
+---
+/**
+ * /games/signal-salvage.astro
+ * SEO Title: Signal Salvage — 2-Player Twin-Stick Repair Duel
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import InterlinkStrip from '../../components/global/InterlinkStrip.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
+import { resolveToolsForGame } from '../../data/arcadeInterlinks';
+
+const breadcrumbs = [
+  { name: 'Games Arcade', url: '/games' },
+  { name: 'Signal Salvage' },
+];
+
+const seoTitle = "Signal Salvage | 2-Player Twin-Stick Game & Test";
+const seoDesc = "Stress-test two controllers in this 90-second twin-stick repair duel. Uses both analog sticks and triggers continuously.";
+---
+
+<BaseLayout title={seoTitle} description={seoDesc} breadcrumbs={breadcrumbs}>
+  <Header />
+
+  <main id="main-content" class="game-page pb-24">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="game-header">
+        <span class="badge-tag">Twin-Stick Duel</span>
+        <h1 class="game-title text-balance">Signal Salvage</h1>
+        <p class="game-subtitle text-balance">
+          2-Player Twin-Stick Repair Duel. Stress-test two controllers in this 90-second showdown.
+        </p>
+      </header>
+
+      <div class="game-viewport-wrapper">
+        <!-- HUD -->
+        <div class="game-hud" id="hud" hidden>
+          <div class="hud-player p1-hud">
+            <span class="hud-label">PLAYER 1</span>
+            <span class="hud-score tabular-nums" id="p1-score">0</span>
+          </div>
+          <div class="hud-timer">
+            <span class="hud-time tabular-nums" id="time-left">90</span>
+          </div>
+          <div class="hud-player p2-hud text-right">
+            <span class="hud-label">PLAYER 2</span>
+            <span class="hud-score tabular-nums" id="p2-score">0</span>
+          </div>
+        </div>
+
+        <!-- Lobby Overlay -->
+        <div class="game-overlay" id="lobby-overlay">
+          <h2 class="overlay-title">Connect Controllers</h2>
+          <p class="overlay-desc mb-6">Press any button to join</p>
+          
+          <div class="flex flex-col sm:flex-row gap-6 mb-8 w-full max-w-lg mx-auto">
+            <div class="card-base flex-1 p-6 text-center" id="p1-card">
+              <h3 class="text-blue-400 font-bold mb-2">PLAYER 1</h3>
+              <p class="text-surface-content-muted text-sm" id="p1-status">Waiting for input...</p>
+            </div>
+            <div class="card-base flex-1 p-6 text-center" id="p2-card">
+              <h3 class="text-red-400 font-bold mb-2">PLAYER 2</h3>
+              <p class="text-surface-content-muted text-sm" id="p2-status">Waiting for input...</p>
+            </div>
+          </div>
+
+          <p class="text-sm text-surface-content-muted mb-6">Keyboard Fallback: P1 (WASD+Arrows+Space), P2 (Not available)</p>
+          
+          <button class="btn-primary" id="btn-start" disabled>Start 90s Match</button>
+        </div>
+
+        <!-- Game Over Overlay -->
+        <div class="game-overlay" id="game-over-overlay" hidden>
+          <h2 class="overlay-title mb-2">Match Over</h2>
+          <h3 class="text-2xl font-bold mb-6" id="winner-text">Player 1 Wins!</h3>
+          
+          <div class="flex gap-8 mb-8 justify-center">
+            <div class="text-center">
+              <div class="text-surface-content-muted text-sm mb-1">P1 Score</div>
+              <div class="text-3xl font-bold tabular-nums text-blue-400" id="final-p1">0</div>
+            </div>
+            <div class="text-center">
+              <div class="text-surface-content-muted text-sm mb-1">P2 Score</div>
+              <div class="text-3xl font-bold tabular-nums text-red-400" id="final-p2">0</div>
+            </div>
+          </div>
+
+          <div id="replay-report" class="card-base bg-surface-1 border-warning-border/30 p-4 mb-6 text-left max-w-md mx-auto hidden">
+            <div class="flex items-start gap-3">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" class="mt-1 flex-shrink-0"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <div>
+                <h4 class="font-bold text-warning-content mb-1">Input Report</h4>
+                <p class="text-sm text-surface-content-muted" id="replay-text">Potential resting stick drift detected on Player 1.</p>
+                <a href="/test/controller/drift" class="text-blue-400 hover:text-blue-300 text-sm mt-2 inline-block">Run Drift Diagnostic &rarr;</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex gap-4 justify-center">
+            <button class="btn-primary" id="btn-rematch">Rematch</button>
+            <a href="/test/controller/full-diagnostic" class="btn-secondary">Run Diagnostic</a>
+          </div>
+        </div>
+
+        <canvas id="gameCanvas" width="900" height="600"></canvas>
+      </div>
+
+      <GameHowToPlay
+        xp={150}
+        goal="Two repair drones compete in a malfunctioning digital arena to stabilize, collect, and return 'signal cores' to their respective colored bases while dodging sweeping hazardous scanning walls."
+        controls={[
+          { action: 'Left Stick', label: 'Move Drone (360°)' },
+          { action: 'Right Stick', label: 'Aim Repair Beam' },
+          { action: 'R2 / RT', label: 'Fire Beam / Capture Core' },
+        ]}
+        steps={[
+          'Connect two controllers and press any button to join as Player 1 or Player 2.',
+          'Wait for a Signal Core to spawn in the center, aim with the right stick, and fire with R2 to capture it.',
+          'Take the captured core back to your base (left for P1, right for P2) to score points.',
+          'Avoid the moving orange walls—if they hit you, you will drop your core.',
+          'Score as many points as possible before the 90-second timer runs out.',
+        ]}
+      />
+
+      {resolveToolsForGame('/games/signal-salvage').length > 0 && <InterlinkStrip type="tools" links={resolveToolsForGame('/games/signal-salvage')} title="Recommended Diagnostic Tools" />}
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .game-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .game-header { margin-bottom: 2rem; }
+  .game-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .game-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
+  .game-viewport-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    aspect-ratio: 3/2;
+    background: #050810;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-surface-border);
+    overflow: hidden;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .game-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 8, 16, 0.9);
+    backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .game-hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .hud-player {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hud-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--color-surface-content-muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .hud-score {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1;
+    text-shadow: 0 0 20px rgba(0,0,0,0.5);
+  }
+
+  .p1-hud .hud-score { color: #60A5FA; }
+  .p2-hud .hud-score { color: #F87171; }
+
+  .hud-time {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #fff;
+    background: rgba(0,0,0,0.5);
+    padding: 0.5rem 1.5rem;
+    border-radius: 99px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+</style>
+
+<script>
+  import { parseGamepadState } from '../../lib/gamepad';
+  import { addPoints } from '../../lib/rewards';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d')!;
+    
+    // UI Elements
+    const lobbyOverlay = document.getElementById('lobby-overlay')!;
+    const gameOverOverlay = document.getElementById('game-over-overlay')!;
+    const hud = document.getElementById('hud')!;
+    const btnStart = document.getElementById('btn-start') as HTMLButtonElement;
+    const btnRematch = document.getElementById('btn-rematch') as HTMLButtonElement;
+    
+    const p1Status = document.getElementById('p1-status')!;
+    const p2Status = document.getElementById('p2-status')!;
+    const p1Card = document.getElementById('p1-card')!;
+    const p2Card = document.getElementById('p2-card')!;
+
+    const p1ScoreEl = document.getElementById('p1-score')!;
+    const p2ScoreEl = document.getElementById('p2-score')!;
+    const timeLeftEl = document.getElementById('time-left')!;
+    
+    // State
+    let isPlaying = false;
+    let isLobby = true;
+    let lastTime = performance.now();
+    
+    // Lobby mapping
+    let p1Index: number | null = null;
+    let p2Index: number | null = null;
+
+    // Keys (Fallback)
+    const keys = new Set<string>();
+    window.addEventListener('keydown', e => keys.add(e.code));
+    window.addEventListener('keyup', e => keys.delete(e.code));
+
+    // Input normalizer
+    function applyRadialDeadzone(x: number, y: number, deadzone = 0.12) {
+      const magnitude = Math.hypot(x, y);
+      if (magnitude <= deadzone) return { x: 0, y: 0 };
+      const normalized = Math.min(1, (magnitude - deadzone) / (1 - deadzone));
+      return {
+        x: (x / magnitude) * normalized,
+        y: (y / magnitude) * normalized,
+      };
+    }
+
+    // Entities
+    class Drone {
+      x: number; y: number;
+      vx: number = 0; vy: number = 0;
+      aimX: number = 1; aimY: number = 0;
+      color: string;
+      baseColor: string;
+      score: number = 0;
+      hasCore: boolean = false;
+      baseX: number;
+      isP1: boolean;
+
+      constructor(x: number, y: number, isP1: boolean) {
+        this.x = x; this.y = y;
+        this.isP1 = isP1;
+        this.color = isP1 ? '#3B82F6' : '#EF4444';
+        this.baseColor = isP1 ? 'rgba(59, 130, 246, 0.2)' : 'rgba(239, 68, 68, 0.2)';
+        this.baseX = isP1 ? 100 : canvas.width - 100;
+      }
+    }
+
+    class Core {
+      x: number; y: number;
+      active: boolean = true;
+      carrier: Drone | null = null;
+
+      constructor() {
+        this.x = 250 + Math.random() * (canvas.width - 500);
+        this.y = 100 + Math.random() * (canvas.height - 200);
+      }
+    }
+
+    class Hazard {
+      x: number; y: number;
+      width: number; height: number;
+      vy: number;
+
+      constructor(x: number) {
+        this.x = x;
+        this.y = Math.random() * canvas.height;
+        this.width = 40;
+        this.height = 150;
+        this.vy = (Math.random() > 0.5 ? 1 : -1) * 2;
+      }
+      
+      update() {
+        this.y += this.vy;
+        if (this.y < 0 || this.y + this.height > canvas.height) this.vy *= -1;
+      }
+    }
+
+    let p1: Drone;
+    let p2: Drone;
+    let cores: Core[] = [];
+    let hazards: Hazard[] = [];
+    let matchTime = 90;
+    
+    // Diagnostic tracking
+    let p1JitterCount = 0;
+    let p2JitterCount = 0;
+
+    function initGame() {
+      p1 = new Drone(100, canvas.height/2, true);
+      p2 = new Drone(canvas.width - 100, canvas.height/2, false);
+      cores = [new Core(), new Core()];
+      hazards = [
+        new Hazard(canvas.width/2 - 100),
+        new Hazard(canvas.width/2 + 60)
+      ];
+      matchTime = 90;
+      p1JitterCount = 0;
+      p2JitterCount = 0;
+      
+      p1ScoreEl.innerText = '0';
+      p2ScoreEl.innerText = '0';
+      timeLeftEl.innerText = '90';
+    }
+
+    function checkLobbyInput() {
+      if (!isLobby) return;
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      
+      for (let i = 0; i < gamepads.length; i++) {
+        const gp = gamepads[i];
+        if (!gp || !gp.connected) continue;
+
+        // Check for any button press
+        let pressed = false;
+        for (let b of gp.buttons) {
+          if (b.pressed || b.value > 0.5) pressed = true;
+        }
+
+        if (pressed) {
+          if (p1Index === null && p2Index !== i) {
+            p1Index = i;
+            p1Status.innerHTML = `<span class="text-emerald-400">Connected: ${gp.id.substring(0,20)}...</span>`;
+            p1Card.style.borderColor = '#3B82F6';
+          } else if (p2Index === null && p1Index !== i) {
+            p2Index = i;
+            p2Status.innerHTML = `<span class="text-emerald-400">Connected: ${gp.id.substring(0,20)}...</span>`;
+            p2Card.style.borderColor = '#EF4444';
+          }
+        }
+      }
+
+      // Keyboard fallback for P1 for dev
+      if (keys.has('Space') && p1Index === null) {
+        p1Status.innerHTML = `<span class="text-emerald-400">Connected: Keyboard Fallback</span>`;
+        p1Card.style.borderColor = '#3B82F6';
+        p1Index = -1; // Magic number for KB
+      }
+      
+      // Keyboard fallback for P2 for dev
+      if (keys.has('Enter') && p2Index === null) {
+        p2Status.innerHTML = `<span class="text-emerald-400">Connected: Keyboard Fallback</span>`;
+        p2Card.style.borderColor = '#EF4444';
+        p2Index = -2; // Magic number for KB P2
+      }
+
+      if (p1Index !== null && p2Index !== null && btnStart.disabled) {
+        btnStart.disabled = false;
+        btnStart.innerText = "Start Match";
+      }
+    }
+
+    function startGame() {
+      isLobby = false;
+      lobbyOverlay.hidden = true;
+      gameOverOverlay.hidden = true;
+      hud.hidden = false;
+      initGame();
+      isPlaying = true;
+      lastTime = performance.now();
+    }
+
+    function endGame() {
+      isPlaying = false;
+      hud.hidden = true;
+      gameOverOverlay.hidden = false;
+      
+      document.getElementById('final-p1')!.innerText = p1.score.toString();
+      document.getElementById('final-p2')!.innerText = p2.score.toString();
+      
+      const winner = document.getElementById('winner-text')!;
+      if (p1.score > p2.score) {
+        winner.innerText = "Player 1 Wins!";
+        winner.className = "text-3xl font-bold mb-6 text-blue-400";
+      } else if (p2.score > p1.score) {
+        winner.innerText = "Player 2 Wins!";
+        winner.className = "text-3xl font-bold mb-6 text-red-400";
+      } else {
+        winner.innerText = "Draw!";
+        winner.className = "text-3xl font-bold mb-6 text-white";
+      }
+
+      addPoints(200);
+
+      // Replay report logic
+      const reportEl = document.getElementById('replay-report')!;
+      const reportText = document.getElementById('replay-text')!;
+      
+      if (p1JitterCount > 100 || p2JitterCount > 100) {
+        reportEl.classList.remove('hidden');
+        if (p1JitterCount > p2JitterCount) {
+          reportText.innerText = `Player 1's left stick showed ${p1JitterCount} micro-movements while untriggered.`;
+        } else {
+          reportText.innerText = `Player 2's left stick showed ${p2JitterCount} micro-movements while untriggered.`;
+        }
+      } else {
+        reportEl.classList.add('hidden');
+      }
+    }
+
+    function updatePhysics() {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      
+      const p1gp = p1Index !== null && p1Index >= 0 ? gamepads[p1Index] : null;
+      const p2gp = p2Index !== null && p2Index >= 0 ? gamepads[p2Index] : null;
+
+      // Player 1 Input
+      let p1MoveX = 0, p1MoveY = 0, p1AimX = p1.aimX, p1AimY = p1.aimY, p1Fire = false;
+      if (p1gp) {
+        const state = parseGamepadState(p1gp);
+        const dz = applyRadialDeadzone(state.leftStick.x, state.leftStick.y, 0.15);
+        p1MoveX = dz.x; p1MoveY = dz.y;
+        
+        const aimDz = applyRadialDeadzone(state.rightStick.x, state.rightStick.y, 0.2);
+        if (aimDz.x !== 0 || aimDz.y !== 0) {
+          p1AimX = aimDz.x; p1AimY = aimDz.y;
+        }
+        p1Fire = state.triggers.r2 > 0.5;
+
+        // Diagnostic raw tracking: if raw is moving but deadzone is 0
+        if (dz.x === 0 && dz.y === 0 && (Math.abs(state.leftStick.x) > 0.05 || Math.abs(state.leftStick.y) > 0.05)) {
+          p1JitterCount++;
+        }
+      } else if (p1Index === -1) {
+        if (keys.has('KeyA')) p1MoveX = -1;
+        if (keys.has('KeyD')) p1MoveX = 1;
+        if (keys.has('KeyW')) p1MoveY = -1;
+        if (keys.has('KeyS')) p1MoveY = 1;
+        if (keys.has('ArrowLeft')) p1AimX = -1;
+        if (keys.has('ArrowRight')) p1AimX = 1;
+        if (keys.has('ArrowUp')) p1AimY = -1;
+        if (keys.has('ArrowDown')) p1AimY = 1;
+        p1Fire = keys.has('Space');
+      }
+
+      // Player 2 Input
+      let p2MoveX = 0, p2MoveY = 0, p2AimX = p2.aimX, p2AimY = p2.aimY, p2Fire = false;
+      if (p2gp) {
+        const state = parseGamepadState(p2gp);
+        const dz = applyRadialDeadzone(state.leftStick.x, state.leftStick.y, 0.15);
+        p2MoveX = dz.x; p2MoveY = dz.y;
+        
+        const aimDz = applyRadialDeadzone(state.rightStick.x, state.rightStick.y, 0.2);
+        if (aimDz.x !== 0 || aimDz.y !== 0) {
+          p2AimX = aimDz.x; p2AimY = aimDz.y;
+        }
+        p2Fire = state.triggers.r2 > 0.5;
+
+        if (dz.x === 0 && dz.y === 0 && (Math.abs(state.leftStick.x) > 0.05 || Math.abs(state.leftStick.y) > 0.05)) {
+          p2JitterCount++;
+        }
+      } else if (p2Index === -2) {
+        // Fallback for P2
+        if (keys.has('KeyJ')) p2MoveX = -1;
+        if (keys.has('KeyL')) p2MoveX = 1;
+        if (keys.has('KeyI')) p2MoveY = -1;
+        if (keys.has('KeyK')) p2MoveY = 1;
+        if (keys.has('Digit1')) p2AimX = -1;
+        if (keys.has('Digit2')) p2AimX = 1;
+        if (keys.has('Digit3')) p2AimY = -1;
+        if (keys.has('Digit4')) p2AimY = 1;
+        p2Fire = keys.has('Enter');
+      }
+
+      // Apply physics
+      const applyPlayer = (p: Drone, mx: number, my: number, ax: number, ay: number, fire: boolean) => {
+        const speedMultiplier = p.hasCore ? 3 : 5; // Slower with core
+        p.vx = mx * speedMultiplier;
+        p.vy = my * speedMultiplier;
+        
+        // Normalize aim
+        const aimMag = Math.hypot(ax, ay);
+        if (aimMag > 0) {
+          p.aimX = ax / aimMag;
+          p.aimY = ay / aimMag;
+        }
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Boundaries
+        p.x = Math.max(20, Math.min(canvas.width - 20, p.x));
+        p.y = Math.max(20, Math.min(canvas.height - 20, p.y));
+
+        // Hazard Collision
+        for (let h of hazards) {
+          if (p.x > h.x && p.x < h.x + h.width && p.y > h.y && p.y < h.y + h.height) {
+            // Push out
+            if (p.vx > 0) p.x = h.x - 1;
+            else if (p.vx < 0) p.x = h.x + h.width + 1;
+          }
+        }
+
+        // Core interaction
+        if (fire && !p.hasCore) {
+          // Beam reach
+          // Beam reach
+          
+          for (let c of cores) {
+            if (!c.carrier && c.active) {
+              // dist from core to beam line segment
+              const dist = Math.hypot(c.x - p.x, c.y - p.y);
+              if (dist < 100) { // Rough cone check
+                c.carrier = p;
+                p.hasCore = true;
+                break;
+              }
+            }
+          }
+        }
+
+        // Base drop-off
+        if (p.hasCore) {
+          const inBase = p.isP1 ? (p.x < 150) : (p.x > canvas.width - 150);
+          if (inBase) {
+            p.hasCore = false;
+            p.score += 25;
+            if (p.isP1) p1ScoreEl.innerText = p.score.toString();
+            else p2ScoreEl.innerText = p.score.toString();
+            
+            // Respawn core
+            const c = cores.find(c => c.carrier === p);
+            if (c) {
+              c.carrier = null;
+              c.x = 250 + Math.random() * (canvas.width - 500);
+              c.y = 100 + Math.random() * (canvas.height - 200);
+            }
+          }
+        }
+      };
+
+      applyPlayer(p1, p1MoveX, p1MoveY, p1AimX, p1AimY, p1Fire);
+      applyPlayer(p2, p2MoveX, p2MoveY, p2AimX, p2AimY, p2Fire);
+
+      hazards.forEach(h => h.update());
+
+      // Update Cores
+      cores.forEach(c => {
+        if (c.carrier) {
+          c.x = c.carrier.x;
+          c.y = c.carrier.y - 20; // Float above
+        }
+      });
+    }
+
+    function render() {
+      // Clear
+      ctx.fillStyle = '#050810';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (isLobby) {
+        checkLobbyInput();
+        requestAnimationFrame(render);
+        return;
+      }
+
+      // Draw Grid
+      ctx.strokeStyle = '#1e2638';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < canvas.width; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+      }
+
+      if (isPlaying) {
+        const now = performance.now();
+        const dt = (now - lastTime) / 1000;
+        lastTime = now;
+
+        updatePhysics();
+
+        // Match Timer
+        matchTime -= dt;
+        timeLeftEl.innerText = Math.ceil(Math.max(0, matchTime)).toString();
+        if (matchTime <= 0) {
+          endGame();
+        }
+      }
+
+      // Draw Bases
+      ctx.fillStyle = p1.baseColor;
+      ctx.fillRect(0, 0, 150, canvas.height);
+      ctx.strokeStyle = p1.color;
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(150, 0); ctx.lineTo(150, canvas.height); ctx.stroke();
+
+      ctx.fillStyle = p2.baseColor;
+      ctx.fillRect(canvas.width - 150, 0, 150, canvas.height);
+      ctx.strokeStyle = p2.color;
+      ctx.beginPath(); ctx.moveTo(canvas.width - 150, 0); ctx.lineTo(canvas.width - 150, canvas.height); ctx.stroke();
+
+      // Draw Hazards
+      ctx.fillStyle = '#F59E0B';
+      hazards.forEach(h => {
+        ctx.fillRect(h.x, h.y, h.width, h.height);
+      });
+
+      // Draw Drones
+      const drawDrone = (p: Drone) => {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        
+        // Beam line
+        ctx.strokeStyle = p.color;
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(p.aimX * 100, p.aimY * 100);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Body
+        ctx.fillStyle = '#111827';
+        ctx.strokeStyle = p.color;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(0, 0, 16, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Direction indicator
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.aimX * 12, p.aimY * 12, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      };
+
+      drawDrone(p1);
+      drawDrone(p2);
+
+      // Draw Cores
+      cores.forEach(c => {
+        ctx.shadowColor = '#10B981';
+        ctx.shadowBlur = 15;
+        ctx.fillStyle = '#10B981';
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, 8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      requestAnimationFrame(render);
+    }
+
+    render();
+
+    btnStart.addEventListener('click', startGame);
+    btnRematch.addEventListener('click', startGame);
+  });
+</script>

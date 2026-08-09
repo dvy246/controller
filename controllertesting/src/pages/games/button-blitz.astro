@@ -10,6 +10,8 @@ import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
 import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
 import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
+import InterlinkStrip from '../../components/global/InterlinkStrip.astro';
+import { resolveToolsForGame } from '../../data/arcadeInterlinks';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -23,6 +25,8 @@ const schema = {
   description: 'Fast-paced button reaction game for PS5, Xbox, and Switch gamepads.',
   gamePlatform: 'Web Browser',
 };
+
+const relatedTools = resolveToolsForGame('button-blitz');
 ---
 
 <BaseLayout
@@ -90,6 +94,12 @@ const schema = {
           'A correct answer grows the streak multiplier — chain them for high scores.',
           'Wrong presses are free in terms of score loss, but they wipe your streak, so accuracy beats speed.',
         ]}
+      />
+      <InterlinkStrip
+        type="tools"
+        title="Verify with a diagnostic tool"
+        subtitle="Practice is one thing — confirmation is another. Run the matching hardware test to turn your score into a measurable verdict."
+        links={relatedTools}
       />
     </div>
   </main>

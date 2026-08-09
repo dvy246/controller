@@ -10,6 +10,8 @@ import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
 import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
 import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
+import InterlinkStrip from '../../components/global/InterlinkStrip.astro';
+import { resolveToolsForGame } from '../../data/arcadeInterlinks';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -23,6 +25,8 @@ const schema = {
   description: 'Simon-style memory game for gamepads. Repeat the growing face-button sequence.',
   gamePlatform: 'Web Browser',
 };
+
+const relatedTools = resolveToolsForGame('memory-pulse');
 ---
 
 <BaseLayout
@@ -91,6 +95,13 @@ const schema = {
         'Watch the pad order on your controller, not the screen: the physical layout is your memory map.',
       ]}
     />
+
+      <InterlinkStrip
+        type="tools"
+        title="Verify with a diagnostic tool"
+        subtitle="Practice is one thing — confirmation is another. Run the matching hardware test to turn your score into a measurable verdict."
+        links={relatedTools}
+      />
   </div>
   <Footer />
 </BaseLayout>
