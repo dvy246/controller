@@ -1,4 +1,8 @@
 ---
+import { getLangFromUrl, getLocalizedUrl } from '../../i18n/utils';
+const currentLang = getLangFromUrl(Astro.url);
+const l = (path: string) => getLocalizedUrl(Astro.url, currentLang, path);
+
 /**
  * Footer.astro — ControllerTesting.com
  * Trust signals, SEO links, disclaimer, affiliate disclosure.
@@ -11,7 +15,7 @@
     {/* ── Top: Brand + Trust ── */}
     <div class="footer-top">
       <div class="footer-brand">
-        <a href="/" class="footer-logo" aria-label="ControllerTesting.com">
+        <a href={l('/')} class="footer-logo" aria-label="ControllerTesting.com">
           <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
             <rect width="28" height="28" rx="6" fill="var(--color-accent)"/>
             <path d="M8 14c0-3.314 2.686-6 6-6s6 2.686 6 6-2.686 6-6 6-6-2.686-6-6z" stroke="var(--color-text-inverse)" stroke-width="1.5" fill="none"/>
@@ -44,60 +48,60 @@
         <div class="footer-col">
           <h3 class="footer-col-title">Controller Tests <span class="footer-col-icon">▼</span></h3>
           <ul role="list">
-            <li><a href="/test/controller/drift">Stick Drift Test</a></li>
-            <li><a href="/test/controller/full-diagnostic">Full Diagnostic</a></li>
-            <li><a href="/test/controller/buttons">Button Tester</a></li>
-            <li><a href="/test/controller/triggers">Trigger Test</a></li>
-            <li><a href="/test/controller/health-score">Health Score</a></li>
-            <li><a href="/test/controller/vibration">Vibration Test</a></li>
-            <li><a href="/test/controller">All 21 Tools</a></li>
+            <li><a href={l('/test/controller/drift')}>Stick Drift Test</a></li>
+            <li><a href={l('/test/controller/full-diagnostic')}>Full Diagnostic</a></li>
+            <li><a href={l('/test/controller/buttons')}>Button Tester</a></li>
+            <li><a href={l('/test/controller/triggers')}>Trigger Test</a></li>
+            <li><a href={l('/test/controller/health-score')}>Health Score</a></li>
+            <li><a href={l('/test/controller/vibration')}>Vibration Test</a></li>
+            <li><a href={l('/test/controller')}>All 21 Tools</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h3 class="footer-col-title">More Tests <span class="footer-col-icon">▼</span></h3>
           <ul role="list">
-            <li><a href="/test/mouse">Mouse Tests</a></li>
-            <li><a href="/test/keyboard">Keyboard Tests</a></li>
-            <li><a href="/test/midi">MIDI &amp; Drum Pads</a></li>
-            <li><a href="/audio-test/surround-sound">Spatial Audio Test</a></li>
-            <li><a href="/hz-test/144hz">Hz &amp; Ghosting Test</a></li>
-            <li><a href="/games">Game Arcade</a></li>
+            <li><a href={l('/test/mouse')}>Mouse Tests</a></li>
+            <li><a href={l('/test/keyboard')}>Keyboard Tests</a></li>
+            <li><a href={l('/test/midi')}>MIDI &amp; Drum Pads</a></li>
+            <li><a href={l('/audio-test/surround-sound')}>Spatial Audio Test</a></li>
+            <li><a href={l('/hz-test/144hz')}>Hz &amp; Ghosting Test</a></li>
+            <li><a href={l('/games')}>Game Arcade</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h3 class="footer-col-title">Fix &amp; Optimize <span class="footer-col-icon">▼</span></h3>
           <ul role="list">
-            <li><a href="/warranty">Warranty Assistant</a></li>
-            <li><a href="/fix-or-replace">Fix vs Replace Calc</a></li>
-            <li><a href="/fix/stick-drift/ps5-dualsense">Fix PS5 Drift</a></li>
-            <li><a href="/test/controller/timeline">Drift Timeline Tracker</a></li>
-            <li><a href="/test/controller/competitive-readiness">Competitive Readiness</a></li>
-            <li><a href="/test/controller/ps-calibration">PS4/PS5 Calibration</a></li>
+            <li><a href={l('/warranty')}>Warranty Assistant</a></li>
+            <li><a href={l('/fix-or-replace')}>Fix vs Replace Calc</a></li>
+            <li><a href={l('/fix/stick-drift/ps5-dualsense')}>Fix PS5 Drift</a></li>
+            <li><a href={l('/test/controller/timeline')}>Drift Timeline Tracker</a></li>
+            <li><a href={l('/test/controller/competitive-readiness')}>Competitive Readiness</a></li>
+            <li><a href={l('/test/controller/ps-calibration')}>PS4/PS5 Calibration</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h3 class="footer-col-title">Compare &amp; Data <span class="footer-col-icon">▼</span></h3>
           <ul role="list">
-            <li><a href="/compare/dualsense-vs-xbox-series">DualSense vs Xbox Series</a></li>
-            <li><a href="/compare/dualsense-edge-vs-xbox-elite-2">Edge vs Elite Series 2</a></li>
-            <li><a href="/controller/ps5-dualsense">PS5 DualSense Profile</a></li>
-            <li><a href="/controller/xbox-wireless">Xbox Wireless Profile</a></li>
-            <li><a href="/reliability/ps5-dualsense">DualSense Reliability</a></li>
-            <li><a href="/reliability/xbox-series-x">Xbox Series X Reliability</a></li>
-            <li><a href="/press">Press Kit</a></li>
+            <li><a href={l('/compare/dualsense-vs-xbox-series')}>DualSense vs Xbox Series</a></li>
+            <li><a href={l('/compare/dualsense-edge-vs-xbox-elite-2')}>Edge vs Elite Series 2</a></li>
+            <li><a href={l('/controller/ps5-dualsense')}>PS5 DualSense Profile</a></li>
+            <li><a href={l('/controller/xbox-wireless')}>Xbox Wireless Profile</a></li>
+            <li><a href={l('/reliability/ps5-dualsense')}>DualSense Reliability</a></li>
+            <li><a href={l('/reliability/xbox-series-x')}>Xbox Series X Reliability</a></li>
+            <li><a href={l('/press')}>Press Kit</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h3 class="footer-col-title">Learn &amp; Connect <span class="footer-col-icon">▼</span></h3>
           <ul role="list">
-            <li><a href="/shop">Repair Shop Suite</a></li>
-            <li><a href="/verify">Verify Certificate</a></li>
-            <li><a href="/passport">Controller Passport</a></li>
-            <li><a href="/learn">Controller Guides</a></li>
-            <li><a href="/connect">Connect &amp; Pair</a></li>
-            <li><a href="/learn/hall-effect-vs-potentiometer-guide">Hall Effect vs Potentiometer</a></li>
-            <li><a href="/test/methodology">How Tests Work</a></li>
-            <li><a href="/reliability/report">Monthly Reliability Report</a></li>
+            <li><a href={l('/shop')}>Repair Shop Suite</a></li>
+            <li><a href={l('/verify')}>Verify Certificate</a></li>
+            <li><a href={l('/passport')}>Controller Passport</a></li>
+            <li><a href={l('/learn')}>Controller Guides</a></li>
+            <li><a href={l('/connect')}>Connect &amp; Pair</a></li>
+            <li><a href={l('/learn/hall-effect-vs-potentiometer-guide')}>Hall Effect vs Potentiometer</a></li>
+            <li><a href={l('/test/methodology')}>How Tests Work</a></li>
+            <li><a href={l('/reliability/report')}>Monthly Reliability Report</a></li>
           </ul>
         </div>
       </nav>
@@ -106,10 +110,10 @@
     {/* ── Bottom: Legal ── */}
     <div class="footer-bottom">
       <div class="footer-legal-links" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem; font-size: 0.8125rem; font-weight: 500;">
-        <a href="/about" style="color: var(--color-text-secondary); text-decoration: none;">About Us</a>
-        <a href="/contact" style="color: var(--color-text-secondary); text-decoration: none;">Contact Us</a>
-        <a href="/privacy" style="color: var(--color-text-secondary); text-decoration: none;">Privacy Policy</a>
-        <a href="/terms" style="color: var(--color-text-secondary); text-decoration: none;">Terms of Service</a>
+        <a href={l('/about')} style="color: var(--color-text-secondary); text-decoration: none;">About Us</a>
+        <a href={l('/contact')} style="color: var(--color-text-secondary); text-decoration: none;">Contact Us</a>
+        <a href={l('/privacy')} style="color: var(--color-text-secondary); text-decoration: none;">Privacy Policy</a>
+        <a href={l('/terms')} style="color: var(--color-text-secondary); text-decoration: none;">Terms of Service</a>
       </div>
       <p class="footer-legal">
         &copy; {new Date().getFullYear()} ControllerTesting.com. All rights reserved.

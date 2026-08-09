@@ -16,12 +16,19 @@ export function useTranslations(lang: keyof typeof ui) {
   };
 }
 
-export function getLocalizedUrl(url: URL, lang: keyof typeof languages) {
+export function getLocalizedUrl(url: URL, lang: keyof typeof languages, overridePath?: string) {
   const currentLang = getLangFromUrl(url);
-  let pathname = url.pathname;
+  let pathname = overridePath !== undefined ? overridePath : url.pathname;
 
-  if (currentLang !== defaultLang) {
+  if (currentLang !== defaultLang && overridePath === undefined) {
     pathname = pathname.replace(`/${currentLang}`, "");
+  }
+
+  for (const l of Object.keys(languages)) {
+    if (pathname.startsWith(`/${l}/`) || pathname === `/${l}`) {
+      pathname = pathname.replace(`/${l}`, "");
+      break;
+    }
   }
 
   if (pathname === "/" || pathname === "") {

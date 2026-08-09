@@ -171,6 +171,18 @@ const schemas = [
       })();
     </script>
 
+    {/* ── Language preference persistence ── */}
+    <script is:inline>
+      (function () {
+        try {
+          var p = localStorage.getItem('ct_preferred_lang');
+          if (p && p !== 'en' && window.location.pathname === '/') {
+            window.location.replace('/' + p);
+          }
+        } catch (e) {}
+      })();
+    </script>
+
     {/* ── Token-gated Cloudflare Web Analytics ── */}
     {import.meta.env?.PUBLIC_CF_ANALYTICS_TOKEN && (
       <script
