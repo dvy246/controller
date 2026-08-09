@@ -4,8 +4,8 @@
  * Programmatic SEO page for True Circularity & Symmetry Grader.
  * Mapped across standard controllers and sensor types.
  */
-import ToolLayout from '../../../layouts/ToolLayout.astro';
-import CircularityGrader from '../../../components/tools/controller/CircularityGrader.astro';
+import ToolLayout from '@layouts/ToolLayout.astro';
+import CircularityGrader from '@components/tools/controller/CircularityGrader.astro';
 
 export function getStaticPaths() {
   const controllers = [
@@ -44,7 +44,7 @@ const { controller, sensor } = Astro.params;
 const { controllerName, sensorName, sensorTech, sensorBias } = Astro.props;
 
 const title = `${controllerName} ${sensorName} Circularity Grader | ControllerTesting.com`;
-const description = `Grade the true stick circularity and symmetry of your ${controllerName} with ${sensorName} sensors. Detect physical wear, manufacturing defects, and outer rim precision.`;
+const description = `Grade the stick circularity and symmetry of your ${controllerName} with ${sensorName} sensors. Detect physical wear, manufacturing defects, and outer rim precision.`;
 const toolName = `${controllerName} Circularity Grader (${sensorName})`;
 const category = 'God-Mode Diagnostics';
 

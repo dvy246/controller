@@ -1,8 +1,8 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/global/Header.astro';
-import Footer from '../components/global/Footer.astro';
-import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
@@ -23,7 +23,8 @@ const schema = {
 };
 ---
 
-<BaseLayout title={title} description={description} breadcrumbs={breadcrumbs} schema={schema}>
+<BaseLayout title={title} description={description} breadcrumbs={breadcrumbs} schema={schema}
+  localized={true}>
   <Header />
 
   <main class="compatibility-page container-site page-layout">
@@ -112,7 +113,7 @@ const schema = {
 </BaseLayout>
 
 <script>
-  import compData from '../data/compatibilityData.json';
+  import compData from '@data/compatibilityData.json';
 
   document.addEventListener('DOMContentLoaded', () => {
     const filterOS = document.getElementById('filter-os') as HTMLSelectElement;

@@ -1,9 +1,9 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/global/Header.astro';
-import Footer from '../components/global/Footer.astro';
-import Breadcrumbs from '../components/global/Breadcrumbs.astro';
-import WaitlistForm from '../components/global/WaitlistForm.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import WaitlistForm from '@components/global/WaitlistForm.astro';
 
 const canonicalUrl = "https://controllertesting.com/shop";
 const breadcrumbs = [
@@ -27,7 +27,8 @@ const schemaData = {
   description="Empower your controller repair shop or refurbishing business with self-verifying hardware health certificates, branded diagnostic reports, and zero-point calibration tools."
   canonical={canonicalUrl}
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
 
   <Header />

@@ -1,14 +1,14 @@
 ---
 /**
  * /test/controller/index.astro — Controller Tools Hub
- * SEO Title: Online Controller Tester — 21 Free Gamepad Diagnostic Tools
+ * SEO Title: Online Controller Tester — 39 Core Gamepad Diagnostic Tools
  * Hub index listing all 21 controller tools.
  */
 
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import Header from '../../../components/global/Header.astro';
-import Footer from '../../../components/global/Footer.astro';
-import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
@@ -82,10 +82,12 @@ function getHubIcon(href: string) {
 ---
 
 <BaseLayout
-  title="Online Controller Tester — 21 Free Gamepad Diagnostic Tools | ControllerTesting.com"
-  description="Test any gamepad online. 21 free diagnostic tools for stick drift, button response, trigger linearity, polling rate, and rumble motors. Works with PS5, Xbox, Switch & PC."
+  title="Controller Test Tools - Free Online Gamepad Diagnostic Suite"
+  description="Complete free online controller testing suite. 39 core diagnostic tools for stick drift, button response, trigger linearity, polling rate, deadzone, and vibration. Works with PS5, Xbox, Switch & PC gamepads."
+  keywords="controller test tools, gamepad diagnostic, controller tester online, stick drift test, button tester, trigger test, polling rate test, deadzone test, vibration test, free gamepad tester"
   schema={itemListSchema}
   breadcrumbs={breadcrumbs}
+  localized={true}
 >
   <Header />
 
@@ -94,7 +96,7 @@ function getHubIcon(href: string) {
       <Breadcrumbs items={breadcrumbs} />
 
       <header class="hub-header">
-        <span class="badge-tag">21 Diagnostic Tools</span>
+        <span class="badge-tag">39 Core Diagnostic Tools</span>
         <h1 class="hub-title text-h1">Controller Diagnostic Hub</h1>
         <p class="hub-subtitle">
           Select a tool below to diagnose stick drift, button responsiveness, trigger linearity, or complete health checkups. All tools run 100% locally in your browser.

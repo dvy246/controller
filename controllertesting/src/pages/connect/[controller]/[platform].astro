@@ -6,10 +6,10 @@
  * verifies the result. No invented figures.
  */
 
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import Header from '../../../components/global/Header.astro';
-import Footer from '../../../components/global/Footer.astro';
-import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 export function getStaticPaths() {
   const controllers = [
@@ -122,7 +122,8 @@ const howToSchema = {
   description={`How to connect and pair the ${controller.name} with ${platform.name}: Bluetooth pairing, USB setup, first-run mapping, and verification with our free tester.`}
   breadcrumbs={breadcrumbs}
   schema={howToSchema}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="connect-page">

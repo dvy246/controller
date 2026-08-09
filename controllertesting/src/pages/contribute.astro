@@ -1,9 +1,9 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/global/Header.astro';
-import Footer from '../components/global/Footer.astro';
-import Breadcrumbs from '../components/global/Breadcrumbs.astro';
-import PremiumGuideCard from '../components/seo/PremiumGuideCard.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import PremiumGuideCard from '@components/seo/PremiumGuideCard.astro';
 
 const breadcrumbs = [
   { name: 'Data Project', url: '/contribute' }
@@ -22,7 +22,8 @@ const schemaData = {
   description="Join 142,000+ gamers building the internet's largest open-source controller reliability database. Help us expose stick drift hardware flaws."
   canonical="https://controllertesting.com/contribute"
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
   <Header />
 
@@ -32,6 +33,7 @@ const schemaData = {
     </div>
 
     <PremiumGuideCard
+      badge="Data Project"
       title="The Open Hardware Database"
       description="Help us expose hardware flaws. We are building the internet's largest open-source controller reliability database."
       publishedAt="2026-08-01"

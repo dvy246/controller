@@ -5,13 +5,13 @@
  * Every dimension on this page traces to src/data/controllerFitData.json.
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import FitBlueprint from '../../components/tools/fit/FitBlueprint.astro';
-import { getFitModels } from '../../lib/fit';
-import fitData from '../../data/controllerFitData.json';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import FitBlueprint from '@components/tools/fit/FitBlueprint.astro';
+import { getFitModels } from '@lib/fit';
+import fitData from '@data/controllerFitData.json';
 
 const models = Object.entries(getFitModels());
 const measuredCount = models.filter(([, m]) => m.widthMm !== null).length;
@@ -53,7 +53,8 @@ const faqSchema = {
   description="Match your hand span against real controller body dimensions and get named, reason-backed picks for the controllers most likely to fit you. No ruler needed, no numeric score."
   breadcrumbs={breadcrumbs}
   schema={faqSchema}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="fit-page">

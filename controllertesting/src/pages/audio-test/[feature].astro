@@ -1,9 +1,9 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import AudioRadar from '../../components/features/AudioRadar.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import AudioRadar from '@components/features/AudioRadar.astro';
 
 export function getStaticPaths() {
   const features = ['surround-sound', 'bluetooth-latency', 'bass-frequency'];
@@ -41,7 +41,8 @@ const schema = {
 };
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs}>
+<BaseLayout title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs}
+  localized={true}>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
   <Header />

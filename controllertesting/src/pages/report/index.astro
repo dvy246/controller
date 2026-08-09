@@ -1,9 +1,9 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import ReportViewer from '../../components/features/verify/ReportViewer.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import ReportViewer from '@components/features/verify/ReportViewer.astro';
 
 const breadcrumbs = [
   { name: 'Controller Passport', url: '/passport' },
@@ -16,7 +16,8 @@ const breadcrumbs = [
   description="Controller diagnostic report stored on this device. View stick drift %, circularity error, and button telemetry."
   noindex={true}
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <Header />
 
   <main class="container-site page-layout pt-24 pb-16">

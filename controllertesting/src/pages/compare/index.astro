@@ -4,10 +4,10 @@
  * Zero competitor coverage (verified: controllertest.io has no /compare pages).
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const comparisons = [
   { slug: 'dualsense-vs-xbox-series', title: 'PS5 DualSense vs Xbox Series Wireless' },
@@ -49,7 +49,8 @@ const schemaData = [
   description="Compare PS5 DualSense vs Xbox, DualSense Edge vs Elite Series 2, Switch Pro vs Xbox, and more. Latency, stick drift durability, polling rate and price."
   breadcrumbs={breadcrumbs}
   schema={schemaData}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="hub-page">

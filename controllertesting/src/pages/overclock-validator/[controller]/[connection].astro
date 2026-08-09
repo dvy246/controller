@@ -1,6 +1,6 @@
 ---
-import ToolLayout from '../../../layouts/ToolLayout.astro';
-import OverclockValidator from '../../../components/tools/controller/OverclockValidator.astro';
+import ToolLayout from '@layouts/ToolLayout.astro';
+import OverclockValidator from '@components/tools/controller/OverclockValidator.astro';
 
 export function getStaticPaths() {
   const controllers = [
@@ -31,7 +31,7 @@ const { controller, connection } = Astro.params;
 const { controllerName, connectionName } = Astro.props;
 
 const title = `${controllerName} ${connectionName} Overclock Validator | ControllerTesting.com`;
-const description = `Test and validate the true hardware polling rate (Hz) and input jitter of your ${controllerName} via ${connectionName}. Verify your hidusbf overclock settings in real-time.`;
+const description = `Test and validate the browser-observed update timing (Hz) and input jitter of your ${controllerName} via ${connectionName}. Verify your hidusbf overclock settings in real-time.`;
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
@@ -103,7 +103,7 @@ const faqSchema = {
         <li>Ensure your {controllerName} is connected via {connectionName}.</li>
         <li>Press any button to wake the Gamepad API.</li>
         <li>Move the analog sticks in rapid, continuous circles.</li>
-        <li>Watch the telemetry graph stabilize to see your true hardware polling rate.</li>
+        <li>Watch the telemetry graph stabilize to see your browser-observed update timing.</li>
       </ol>
     </div>
 

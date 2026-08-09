@@ -1,8 +1,8 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/global/Header.astro';
-import Footer from '../components/global/Footer.astro';
-import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const canonicalUrl = "https://controllertesting.com/passport";
 const breadcrumbs = [
@@ -25,7 +25,8 @@ const schemaData = {
   description="Run a 5-point hardware inspection for your Xbox, PlayStation, or Switch controller and generate a timestamped, shareable health report for resale listings, repairs, or your own records."
   canonical={canonicalUrl}
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
 
   <Header />
@@ -347,10 +348,10 @@ const schemaData = {
 </BaseLayout>
 
 <script>
-  import { generateUUID, detectEnvironment, checkCapabilities } from '../lib/report';
-  import type { EvidenceReport } from '../lib/report';
-  import { saveToPassport, getPassportHistory, compareReports } from '../lib/passport';
-  import { buildShareUrl, encodeSharePayload, serializePayload, computeHealthGrade, copyToClipboard } from '../lib/share';
+  import { generateUUID, detectEnvironment, checkCapabilities } from '@lib/report';
+  import type { EvidenceReport } from '@lib/report';
+  import { saveToPassport, getPassportHistory, compareReports } from '@lib/passport';
+  import { buildShareUrl, encodeSharePayload, serializePayload, computeHealthGrade, copyToClipboard } from '@lib/share';
 
   const MODEL_META: Record<string, { vendorId?: string; productId?: string; modelKey?: string }> = {
     'PS5 DualSense': { vendorId: '0x054c', productId: '0x0ce6', modelKey: 'ps5-dualsense' },

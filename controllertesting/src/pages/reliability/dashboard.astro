@@ -5,11 +5,11 @@
  * No derived numbers are invented: charts render raw JSON values.
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import reliabilityData from '../../data/reliabilityData.json';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import reliabilityData from '@data/reliabilityData.json';
 
 const models = Object.entries(reliabilityData.models as Record<string, any>);
 const totalSamples = reliabilityData.totalSamplesMeasured;
@@ -47,7 +47,8 @@ function barWidth(value: number, max: number): number {
   title="Controller Reliability Dashboard — 142,850 Test Results Across 5 Models | ControllerTesting.com"
   description={`Aggregate controller reliability dashboard: stick drift, circularity error, and drift-free lifespan baselines for 5 controller models, compiled from ${totalSamples.toLocaleString()} documented test results (snapshot ${reliabilityData.updatedAt}).`}
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="dash-page">

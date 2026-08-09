@@ -5,12 +5,12 @@
  * Everything traces to controllerFitData.json; null = pending measurement.
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import { getFitModels, computeVerdict, HAND_REFERENCES, type HandKey } from '../../lib/fit';
-import fitData from '../../data/controllerFitData.json';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import { getFitModels, computeVerdict, HAND_REFERENCES, type HandKey } from '@lib/fit';
+import fitData from '@data/controllerFitData.json';
 
 export function getStaticPaths() {
   const models = getFitModels();
@@ -65,7 +65,8 @@ const schemaData = {
   description={`Does the ${model.name} fit your hands? Body width ${model.widthMm ?? 'unmeasured'}, weight ${model.weightG ?? 'unmeasured'} g, ${model.stickLayout} layout, and reference fit verdicts for small, medium and large hands.`}
   canonical={canonicalUrl}
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
 
   <Header />

@@ -5,10 +5,10 @@
  * SEO optimized and aligned with Data Authority pivot.
  * UPGRADED: Multi-Million Dollar Premium UI
  */
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const breadcrumbs = [
   { name: 'Diagnostic Toolkit' }
@@ -33,7 +33,7 @@ const controllerTools = [
   { name: 'Stick Drift Detector', url: '/test/controller/drift', desc: '0.1% stick drift canvas visualizer.', badge: 'High Priority' },
   { name: 'Controller Health Score™', url: '/test/controller/health-score', desc: '0-100 grade & printable PDF report card.', badge: 'Flagship' },
   { name: 'Nintendo Switch Tester & Repair', url: '/test/controller/nintendo-switch', desc: 'Joy-Con drift tester and Hall-effect replacement guide.' },
-  { name: 'PS Controller WebHID Calibration', url: '/test/controller/ps-calibration', desc: 'Low-level WebHID zero-point sampling & firmware save.', badge: 'Flagship' },
+  { name: 'PS Controller WebHID Calibration', url: '/test/controller/ps-calibration', desc: 'Low-level WebHID zero-point sampling & compatible-device WebHID calibration.', badge: 'Flagship' },
   { name: 'Steering Wheel & Pedals', url: '/test/controller/steering-wheel', desc: '900°/1080° rotation disc & Throttle/Brake/Clutch linearity.' },
   { name: 'Fight Stick & Hitbox', url: '/test/controller/fight-stick', desc: 'Vewlix 8-button layout & Capcom SOCD cleaner rule check.' },
   { name: 'Flight Stick & HOTAS', url: '/test/controller/flight-stick', desc: 'Pitch/roll/yaw, 128+ buttons & throttle quadrant.' },
@@ -52,6 +52,15 @@ const controllerTools = [
   { name: 'Touchpad Tester', url: '/test/controller/touchpad', desc: 'PS5 DualSense multi-touch trackpad.' },
   { name: 'Microphone Tester', url: '/test/controller/microphone', desc: 'Built-in mic & 3.5mm headset audio meter.' },
   { name: 'Competitive Readiness', url: '/test/controller/competitive-readiness', desc: 'Esports tournament benchmark assessor.' },
+  { name: 'PS5 DualSense Tester', url: '/test/controller/ps5', desc: 'PS5 DualSense stick drift, adaptive triggers, touchpad, haptics & gyro.', badge: 'Flagship' },
+  { name: 'Xbox Controller Tester', url: '/test/controller/xbox', desc: 'Xbox Series X|S, Elite & One input lag, stick drift & button faults.' },
+  { name: 'Joy-Con Tester', url: '/test/controller/joycon', desc: 'Joy-Con drift & input accuracy for Nintendo Switch.' },
+  { name: 'Switch Pro Tester', url: '/test/controller/switch-pro', desc: 'Switch Pro polling rate, buttons & analog stick precision.' },
+  { name: 'Joystick & Flight Stick Tester', url: '/test/controller/joystick-tester', desc: 'HOTAS, flight sticks & specialized joysticks — multi-axis, throttle, buttons.' },
+  { name: 'Gamepad Mapping Tester', url: '/test/controller/gamepad-mapping', desc: 'Verify custom controller layouts & button rebinds before launching.' },
+  { name: 'Hall Effect Mod', url: '/test/controller/hall-effect-mod', desc: "Hall effect mod 'Before & After' benchmark & Mod Success Certificate." },
+  { name: 'Quick Health Check', url: '/test/controller/quick-health', desc: 'Express 60-second guided checkup — drift, buttons, triggers.' },
+  { name: 'Controller Passport', url: '/test/controller/passport', desc: '5-point inspection form → timestamped, shareable health report.' },
 ];
 
 const mouseTools = [
@@ -110,10 +119,11 @@ function getToolIconSvg(url: string) {
 }
 ---
 <BaseLayout 
-  title="Testing Toolkit | 32+ Diagnostic Tools for Controller & Mouse"
+  title="Testing Toolkit | 39 Diagnostic Tools for Controller & Mouse"
   description="The world's most comprehensive hardware testing toolkit. Diagnose stick drift, polling rate, circularity, and latency. Used by 142,850+ players."
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <script type="application/ld+json" set:html={JSON.stringify(toolsSchema)} />
 
   <Header />

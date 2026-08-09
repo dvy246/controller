@@ -4,10 +4,10 @@
  * SEO Title: PS5 DualSense Controller Specifications, Stick Drift & Diagnostic Guide
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const breadcrumbs = [
   { name: 'Controller Profiles' },
@@ -28,7 +28,8 @@ const schema = {
   description="Complete PS5 DualSense controller specs, ALPS potentiometer stick drift rate, polling rate capabilities, and free online diagnostic tools."
   schema={schema}
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="profile-page">

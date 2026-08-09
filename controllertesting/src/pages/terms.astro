@@ -4,13 +4,21 @@
  * SEO Title: Terms of Service — ControllerTesting.com
  */
 
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/global/Header.astro';
-import Footer from '../components/global/Footer.astro';
-import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const breadcrumbs = [
   { name: 'Terms of Service' },
+];
+
+const sections = [
+  { id: 'acceptance', title: '1. Acceptance of Terms' },
+  { id: 'disclaimer', title: '2. Diagnostic Utility & Scope' },
+  { id: 'trademarks', title: '3. Trademarks & Brand Disclaimer' },
+  { id: 'acceptable-use', title: '4. Acceptable Use Policy' },
+  { id: 'limitation', title: '5. Limitation of Liability' },
 ];
 ---
 
@@ -18,40 +26,112 @@ const breadcrumbs = [
   title="Terms of Service — ControllerTesting.com"
   description="ControllerTesting.com terms of service and usage disclaimers."
   breadcrumbs={breadcrumbs}
+  localized={true}
 >
   <Header />
 
-  <main id="main-content" class="legal-page">
-    <div class="container-site">
-      <Breadcrumbs items={breadcrumbs} />
+  <main id="main-content" class="pt-24 pb-20 bg-surface-0 min-h-screen">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      
+      <!-- Breadcrumbs -->
+      <div class="mb-6">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
 
-      <header class="page-hero">
-        <h1 class="page-title">Terms of Service</h1>
-        <p class="page-subtitle">Last updated: August 2026</p>
+      <!-- Hero Header Section -->
+      <header class="rounded-2xl bg-surface-1 border border-surface-2 p-8 sm:p-10 mb-8">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="px-2.5 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono font-medium">
+            Legal Terms & Disclaimers
+          </span>
+          <span class="text-xs text-text-tertiary font-mono">Last Updated: August 2026</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-text-primary tracking-tight mb-2">
+          Terms of Service
+        </h1>
+        <p class="text-sm sm:text-base text-text-secondary max-w-2xl leading-relaxed">
+          Please review the terms and conditions governing the use of ControllerTesting.com diagnostic utilities.
+        </p>
       </header>
 
-      <div class="legal-content card-base">
-        <h2>1. Free Web Service</h2>
-        <p>
-          ControllerTesting.com provides web-based controller and mouse diagnostic utilities free of charge for informational and testing purposes.
-        </p>
+      <!-- Content Grid: TOC + Document -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Sidebar Navigation (Col 4) -->
+        <aside class="lg:col-span-4 hidden lg:block">
+          <div class="sticky top-28 rounded-xl bg-surface-1 border border-surface-2 p-5 space-y-2">
+            <span class="block text-xs font-mono uppercase text-text-tertiary tracking-wider mb-3 px-2">Table of Contents</span>
+            {sections.map((sec) => (
+              <a
+                href={`#${sec.id}`}
+                class="block text-xs font-medium text-text-secondary hover:text-blue-400 hover:bg-surface-2 px-3 py-2 rounded-lg transition-colors"
+              >
+                {sec.title}
+              </a>
+            ))}
+          </div>
+        </aside>
 
-        <h2>2. Hardware & Trademark Disclaimer</h2>
-        <p>
-          PlayStation, DualSense, DualShock, Xbox, Joy-Con, and Nintendo Switch are registered trademarks of their respective owners. ControllerTesting.com is an independent utility platform and is not affiliated with or endorsed by Sony, Microsoft, or Nintendo.
-        </p>
+        <!-- Document Body (Col 8) -->
+        <div class="lg:col-span-8 space-y-6">
+          <div class="rounded-2xl bg-surface-1 border border-surface-2 p-6 sm:p-10 space-y-8 text-sm sm:text-base text-text-secondary leading-relaxed">
+            
+            <section id="acceptance" class="scroll-mt-32">
+              <h2 class="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                1. Acceptance of Terms
+              </h2>
+              <p>
+                By accessing or using ControllerTesting.com, you agree to be bound by these Terms of Service. If you do not agree with any part of these terms, you may not use our diagnostic tools or services.
+              </p>
+            </section>
+
+            <section id="disclaimer" class="scroll-mt-32 border-t border-surface-2 pt-6">
+              <h2 class="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                2. Free Web Service & Diagnostic Scope
+              </h2>
+              <p>
+                ControllerTesting.com provides client-side hardware testing utilities free of charge for informational, calibration, and diagnostic purposes. Results depend on browser Gamepad API implementations and hardware drivers. Diagnostics are provided "as is" without warranties of any kind.
+              </p>
+            </section>
+
+            <section id="trademarks" class="scroll-mt-32 border-t border-surface-2 pt-6">
+              <h2 class="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                3. Trademarks & Brand Disclaimer
+              </h2>
+              <p>
+                PlayStation, DualSense, DualShock, Xbox, Joy-Con, Nintendo Switch, and Steam Deck are registered trademarks of their respective corporate owners (Sony Interactive Entertainment, Microsoft Corp, Nintendo Co., Ltd., Valve Corp). ControllerTesting.com is an independent open diagnostic utility and is not affiliated with, sponsored by, or endorsed by any of these entities.
+              </p>
+            </section>
+
+            <section id="acceptable-use" class="scroll-mt-32 border-t border-surface-2 pt-6">
+              <h2 class="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                4. Acceptable Use Policy
+              </h2>
+              <p>
+                You may embed our diagnostic widgets or link to our tools freely. You agree not to perform automated scraping attacks, reverse-engineer web services in a disruptive manner, or misuse the platform to generate deceptive hardware claims.
+              </p>
+            </section>
+
+            <section id="limitation" class="scroll-mt-32 border-t border-surface-2 pt-6">
+              <h2 class="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+                5. Limitation of Liability
+              </h2>
+              <p>
+                Under no circumstances shall ControllerTesting.com or its maintainers be liable for any direct, indirect, incidental, or consequential damages resulting from hardware disassembly, physical repair attempts, or reliance on diagnostic scores.
+              </p>
+            </section>
+
+          </div>
+        </div>
+
       </div>
     </div>
   </main>
 
   <Footer />
 </BaseLayout>
-
-<style>
-  .legal-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
-  .page-hero { margin-bottom: 2.5rem; }
-  .page-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
-  .page-subtitle { font-size: 1rem; color: var(--color-text-secondary); }
-  .legal-content { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; line-height: 1.7; color: var(--color-text-secondary); }
-  .legal-content h2 { color: var(--color-text-primary); font-size: 1.25rem; font-weight: 700; }
-</style>

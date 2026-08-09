@@ -6,10 +6,10 @@
  * are labeled as such and cross-linked for verification.
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const guides = [
   {
@@ -118,7 +118,8 @@ const faqSchema = {
   description="Plain-English guides on stick drift, controller deadzones, polling rate, input latency, Hall-effect vs potentiometer sensors, and how controllers work — every figure traceable to our published dataset."
   breadcrumbs={breadcrumbs}
   schema={itemListSchema}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="learn-page">

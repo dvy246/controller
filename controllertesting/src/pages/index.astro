@@ -18,10 +18,10 @@
  * 8 sections, 4+ different layout families ✓
  */
 
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/global/Header.astro';
-import Footer from '../components/global/Footer.astro';
-import ControllerHero from '../components/global/ControllerHero.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import ControllerHero from '@components/global/ControllerHero.astro';
 
 const websiteSchema = {
   '@context': 'https://schema.org',
@@ -85,7 +85,7 @@ const tools = [
 ];
 
 const stats = [
-  { value: '32', label: 'Hardware tools', mono: true },
+  { value: '39', label: 'Hardware tools', mono: true },
   { value: '142k+', label: 'Controllers tested', mono: true },
   { value: '100%', label: 'Privacy preserving', mono: true },
   { value: '0', label: 'Installs required', mono: true },
@@ -124,8 +124,9 @@ function getToolIcon(icon: string) {
 ---
 
 <BaseLayout
-  title="Controller Tester: Free Gamepad & Stick Drift Test"
-  description="Free online controller tester for PS5, Xbox, and PC. Check stick drift, buttons, polling rate, and deadzones. Get your gamepad Health Score."
+  title="Gamepad Tester & Controller Test Online - Check Joystick, Stick Drift, Buttons Free"
+  description="Free online gamepad tester and controller test for PS5, Xbox, Switch & PC. Check stick drift, buttons, triggers, deadzone, vibration, and polling rate. No download required."
+  keywords="controller games, ps5 controller, ps5 controller drift, playstation 5 controller, nintendo switch pro controller, switch controller, switch 2 pro controller, xbox elite controller series 2, nintendo controller, nintendo switch joy con, switch joy con, joy con controller, nintendo switch joy con repair, joy con 2, nintendo switch joy con controller, nintendo switch, nintendo switch oled, nintendo switch 2 games, nintendo switch controller, best nintendo switch games, nintendo switch 2 pro controller, how to connect ps5 controller to pc, controller test, xbox controller test, ps4 controller test"
   ogImage="https://controllertesting.com/images/controller-hero.jpg"
   ogImageAlt="White DualSense controller ready for an online controller test"
   ogImageWidth={736}
@@ -152,26 +153,26 @@ function getToolIcon(icon: string) {
             <span class="hero-kicker-meta">Browser / ready</span>
           </div>
           <h1 id="hero-headline" class="text-hero mb-6">
-            Diagnose stick drift <span class="text-accent">before you lose.</span>
+            Is your controller really <span class="text-accent">working correctly?</span>
           </h1>
           <p class="hero-subtext">
-            Test your controller, mouse, and keyboard instantly. Catch drift, latency, and button failures before your warranty expires. Experience that you have never felt before.
+            Test sticks, buttons, triggers, vibration, and input stability in your browser.
           </p>
           <div class="hero-ctas">
             <a href="/test/controller/full-diagnostic" class="btn-primary hero-cta-primary">
-              Test your controller
+              Connect controller
               <span class="btn-icon-wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
             </a>
-            <a href="/test/controller/drift" class="btn-secondary hero-cta-secondary">
-              Check stick drift
+            <a href="/test/controller/quick-health" class="btn-secondary hero-cta-secondary">
+              Run a quick test
             </a>
           </div>
 
           {/* Clean Telemetry Proof Pill (No fake avatar initials) */}
           <div class="hero-proof">
-            <div class="rounded-full bg-surface-1 border border-surface-2 text-xs font-mono text-secondary flex items-center px-3 gap-2">
+            <a href="/test/methodology" class="rounded-full bg-surface-1 border border-surface-2 text-xs font-mono text-secondary flex items-center px-3 gap-2 hover:border-accent/50 transition-colors">
               <span class="text-pass font-bold">✓ 142,850+</span> hardware telemetry samples measured
-            </div>
+            </a>
           </div>
         </div>
 
@@ -242,7 +243,7 @@ function getToolIcon(icon: string) {
       <div class="container-site">
         <div class="section-header-stack" data-reveal>
           <h2 id="tools-heading" class="section-heading">
-            29 tools. One controller.
+            39 core diagnostic tools. One controller.
             <br />Every test you need.
           </h2>
         </div>
@@ -323,7 +324,7 @@ function getToolIcon(icon: string) {
               <span class="badge-tag">Full-Setup Testing</span>
               <h3 class="setup-band-title">Your mouse and keyboard get the same treatment.</h3>
               <p class="setup-band-desc">
-                CPS speed, true DPI, 8K polling, click latency, double-click faults, scroll-wheel health —
+                CPS speed, DPI analysis, 8K polling, click latency, double-click faults, scroll-wheel health —
                 7 mouse tools. Plus a mechanical keyboard sandbox with NKRO matrix verification.
               </p>
             </div>
@@ -594,6 +595,30 @@ function getToolIcon(icon: string) {
             <span aria-hidden="true">·</span>
             <span>Works in 2 seconds</span>
           </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ═══════════════════════════════════════════════════════
+        SECTION 8: SEO CONTENT HUB (600 Words)
+        ═══════════════════════════════════════════════════════ */}
+    <section class="seo-content-hub" aria-labelledby="seo-hub-title" style="padding: 4rem 0; background: var(--color-surface-0); border-top: 1px solid var(--color-border-subtle);">
+      <div class="container-narrow">
+        <div class="prose-container" style="color: var(--color-text-secondary); line-height: 1.7; font-size: 1.05rem;">
+          <h2 id="seo-hub-title" style="color: var(--color-text-primary); font-size: 2rem; font-weight: 800; margin-bottom: 1.5rem;">The Complete Browser-Based Controller Diagnostic Platform</h2>
+          <p style="margin-bottom: 1.5rem;">Whether you're a competitive esports player looking to eliminate input delay on <strong>controller games</strong>, or a casual gamer verifying a secondhand console to play the <strong>best nintendo switch games</strong>, hardware reliability is critical. From preparing for upcoming <strong>nintendo switch 2 games</strong> on the much-anticipated <strong>nintendo switch 2</strong> console to enjoying classics on a <strong>nintendo switch oled</strong> or <strong>nintendo switch lite</strong>, having a fully functional gamepad is non-negotiable. Our platform provides an instant, installation-free <strong>controller test</strong> directly in your browser. Utilizing the HTML5 Gamepad API, we read raw telemetry from your hardware, allowing you to visualize analog stick accuracy, button actuation, and trigger linearity across all major devices—including the <strong>playstation 5 controller</strong>, the <strong>nintendo switch pro controller</strong>, and the <strong>xbox elite controller series 2</strong>.</p>
+          
+          <h3 style="color: var(--color-text-primary); font-size: 1.5rem; font-weight: 700; margin: 2.5rem 0 1rem;">Precision Diagnostics: Visualizing Stick Drift and Wear</h3>
+          <p style="margin-bottom: 1.5rem;">Analog stick degradation is the most common point of hardware failure in modern gamepads. Before you invest in a costly <strong>nintendo switch joy con repair</strong> or buy a new set of <strong>nintendo switch games</strong>, it is crucial to determine if your crosshair movement is caused by a software deadzone configuration or physical potentiometer wear. Our diagnostic suite measures resting axis variance down to a 0.1% margin of error. If you are experiencing unexpected camera movement on your DualSense, running our dedicated test will quickly confirm the presence of <strong>ps5 controller drift</strong>, empowering you to adjust your in-game settings or pursue a warranty claim.</p>
+          
+          <h3 style="color: var(--color-text-primary); font-size: 1.5rem; font-weight: 700; margin: 2.5rem 0 1rem;">Supported Hardware: From Next-Gen to Retro</h3>
+          <p style="margin-bottom: 1.5rem;">Our testing engine is built for maximum compatibility. You can perform a rigorous <strong>xbox controller test</strong> to verify the adjustable tension thumbsticks on an <strong>xbox elite controller</strong> (including the <strong>xbox elite controller series</strong> models), or map the unique inputs of a <strong>switch 2 pro controller</strong>. We extensively support <strong>nintendo</strong> hardware; whether you are testing a standard <strong>nintendo switch joy con</strong> or mapping a legacy <strong>super nintendo controller switch</strong> setup via USB, our interface accurately reflects the <strong>nintendo controller layout</strong>. Even an <strong>old nintendo controller</strong> or an <strong>original nintendo controller</strong> paired with an adapter can be analyzed for input latency and ghosting. If you need to test a <strong>joy con controller</strong>, a <strong>switch controller</strong>, or verify <strong>nintendo switch controller</strong> drift, we have you covered.</p>
+          
+          <h3 style="color: var(--color-text-primary); font-size: 1.5rem; font-weight: 700; margin: 2.5rem 0 1rem;">Connectivity: Pairing Your Device for PC and Mobile</h3>
+          <p style="margin-bottom: 1.5rem;">A frequent barrier to hardware testing and playing <strong>controller games for pc</strong> is establishing a stable connection. A common question we receive is <strong>how to connect ps5 controller to pc</strong>, <strong>how to connect ps5 controller</strong> generally, or <strong>how to connect ps5 controller to iphone</strong>. For PC, the most reliable method with the lowest latency is a direct USB-C connection. For wireless testing or iOS gaming, simply hold the Create and PS buttons simultaneously until the light bar flashes to initiate Bluetooth pairing. Once connected, your OS will expose the device to the browser, allowing you to instantly play <strong>online controller games</strong> (or <strong>pc controller games</strong>) or run our polling rate diagnostic on your <strong>ps5 controller pro</strong> or standard <strong>ps5 controller</strong>. We also fully support the <strong>xbox controller</strong> and <strong>ps4 controller</strong> for all these features.</p>
+          
+          <h3 style="color: var(--color-text-primary); font-size: 1.5rem; font-weight: 700; margin: 2.5rem 0 1rem;">Limitations and Browser Implementation</h3>
+          <p style="margin-bottom: 1.5rem;">While our <strong>ps4 controller test</strong> and <strong>ps5 controller test</strong> suites are highly accurate, it's important to understand the limitations of the Gamepad API. Browsers normalize inputs differently depending on your operating system. For example, Windows may apply a hardware-level deadzone to Xbox controllers before the data ever reaches the browser. Similarly, testing a <strong>nintendo controller switch</strong> setup, a <strong>joy con 2</strong>, or a <strong>switch joy con</strong> wirelessly via Bluetooth can introduce artificial latency compared to a wired connection. We always recommend using a wired connection on a Chromium browser (like Google Chrome or Microsoft Edge) for the most accurate diagnostic results across all your <strong>nintendo switch</strong> and next-gen gaming hardware.</p>
         </div>
       </div>
     </section>

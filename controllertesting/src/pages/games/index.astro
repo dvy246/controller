@@ -4,10 +4,10 @@
  * SEO Title: Controller Arcade — 5 Free Browser Games for Gamepads
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const breadcrumbs = [
   { name: 'Games Arcade' },
@@ -64,7 +64,8 @@ function getGameIcon(id: string) {
   description="Play 5 free browser games using your PS5, Xbox, or Switch controller. Precision aim trainers, reflex challenges, and rewards Arcade."
   schema={schema}
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="arcade-page">
@@ -133,7 +134,7 @@ function getGameIcon(id: string) {
 </BaseLayout>
 
 <script>
-  import { getUserProgress } from '../../lib/rewards';
+  import { getUserProgress } from '@lib/rewards';
 
   document.addEventListener('DOMContentLoaded', () => {
     const prog = getUserProgress();

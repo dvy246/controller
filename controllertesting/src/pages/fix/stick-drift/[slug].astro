@@ -5,10 +5,10 @@
  * reliability links only exist where reliabilityData.json has the model.
  */
 
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import Header from '../../../components/global/Header.astro';
-import Footer from '../../../components/global/Footer.astro';
-import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 export function getStaticPaths() {
   const guides = [
@@ -253,7 +253,8 @@ const reliabilitySnippet = guide.reliabilitySlug
   description={`Step-by-step guide to fix ${guide.name} controller stick drift: ${guide.sensor} diagnosis, cleaning, deadzone tuning, and replacement options.`}
   schema={howToSchema}
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="guide-page">

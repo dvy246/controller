@@ -1,0 +1,49 @@
+---
+/**
+ * SemanticGlossary.astro
+ * SEO injection block providing deep semantic entities and NLP relevance.
+ */
+---
+
+<section class="max-w-4xl mx-auto mt-16 mb-16 px-4 md:px-0 text-stone-600 dark:text-stone-400">
+  <h2 class="text-2xl font-bold text-stone-900 dark:text-stone-100 mb-6">Controller Hardware Glossary & Tips</h2>
+  
+  <div class="grid md:grid-cols-2 gap-8">
+    <div class="space-y-6">
+      <article>
+        <h3 class="text-lg font-semibold text-stone-800 dark:text-stone-200">Stick Drift & Deadzones</h3>
+        <p class="text-sm mt-2 leading-relaxed">
+          <strong class="text-stone-900 dark:text-stone-100">Stick drift</strong> occurs when analog sticks register input without being touched. 
+          This is typically caused by physical wear in traditional carbon-film potentiometers. A 
+          <strong class="text-stone-900 dark:text-stone-100">deadzone</strong> is a software-level threshold (e.g., 5-10%) applied to ignore these microscopic false inputs.
+        </p>
+      </article>
+
+      <article>
+        <h3 class="text-lg font-semibold text-stone-800 dark:text-stone-200">Hall Effect Sensors</h3>
+        <p class="text-sm mt-2 leading-relaxed">
+          Unlike traditional ALPS potentiometers, <strong class="text-stone-900 dark:text-stone-100">Hall Effect modules</strong> use magnetic fields to measure stick position. 
+          Because there is no physical contact or friction between the internal components, they are virtually immune to wear-induced stick drift, drastically extending the controller's lifespan.
+        </p>
+      </article>
+    </div>
+
+    <div class="space-y-6">
+      <article>
+        <h3 class="text-lg font-semibold text-stone-800 dark:text-stone-200">Polling Rate (Hz) & Input Latency</h3>
+        <p class="text-sm mt-2 leading-relaxed">
+          <strong class="text-stone-900 dark:text-stone-100">Polling rate</strong> is how often your controller sends data to your device, measured in Hertz (Hz). 
+          A standard Bluetooth connection yields around 125Hz (8ms latency). Overclocking or using a wired USB connection can push this to 500Hz-1000Hz (1ms-2ms latency), critical for competitive gaming.
+        </p>
+      </article>
+
+      <article>
+        <h3 class="text-lg font-semibold text-stone-800 dark:text-stone-200">Circularity Error</h3>
+        <p class="text-sm mt-2 leading-relaxed">
+          When you rotate a joystick along its outer edge, a perfect module should trace a mathematically perfect circle. 
+          <strong class="text-stone-900 dark:text-stone-100">Circularity error</strong> measures the deviation from this perfect circle. High deviations (>15%) can result in uneven diagonal movement speeds in FPS games.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>

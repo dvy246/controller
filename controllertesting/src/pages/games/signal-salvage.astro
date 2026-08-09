@@ -4,13 +4,13 @@
  * SEO Title: Signal Salvage — 2-Player Twin-Stick Repair Duel
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import InterlinkStrip from '../../components/global/InterlinkStrip.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
-import { resolveToolsForGame } from '../../data/arcadeInterlinks';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import InterlinkStrip from '@components/global/InterlinkStrip.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import GameHowToPlay from '@components/games/GameHowToPlay.astro';
+import { resolveToolsForGame } from '@data/arcadeInterlinks';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -21,7 +21,8 @@ const seoTitle = "Signal Salvage | 2-Player Twin-Stick Game & Test";
 const seoDesc = "Stress-test two controllers in this 90-second twin-stick repair duel. Uses both analog sticks and triggers continuously.";
 ---
 
-<BaseLayout title={seoTitle} description={seoDesc} breadcrumbs={breadcrumbs}>
+<BaseLayout title={seoTitle} description={seoDesc} breadcrumbs={breadcrumbs}
+  localized={true}>
   <Header />
 
   <main id="main-content" class="game-page pb-24">
@@ -224,8 +225,8 @@ const seoDesc = "Stress-test two controllers in this 90-second twin-stick repair
 </style>
 
 <script>
-  import { parseGamepadState } from '../../lib/gamepad';
-  import { addPoints } from '../../lib/rewards';
+  import { parseGamepadState } from '@lib/gamepad';
+  import { addPoints } from '@lib/rewards';
 
   document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;

@@ -5,10 +5,10 @@
  * Hub index listing all keyboard diagnostic tools.
  */
 
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import Header from '../../../components/global/Header.astro';
-import Footer from '../../../components/global/Footer.astro';
-import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const breadcrumbs = [
   { name: 'Tests', url: '/test/keyboard' },
@@ -60,7 +60,8 @@ function getKeyboardIcon(href: string) {
   description="Test any keyboard online. Diagnostic tools for 100% ANSI, TKL 80%, 60%, Mac layouts, N-Key Rollover (NKRO), switch chatter double-typing, and latency."
   schema={itemListSchema}
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="hub-page">

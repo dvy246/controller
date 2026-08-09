@@ -4,10 +4,10 @@
  * SEO Title: Server Error (500) | ControllerTesting.com
  */
 
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/global/Header.astro';
-import Footer from '../components/global/Footer.astro';
-import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const breadcrumbs = [
   { name: 'Server Error' }
@@ -19,7 +19,8 @@ const breadcrumbs = [
   description="An unexpected error occurred. Please refresh or return to ControllerTesting.com diagnostic tools."
   noindex={true}
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <Header />
   <div class="error-container">
     <Breadcrumbs items={breadcrumbs} />

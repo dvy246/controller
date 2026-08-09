@@ -4,14 +4,14 @@
  * Reflex reaction speed game.
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
-import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
-import InterlinkStrip from '../../components/global/InterlinkStrip.astro';
-import { resolveToolsForGame } from '../../data/arcadeInterlinks';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import ArcadeRewardsLine from '@components/games/ArcadeRewardsLine.astro';
+import GameHowToPlay from '@components/games/GameHowToPlay.astro';
+import InterlinkStrip from '@components/global/InterlinkStrip.astro';
+import { resolveToolsForGame } from '@data/arcadeInterlinks';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -25,7 +25,8 @@ const relatedTools = resolveToolsForGame('quick-draw');
   title="Quick Draw Reaction Challenge — Controller Arcade Game | ControllerTesting.com"
   description="Test your reaction speed in Quick Draw. Press R2 / Primary Button the millisecond the signal turns green."
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <Header />
   <div class="game-container">
     <div class="hero-card card-base">
@@ -99,7 +100,7 @@ const relatedTools = resolveToolsForGame('quick-draw');
     claimArcadeXp,
     getArcadeRewardEls,
     renderArcadeRewards,
-  } from '../../lib/arcadeRewards';
+  } from '@lib/arcadeRewards';
 
   document.addEventListener('DOMContentLoaded', () => {
     let startTime = 0;

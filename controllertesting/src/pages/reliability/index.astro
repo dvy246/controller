@@ -5,11 +5,11 @@
  * No competitor has this content type (verified).
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import reliabilityData from '../../data/reliabilityData.json';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import reliabilityData from '@data/reliabilityData.json';
 
 const models = Object.entries(reliabilityData.models as Record<string, any>);
 
@@ -41,7 +41,8 @@ const schemaData = [
   description={`Baseline stick drift and sensor reliability figures for 5 controller models, compiled from ${reliabilityData.totalSamplesMeasured.toLocaleString()} documented test results (snapshot ${reliabilityData.updatedAt}).`}
   breadcrumbs={breadcrumbs}
   schema={schemaData}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="hub-page">

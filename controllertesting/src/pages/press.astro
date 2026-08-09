@@ -5,11 +5,11 @@
  * to reliabilityData.json, the methodology page, or the gamepad-lib repo.
  */
 
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/global/Header.astro';
-import Footer from '../components/global/Footer.astro';
-import Breadcrumbs from '../components/global/Breadcrumbs.astro';
-import reliabilityData from '../data/reliabilityData.json';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import reliabilityData from '@data/reliabilityData.json';
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
@@ -18,7 +18,7 @@ const breadcrumbs = [
 
 const facts = [
   { k: 'Documented diagnostic results', v: `${reliabilityData.totalSamplesMeasured.toLocaleString()}+` },
-  { k: 'Free browser diagnostics', v: '32' },
+  { k: 'Free browser diagnostics', v: '39' },
   { k: 'Repair guides', v: '12' },
   { k: 'Per-game settings guides', v: '30' },
   { k: 'Controller comparisons', v: '9' },
@@ -30,7 +30,8 @@ const facts = [
   title="Press Kit — ControllerTesting.com | Media & Review Resources"
   description="Press kit for ControllerTesting.com: the data-backed controller testing platform with 142,850+ documented results, open-source measurement math, and zero-invented-figures policy."
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content">

@@ -4,10 +4,10 @@
  * Zero competitor coverage (verified: controllertest.io has no profile pages).
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const controllers = [
   { slug: 'ps5-dualsense', name: 'PS5 DualSense', brand: 'Sony', type: 'Standard Gamepad' },
@@ -28,7 +28,8 @@ const breadcrumbs = [{ name: 'Home', url: '/' }, { name: 'Controller Profiles' }
   title="Controller Profiles — Specs, Known Issues & Diagnostics | ControllerTesting.com"
   description="Hardware profiles for PS5 DualSense, Xbox, Switch Pro, DualSense Edge, Elite Series 2 and more: sensor types, known issues, and the right diagnostic for each."
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="hub-page">

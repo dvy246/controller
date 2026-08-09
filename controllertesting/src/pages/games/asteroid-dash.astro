@@ -4,14 +4,14 @@
  * Dodge asteroids and collect orbs. Left stick movement, R2 boost.
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
-import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
-import InterlinkStrip from '../../components/global/InterlinkStrip.astro';
-import { resolveToolsForGame } from '../../data/arcadeInterlinks';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import ArcadeRewardsLine from '@components/games/ArcadeRewardsLine.astro';
+import GameHowToPlay from '@components/games/GameHowToPlay.astro';
+import InterlinkStrip from '@components/global/InterlinkStrip.astro';
+import { resolveToolsForGame } from '@data/arcadeInterlinks';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -34,7 +34,8 @@ const relatedTools = resolveToolsForGame('asteroid-dash');
   description="Play Asteroid Dash, a dodge-and-collect survival game for PS5, Xbox, and Switch controllers. Collect orbs, dodge asteroids, survive."
   schema={schema}
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <Header />
   <div class="game-container">
     <div class="hero-card card-base">
@@ -106,12 +107,12 @@ const relatedTools = resolveToolsForGame('asteroid-dash');
 </BaseLayout>
 
 <script>
-  import { parseGamepadState } from '../../lib/gamepad';
+  import { parseGamepadState } from '@lib/gamepad';
   import {
     claimArcadeXp,
     getArcadeRewardEls,
     renderArcadeRewards,
-  } from '../../lib/arcadeRewards';
+  } from '@lib/arcadeRewards';
 
   document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('ast-canvas') as HTMLCanvasElement;

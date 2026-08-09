@@ -43,7 +43,7 @@ This document serves as the absolute source of truth for all AI agents, software
     *   Controller Diagnostic Tools (22 tools)
     *   Mouse Diagnostic Tools (10 tools)
     *   Specialized & MIDI Tools
-    *   Browser Arcade Games (5 games)
+    *   Browser Arcade Games (10 games)
     *   Widgets & Embeds
     *   Decision Tools & Repair Guides
 *   **Accessibility**: Full keyboard arrow navigation (`Up`/`Down`/`Enter`/`Esc`), backdrop blur overlay, ARIA dialog roles.
@@ -129,7 +129,7 @@ This document serves as the absolute source of truth for all AI agents, software
 *   **Controller Health Score™ Share Card**: `HealthScore.astro` — 1200×630 canvas PNG + clipboard share. Integrated with Evidence Report metadata (UUID, OS, Browser).
 *   **Drift Timeline Predictive Wear**: `DriftTimeline.astro` — `tl-wear-card` projects wear vs model baseline (avg drift onset).
 *   **Games Arcade Hub** (`/games`) — Catalog of browser arcade games.
-*   **Interactive Games**: Stick Sniper (`/games/stick-sniper`), Button Blitz (`/games/button-blitz`), Stick Maze Runner (`/games/stick-maze`), Trigger Racer (`/games/trigger-racer`), Quick Draw Reaction (`/games/quick-draw`).
+*   **Interactive Games**: Stick Sniper (`/games/stick-sniper`), Button Blitz (`/games/button-blitz`), Stick Maze Runner (`/games/stick-maze`), Trigger Racer (`/games/trigger-racer`), Quick Draw Reaction (`/games/quick-draw`), Memory Pulse (`/games/memory-pulse`), Asteroid Dash (`/games/asteroid-dash`), Combo Rush (`/games/combo-rush`), Neon Striker (`/games/neon-striker`), Kart Drift (`/games/kart-drift`).
 
 ---
 

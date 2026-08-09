@@ -4,14 +4,14 @@
  * SEO Title: Kart Drift — Controller Racing & Drifting Game
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
-import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
-import InterlinkStrip from '../../components/global/InterlinkStrip.astro';
-import { resolveToolsForGame } from '../../data/arcadeInterlinks';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import ArcadeRewardsLine from '@components/games/ArcadeRewardsLine.astro';
+import GameHowToPlay from '@components/games/GameHowToPlay.astro';
+import InterlinkStrip from '@components/global/InterlinkStrip.astro';
+import { resolveToolsForGame } from '@data/arcadeInterlinks';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -34,7 +34,8 @@ const relatedTools = resolveToolsForGame('kart-drift');
   description="High-speed top-down racing. Master the art of the drift in this 3-lap time trial using your PS5, Xbox, or Switch controller."
   schema={schema}
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="game-page">
@@ -126,8 +127,8 @@ const relatedTools = resolveToolsForGame('kart-drift');
 </BaseLayout>
 
 <script>
-  import { parseGamepadState } from '../../lib/gamepad';
-  import { claimArcadeXp, getArcadeRewardEls, renderArcadeRewards } from '../../lib/arcadeRewards';
+  import { parseGamepadState } from '@lib/gamepad';
+  import { claimArcadeXp, getArcadeRewardEls, renderArcadeRewards } from '@lib/arcadeRewards';
 
   document.addEventListener('DOMContentLoaded', () => {
     const setupPanel = document.getElementById('kart-setup') as HTMLElement | null;

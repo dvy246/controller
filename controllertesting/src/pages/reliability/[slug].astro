@@ -1,9 +1,9 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import Footer from '../../components/global/Footer.astro';
-import Header from '../../components/global/Header.astro';
-import reliabilityData from '../../data/reliabilityData.json';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import Footer from '@components/global/Footer.astro';
+import Header from '@components/global/Header.astro';
+import reliabilityData from '@data/reliabilityData.json';
 
 export function getStaticPaths() {
   const models = Object.keys(reliabilityData.models);
@@ -43,7 +43,8 @@ const schemaData = {
   canonical={canonicalUrl}
   breadcrumbs={breadcrumbs}
   schema={schemaData}
->
+
+  localized={true}>
   <Header />
 
   <main class="reliability-report-page container-site page-layout">

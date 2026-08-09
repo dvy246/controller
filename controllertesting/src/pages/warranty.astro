@@ -4,10 +4,10 @@
  * SEO Title: Controller Warranty Checker — Check DualSense, Xbox & Switch Warranty Policies
  */
 
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/global/Header.astro';
-import Footer from '../components/global/Footer.astro';
-import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const breadcrumbs = [
   { name: 'Warranty Assistant' },
@@ -37,7 +37,8 @@ const schema = {
   description="Check warranty coverage for PS5 DualSense, Xbox Elite 2, and Switch Joy-Cons. Learn how to file stick drift warranty claims and export test proof."
   schema={schema}
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="warranty-page">

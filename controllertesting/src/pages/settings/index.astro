@@ -4,10 +4,10 @@
  * Zero competitor coverage (verified: controllertest.io has no /settings pages).
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const games = [
   { slug: 'fortnite', name: 'Fortnite' },
@@ -29,13 +29,35 @@ const controllers = [
 ];
 
 const breadcrumbs = [{ name: 'Home', url: '/' }, { name: 'Settings' }];
+
+const schemaData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Game Controller Settings — Deadzone & Sensitivity Guides',
+    description: 'Per-game controller settings starting points: deadzone, response curve and sensitivity for Fortnite, Apex, Warzone, Valorant, CS2 and more, tuned per controller.',
+    url: 'https://controllertesting.com/settings/'
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: games.map((g, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: `Settings for ${g.name}`,
+      url: `https://controllertesting.com/settings/${g.slug}/ps5-dualsense`
+    }))
+  }
+];
 ---
 
 <BaseLayout
   title="Game Controller Settings — Deadzone & Sensitivity Guides | ControllerTesting.com"
   description="Per-game controller settings starting points: deadzone, response curve and sensitivity for Fortnite, Apex, Warzone, Valorant, CS2 and more, tuned per controller."
   breadcrumbs={breadcrumbs}
->
+  schema={schemaData}
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="hub-page">

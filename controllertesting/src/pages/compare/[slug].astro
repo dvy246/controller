@@ -4,11 +4,11 @@
  * SEO Title: {Controller A} vs {Controller B} — Detailed Hardware Comparison ({Year})
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import reliabilityData from '../../data/reliabilityData.json';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import reliabilityData from '@data/reliabilityData.json';
 
 const reliabilityModels = reliabilityData.models as Record<string, any>;
 
@@ -139,7 +139,8 @@ const faqs = [
   breadcrumbs={breadcrumbs}
   faqs={faqs}
   schema={productSchemas}
->
+
+  localized={true}>
   <Header />
   <div class="compare-container">
     <div class="hero-card card-base">

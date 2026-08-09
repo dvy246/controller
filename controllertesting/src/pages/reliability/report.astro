@@ -4,11 +4,11 @@
  * Data-backed, dated, cites the baseline snapshot. First edition: 2026-08.
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import reliabilityData from '../../data/reliabilityData.json';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import reliabilityData from '@data/reliabilityData.json';
 
 type Model = {
   name: string;
@@ -33,7 +33,8 @@ const reportTitle = `Reliability Dataset Report — ${new Date(reliabilityData.u
   title={`${reportTitle} | ControllerTesting.com`}
   description={`Monthly controller reliability dataset report: stick drift after 12 months, circularity error, and average lifespan before drift across ${reliabilityData.totalSamplesMeasured.toLocaleString()} documented results.`}
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content">

@@ -4,10 +4,10 @@
  * Target keyword: playstation controller test
  */
 
-import ToolLayout from '../../../layouts/ToolLayout.astro';
-import Interactive2DVisualizer from '../../../components/tools/controller/Interactive2DVisualizer.astro';
-import DiagnosticResultsBento from '../../../components/seo/DiagnosticResultsBento.astro';
-import PremiumGuideCard from '../../../components/seo/PremiumGuideCard.astro';
+import ToolLayout from '@layouts/ToolLayout.astro';
+import Interactive2DVisualizer from '@components/tools/controller/Interactive2DVisualizer.astro';
+import DiagnosticResultsBento from '@components/seo/DiagnosticResultsBento.astro';
+import PremiumGuideCard from '@components/seo/PremiumGuideCard.astro';
 
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
@@ -23,14 +23,22 @@ const faqs = [
   {
     "question": "How to reset a PS5 controller?",
     "answer": "Locate the small reset button on the back of the controller next to the Sony logo. Use a paperclip to press and hold the button for 5 seconds."
+  },
+  {
+    "question": "How do I check my PS5 controller buttons online?",
+    "answer": "Connect your DualSense controller to your PC or Mac via USB-C or Bluetooth. Press any button to activate the connection, and our tester will display all face buttons and D-Pad inputs."
+  },
+  {
+    "question": "Why is my PS5 controller drifting?",
+    "answer": "PS5 controller drift happens when the ALPS potentiometer sensors degrade from use or gather dust, causing the stick to register false inputs without you touching it."
   }
 ];
 
 ---
 
 <ToolLayout
-  title="Playstation Controller Test & Stick Drift Check"
-  description="Check your Playstation controller for stick drift, button responsiveness, and trigger issues with our advanced online diagnostic tool."
+  title="PS5 Controller Test - Free DualSense Gamepad Tester Online"
+  description="Test your PS5 DualSense controller online for free. Check stick drift, buttons, adaptive triggers, touchpad, haptic feedback, and gyroscope with our browser-based PlayStation 5 controller tester."
   toolName="Playstation Controller Test"
   category="Diagnostic"
   categoryUrl="/test/controller"

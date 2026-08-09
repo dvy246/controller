@@ -22,11 +22,13 @@ import TelemetryConsent from '../components/global/TelemetryConsent.astro';
 import PremiumFaqAccordion from '../components/seo/PremiumFaqAccordion.astro';
 import HowToGetStarted from '../components/global/HowToGetStarted.astro';
 import InterlinkStrip from '../components/global/InterlinkStrip.astro';
+import SemanticGlossary from '../components/global/SemanticGlossary.astro';
 import { resolveGamesForTool } from '../data/arcadeInterlinks';
 
 export interface Props {
   title: string;
   description: string;
+  keywords?: string;
   toolName: string;
   category: string;
   categoryUrl: string;
@@ -41,6 +43,7 @@ export interface Props {
 const {
   title,
   description,
+  keywords,
   toolName,
   category,
   categoryUrl,
@@ -50,14 +53,13 @@ const {
   telemetryEnabled = false,
 } = Astro.props;
 
-// Auto-generate WebApplication + FAQPage JSON-LD schemas
 const webAppSchema = {
   '@context': 'https://schema.org',
-  '@type': 'WebApplication',
+  '@type': ['WebApplication', 'SoftwareApplication'],
   name: toolName,
   url: Astro.url.href,
-  applicationCategory: 'BrowserApplication',
-  operatingSystem: 'Any',
+  applicationCategory: 'Utility',
+  operatingSystem: 'Web Browser',
   offers: {
     '@type': 'Offer',
     price: '0',
@@ -90,8 +92,10 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
 <BaseLayout
   title={title}
   description={description}
+  keywords={keywords}
   breadcrumbs={breadcrumbs}
   schema={allSchemas}
+  localized={true}
 >
   <Header />
 
@@ -199,7 +203,7 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
                 <span class="action-badge-v2 action-badge-v2--blue">Telemetry</span>
               </div>
               <h3 class="action-title-v2 action-title-v2--blue">Overclock &amp; Circularity</h3>
-              <p class="action-desc-v2">Verify true hardware polling Hz stability and statistical circularity grades.</p>
+              <p class="action-desc-v2">Verify browser-observed update timing Hz stability and statistical circularity grades.</p>
             </div>
             <div class="action-card-footer">
               <a href="/overclock-validator/ps5/usb-c" class="action-cta action-cta--blue">
@@ -245,6 +249,9 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
           <slot name="content" />
         </article>
       )}
+
+      {/* ── 8.5. Semantic SEO Glossary ── */}
+      <SemanticGlossary />
 
       {/* ── 9. FAQ Card (Unified Premium Accordion) ── */}
       {faqs.length > 0 && (

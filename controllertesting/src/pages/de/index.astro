@@ -18,12 +18,10 @@
  * 8 sections, 4+ different layout families ✓
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import ControllerHero from '../../components/global/ControllerHero.astro';
-import { useTranslations } from '../../i18n/utils';
-const t = useTranslations('de');
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import ControllerHero from '@components/global/ControllerHero.astro';
 
 const websiteSchema = {
   '@context': 'https://schema.org',
@@ -77,7 +75,7 @@ const faqSchema = {
 
 const tools = [
   { name: 'Stick Drift Test', href: '/test/controller/drift', desc: 'Detect analog stick drift to 0.1% precision', badge: 'Most used', icon: 'drift' },
-  { name: 'Full Diagnostic', href: '/test/controller/full-diagnostic', desc: 'Complete 2-minute controller health checkup', badge: 'Aushängeschild', icon: 'diagnostic' },
+  { name: 'Full Diagnostic', href: '/test/controller/full-diagnostic', desc: 'Complete 2-minute controller health checkup', badge: 'Flagship', icon: 'diagnostic' },
   { name: 'Button Tester', href: '/test/controller/buttons', desc: 'Test every button for ghosting and response', icon: 'buttons' },
   { name: 'Trigger Pressure', href: '/test/controller/triggers', desc: 'Measure analog trigger linearity and range', icon: 'triggers' },
   { name: 'Health Score', href: '/test/controller/health-score', desc: 'Get your controller\'s 0-100 score + grade', badge: 'Unique', icon: 'score' },
@@ -87,7 +85,7 @@ const tools = [
 ];
 
 const stats = [
-  { value: '32', label: 'Hardware tools', mono: true },
+  { value: '39', label: 'Hardware tools', mono: true },
   { value: '142k+', label: 'Controllers tested', mono: true },
   { value: '100%', label: 'Privacy preserving', mono: true },
   { value: '0', label: 'Installs required', mono: true },
@@ -104,30 +102,31 @@ const journeySteps = [
 function getToolIcon(icon: string) {
   switch (icon) {
     case 'drift':
-      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-drift-de" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs><circle cx="12" cy="12" r="9" stroke="url(#g-drift-de)" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="url(#g-drift-de)" fill-opacity="0.3" stroke="#06B6D4" stroke-width="1.5"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/></svg>`;
+      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-drift-h" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs><circle cx="12" cy="12" r="9" stroke="url(#g-drift-h)" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="url(#g-drift-h)" fill-opacity="0.3" stroke="#06B6D4" stroke-width="1.5"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/></svg>`;
     case 'diagnostic':
-      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-diag-de" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#8B5CF6"/><stop offset="100%" stop-color="#EC4899"/></linearGradient></defs><rect x="3" y="4" width="18" height="16" rx="4" fill="url(#g-diag-de)" fill-opacity="0.15" stroke="url(#g-diag-de)" stroke-width="2"/><path d="M7 12h2.5l1.5-4 2.5 8 2-4h3.5" stroke="#EC4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-diag-h" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#8B5CF6"/><stop offset="100%" stop-color="#EC4899"/></linearGradient></defs><rect x="3" y="4" width="18" height="16" rx="4" fill="url(#g-diag-h)" fill-opacity="0.15" stroke="url(#g-diag-h)" stroke-width="2"/><path d="M7 12h2.5l1.5-4 2.5 8 2-4h3.5" stroke="#EC4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
     case 'buttons':
-      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-btn-de" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#10B981"/></linearGradient></defs><rect x="2" y="6" width="20" height="12" rx="6" fill="url(#g-btn-de)" fill-opacity="0.15" stroke="url(#g-btn-de)" stroke-width="2"/><circle cx="16" cy="8.5" r="1.5" fill="#EF4444"/><circle cx="13.5" cy="12" r="1.5" fill="#3B82F6"/><circle cx="18.5" cy="12" r="1.5" fill="#10B981"/><circle cx="16" cy="15.5" r="1.5" fill="#F59E0B"/></svg>`;
+      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-btn-h" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#10B981"/></linearGradient></defs><rect x="2" y="6" width="20" height="12" rx="6" fill="url(#g-btn-h)" fill-opacity="0.15" stroke="url(#g-btn-h)" stroke-width="2"/><circle cx="16" cy="8.5" r="1.5" fill="#EF4444"/><circle cx="13.5" cy="12" r="1.5" fill="#3B82F6"/><circle cx="18.5" cy="12" r="1.5" fill="#10B981"/><circle cx="16" cy="15.5" r="1.5" fill="#F59E0B"/></svg>`;
     case 'triggers':
-      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-trig-de" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#10B981"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs><rect x="4" y="3" width="6" height="18" rx="3" fill="url(#g-trig-de)" fill-opacity="0.2" stroke="url(#g-trig-de)" stroke-width="2"/><rect x="14" y="3" width="6" height="18" rx="3" fill="url(#g-trig-de)" fill-opacity="0.2" stroke="url(#g-trig-de)" stroke-width="2"/><rect x="4" y="10" width="6" height="11" rx="2" fill="#10B981"/><rect x="14" y="6" width="6" height="15" rx="2" fill="#06B6D4"/></svg>`;
+      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-trig-h" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#10B981"/><stop offset="100%" stop-color="#06B6D4"/></linearGradient></defs><rect x="4" y="3" width="6" height="18" rx="3" fill="url(#g-trig-h)" fill-opacity="0.2" stroke="url(#g-trig-h)" stroke-width="2"/><rect x="14" y="3" width="6" height="18" rx="3" fill="url(#g-trig-h)" fill-opacity="0.2" stroke="url(#g-trig-h)" stroke-width="2"/><rect x="4" y="10" width="6" height="11" rx="2" fill="#10B981"/><rect x="14" y="6" width="6" height="15" rx="2" fill="#06B6D4"/></svg>`;
     case 'score':
-      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-score-de" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#10B981"/></linearGradient></defs><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="url(#g-score-de)" fill-opacity="0.25" stroke="url(#g-score-de)" stroke-width="2" stroke-linejoin="round"/></svg>`;
+      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-score-h" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#10B981"/></linearGradient></defs><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="url(#g-score-h)" fill-opacity="0.25" stroke="url(#g-score-h)" stroke-width="2" stroke-linejoin="round"/></svg>`;
     case 'deadzone':
-      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-dz-de" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EF4444"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs><circle cx="12" cy="12" r="9" stroke="url(#g-dz-de)" stroke-width="2"/><circle cx="12" cy="12" r="5" fill="url(#g-dz-de)" fill-opacity="0.25" stroke="#EF4444" stroke-width="1.5"/><path d="M12 7v10M7 12h10" stroke="#F59E0B" stroke-width="1.5"/></svg>`;
+      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-dz-h" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EF4444"/><stop offset="100%" stop-color="#F59E0B"/></linearGradient></defs><circle cx="12" cy="12" r="9" stroke="url(#g-dz-h)" stroke-width="2"/><circle cx="12" cy="12" r="5" fill="url(#g-dz-h)" fill-opacity="0.25" stroke="#EF4444" stroke-width="1.5"/><path d="M12 7v10M7 12h10" stroke="#F59E0B" stroke-width="1.5"/></svg>`;
     case 'polling':
-      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-hz-de" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00F2FE"/><stop offset="100%" stop-color="#4FACFE"/></linearGradient></defs><path d="M2 13h4l3-8 4 14 3-10 2 4h4" stroke="url(#g-hz-de)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-hz-h" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00F2FE"/><stop offset="100%" stop-color="#4FACFE"/></linearGradient></defs><path d="M2 13h4l3-8 4 14 3-10 2 4h4" stroke="url(#g-hz-h)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
     case 'circularity':
-      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-circ-de" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#38BDF8"/></linearGradient></defs><circle cx="12" cy="12" r="9" stroke="url(#g-circ-de)" stroke-width="2" stroke-dasharray="4 2"/><circle cx="12" cy="12" r="3" fill="#38BDF8"/><path d="M12 3v18M3 12h18" stroke="url(#g-circ-de)" stroke-width="1.5" stroke-opacity="0.5"/></svg>`;
+      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-circ-h" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#38BDF8"/></linearGradient></defs><circle cx="12" cy="12" r="9" stroke="url(#g-circ-h)" stroke-width="2" stroke-dasharray="4 2"/><circle cx="12" cy="12" r="3" fill="#38BDF8"/><path d="M12 3v18M3 12h18" stroke="url(#g-circ-h)" stroke-width="1.5" stroke-opacity="0.5"/></svg>`;
     default:
-      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-def-de" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#60A5FA"/></linearGradient></defs><rect x="2" y="6" width="20" height="12" rx="6" fill="url(#g-def-de)" fill-opacity="0.2" stroke="url(#g-def-de)" stroke-width="2"/></svg>`;
+      return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-def-h" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#60A5FA"/></linearGradient></defs><rect x="2" y="6" width="20" height="12" rx="6" fill="url(#g-def-h)" fill-opacity="0.2" stroke="url(#g-def-h)" stroke-width="2"/></svg>`;
   }
 }
 ---
 
 <BaseLayout
-  title="Controller Test Online | Kostenloser Gamepad-Tester"
-  description="Führe einen kostenlosen Controller-Test für PS5, PS4, Xbox, Switch und PC online durch. Nutze einen Gamepad-Tester, um Drift, Tasten, Trigger, Polling-Rate und Vibration zu prüfen."
+  title="Gamepad Tester & Controller Test Online - Check Joystick, Stick Drift, Buttons Free"
+  description="Free online gamepad tester and controller test for PS5, Xbox, Switch & PC. Check stick drift, buttons, triggers, deadzone, vibration, and polling rate. No download required."
+  keywords="controller games, ps5 controller, ps5 controller drift, playstation 5 controller, nintendo switch pro controller, switch controller, switch 2 pro controller, xbox elite controller series 2, nintendo controller, nintendo switch joy con, switch joy con, joy con controller, nintendo switch joy con repair, joy con 2, nintendo switch joy con controller, nintendo switch, nintendo switch oled, nintendo switch 2 games, nintendo switch controller, best nintendo switch games, nintendo switch 2 pro controller, how to connect ps5 controller to pc, controller test, xbox controller test, ps4 controller test"
   ogImage="https://controllertesting.com/images/controller-hero.jpg"
   ogImageAlt="White DualSense controller ready for an online controller test"
   ogImageWidth={736}
@@ -143,7 +142,6 @@ function getToolIcon(icon: string) {
         SECTION 1: HERO — Asymmetric split (design-taste rule)
         ═══════════════════════════════════════════════════════ */}
     <section class="hero" aria-labelledby="hero-headline">
-      {/* Aurora ambient background — CSS-only, transform-composited (see global.css) */}
       <div class="hero-aurora" aria-hidden="true"></div>
       <div class="hero-inner">
 
@@ -151,30 +149,30 @@ function getToolIcon(icon: string) {
         <div class="hero-content">
           <div class="hero-kicker">
             <span class="hero-kicker-signal" aria-hidden="true"></span>
-            <span>Controller-Test / Präzisionsdiagnose</span>
-            <span class="hero-kicker-meta">Browser / bereit</span>
+            <span>Controller test / precision diagnostics</span>
+            <span class="hero-kicker-meta">Browser / ready</span>
           </div>
           <h1 id="hero-headline" class="text-hero mb-6">
-            Diagnostiziere Stick-Drift <span class="text-accent">bevor du verlierst.</span>
+            Is your controller really <span class="text-accent">working correctly?</span>
           </h1>
           <p class="hero-subtext">
-            Teste deinen Controller, deine Maus und deine Tastatur sofort. Erkenne Drift, Latenz und Tastenausfälle, bevor deine Garantie abläuft. Ein Erlebnis, das du noch nie gefühlt hast.
+            Test sticks, buttons, triggers, vibration, and input stability in your browser.
           </p>
           <div class="hero-ctas">
             <a href="/test/controller/full-diagnostic" class="btn-primary hero-cta-primary">
-              Teste deinen Controller
+              Connect controller
               <span class="btn-icon-wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
             </a>
-            <a href="/test/controller/drift" class="btn-secondary hero-cta-secondary">
-              Prüfe auf Stick-Drift
+            <a href="/test/controller/quick-health" class="btn-secondary hero-cta-secondary">
+              Run a quick test
             </a>
           </div>
 
           {/* Clean Telemetry Proof Pill (No fake avatar initials) */}
           <div class="hero-proof">
-            <div class="rounded-full bg-surface-1 border border-surface-2 text-xs font-mono text-secondary flex items-center px-3 gap-2">
-              <span class="text-pass font-bold">✓ 142,850+</span> gemessene Hardware-Telemetriedaten
-            </div>
+            <a href="/test/methodology" class="rounded-full bg-surface-1 border border-surface-2 text-xs font-mono text-secondary flex items-center px-3 gap-2 hover:border-accent/50 transition-colors">
+              <span class="text-pass font-bold">✓ 142,850+</span> hardware telemetry samples measured
+            </a>
           </div>
         </div>
 
@@ -187,7 +185,7 @@ function getToolIcon(icon: string) {
 
       {/* ── Compatibility strip — UNDER hero, not inside (design-taste rule) ── */}
       <div class="compat-strip">
-        <span class="compat-label">Funktioniert mit</span>
+        <span class="compat-label">Works with</span>
         <div class="compat-icons" aria-label="Supported controllers: PS5, Xbox, Nintendo Switch, PC, Android, iOS">
           <span class="compat-item">PS5</span>
           <span class="compat-divider" aria-hidden="true"></span>
@@ -217,12 +215,12 @@ function getToolIcon(icon: string) {
           <span class="stat-featured-orbit-dot"></span>
         </div>
         <div class="stat-featured-content">
-          <span class="stat-featured-label">Live-Hardware-Telemetrie</span>
+          <span class="stat-featured-label">Live hardware telemetry</span>
           <div class="stat-featured-value">
             <span class="stat-count-value" id="telemetry-count" data-count="142850">142k+</span>
-            <span class="stat-featured-unit">Proben</span>
+            <span class="stat-featured-unit">samples</span>
           </div>
-          <span class="stat-featured-desc">Drift- &amp; Zirkularitätsmessungen aus echten Controllertests</span>
+          <span class="stat-featured-desc">drift &amp; circularity measurements from real controller tests</span>
         </div>
       </div>
 
@@ -245,8 +243,8 @@ function getToolIcon(icon: string) {
       <div class="container-site">
         <div class="section-header-stack" data-reveal>
           <h2 id="tools-heading" class="section-heading">
-            29 Tools. Ein Controller.
-            <br />Jeder Test, den du brauchst.
+            39 core diagnostic tools. One controller.
+            <br />Every test you need.
           </h2>
         </div>
 
@@ -256,14 +254,14 @@ function getToolIcon(icon: string) {
           {/* Featured large cell — real visual, not text-only */}
           <a href="/test/controller/health-score" class="bento-featured" data-reveal>
             <div class="bento-featured-content">
-              <span class="bento-badge">Aushängeschild</span>
-              <h3 class="bento-featured-title">Controller Gesundheits-Score</h3>
+              <span class="bento-badge">Flagship</span>
+              <h3 class="bento-featured-title">Controller Health Score</h3>
               <p class="bento-featured-desc">
-                Der einzige 0-100-Score, der Drift, Tasten, Trigger, Polling-Rate
-                und Zirkularität in einer einzigen Diagnose misst. Hole dir deine Note: A+ bis F.
+                The only 0-100 score that measures drift, buttons, triggers, polling rate,
+                and circularity in a single diagnostic. Get your grade: A+ to F.
               </p>
               <span class="bento-link">
-                Hol dir deinen Score
+                Get your score
                 <span class="btn-icon-wrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
               </span>
             </div>
@@ -311,29 +309,34 @@ function getToolIcon(icon: string) {
 
         <div class="tools-see-all" data-reveal>
           <a href="/test/controller" class="btn-secondary">
-            Alle 29 Controller-Tests ansehen
+            View all 29 controller tests
             <span class="btn-icon-wrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
           </a>
-          <a href="/test/mouse" class="btn-ghost">Maus-Tests</a>
-          <a href="/test/keyboard" class="btn-ghost">Tastatur-Tests</a>
+          <a href="/test/mouse" class="btn-ghost">Mouse tests</a>
+          <a href="/test/keyboard" class="btn-ghost">Keyboard tests</a>
         </div>
+
 
         {/* ── Whole-setup band: mouse + keyboard as first-class, not footnotes ── */}
         <div class="setup-band card-base" data-reveal>
-          <div class="setup-band-head">
-            <span class="badge-tag">Komplettes Setup-Testing</span>
-            <h3 class="setup-band-title">Deine Maus und Tastatur bekommen dieselbe Behandlung.</h3>
-            <p class="setup-band-desc">
-              CPS-Geschwindigkeit, echte DPI, 8K-Polling, Klick-Latenz, Doppelklick-Fehler, Scrollrad-Gesundheit —
-              7 Maus-Tools. Plus eine Sandbox für mechanische Tastaturen mit NKRO-Matrixüberprüfung.
-            </p>
+          <div class="setup-band-body">
+            <div class="setup-band-head">
+              <span class="badge-tag">Full-Setup Testing</span>
+              <h3 class="setup-band-title">Your mouse and keyboard get the same treatment.</h3>
+              <p class="setup-band-desc">
+                CPS speed, DPI analysis, 8K polling, click latency, double-click faults, scroll-wheel health —
+                7 mouse tools. Plus a mechanical keyboard sandbox with NKRO matrix verification.
+              </p>
+            </div>
           </div>
-          <div class="setup-band-links">
-            <a href="/test/mouse/cps" class="btn-secondary">CPS Test</a>
-            <a href="/test/mouse/dpi" class="btn-secondary">DPI Analyzer</a>
-            <a href="/test/mouse/polling-rate" class="btn-secondary">8K Polling Rate</a>
-            <a href="/test/mouse/double-click" class="btn-secondary">Double-Click Fault</a>
-            <a href="/keyboard-tester/full" class="btn-ghost">Tastatur-Sandbox</a>
+          <div class="setup-band-footer">
+            <div class="setup-band-links">
+              <a href="/test/mouse/cps" class="btn-secondary">CPS Test</a>
+              <a href="/test/mouse/dpi" class="btn-secondary">DPI Analyzer</a>
+              <a href="/test/mouse/polling-rate" class="btn-secondary">8K Polling Rate</a>
+              <a href="/test/mouse/double-click" class="btn-secondary">Double-Click Fault</a>
+              <a href="/keyboard-tester/full" class="btn-ghost">Keyboard Sandbox</a>
+            </div>
           </div>
         </div>
       </div>
@@ -348,15 +351,15 @@ function getToolIcon(icon: string) {
         <div class="journey-layout">
           <div class="journey-left" data-reveal>
             <h2 id="journey-heading" class="section-heading">
-              Eine Plattform.
-              <br />Jede Antwort.
+              One platform.
+              <br />Every answer.
             </h2>
             <p class="journey-desc">
-              Wenn sich dein Controller seltsam anfühlt, besuchst du derzeit 5-8 Websites, um
-              ein Problem zu lösen. Wir bieten die gesamte Reise an einem Ort.
+              When your controller feels off, you currently visit 5-8 websites to
+              solve one problem. We own the entire journey in one place.
             </p>
             <a href="/test/controller/full-diagnostic" class="btn-primary">
-              Beginne deine Reise
+              Start your journey
             </a>
           </div>
 
@@ -385,29 +388,29 @@ function getToolIcon(icon: string) {
         <div class="games-layout">
           <div class="games-content" data-reveal>
             <h2 id="games-heading" class="section-heading">
-              Teste deinen Controller.
-              <br />Dann spiele damit.
+              Test your controller.
+              <br />Then play with it.
             </h2>
             <p class="games-desc">
-              5 Browser-Spiele, die auf deine Controllereingaben abgestimmt sind. Sammle XP,
-              steige auf, baue eine tägliche Serie auf. Keine Gaming-Seite hat das.
+              5 browser games built around your controller inputs. Earn XP points,
+              level up, build a daily streak. No gaming site has this.
             </p>
             <div class="games-types">
               <div class="games-type">
                 <span class="games-type-count">5</span>
-                <span class="games-type-label">Präzisionsspiele</span>
+                <span class="games-type-label">Precision games</span>
               </div>
               <div class="games-type">
                 <span class="games-type-count">5</span>
-                <span class="games-type-label">Reflexspiele</span>
+                <span class="games-type-label">Reflex games</span>
               </div>
               <div class="games-type">
                 <span class="games-type-count">5</span>
-                <span class="games-type-label">2-Spieler-Spiele</span>
+                <span class="games-type-label">2-Player games</span>
               </div>
             </div>
             <a href="/games" class="btn-primary">
-              Arcade öffnen
+              Open Arcade
               <span class="btn-icon-wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
             </a>
           </div>
@@ -442,19 +445,19 @@ function getToolIcon(icon: string) {
             </div>
 
             <div class="rewards-card" data-reveal>
-              <h3 class="rewards-title">Verdiene beim Spielen</h3>
+              <h3 class="rewards-title">Earn while you play</h3>
               <div class="rewards-row">
                 <span class="reward-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                  Test abgeschlossen +50 Pkt
+                  Test completion +50 pts
                 </span>
                 <span class="reward-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
-                  Erfolge freischalten
+                  Achievements unlock
                 </span>
                 <span class="reward-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-                  Bestenlisten-Rang
+                  Leaderboard rank
                 </span>
               </div>
             </div>
@@ -472,37 +475,37 @@ function getToolIcon(icon: string) {
       <div class="container-site">
         <div class="moat-header" data-reveal>
           <h2 id="moat-heading" class="section-heading centered">
-            Anders gebaut.<br />Nicht nur ein weiterer Tester.
+            Built different.<br />Not just another tester.
           </h2>
           <p class="moat-desc">
-            Jeder Konkurrent ist eine One-Page-App mit 5-30 indizierten Seiten und null Inhalt.
-            Wir sind eine Plattform mit über 830 Seiten, die den gesamten Lebenszyklus des Controllers abdeckt.
+            Every competitor is a single-page app with 5-30 indexed pages and zero content.
+            We are an 830+ page platform that owns the entire controller lifecycle.
           </p>
         </div>
 
         <div class="moat-comparison" data-reveal>
           <div class="compare-col compare-them">
-            <h3 class="compare-heading">Andere Seiten</h3>
+            <h3 class="compare-heading">Other sites</h3>
             <ul class="compare-list" role="list">
               <li class="compare-item bad">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="No" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-                5-30 indizierte Seiten (SPA)
+                5-30 indexed pages (SPA)
               </li>
               <li class="compare-item bad">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-                Zeigt Rohdaten, keine Antworten
+                Shows raw data, not answers
               </li>
               <li class="compare-item bad">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-                2-4-minütige Sitzungen
+                2-4 minute sessions
               </li>
               <li class="compare-item bad">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-                Keine Reparaturanleitungen oder Inhalte
+                Zero repair guides or content
               </li>
               <li class="compare-item bad">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-                Keine Spiele, keine Motivation
+                No games, no engagement loop
               </li>
             </ul>
           </div>
@@ -514,23 +517,23 @@ function getToolIcon(icon: string) {
             <ul class="compare-list" role="list">
               <li class="compare-item good">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-label="Yes" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                Über 830 indizierte Seiten (Astro SSG)
+                830+ indexed pages (Astro SSG)
               </li>
               <li class="compare-item good">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                Diagnostiziert, repariert und optimiert
+                Diagnoses, fixes, and optimizes
               </li>
               <li class="compare-item good">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                8-15-minütige Sitzungen (Spiele)
+                8-15 minute sessions (games)
               </li>
               <li class="compare-item good">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                Über 800 Reparaturanleitungen und Seiten
+                800+ repair guides and content pages
               </li>
               <li class="compare-item good">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                5 Spiele, XP-Belohnungen, tägliche Serien
+                5 games, XP rewards, daily streaks
               </li>
             </ul>
           </div>
@@ -544,9 +547,9 @@ function getToolIcon(icon: string) {
     <section class="faq-section" aria-labelledby="faq-heading">
       <div class="container-site faq-layout">
         <div class="faq-intro" data-reveal>
-          <span class="section-eyebrow">Schnelle Antworten</span>
-          <h2 id="faq-heading" class="section-heading">Bevor du testest,<br />weiß, was dich erwartet.</h2>
-          <p>Schließe einen Controller an, wähle das zu prüfende Signal und erhalte ein handlungsrelevantes Ergebnis. Der erste Test ist immer kostenlos.</p>
+          <span class="section-eyebrow">Quick answers</span>
+          <h2 id="faq-heading" class="section-heading">Before you test,<br />know what to expect.</h2>
+          <p>Connect a controller, choose the signal you want to inspect, and get a result you can act on. The first test is always free.</p>
         </div>
         <div class="faq-list" data-reveal>
           {faqs.map((faq) => (
@@ -570,15 +573,15 @@ function getToolIcon(icon: string) {
       <div class="container-narrow">
         <div class="cta-inner" data-reveal>
           <h2 id="cta-heading" class="cta-heading">
-            Dein Controller verdient eine echte Diagnose.
+            Your controller deserves a real diagnosis.
           </h2>
           <p class="cta-desc">
-            Dauert 2 Minuten. Keine Downloads, keine Konten, keine Datenerfassung.
-            Alles läuft in deinem Browser.
+            Takes 2 minutes. No downloads, no accounts, no data collection.
+            Everything runs in your browser.
           </p>
           <div class="cta-actions">
             <a href="/test/controller/full-diagnostic" class="btn-primary cta-btn">
-              Teste deinen Controller
+              Test your controller
               <span class="btn-icon-wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
             </a>
             <a href="/test/controller/drift" class="btn-secondary">
@@ -586,12 +589,36 @@ function getToolIcon(icon: string) {
             </a>
           </div>
           <div class="cta-features" aria-label="Features: completely free, no download required, works instantly">
-            <span>Komplett kostenlos</span>
+            <span>Completely free</span>
             <span aria-hidden="true">·</span>
-            <span>Kein Download erforderlich</span>
+            <span>No download required</span>
             <span aria-hidden="true">·</span>
-            <span>Funktioniert in 2 Sekunden</span>
+            <span>Works in 2 seconds</span>
           </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ═══════════════════════════════════════════════════════
+        SECTION 8: SEO CONTENT HUB (600 Words)
+        ═══════════════════════════════════════════════════════ */}
+    <section class="seo-content-hub" aria-labelledby="seo-hub-title" style="padding: 4rem 0; background: var(--color-surface-0); border-top: 1px solid var(--color-border-subtle);">
+      <div class="container-narrow">
+        <div class="prose-container" style="color: var(--color-text-secondary); line-height: 1.7; font-size: 1.05rem;">
+          <h2 id="seo-hub-title" style="color: var(--color-text-primary); font-size: 2rem; font-weight: 800; margin-bottom: 1.5rem;">The Complete Browser-Based Controller Diagnostic Platform</h2>
+          <p style="margin-bottom: 1.5rem;">Whether you're a competitive esports player looking to eliminate input delay on <strong>controller games</strong>, or a casual gamer verifying a secondhand console to play the <strong>best nintendo switch games</strong>, hardware reliability is critical. From preparing for upcoming <strong>nintendo switch 2 games</strong> on the much-anticipated <strong>nintendo switch 2</strong> console to enjoying classics on a <strong>nintendo switch oled</strong> or <strong>nintendo switch lite</strong>, having a fully functional gamepad is non-negotiable. Our platform provides an instant, installation-free <strong>controller test</strong> directly in your browser. Utilizing the HTML5 Gamepad API, we read raw telemetry from your hardware, allowing you to visualize analog stick accuracy, button actuation, and trigger linearity across all major devices—including the <strong>playstation 5 controller</strong>, the <strong>nintendo switch pro controller</strong>, and the <strong>xbox elite controller series 2</strong>.</p>
+          
+          <h3 style="color: var(--color-text-primary); font-size: 1.5rem; font-weight: 700; margin: 2.5rem 0 1rem;">Precision Diagnostics: Visualizing Stick Drift and Wear</h3>
+          <p style="margin-bottom: 1.5rem;">Analog stick degradation is the most common point of hardware failure in modern gamepads. Before you invest in a costly <strong>nintendo switch joy con repair</strong> or buy a new set of <strong>nintendo switch games</strong>, it is crucial to determine if your crosshair movement is caused by a software deadzone configuration or physical potentiometer wear. Our diagnostic suite measures resting axis variance down to a 0.1% margin of error. If you are experiencing unexpected camera movement on your DualSense, running our dedicated test will quickly confirm the presence of <strong>ps5 controller drift</strong>, empowering you to adjust your in-game settings or pursue a warranty claim.</p>
+          
+          <h3 style="color: var(--color-text-primary); font-size: 1.5rem; font-weight: 700; margin: 2.5rem 0 1rem;">Supported Hardware: From Next-Gen to Retro</h3>
+          <p style="margin-bottom: 1.5rem;">Our testing engine is built for maximum compatibility. You can perform a rigorous <strong>xbox controller test</strong> to verify the adjustable tension thumbsticks on an <strong>xbox elite controller</strong> (including the <strong>xbox elite controller series</strong> models), or map the unique inputs of a <strong>switch 2 pro controller</strong>. We extensively support <strong>nintendo</strong> hardware; whether you are testing a standard <strong>nintendo switch joy con</strong> or mapping a legacy <strong>super nintendo controller switch</strong> setup via USB, our interface accurately reflects the <strong>nintendo controller layout</strong>. Even an <strong>old nintendo controller</strong> or an <strong>original nintendo controller</strong> paired with an adapter can be analyzed for input latency and ghosting. If you need to test a <strong>joy con controller</strong>, a <strong>switch controller</strong>, or verify <strong>nintendo switch controller</strong> drift, we have you covered.</p>
+          
+          <h3 style="color: var(--color-text-primary); font-size: 1.5rem; font-weight: 700; margin: 2.5rem 0 1rem;">Connectivity: Pairing Your Device for PC and Mobile</h3>
+          <p style="margin-bottom: 1.5rem;">A frequent barrier to hardware testing and playing <strong>controller games for pc</strong> is establishing a stable connection. A common question we receive is <strong>how to connect ps5 controller to pc</strong>, <strong>how to connect ps5 controller</strong> generally, or <strong>how to connect ps5 controller to iphone</strong>. For PC, the most reliable method with the lowest latency is a direct USB-C connection. For wireless testing or iOS gaming, simply hold the Create and PS buttons simultaneously until the light bar flashes to initiate Bluetooth pairing. Once connected, your OS will expose the device to the browser, allowing you to instantly play <strong>online controller games</strong> (or <strong>pc controller games</strong>) or run our polling rate diagnostic on your <strong>ps5 controller pro</strong> or standard <strong>ps5 controller</strong>. We also fully support the <strong>xbox controller</strong> and <strong>ps4 controller</strong> for all these features.</p>
+          
+          <h3 style="color: var(--color-text-primary); font-size: 1.5rem; font-weight: 700; margin: 2.5rem 0 1rem;">Limitations and Browser Implementation</h3>
+          <p style="margin-bottom: 1.5rem;">While our <strong>ps4 controller test</strong> and <strong>ps5 controller test</strong> suites are highly accurate, it's important to understand the limitations of the Gamepad API. Browsers normalize inputs differently depending on your operating system. For example, Windows may apply a hardware-level deadzone to Xbox controllers before the data ever reaches the browser. Similarly, testing a <strong>nintendo controller switch</strong> setup, a <strong>joy con 2</strong>, or a <strong>switch joy con</strong> wirelessly via Bluetooth can introduce artificial latency compared to a wired connection. We always recommend using a wired connection on a Chromium browser (like Google Chrome or Microsoft Edge) for the most accurate diagnostic results across all your <strong>nintendo switch</strong> and next-gen gaming hardware.</p>
         </div>
       </div>
     </section>
@@ -718,6 +745,13 @@ function getToolIcon(icon: string) {
     padding: clamp(3rem, 7vw, 6.5rem) 1.5rem clamp(2.5rem, 5vw, 4rem);
     position: relative;
     z-index: 1;
+  }
+
+  @media (max-width: 768px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+      padding-top: 2rem;
+    }
   }
 
   /* ── Hero content (left) ── */
@@ -1150,6 +1184,12 @@ function getToolIcon(icon: string) {
     cursor: pointer;
   }
 
+  @media (max-width: 768px) {
+    .bento-featured {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .bento-featured:hover {
     border-color: var(--color-accent);
     box-shadow: 0 0 32px rgba(37, 99, 235, 0.12);
@@ -1277,6 +1317,7 @@ function getToolIcon(icon: string) {
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1rem;
   }
+  .tool-card:hover
 
   .tools-see-all {
     display: flex;
@@ -1289,19 +1330,24 @@ function getToolIcon(icon: string) {
   /* ── Whole-setup band (mouse + keyboard as first-class citizens) ── */
   .setup-band {
     margin-top: 2rem;
-    padding: 1.75rem 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 2rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0;
+    justify-content: flex-start;
+  }
+
+  .setup-band-body {
+    flex: 1;
+    margin-bottom: 1.5rem;
+  }
+
+  .setup-band-footer {
+    flex-shrink: 0;
   }
 
   .setup-band-head {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    max-width: 46ch;
+    gap: 0.625rem;
   }
 
   .setup-band-title {
@@ -1309,17 +1355,21 @@ function getToolIcon(icon: string) {
     font-weight: 800;
     color: var(--color-text-primary);
     letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin: 0;
   }
 
   .setup-band-desc {
     font-size: var(--text-small);
     color: var(--color-text-secondary);
-    line-height: 1.6;
+    line-height: 1.65;
+    margin: 0;
+    max-width: 52ch;
   }
 
   .setup-band-links {
     display: flex;
-    gap: 0.6rem;
+    gap: 0.625rem;
     flex-wrap: wrap;
     align-items: center;
   }

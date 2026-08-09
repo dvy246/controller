@@ -21,10 +21,10 @@ export interface Props {
   ogImageHeight?: number;
   breadcrumbs?: Array<{ name: string; url?: string }>;
   faqs?: Array<{ question: string; answer: string }>;
+  keywords?: string;
   /**
-   * Mark pages that actually ship translated variants (currently the 5 locale
-   * homepages: /, /es/, /de/, /fr/, /ja/). Only then are hreflang alternates
-   * emitted — previously every page linked to locale URLs that 404'd.
+   * Mark pages that have auto-synced locale variants.
+   * When true, hreflang alternates are emitted for all 10 locales.
    */
   localized?: boolean;
 }
@@ -42,6 +42,7 @@ const {
   noindex = false,
   breadcrumbs,
   faqs = [],
+  keywords,
   localized = false,
 } = Astro.props;
 
@@ -57,7 +58,7 @@ const canonicalUrl = canonical ?? new URL(cleanPath, Astro.site).href;
 // variants (localized=true). basePath is the English route; locale pages
 // rewrite their own prefix so alternates point at the same content in each
 // of the 5 supported locales instead of 404ing.
-const localeMatch = cleanPath.match(/^\/(es|de|fr|ja)(\/|$)/);
+const localeMatch = cleanPath.match(/^\/(es|de|fr|ja|pt|ko|ru|zh-tw|it)(\/|$)/);
 const activeLocale = localeMatch ? localeMatch[1] : 'en';
 const basePath = activeLocale === 'en' ? cleanPath : cleanPath.replace(/^\/[a-z]{2}\/?/, '/');
 const languageSet = localized
@@ -67,6 +68,11 @@ const languageSet = localized
       { code: 'de', path: `/de${basePath}` },
       { code: 'fr', path: `/fr${basePath}` },
       { code: 'ja', path: `/ja${basePath}` },
+      { code: 'pt', path: `/pt${basePath}` },
+      { code: 'ko', path: `/ko${basePath}` },
+      { code: 'ru', path: `/ru${basePath}` },
+      { code: 'zh-tw', path: `/zh-tw${basePath}` },
+      { code: 'it', path: `/it${basePath}` },
     ]
   : [];
 
@@ -99,20 +105,48 @@ const faqSchema = faqs.length > 0
     }
   : null;
 
-const organizationSchema = {
+const webSiteSchema = {
   '@context': 'https://schema.org',
-  '@type': 'Organization',
+  '@type': 'WebSite',
   name: 'ControllerTesting.com',
   url: 'https://controllertesting.com',
-  logo: 'https://controllertesting.com/favicon.svg',
+  description: 'Free online gamepad tester and controller diagnostic suite. Test stick drift, buttons, triggers, vibration, polling rate, and deadzone on PS5, Xbox, Switch, and PC controllers.',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://controllertesting.com/?q={search_term_string}',
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': ['Organization', 'ResearchOrganization'],
+  name: 'ControllerTesting.com',
+  url: 'https://controllertesting.com',
+  logo: {
+    '@type': 'ImageObject',
+    url: 'https://controllertesting.com/favicon.svg'
+  },
   description: 'Browser-based controller diagnostic suite and hardware reliability research laboratory.',
   sameAs: [
     'https://github.com/controllertesting'
-  ]
+  ],
+  knowsAbout: [
+    'Gamepad API',
+    'Hardware Diagnostics',
+    'Controller Drift',
+    'Input Latency',
+    'Polling Rate',
+    'Controller Deadzone',
+    'Stick Circularity',
+    'Hall Effect Sticks'
+  ],
+  publishingPrinciples: 'https://controllertesting.com/test/methodology'
 };
 
 // Collect all schemas
 const schemas = [
+  webSiteSchema,
   organizationSchema,
   ...(Array.isArray(schema) ? schema : schema ? [schema] : []),
   ...(breadcrumbSchema ? [breadcrumbSchema] : []),
@@ -140,7 +174,7 @@ const schemas = [
     {/* ── Token-gated Cloudflare Web Analytics ── */}
     {import.meta.env?.PUBLIC_CF_ANALYTICS_TOKEN && (
       <script
-        defer
+        type="text/partytown"
         src="https://static.cloudflareinsights.com/beacon.min.js"
         data-cf-beacon={`{"token": "${import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN}"}`}
       />
@@ -149,6 +183,7 @@ const schemas = [
     {/* ── Core SEO ── */}
     <title>{title}</title>
     <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
     <link rel="canonical" href={canonicalUrl} />
     {!noindex && localized && (
       <>

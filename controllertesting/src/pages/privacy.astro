@@ -4,13 +4,21 @@
  * SEO Title: Privacy Policy — ControllerTesting.com
  */
 
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/global/Header.astro';
-import Footer from '../components/global/Footer.astro';
-import Breadcrumbs from '../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const breadcrumbs = [
   { name: 'Privacy Policy' },
+];
+
+const sections = [
+  { id: 'zero-data', title: '1. Zero Server-Side Data Collection' },
+  { id: 'client-processing', title: '2. Client-Side API Signal Processing' },
+  { id: 'local-storage', title: '3. Browser Local Storage Usage' },
+  { id: 'third-party', title: '4. Third-Party Services & Cookies' },
+  { id: 'updates', title: '5. Updates & Policy Modifications' },
 ];
 ---
 
@@ -18,40 +26,112 @@ const breadcrumbs = [
   title="Privacy Policy — ControllerTesting.com"
   description="ControllerTesting.com privacy policy. 100% client-side Gamepad API processing with zero data collection or tracking."
   breadcrumbs={breadcrumbs}
+  localized={true}
 >
   <Header />
 
-  <main id="main-content" class="legal-page">
-    <div class="container-site">
-      <Breadcrumbs items={breadcrumbs} />
+  <main id="main-content" class="pt-24 pb-20 bg-surface-0 min-h-screen">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      
+      <!-- Breadcrumbs -->
+      <div class="mb-6">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
 
-      <header class="page-hero">
-        <h1 class="page-title">Privacy Policy</h1>
-        <p class="page-subtitle">Last updated: August 2026</p>
+      <!-- Hero Header Section -->
+      <header class="rounded-2xl bg-surface-1 border border-surface-2 p-8 sm:p-10 mb-8">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-medium">
+            100% Private & Client-Side
+          </span>
+          <span class="text-xs text-text-tertiary font-mono">Last Updated: August 2026</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-text-primary tracking-tight mb-2">
+          Privacy Policy
+        </h1>
+        <p class="text-sm sm:text-base text-text-secondary max-w-2xl leading-relaxed">
+          ControllerTesting.com is engineered around a zero-data architecture. All hardware signal processing stays inside your browser.
+        </p>
       </header>
 
-      <div class="legal-content card-base">
-        <h2>1. Zero Data Collection Policy</h2>
-        <p>
-          ControllerTesting.com processes all Gamepad API signals, button presses, analog stick coordinates, and mouse movement locally in your web browser. We do not collect, transmit, store, or sell any hardware data.
-        </p>
+      <!-- Content Grid: TOC + Document -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Sidebar Navigation (Col 4) -->
+        <aside class="lg:col-span-4 hidden lg:block">
+          <div class="sticky top-28 rounded-xl bg-surface-1 border border-surface-2 p-5 space-y-2">
+            <span class="block text-xs font-mono uppercase text-text-tertiary tracking-wider mb-3 px-2">Table of Contents</span>
+            {sections.map((sec) => (
+              <a
+                href={`#${sec.id}`}
+                class="block text-xs font-medium text-text-secondary hover:text-blue-400 hover:bg-surface-2 px-3 py-2 rounded-lg transition-colors"
+              >
+                {sec.title}
+              </a>
+            ))}
+          </div>
+        </aside>
 
-        <h2>2. Local Storage</h2>
-        <p>
-          Features like the Drift Timeline Tracker and Arcade Rewards use your browser's local storage (`localStorage`) to save snapshots and XP scores on your device. This data never leaves your browser.
-        </p>
+        <!-- Document Body (Col 8) -->
+        <div class="lg:col-span-8 space-y-6">
+          <div class="rounded-2xl bg-surface-1 border border-surface-2 p-6 sm:p-10 space-y-8 text-sm sm:text-base text-text-secondary leading-relaxed">
+            
+            <section id="zero-data" class="scroll-mt-32">
+              <h2 class="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                1. Zero Server-Side Data Collection
+              </h2>
+              <p>
+                ControllerTesting.com does not collect, record, transmit, or monetize any gamepad button presses, analog stick displacement vectors, serial identifiers, or mouse trajectory inputs. All calculation algorithms execute strictly inside your local browser JavaScript engine thread.
+              </p>
+            </section>
+
+            <section id="client-processing" class="scroll-mt-32 border-t border-surface-2 pt-6">
+              <h2 class="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                2. Client-Side API Signal Processing
+              </h2>
+              <p>
+                When you connect a controller via USB or Bluetooth, your browser exposes the device through the standardized HTML5 Gamepad API. Our visualizers read raw input buffer values directly in real time. These values exist strictly in temporary browser memory and are discarded as soon as you close the tab.
+              </p>
+            </section>
+
+            <section id="local-storage" class="scroll-mt-32 border-t border-surface-2 pt-6">
+              <h2 class="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                3. Browser Local Storage Usage
+              </h2>
+              <p>
+                Certain features (such as your saved Drift Timeline history and Arcade XP scores) utilize your web browser's native `localStorage` API. This data remains on your physical hardware and can be cleared at any time by clearing your browser cache.
+              </p>
+            </section>
+
+            <section id="third-party" class="scroll-mt-32 border-t border-surface-2 pt-6">
+              <h2 class="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                4. Third-Party Services & Cookies
+              </h2>
+              <p>
+                We minimize external dependencies. We do not set non-essential tracking cookies. Standard server logs (such as HTTP request IP addresses) may be handled temporarily by CDN infrastructure strictly for DDoS mitigation and website security.
+              </p>
+            </section>
+
+            <section id="updates" class="scroll-mt-32 border-t border-surface-2 pt-6">
+              <h2 class="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+                5. Updates & Policy Modifications
+              </h2>
+              <p>
+                Any future enhancements to our diagnostic tools will strictly adhere to our core privacy commitment: zero hardware tracking, 100% client-side computation, and total user data sovereignty.
+              </p>
+            </section>
+
+          </div>
+        </div>
+
       </div>
     </div>
   </main>
 
   <Footer />
 </BaseLayout>
-
-<style>
-  .legal-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
-  .page-hero { margin-bottom: 2.5rem; }
-  .page-title { font-size: var(--text-h1); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
-  .page-subtitle { font-size: 1rem; color: var(--color-text-secondary); }
-  .legal-content { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; line-height: 1.7; color: var(--color-text-secondary); }
-  .legal-content h2 { color: var(--color-text-primary); font-size: 1.25rem; font-weight: 700; }
-</style>

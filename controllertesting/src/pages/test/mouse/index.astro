@@ -1,14 +1,14 @@
 ---
 /**
  * /test/mouse/index.astro — Mouse Tools Hub
- * SEO Title: Online Mouse Tester — 10 Free Mouse Diagnostic Tools
+ * SEO Title: Online Mouse Tester — 7 Free Mouse Diagnostic Tools
  * Hub index listing all mouse tools.
  */
 
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import Header from '../../../components/global/Header.astro';
-import Footer from '../../../components/global/Footer.astro';
-import Breadcrumbs from '../../../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const breadcrumbs = [
   { name: 'Tests', url: '/test/mouse' },
@@ -18,7 +18,7 @@ const breadcrumbs = [
 const mouseTools = [
   { name: 'CPS Test (Click Speed)', href: '/test/mouse/cps', desc: 'Test clicks per second in 5s, 10s & 30s modes', badge: 'Popular' },
   { name: 'Mouse Polling Rate', href: '/test/mouse/polling-rate', desc: 'Test mouse report rate in Hz up to 8000Hz (8kHz)', badge: 'Flagship' },
-  { name: 'DPI Analyzer', href: '/test/mouse/dpi', desc: 'Calculate true hardware DPI & pixel sensitivity' },
+  { name: 'DPI Analyzer', href: '/test/mouse/dpi', desc: 'Calculate hardware DPI & pixel sensitivity' },
   { name: 'Click Latency', href: '/test/mouse/click-latency', desc: 'Measure mouse click response delay in ms' },
   { name: 'Mouse Button Tester', href: '/test/mouse/buttons', desc: 'Test MB1, MB2, MB3, MB4, MB5 side buttons' },
   { name: 'Scroll Wheel Tester', href: '/test/mouse/scroll', desc: 'Test scroll direction & reverse jumping faults' },
@@ -50,11 +50,12 @@ function getMouseIcon(href: string) {
 ---
 
 <BaseLayout
-  title="Online Mouse Tester — 10 Free Mouse Diagnostic Tools | ControllerTesting.com"
-  description="Test gaming mouse performance online. 10 free diagnostic tools for CPS click speed, polling rate Hz, DPI calculation, click latency, and double-click faults."
+  title="Online Mouse Tester — 7 Free Mouse Diagnostic Tools | ControllerTesting.com"
+  description="Test gaming mouse performance online. 7 free diagnostic tools for CPS click speed, polling rate Hz, DPI calculation, click latency, and double-click faults."
   schema={itemListSchema}
   breadcrumbs={breadcrumbs}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="hub-page">

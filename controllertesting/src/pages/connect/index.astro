@@ -4,10 +4,10 @@
  * 4 controllers × 3 platforms (PC/macOS/Steam Deck).
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const controllers = [
   { slug: 'ps5-dualsense', name: 'PS5 DualSense', tag: 'Potentiometer sticks' },
@@ -43,7 +43,8 @@ const itemListSchema = {
   description="Step-by-step connection and pairing guides for PS5 DualSense, PS4 DualShock 4, Xbox Wireless, and Switch Pro controllers on Windows, macOS, and Steam Deck."
   breadcrumbs={breadcrumbs}
   schema={itemListSchema}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="connect-hub">

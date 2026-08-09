@@ -1,7 +1,7 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import CourseDesignCard from '../components/ui/CourseDesignCard.astro';
-import type { CardData } from '../components/ui/CourseDesignCard.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CourseDesignCard from '@components/ui/CourseDesignCard.astro';
+import type { CardData } from '@components/ui/CourseDesignCard.astro';
 
 const cardData: CardData[] = [
   {
@@ -67,7 +67,8 @@ const cardData: CardData[] = [
   title="Course Design Cards Demo" 
   description="Previewing the premium Native Astro course design cards."
   noindex={true}
->
+
+  localized={true}>
   <main class="min-h-screen pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
     
     <header class="mb-12 text-center md:text-left">

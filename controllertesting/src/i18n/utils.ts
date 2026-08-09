@@ -24,9 +24,12 @@ export function getLocalizedUrl(url: URL, lang: keyof typeof languages) {
     pathname = pathname.replace(`/${currentLang}`, "");
   }
 
-  if (lang === defaultLang) {
-    return pathname || "/";
+  if (pathname === "/" || pathname === "") {
+    return lang === defaultLang ? "/" : `/${lang}`;
   }
 
-  return `/${lang}${pathname.startsWith("/") ? pathname : "/" + pathname}`;
+  const targetPath = pathname.startsWith("/") ? pathname : "/" + pathname;
+  const result = lang === defaultLang ? targetPath : `/${lang}${targetPath}`;
+
+  return result.length > 1 && result.endsWith("/") ? result.slice(0, -1) : result;
 }

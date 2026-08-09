@@ -1,9 +1,9 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import HzVisualizer from '../../components/features/HzVisualizer.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import HzVisualizer from '@components/features/HzVisualizer.astro';
 
 export function getStaticPaths() {
   const refreshRates = ['60hz', '120hz', '144hz', '240hz', '360hz', '540hz'];
@@ -17,7 +17,7 @@ const { hz } = Astro.params;
 const numericHz = parseInt(hz.replace('hz', ''), 10) || 144;
 
 const title = `Monitor ${numericHz}Hz Refresh Rate & Motion Blur Test`;
-const description = `Test your monitor's true ${numericHz}Hz refresh rate, ghosting persistence, frame pacing, and motion blur performance. WebGL-accelerated display benchmark.`;
+const description = `Test your monitor's ${numericHz}Hz refresh rate, ghosting persistence, frame pacing, and motion blur performance. WebGL-accelerated display benchmark.`;
 const canonical = `https://controllertesting.com/hz-test/${hz}`;
 
 const breadcrumbs = [
@@ -41,7 +41,8 @@ const schema = {
 };
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs}>
+<BaseLayout title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs}
+  localized={true}>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
   <Header />
@@ -57,7 +58,7 @@ const schema = {
         {numericHz}Hz Refresh Rate & Motion Blur Test
       </h1>
       <p class="mt-2 text-secondary max-w-3xl">
-        Benchmark your display's ability to render true <span class="text-accent font-semibold">{numericHz} Hz</span> frame output without motion blur, pixel trail ghosting, or frame stuttering.
+        Benchmark your display's ability to render <span class="text-accent font-semibold">{numericHz} Hz</span> frame output without motion blur, pixel trail ghosting, or frame stuttering.
       </p>
     </div>
 

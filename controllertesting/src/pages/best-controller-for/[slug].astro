@@ -4,12 +4,12 @@
  * slug: small | large | limited-grip-strength
  */
 
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import { picksForHandKey, HAND_REFERENCES, getFitModels, type HandKey } from '../../lib/fit';
-import fitData from '../../data/controllerFitData.json';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import { picksForHandKey, HAND_REFERENCES, getFitModels, type HandKey } from '@lib/fit';
+import fitData from '@data/controllerFitData.json';
 
 type GuideKey = 'small' | 'large' | 'limited-grip-strength';
 
@@ -105,7 +105,8 @@ const tierLabel: Record<string, string> = {
   canonical={canonicalUrl}
   breadcrumbs={breadcrumbs}
   schema={faqSchema}
->
+
+  localized={true}>
   <Header />
 
   <main id="main-content" class="bcf-page">

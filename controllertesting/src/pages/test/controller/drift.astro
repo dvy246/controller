@@ -5,9 +5,9 @@
  * Target keyword: controller stick drift test, ps5 stick drift test, xbox stick drift test
  */
 
-import ToolLayout from '../../../layouts/ToolLayout.astro';
-import DriftTester from '../../../components/tools/controller/DriftTester.astro';
-import DecisionStrip from '../../../components/features/DecisionStrip.astro';
+import ToolLayout from '@layouts/ToolLayout.astro';
+import DriftTester from '@components/tools/controller/DriftTester.astro';
+import DecisionStrip from '@components/features/DecisionStrip.astro';
 
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
@@ -32,12 +32,21 @@ const faqs = [
     question: 'Does this test work with PS5 DualSense and Xbox controllers?',
     answer: 'Yes! This test supports PS5 DualSense, PS4 DualShock, Xbox Series X/S, Xbox One, Nintendo Switch Pro Controller, Joy-Cons, and any standard USB or Bluetooth gamepad.',
   },
+  {
+    question: 'Is a 5% stick drift bad?',
+    answer: 'A 5% resting drift is considered minor to moderate wear. You can usually mask it by increasing your in-game inner deadzone to 6-8%, but it indicates the carbon potentiometer tracks are actively degrading.',
+  },
+  {
+    question: 'How to fix stick drift permanently?',
+    answer: 'The only permanent fix for stick drift is replacing the analog stick module. Upgrading to a Hall-effect joystick module entirely eliminates future drift because it uses magnets instead of physical contacts.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Stick Drift Test: Free Online Controller & Gamepad Tester"
-  description="Test your PS5, Xbox, or Switch controller for stick drift instantly. Measure analog precision to 0.1% accuracy with our free online gamepad tester."
+  title="Stick Drift Test - Free Online Controller Drift Tester & Analog Stick Check"
+  description="Test your PS5, Xbox, or Switch controller for stick drift instantly. Our free online gamepad tester measures analog joystick drift to 0.1% accuracy. No download required."
+  keywords="stick drift test, controller drift test, joycon drift test, ps5 controller drift test, xbox controller drift test, how to test controller drift, gamepad drift test"
   toolName="Stick Drift Tester"
   category="Controller Diagnostic"
   categoryUrl="/test/controller"

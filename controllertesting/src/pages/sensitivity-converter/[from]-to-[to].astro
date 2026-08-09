@@ -1,10 +1,10 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/global/Header.astro';
-import Footer from '../../components/global/Footer.astro';
-import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
-import SensConverterUI from '../../components/features/SensConverterUI.astro';
-import gamesData from '../../data/gameEngineConstants.json';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import SensConverterUI from '@components/features/SensConverterUI.astro';
+import gamesData from '@data/gameEngineConstants.json';
 
 export function getStaticPaths() {
   const keys = Object.keys(gamesData);
@@ -53,7 +53,8 @@ const schema = {
 };
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs}>
+<BaseLayout title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs}
+  localized={true}>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
   <Header />

@@ -8,16 +8,7 @@ import { languages, defaultLang } from '../../i18n/translations';
 import { getLangFromUrl, getLocalizedUrl } from '../../i18n/utils';
 
 const currentLang = getLangFromUrl(Astro.url);
-const pathname = Astro.url.pathname;
-
-// Only the homepage is currently localized (es/de/fr/ja/index.astro).
-// Offering locale links on any other page would 404 — hide them.
-const localizedPath =
-  currentLang !== defaultLang ? pathname.replace(`/${currentLang}`, '') : pathname;
-const isLocalizedPage = localizedPath === '/' || localizedPath === '';
-const availableLangs = isLocalizedPage
-  ? Object.keys(languages)
-  : [currentLang];
+const availableLangs = Object.keys(languages);
 ---
 
 <div class="lang-selector-wrapper">

@@ -1,13 +1,14 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import FeatureShaderCards from '../components/ui/FeatureShaderCards.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import FeatureShaderCards from '@components/ui/FeatureShaderCards.astro';
 ---
 
 <BaseLayout 
   title="Feature Shader Cards Demo" 
   description="High-performance, pure CSS animated shader cards for Controllertesting.com."
   noindex={true}
->
+
+  localized={true}>
   <main class="min-h-screen pt-32 pb-24 relative overflow-hidden">
     <FeatureShaderCards />
   </main>

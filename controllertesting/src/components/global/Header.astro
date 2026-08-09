@@ -77,6 +77,18 @@ import LanguageSelector from './LanguageSelector.astro';
                     <span class="dropdown-item-desc">Stick drift, circularity &amp; input latency</span>
                   </div>
                 </a>
+                <a role="menuitem" class="dropdown-item" href="/test/controller/drift">
+                  <div class="dropdown-item-icon" style="background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.3);" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#10B981" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="#10B981" fill-opacity="0.3" stroke="#34D399" stroke-width="1.5"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="#34D399" stroke-width="2" stroke-linecap="round"/></svg>
+                  </div>
+                  <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">
+                      Stick Drift Test
+                      <span class="nav-badge badge-speed">Hot</span>
+                    </div>
+                    <span class="dropdown-item-desc">High-precision 0.1% drift detection</span>
+                  </div>
+                </a>
                 <a role="menuitem" class="dropdown-item" href="/test/mouse">
                   <div class="dropdown-item-icon" style="background: rgba(6, 182, 212, 0.12); border-color: rgba(6, 182, 212, 0.3);" aria-hidden="true">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="nav-ms" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#06B6D4"/><stop offset="100%" stop-color="#10B981"/></linearGradient></defs><rect x="6" y="3" width="12" height="18" rx="6" fill="url(#nav-ms)" fill-opacity="0.25" stroke="#06B6D4" stroke-width="2"/><line x1="12" y1="7" x2="12" y2="11" stroke="#10B981" stroke-width="2.5" stroke-linecap="round"/></svg>
@@ -171,7 +183,7 @@ import LanguageSelector from './LanguageSelector.astro';
                   </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">Overclock Validator</div>
-                    <span class="dropdown-item-desc">True Hz &amp; input latency</span>
+                    <span class="dropdown-item-desc">Observed Hz &amp; input latency</span>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href="/haptics/unreal/explosion">
@@ -246,19 +258,22 @@ import LanguageSelector from './LanguageSelector.astro';
             </div>
             <div class="dropdown-footer">
               <a role="menuitem" class="dropdown-footer-link" href="/tools">
-                <span>View All 32 Diagnostic Tools</span>
+                <span>View All 39 Diagnostic Tools</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </a>
             </div>
           </div>
         </li>
 
+
+
+
         <!-- Play Direct Link -->
         <li class="nav-link-wrap">
           <a href="/games" class="nav-link">
             <span class="nav-dot" aria-hidden="true"></span>
             Play
-            <span class="nav-badge badge-games">Arcade</span>
+            <span class="nav-badge badge-games" style="margin-left:4px; font-size:0.65rem; padding:2px 6px; border-radius:10px; background:rgba(236,72,153,0.15); color:#ec4899; border:1px solid rgba(236,72,153,0.3);">Arcade</span>
           </a>
         </li>
 
@@ -319,6 +334,43 @@ import LanguageSelector from './LanguageSelector.astro';
               <div class="dropdown-item-content">
                 <div class="dropdown-item-title">Learn Guides</div>
                 <span class="dropdown-item-desc">Deep-dive technical repair &amp; tuning articles</span>
+              </div>
+            </a>
+            <div class="dropdown-sep" role="separator"></div>
+            <a role="menuitem" class="dropdown-item" href="/about">
+              <div class="dropdown-item-icon" style="background: rgba(37, 99, 235, 0.15); border-color: rgba(37, 99, 235, 0.3);" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#3B82F6" stroke-width="2"/><line x1="12" y1="16" x2="12" y2="12" stroke="#60A5FA" stroke-width="2.5" stroke-linecap="round"/><circle cx="12" cy="8" r="1.25" fill="#60A5FA"/></svg>
+              </div>
+              <div class="dropdown-item-content">
+                <div class="dropdown-item-title">About Us</div>
+                <span class="dropdown-item-desc">Our engineering mission &amp; architecture</span>
+              </div>
+            </a>
+            <a role="menuitem" class="dropdown-item" href="/contact">
+              <div class="dropdown-item-icon" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.3);" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="2"/><path d="M3 7l9 6 9-6" stroke="#34D399" stroke-width="2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="dropdown-item-content">
+                <div class="dropdown-item-title">Contact Us</div>
+                <span class="dropdown-item-desc">Get in touch with support &amp; engineering</span>
+              </div>
+            </a>
+            <a role="menuitem" class="dropdown-item" href="/privacy">
+              <div class="dropdown-item-icon" style="background: rgba(139, 92, 246, 0.15); border-color: rgba(139, 92, 246, 0.3);" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="#8B5CF6" fill-opacity="0.2" stroke="#8B5CF6" stroke-width="2"/><circle cx="12" cy="11" r="2.5" stroke="#A855F7" stroke-width="1.5"/></svg>
+              </div>
+              <div class="dropdown-item-content">
+                <div class="dropdown-item-title">Privacy Policy</div>
+                <span class="dropdown-item-desc">Zero telemetry tracking &amp; data commitment</span>
+              </div>
+            </a>
+            <a role="menuitem" class="dropdown-item" href="/terms">
+              <div class="dropdown-item-icon" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.3);" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="#F59E0B" fill-opacity="0.2" stroke="#F59E0B" stroke-width="2"/><polyline points="14 2 14 8 20 8" stroke="#FBBF24" stroke-width="2"/><line x1="8" y1="13" x2="16" y2="13" stroke="#FBBF24" stroke-width="2"/><line x1="8" y1="17" x2="14" y2="17" stroke="#FBBF24" stroke-width="2"/></svg>
+              </div>
+              <div class="dropdown-item-content">
+                <div class="dropdown-item-title">Terms of Service</div>
+                <span class="dropdown-item-desc">Usage terms, disclaimers &amp; licensing</span>
               </div>
             </a>
           </div>
@@ -422,7 +474,7 @@ import LanguageSelector from './LanguageSelector.astro';
             <li><a href="/test/controller/passport" class="mobile-nav-link"><span>Controller Passport</span></a></li>
             <li><a href="/calibrate/dualsense/hall-effect" class="mobile-nav-link"><span>WebHID Calibrator</span></a></li>
             <li><a href="/deadzone-calculator/apex-legends/ps5" class="mobile-nav-link"><span>Deadzone Sandbox</span></a></li>
-            <li><a href="/tools" class="mobile-nav-link"><span>All 32 Diagnostic Tools</span></a></li>
+            <li><a href="/tools" class="mobile-nav-link"><span>All 39 Diagnostic Tools</span></a></li>
           </ul>
         </div>
 
@@ -694,7 +746,7 @@ import LanguageSelector from './LanguageSelector.astro';
   .nav-inner {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
     max-width: 1280px;
     margin-inline: auto;
     padding-inline: 1.5rem;
@@ -749,7 +801,6 @@ import LanguageSelector from './LanguageSelector.astro';
     align-items: center;
     gap: 0.35rem;
     list-style: none;
-    margin-left: auto;
   }
 
   .nav-dropdown {
@@ -830,13 +881,13 @@ import LanguageSelector from './LanguageSelector.astro';
   .dropdown-menu {
     position: absolute;
     top: 100%;
-    left: 50%;
-    transform: translateX(-50%) translateY(8px);
-    min-width: 750px;
+    left: 0;
+    transform: translateY(8px);
+    min-width: 760px;
     max-width: calc(100vw - 2rem);
-    padding-top: 0.5rem;
+    padding: 1rem;
     margin-top: 0.25rem;
-    background: rgba(12, 12, 20, 0.94);
+    background: rgba(12, 12, 20, 0.96);
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -846,10 +897,10 @@ import LanguageSelector from './LanguageSelector.astro';
     visibility: hidden;
     pointer-events: none;
     transition: opacity 200ms var(--ease-smooth), transform 200ms var(--ease-smooth), visibility 200ms;
+    z-index: 100;
   }
 
-  /* Hover bridge: closes the dead-zone gap between trigger and menu
-     so moving the mouse from the trigger never closes the dropdown. */
+  /* Hover bridge: closes the dead-zone gap between trigger and menu */
   .dropdown-menu::before {
     content: "";
     position: absolute;
@@ -859,29 +910,16 @@ import LanguageSelector from './LanguageSelector.astro';
     height: 0.75rem;
   }
 
-  /* Desktop: anchor mega menus to the trigger's left edge so wide
-     panels never clip off-viewport in the 1025–1280px band. */
-  @media (min-width: 1024px) {
-    .nav-dropdown .dropdown-menu {
-      left: 0;
-      transform: translateY(8px);
-    }
-    .nav-dropdown:hover .dropdown-menu,
-    .nav-dropdown:focus-within .dropdown-menu {
-      transform: translateY(0);
-    }
-  }
-
-  .dropdown-menu-single {
-    min-width: 320px;
-  }
-
   .nav-dropdown:hover .dropdown-menu,
   .nav-dropdown:focus-within .dropdown-menu {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
+  }
+
+  .dropdown-menu-single {
+    min-width: 320px;
   }
 
   :global([data-theme="light"]) .dropdown-menu {
@@ -1071,6 +1109,7 @@ import LanguageSelector from './LanguageSelector.astro';
     align-items: center;
     gap: 0.5rem;
     flex-shrink: 0;
+    margin-left: auto;
   }
 
   .nav-search-btn {
