@@ -9,6 +9,7 @@ import Header from '../../components/global/Header.astro';
 import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
 import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
+import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -65,6 +66,28 @@ const schema = {
           <a href="/games" class="btn-secondary">Back to Arcade</a>
         </div>
       </div>
+
+      <GameHowToPlay
+        xp={50}
+        goal="Track and destroy as many moving targets as you can before the 30-second round ends. Every hit scores 100 points."
+        controls={[
+          { action: 'Right Stick', label: 'Aim the crosshair' },
+          { action: 'R2 / RT', label: 'Fire at the target' },
+          { action: 'WASD / Arrows', label: 'Aim (keyboard)' },
+          { action: 'Space / Enter', label: 'Fire (keyboard)' },
+        ]}
+        steps={[
+          'Press Start 30s Aim Test to begin the round.',
+          'Move the right stick (or WASD/arrows) to align the crosshair with the red target.',
+          'Squeeze R2/RT (or Space/Enter) to fire — a hit inside the target rings scores 100.',
+          'The target relocates after every hit. Track it down again before the timer runs out.',
+        ]}
+        tips={[
+          'Aim ahead of the target instead of chasing its center — the crosshair moves in continuous steps.',
+          'A single well-timed shot beats spamming the trigger: accuracy feeds your reaction readout.',
+          'Works best with the right stick at default sensitivity; fine corrections are smoother than large flicks.',
+        ]}
+      />
     </div>
   </main>
 
@@ -83,6 +106,7 @@ const schema = {
     const canvas = document.getElementById('sniper-canvas') as HTMLCanvasElement;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+      if (!ctx) return;
     if (!ctx) return;
 
     const overPanel = document.getElementById('sniper-over') as HTMLElement | null;

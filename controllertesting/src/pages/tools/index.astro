@@ -151,21 +151,21 @@ function getToolIconSvg(url: string) {
         {/* Controller Suite */}
         <section class="toolkit-section">
           <div class="section-header border-b border-[var(--color-border-subtle)] pb-6 mb-8">
-            <h2 class="text-h2 mb-2">Controller & Peripheral Suite</h2>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-2">Controller & Peripheral Suite</h2>
             <p class="text-[var(--color-text-secondary)] text-base font-medium">The definitive suite for gamepads, flight sticks, racing wheels, and MIDI.</p>
           </div>
           <div class="grid-tools">
             {controllerTools.map(tool => (
-              <a href={tool.url} class={`tool-hub-card card-hover ${tool.badge === 'Flagship' ? 'card-gradient' : 'card-base'}`}>
+              <a href={tool.url} class="tool-hub-card card-base card-hover">
                 <div class="card-top-bar">
-                  <div class="card-icon" set:html={getToolIconSvg(tool.url)} />
+                  <span class="card-icon" set:html={getToolIconSvg(tool.url)} aria-hidden="true" />
                   {tool.badge && <span class="badge-tag">{tool.badge}</span>}
                 </div>
-                <h3 class="text-h3">{tool.name}</h3>
+                <h3 class="card-tool-name">{tool.name}</h3>
                 <p class="card-tool-desc">{tool.desc}</p>
                 <span class="card-action-link">
                   Run test
-                  <span class="btn-icon-wrap w-6 h-6"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </span>
               </a>
             ))}
@@ -175,20 +175,20 @@ function getToolIconSvg(url: string) {
         {/* Mouse Suite */}
         <section class="toolkit-section">
           <div class="section-header border-b border-[var(--color-border-subtle)] pb-6">
-            <h2 class="text-h2 mb-3">Mouse & Keyboard Suite</h2>
-            <p class="text-[var(--color-text-secondary)] text-lg font-medium">High-precision polling rate and latency checkers for competitive peripherals.</p>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-3">Mouse & Keyboard Suite</h2>
+            <p class="text-[var(--color-text-secondary)] text-base font-medium">High-precision polling rate and latency checkers for competitive peripherals.</p>
           </div>
           <div class="grid-tools">
             {mouseTools.map(tool => (
-              <a href={tool.url} class="tool-hub-card card-hover card-base">
+              <a href={tool.url} class="tool-hub-card card-base card-hover">
                 <div class="card-top-bar">
-                  <div class="card-icon" set:html={getToolIconSvg(tool.url)} />
+                  <span class="card-icon" set:html={getToolIconSvg(tool.url)} aria-hidden="true" />
                 </div>
-                <h3 class="text-h3">{tool.name}</h3>
+                <h3 class="card-tool-name">{tool.name}</h3>
                 <p class="card-tool-desc">{tool.desc}</p>
                 <span class="card-action-link">
                   Run test
-                  <span class="btn-icon-wrap w-6 h-6"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </span>
               </a>
             ))}
@@ -198,20 +198,20 @@ function getToolIconSvg(url: string) {
         {/* Specialized Suite */}
         <section class="toolkit-section">
           <div class="section-header border-b border-[var(--color-border-subtle)] pb-6">
-            <h2 class="text-h2 mb-3">High-SEA Programmatic Suite</h2>
-            <p class="text-[var(--color-text-secondary)] text-lg font-medium">Advanced physics, spatial audio, and aim-training sandbox engines.</p>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-3">High-SEA Programmatic Suite</h2>
+            <p class="text-[var(--color-text-secondary)] text-base font-medium">Advanced physics, spatial audio, and aim-training sandbox engines.</p>
           </div>
           <div class="grid-tools">
             {specializedTools.map(tool => (
-              <a href={tool.url} class="tool-hub-card card-hover card-base">
+              <a href={tool.url} class="tool-hub-card card-base card-hover">
                 <div class="card-top-bar">
-                  <div class="card-icon" set:html={getToolIconSvg(tool.url)} />
+                  <span class="card-icon" set:html={getToolIconSvg(tool.url)} aria-hidden="true" />
                 </div>
-                <h3 class="text-h3">{tool.name}</h3>
+                <h3 class="card-tool-name">{tool.name}</h3>
                 <p class="card-tool-desc">{tool.desc}</p>
                 <span class="card-action-link">
                   Run test
-                  <span class="btn-icon-wrap w-6 h-6"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </span>
               </a>
             ))}

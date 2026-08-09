@@ -1,80 +1,260 @@
 ---
-// FeatureShaderCards.astro
-// Reimplemented as a clean, premium 3-column asymmetric bento grid.
+// FeatureShaderCards.astro — rebuilt with consistent padding and card system
 ---
 
-<section class="py-24 px-4 w-full bg-[var(--color-surface-0)] flex justify-center">
-  <div class="max-w-[1100px] w-full grid grid-cols-1 md:grid-cols-3 gap-6">
-    
-    {/* Top Left: Stick Drift Detection (Spans 2 columns) */}
-    <div class="md:col-span-2 bg-[#161618] rounded-3xl p-8 md:p-10 border border-white/5 shadow-2xl flex flex-col justify-between">
-      <div>
-        <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-6">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<section class="fsc-section">
+  <div class="fsc-grid">
+
+    {/* Card 1: Top Left (2 cols wide) — Stick Drift Detection */}
+    <div class="fsc-card fsc-card--wide fsc-card--blue group">
+      <div class="fsc-card-body">
+        <div class="fsc-icon fsc-icon--blue" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
           </svg>
         </div>
-        <h3 class="text-2xl font-bold text-white mb-4 tracking-tight">Stick Drift Detection</h3>
-        <p class="text-[15px] text-[#A1A1AA] leading-relaxed max-w-lg">
-          Real-time visualization of analog stick movement. Precisely detect dead zones and stick centering accuracy. Helps determine if you need hall effect sticks or physical cleaning. Supports static offset analysis.
-        </p>
+        <h3 class="fsc-title fsc-title--blue">Stick Drift Detection</h3>
+        <p class="fsc-desc">Real-time visualization of analog stick movement. Precisely detect dead zones and stick centering accuracy. Helps determine if you need hall effect sticks or physical cleaning.</p>
+      </div>
+      <div class="fsc-footer">
+        <a href="/test/controller/drift" class="fsc-cta fsc-cta--blue">
+          <span>Test Stick Drift</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
       </div>
     </div>
 
-    {/* Right: Buttons & Vibration (Spans 1 column, 2 rows) */}
-    <div class="md:row-span-2 bg-[#262423] rounded-3xl p-8 md:p-10 border border-white/5 shadow-2xl flex flex-col">
-      <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-6">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E4E4E7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="6" width="20" height="12" rx="4"></rect>
-          <path d="M6 12h4"></path>
-          <path d="M8 10v4"></path>
-          <line x1="15" y1="13" x2="15.01" y2="13"></line>
-          <line x1="18" y1="11" x2="18.01" y2="11"></line>
-        </svg>
+    {/* Card 2: Right (spans 2 rows) — Buttons & Vibration */}
+    <div class="fsc-card fsc-card--tall fsc-card--neutral group">
+      <div class="fsc-card-body">
+        <div class="fsc-icon fsc-icon--neutral" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="6" width="20" height="12" rx="4"></rect>
+            <path d="M6 12h4"></path>
+            <path d="M8 10v4"></path>
+            <line x1="15" y1="13" x2="15.01" y2="13"></line>
+            <line x1="18" y1="11" x2="18.01" y2="11"></line>
+          </svg>
+        </div>
+        <h3 class="fsc-title fsc-title--blue">Buttons &amp; Vibration</h3>
+        <p class="fsc-desc">Test all button responses and verify ABXY layout mapping. Dual motor vibration testing with independent left/right motor control. Check your force feedback system health.</p>
       </div>
-      <h3 class="text-2xl font-bold text-white mb-4 tracking-tight">Buttons & Vibration</h3>
-      <p class="text-[15px] text-[#A1A1AA] leading-relaxed mb-12">
-        Test all button responses and verify ABXY layout mapping. Dual motor vibration testing with independent left/right motor control. Check your force feedback system health.
-      </p>
-      
-      {/* Decorative Dots */}
-      <div class="mt-auto flex justify-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-green-500"></span>
-        <span class="w-2 h-2 rounded-full bg-white/20"></span>
-        <span class="w-2 h-2 rounded-full bg-white/20"></span>
+      <div class="fsc-footer">
+        <div class="fsc-dots" aria-hidden="true">
+          <span class="fsc-dot fsc-dot--active"></span>
+          <span class="fsc-dot"></span>
+          <span class="fsc-dot"></span>
+        </div>
+        <a href="/test/controller/buttons" class="fsc-cta fsc-cta--blue fsc-cta--full">
+          <span>Test Buttons</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
       </div>
     </div>
 
-    {/* Bottom Left 1: Polling Rate & Latency */}
-    <div class="bg-[#161618] rounded-3xl p-8 md:p-10 border border-white/5 shadow-2xl flex flex-col justify-between">
-      <div>
-        <div class="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center mb-6">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    {/* Card 3: Bottom Left — Polling Rate & Latency */}
+    <div class="fsc-card fsc-card--amber group">
+      <div class="fsc-card-body">
+        <div class="fsc-icon fsc-icon--amber" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
           </svg>
         </div>
-        <h3 class="text-xl font-bold text-white mb-3 tracking-tight">Polling Rate & Latency</h3>
-        <p class="text-[14px] text-[#A1A1AA] leading-relaxed">
-          Measure your controller's actual polling rate. Compare input latency between wired and Bluetooth connections. Optimize your competitive gaming experience.
-        </p>
+        <h3 class="fsc-title fsc-title--amber">Polling Rate &amp; Latency</h3>
+        <p class="fsc-desc">Measure your controller's actual polling rate. Compare input latency between wired and Bluetooth connections. Optimize your competitive gaming experience.</p>
+      </div>
+      <div class="fsc-footer">
+        <a href="/test/controller/polling-rate" class="fsc-cta fsc-cta--amber fsc-cta--full">
+          <span>Check Hz</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
       </div>
     </div>
 
-    {/* Bottom Left 2: Local & Secure */}
-    <div class="bg-[#161618] rounded-3xl p-8 md:p-10 border border-white/5 shadow-2xl flex flex-col justify-between">
-      <div>
-        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-6">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    {/* Card 4: Bottom Middle — Local & Secure */}
+    <div class="fsc-card fsc-card--emerald group">
+      <div class="fsc-card-body">
+        <div class="fsc-icon fsc-icon--emerald" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
             <polyline points="9 12 11 14 15 10"></polyline>
           </svg>
         </div>
-        <h3 class="text-xl font-bold text-white mb-3 tracking-tight">Local & Secure</h3>
-        <p class="text-[14px] text-[#A1A1AA] leading-relaxed">
-          Built on the standard Gamepad API. All input processing happens locally in your browser, protecting your privacy.
-        </p>
+        <h3 class="fsc-title fsc-title--emerald">Local &amp; Secure</h3>
+        <p class="fsc-desc">Built on the standard Gamepad API. All input processing happens locally in your browser, protecting your privacy at all times.</p>
+      </div>
+      <div class="fsc-footer">
+        <a href="/test/controller/full-diagnostic" class="fsc-cta fsc-cta--emerald fsc-cta--full">
+          <span>Run Full Test</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
       </div>
     </div>
 
   </div>
 </section>
+
+<style>
+  .fsc-section {
+    padding: 5rem 1.5rem;
+    width: 100%;
+    background: var(--color-surface-0, #09090b);
+    display: flex;
+    justify-content: center;
+  }
+
+  .fsc-grid {
+    max-width: 1100px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+
+  /* ── Base card ── */
+  .fsc-card {
+    background: #141416;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 1.5rem;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    transition: background 300ms ease, border-color 300ms ease, box-shadow 300ms ease, transform 200ms ease;
+    overflow: hidden;
+  }
+
+  .fsc-card:hover {
+    background: #18181c;
+    transform: translateY(-2px);
+  }
+
+  .fsc-card--wide  { grid-column: span 2; }
+  .fsc-card--tall  { grid-column: 3; grid-row: span 2; }
+
+  .fsc-card--blue:hover    { border-color: rgba(96, 165, 250, 0.3); box-shadow: 0 8px 32px rgba(96, 165, 250, 0.07); }
+  .fsc-card--amber:hover   { border-color: rgba(245, 158, 11, 0.3);  box-shadow: 0 8px 32px rgba(245, 158, 11, 0.07); }
+  .fsc-card--emerald:hover { border-color: rgba(16, 185, 129, 0.3);  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.07); }
+
+  /* ── Card body ── */
+  .fsc-card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Icon ── */
+  .fsc-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-bottom: 1.375rem;
+    transition: transform 200ms ease;
+  }
+
+  .group:hover .fsc-icon { transform: scale(1.05); }
+
+  .fsc-icon--blue    { background: rgba(96, 165, 250, 0.1);   border: 1px solid rgba(96, 165, 250, 0.2);   color: #60a5fa; }
+  .fsc-icon--amber   { background: rgba(245, 158, 11, 0.1);   border: 1px solid rgba(245, 158, 11, 0.2);   color: #f59e0b; }
+  .fsc-icon--emerald { background: rgba(16, 185, 129, 0.1);   border: 1px solid rgba(16, 185, 129, 0.2);   color: #10b981; }
+  .fsc-icon--neutral { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1);  color: #a1a1aa;
+    transition: background 300ms ease, border-color 300ms ease, color 300ms ease; }
+
+  /* ── Titles ── */
+  .fsc-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    color: #ffffff;
+    margin: 0 0 0.625rem 0;
+    transition: color 300ms ease;
+  }
+
+  .fsc-card--wide .fsc-title { font-size: 1.3125rem; }
+
+  .group:hover .fsc-title--blue    { color: #60a5fa; }
+  .group:hover .fsc-title--amber   { color: #f59e0b; }
+  .group:hover .fsc-title--emerald { color: #10b981; }
+
+  /* ── Description ── */
+  .fsc-desc {
+    font-size: 0.9375rem;
+    color: #a1a1aa;
+    line-height: 1.65;
+    margin: 0 0 1.5rem 0;
+    flex: 1;
+  }
+
+  /* ── Footer ── */
+  .fsc-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    flex-shrink: 0;
+  }
+
+  /* ── Dots ── */
+  .fsc-dots {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .fsc-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .fsc-dot--active {
+    background: #10b981;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.7);
+  }
+
+  /* ── CTAs ── */
+  .fsc-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5625rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.06);
+    color: #e4e4e7;
+    transition: background 250ms ease, border-color 250ms ease, color 200ms ease;
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+
+  .fsc-cta--full {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .fsc-cta--blue:hover    { background: rgba(96, 165, 250, 0.15);  border-color: rgba(96, 165, 250, 0.35);  color: #fff; }
+  .fsc-cta--amber:hover   { background: rgba(245, 158, 11, 0.15);  border-color: rgba(245, 158, 11, 0.35);  color: #fff; }
+  .fsc-cta--emerald:hover { background: rgba(16, 185, 129, 0.15);  border-color: rgba(16, 185, 129, 0.35);  color: #fff; }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .fsc-grid { grid-template-columns: 1fr 1fr; }
+    .fsc-card--wide { grid-column: span 2; }
+    .fsc-card--tall { grid-column: span 2; grid-row: auto; }
+  }
+
+  @media (max-width: 560px) {
+    .fsc-section { padding: 3rem 1rem; }
+    .fsc-grid { grid-template-columns: 1fr; }
+    .fsc-card--wide, .fsc-card--tall { grid-column: 1; grid-row: auto; }
+    .fsc-card { padding: 1.5rem; }
+  }
+</style>

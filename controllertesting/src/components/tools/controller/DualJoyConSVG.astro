@@ -1,0 +1,177 @@
+---
+/**
+ * DualJoyConSVG.astro
+ * 1:1 Pixel-Perfect 2D Vector Graphic of Nintendo Switch Dual Joy-Cons (Left & Right).
+ * Features real-time Gamepad API button state highlighting and smooth thumbstick cap tracking.
+ */
+---
+<svg id="joycon-svg" viewBox="0 0 700 500" class="w-full max-w-[480px] max-h-[350px] select-none transition-transform duration-300 drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)]" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Drop Shadow Filter for Stick Caps and Buttons -->
+    <filter id="joycon-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+    <filter id="joycon-glow-blue" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#3b82f6" flood-opacity="0.9" />
+    </filter>
+  </defs>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       LEFT JOY-CON (Left Controller Unit)
+       ════════════════════════════════════════════════════════════════════════ -->
+  <g id="left-joycon-group">
+    
+    <!-- Top Triggers (ZL & L) -->
+    <g id="group-left-triggers">
+      <!-- ZL Trigger (Top Curved Shoulder) -->
+      <path id="btn-zl" data-btn="6" d="M 125,52 C 125,40 160,32 205,32 L 252,32 L 252,50 L 195,50 C 150,50 125,58 125,65 Z" class="button-path cursor-pointer fill-[#1D1E22] stroke-[#4B4E5A] transition-colors" stroke-width="2" />
+      <path id="zl-wire-fill" d="M 127,53 C 127,42 160,34 205,34 L 250,34 L 250,48 L 195,48 C 150,48 127,55 127,62 Z" fill="#3B82F6" class="opacity-0 transition-opacity" />
+      
+      <!-- L Bumper (Top Bumper Bar) -->
+      <path id="btn-l" data-btn="4" d="M 148,54 L 252,54 L 252,66 L 158,66 Z" class="button-path cursor-pointer fill-[#23252B] stroke-[#4B4E5A] transition-colors" stroke-width="1.5" />
+    </g>
+
+    <!-- Main Outer Body Shell (Left Joy-Con) -->
+    <path d="M 180,60 L 255,60 L 255,440 L 180,440 C 130,440 100,400 100,340 L 100,160 C 100,100 130,60 180,60 Z" fill="#2D2F36" stroke="#484B56" stroke-width="2.5" />
+    
+    <!-- Inner Rail & Bracket Line (Right Edge) -->
+    <rect x="249" y="70" width="6" height="360" fill="#18191D" rx="2" />
+    <line x1="255" y1="60" x2="255" y2="440" stroke="#121316" stroke-width="4" />
+
+    <!-- Minus [-] Button (Top Right) -->
+    <g id="btn-minus" data-btn="8" class="button-path cursor-pointer">
+      <rect x="214" y="90" width="22" height="6" rx="2" fill="#1B1C20" stroke="#4B4E5A" stroke-width="1.5" />
+      <rect x="218" y="92" width="14" height="2" fill="#A1A1AA" />
+    </g>
+
+    <!-- Left Analog Thumbstick (L3, Axes 0, 1) -->
+    <g id="group-left-stick" transform="translate(178, 160)">
+      <!-- Outer Base Ring -->
+      <circle cx="0" cy="0" r="38" fill="#1B1C20" stroke="#484B56" stroke-width="2" />
+      
+      <!-- Interactive Cap Node -->
+      <g id="stick-l-cap" data-btn="10" class="button-path cursor-pointer stick-cap-node" filter="url(#joycon-shadow)">
+        <circle cx="0" cy="0" r="30" fill="#25272E" stroke="#525663" stroke-width="2" />
+        <circle cx="0" cy="0" r="22" fill="#1F2026" stroke="#3D3F48" stroke-width="1.5" />
+        <circle cx="0" cy="0" r="14" fill="#2B2D35" />
+        <!-- 4 Tactile Ridge Marks -->
+        <line x1="0" y1="-26" x2="0" y2="-20" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+        <line x1="0" y1="20" x2="0" y2="26" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+        <line x1="-26" y1="0" x2="-20" y2="0" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+        <line x1="20" y1="0" x2="26" y2="0" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+        <text x="0" y="3.5" class="fill-stone-400 font-mono font-bold text-[9px]" text-anchor="middle">L3</text>
+      </g>
+    </g>
+
+    <!-- Directional Arrow Buttons (D-PAD) -->
+    <g id="group-dpad-joycon" transform="translate(178, 275)">
+      <!-- Up Arrow ▲ -->
+      <g id="btn-dpad-up" data-btn="12" class="dpad-btn button-path cursor-pointer" filter="url(#joycon-shadow)">
+        <circle cx="0" cy="-38" r="15" fill="#1F2025" stroke="#4B4E5A" stroke-width="1.5" />
+        <path d="M 0,-43 L -5,-34 L 5,-34 Z" fill="#D4D4D8" />
+      </g>
+      <!-- Down Arrow ▼ -->
+      <g id="btn-dpad-down" data-btn="13" class="dpad-btn button-path cursor-pointer" filter="url(#joycon-shadow)">
+        <circle cx="0" cy="38" r="15" fill="#1F2025" stroke="#4B4E5A" stroke-width="1.5" />
+        <path d="M 0,43 L -5,34 L 5,34 Z" fill="#D4D4D8" />
+      </g>
+      <!-- Left Arrow ◀ -->
+      <g id="btn-dpad-left" data-btn="14" class="dpad-btn button-path cursor-pointer" filter="url(#joycon-shadow)">
+        <circle cx="-38" cy="0" r="15" fill="#1F2025" stroke="#4B4E5A" stroke-width="1.5" />
+        <path d="M -43,0 L -34,-5 L -34,5 Z" fill="#D4D4D8" />
+      </g>
+      <!-- Right Arrow ▶ -->
+      <g id="btn-dpad-right" data-btn="15" class="dpad-btn button-path cursor-pointer" filter="url(#joycon-shadow)">
+        <circle cx="38" cy="0" r="15" fill="#1F2025" stroke="#4B4E5A" stroke-width="1.5" />
+        <path d="M 43,0 L 34,-5 L 34,5 Z" fill="#D4D4D8" />
+      </g>
+    </g>
+
+    <!-- Square Capture Button [o] (Bottom Right) -->
+    <g id="btn-capture" data-btn="16" class="button-path cursor-pointer" transform="translate(198, 365)" filter="url(#joycon-shadow)">
+      <rect x="0" y="0" width="26" height="26" rx="5" fill="#1B1C20" stroke="#4B4E5A" stroke-width="1.5" />
+      <circle cx="13" cy="13" r="7" fill="none" stroke="#71717A" stroke-width="1.5" />
+    </g>
+
+  </g>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       RIGHT JOY-CON (Right Controller Unit)
+       ════════════════════════════════════════════════════════════════════════ -->
+  <g id="right-joycon-group">
+    
+    <!-- Top Triggers (ZR & R) -->
+    <g id="group-right-triggers">
+      <!-- ZR Trigger (Top Curved Shoulder) -->
+      <path id="btn-zr" data-btn="7" d="M 575,52 C 575,40 540,32 495,32 L 448,32 L 448,50 L 505,50 C 550,50 575,58 575,65 Z" class="button-path cursor-pointer fill-[#1D1E22] stroke-[#4B4E5A] transition-colors" stroke-width="2" />
+      <path id="zr-wire-fill" d="M 573,53 C 573,42 540,34 495,34 L 450,34 L 450,48 L 505,48 C 550,48 573,55 573,62 Z" fill="#3B82F6" class="opacity-0 transition-opacity" />
+      
+      <!-- R Bumper (Top Bumper Bar) -->
+      <path id="btn-r" data-btn="5" d="M 552,54 L 448,54 L 448,66 L 542,66 Z" class="button-path cursor-pointer fill-[#23252B] stroke-[#4B4E5A] transition-colors" stroke-width="1.5" />
+    </g>
+
+    <!-- Main Outer Body Shell (Right Joy-Con) -->
+    <path d="M 520,60 L 445,60 L 445,440 L 520,440 C 570,440 600,400 600,340 L 600,160 C 600,100 570,60 520,60 Z" fill="#2D2F36" stroke="#484B56" stroke-width="2.5" />
+    
+    <!-- Inner Rail & Bracket Line (Left Edge) -->
+    <rect x="445" y="70" width="6" height="360" fill="#18191D" rx="2" />
+    <line x1="445" y1="60" x2="445" y2="440" stroke="#121316" stroke-width="4" />
+
+    <!-- Plus [+] Button (Top Left) -->
+    <g id="btn-plus" data-btn="9" class="button-path cursor-pointer" transform="translate(464, 85)">
+      <path d="M 4,11 H 18 M 11,4 V 18" stroke="#E2E8F0" stroke-width="3.5" stroke-linecap="round" />
+    </g>
+
+    <!-- Face Buttons (X, Y, A, B) -->
+    <g id="group-action-buttons-joycon" transform="translate(522, 175)">
+      <!-- X Button (Top) -->
+      <g id="btn-x" data-btn="3" class="action-btn cursor-pointer" filter="url(#joycon-shadow)">
+        <circle cx="0" cy="-38" r="16" class="button-path fill-[#1F2025] stroke-[#4B4E5A]" stroke-width="1.5" />
+        <text x="0" y="-32.5" class="fill-stone-200 font-sans font-bold text-[14px]" text-anchor="middle">X</text>
+      </g>
+      <!-- Y Button (Left) -->
+      <g id="btn-y" data-btn="2" class="action-btn cursor-pointer" filter="url(#joycon-shadow)">
+        <circle cx="-38" cy="0" r="16" class="button-path fill-[#1F2025] stroke-[#4B4E5A]" stroke-width="1.5" />
+        <text x="-38" y="5.5" class="fill-stone-200 font-sans font-bold text-[14px]" text-anchor="middle">Y</text>
+      </g>
+      <!-- A Button (Right) -->
+      <g id="btn-a" data-btn="1" class="action-btn cursor-pointer" filter="url(#joycon-shadow)">
+        <circle cx="38" cy="0" r="16" class="button-path fill-[#1F2025] stroke-[#4B4E5A]" stroke-width="1.5" />
+        <text x="38" y="5.5" class="fill-stone-200 font-sans font-bold text-[14px]" text-anchor="middle">A</text>
+      </g>
+      <!-- B Button (Bottom) -->
+      <g id="btn-b" data-btn="0" class="action-btn cursor-pointer" filter="url(#joycon-shadow)">
+        <circle cx="0" cy="38" r="16" class="button-path fill-[#1F2025] stroke-[#4B4E5A]" stroke-width="1.5" />
+        <text x="0" y="43.5" class="fill-stone-200 font-sans font-bold text-[14px]" text-anchor="middle">B</text>
+      </g>
+    </g>
+
+    <!-- Right Analog Thumbstick (R3, Axes 2, 3) -->
+    <g id="group-right-stick" transform="translate(522, 288)">
+      <!-- Outer Base Ring -->
+      <circle cx="0" cy="0" r="38" fill="#1B1C20" stroke="#484B56" stroke-width="2" />
+      
+      <!-- Interactive Cap Node -->
+      <g id="stick-r-cap" data-btn="11" class="button-path cursor-pointer stick-cap-node" filter="url(#joycon-shadow)">
+        <circle cx="0" cy="0" r="30" fill="#25272E" stroke="#525663" stroke-width="2" />
+        <circle cx="0" cy="0" r="22" fill="#1F2026" stroke="#3D3F48" stroke-width="1.5" />
+        <circle cx="0" cy="0" r="14" fill="#2B2D35" />
+        <!-- 4 Tactile Ridge Marks -->
+        <line x1="0" y1="-26" x2="0" y2="-20" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+        <line x1="0" y1="20" x2="0" y2="26" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+        <line x1="-26" y1="0" x2="-20" y2="0" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+        <line x1="20" y1="0" x2="26" y2="0" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+        <text x="0" y="3.5" class="fill-stone-400 font-mono font-bold text-[9px]" text-anchor="middle">R3</text>
+      </g>
+    </g>
+
+    <!-- Circular HOME Button (⌂) (Bottom Left) -->
+    <g id="btn-home" data-btn="17" class="button-path cursor-pointer" transform="translate(476, 378)" filter="url(#joycon-shadow)">
+      <circle cx="0" cy="0" r="15" fill="#1B1C20" stroke="#4B4E5A" stroke-width="1.5" />
+      <circle cx="0" cy="0" r="19" fill="none" stroke="#3B82F6" stroke-width="1.5" class="opacity-60" />
+      <!-- House Icon ⌂ -->
+      <path d="M -5,4 L -5,-1 L 0,-6 L 5,-1 L 5,4 Z" fill="none" stroke="#E2E8F0" stroke-width="1.5" stroke-linejoin="round" />
+    </g>
+
+  </g>
+</svg>

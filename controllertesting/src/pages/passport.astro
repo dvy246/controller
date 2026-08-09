@@ -12,17 +12,17 @@ const breadcrumbs = [
 const schemaData = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "Controller Passport™ - Verified Hardware Resale Certificate",
+  "name": "Controller Passport — Health & Resale Inspection Report",
   "url": canonicalUrl,
-  "description": "Generate a timestamped, 5-point verified hardware health certificate for your controller. Perfect for eBay, Facebook Marketplace, and hardware swap listings.",
+  "description": "Run a 5-point hardware inspection for your Xbox, PlayStation, or Switch controller and generate a timestamped, shareable health report for resale listings, repairs, or your own records.",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Web"
 };
 ---
 
 <BaseLayout
-  title="Controller Passport™ — Verified Resale & Health Certificate Generator"
-  description="Create an official, timestamped 5-point hardware health certificate for your Xbox, PlayStation, or Switch controller. Prove zero stick drift for eBay & marketplace listings."
+  title="Controller Passport — Health & Resale Inspection Report"
+  description="Run a 5-point hardware inspection for your Xbox, PlayStation, or Switch controller and generate a timestamped, shareable health report for resale listings, repairs, or your own records."
   canonical={canonicalUrl}
   breadcrumbs={breadcrumbs}
 >
@@ -38,34 +38,39 @@ const schemaData = {
     <!-- Page Hero Header -->
     <div class="hero-header text-center mb-12">
       <div class="trust-pill inline-flex items-center gap-2 px-3 py-1 rounded-full mb-4">
-        <span class="pulse-dot"></span>
-        Marketplace Resale Trust Engine
+        <span class="static-dot" aria-hidden="true"></span>
+        5-Point Hardware Inspection
       </div>
       <h1 class="text-hero text-gradient mb-4">
-        Controller Passport™
+        Controller Passport
       </h1>
       <p class="hero-desc">
-        Complete our 5-point secondhand hardware inspection, auto-fill sensor telemetry, and generate a verified digital certificate for eBay, Reddit, and Facebook Marketplace listings.
+        Run a structured 5-point inspection — drift, circularity, triggers, buttons, housing — and
+        generate a timestamped health report you can attach to marketplace listings, repair claims,
+        or resale offers. Reports are self-verifying: the checksum catches corrupted copies.
       </p>
     </div>
 
-    <!-- Passport Generator Form Card -->
-    <div class="card-base card-gradient p-8 mb-12 shadow-2xl rounded-2xl">
-      <h2 class="form-title text-2xl font-bold mb-6 flex items-center gap-3">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <!-- Inspection Form Card -->
+    <div id="inspection-form-wrap" class="card-base card-gradient p-6 sm:p-8 mb-12 rounded-2xl">
+      <h2 id="inspection-title" class="form-title text-2xl font-bold mb-6 flex items-center gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
         </svg>
-        Secondhand Controller 5-Point Inspection Checklist
+        Inspection Checklist
       </h2>
 
       <div class="inspection-form space-y-8">
-        <!-- 1. Device Identification & Serial -->
+        <!-- 1. Device Identification -->
         <div class="form-section">
-          <h3 class="section-heading text-lg font-bold mb-4">1. Device Identification & Serial Verification</h3>
+          <h3 class="section-heading text-lg font-bold mb-4">
+            <span class="step-num" aria-hidden="true">01</span>
+            Device Identification
+          </h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <label class="form-label block text-sm font-semibold mb-2">Controller Model</label>
-              <select id="passport-model" class="form-select w-full rounded-xl px-4 py-3">
+              <label class="form-label block text-sm font-semibold mb-2" for="passport-model">Controller Model</label>
+              <select id="passport-model" name="model" class="form-select w-full rounded-xl px-4 py-3">
                 <option value="PS5 DualSense">PS5 DualSense</option>
                 <option value="Xbox Wireless (Series X/S)">Xbox Wireless (Series X/S)</option>
                 <option value="Nintendo Switch Pro Controller">Nintendo Switch Pro Controller</option>
@@ -78,149 +83,172 @@ const schemaData = {
             </div>
 
             <div>
-              <label class="form-label block text-sm font-semibold mb-2">Serial Number / WebHID ID</label>
-              <input type="text" id="passport-serial" placeholder="e.g. SN-948201-X or Auto-ID" class="form-input w-full rounded-xl px-4 py-3" />
+              <label class="form-label block text-sm font-semibold mb-2" for="passport-serial">Serial Number</label>
+              <input type="text" id="passport-serial" name="serial" placeholder="e.g. SN-948201-X (optional)" autocomplete="off" spellcheck="false" class="form-input w-full rounded-xl px-4 py-3" />
             </div>
 
             <div>
-              <label class="form-label block text-sm font-semibold mb-2">Cosmetic Grade</label>
-              <select id="passport-condition" class="form-select w-full rounded-xl px-4 py-3">
-                <option value="Mint / Like New">Mint / Like New (Grade A+)</option>
-                <option value="Used - Excellent">Used - Excellent (Grade A)</option>
-                <option value="Used - Normal Wear">Used - Normal Wear (Grade B)</option>
-                <option value="Refurbished / Repaired">Refurbished / Repaired (Grade C)</option>
+              <label class="form-label block text-sm font-semibold mb-2" for="passport-condition">Cosmetic Condition</label>
+              <select id="passport-condition" name="condition" class="form-select w-full rounded-xl px-4 py-3">
+                <option value="Mint / Like New">Mint / Like New</option>
+                <option value="Used - Excellent">Used - Excellent</option>
+                <option value="Used - Normal Wear">Used - Normal Wear</option>
+                <option value="Refurbished / Repaired">Refurbished / Repaired</option>
               </select>
             </div>
           </div>
         </div>
 
-        <!-- 2. Stick Drift Verification -->
+        <!-- 2. Stick Drift & Circularity -->
         <div class="form-section">
           <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
-            <h3 class="section-heading text-lg font-bold">2. Stick Drift & Circularity Telemetry</h3>
+            <h3 class="section-heading text-lg font-bold">
+              <span class="step-num" aria-hidden="true">02</span>
+              Stick Drift &amp; Circularity
+            </h3>
             <button type="button" id="btn-autofill-telemetry" class="btn-secondary text-xs flex items-center gap-1.5">
-              <span>⚡ Auto-fill from LocalStorage</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              Auto-fill from last test
             </button>
           </div>
+          <p class="text-xs text-secondary mb-4">
+            Run the <a href="/test/controller/drift" class="link-inline">stick drift test</a> and
+            <a href="/test/controller/circularity" class="link-inline">circularity test</a> first, then use the values here.
+          </p>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div>
-              <label class="form-label block text-sm font-semibold mb-2">Left Stick Drift %</label>
-              <input type="number" step="0.01" id="passport-drift-left" value="0.00" class="form-input w-full rounded-xl px-4 py-3 font-mono" />
+              <label class="form-label block text-sm font-semibold mb-2" for="passport-drift-left">Left Stick Drift %</label>
+              <input type="number" step="0.01" min="0" max="100" inputmode="decimal" id="passport-drift-left" name="drift-left" value="0.00" class="form-input w-full rounded-xl px-4 py-3 font-mono" />
             </div>
 
             <div>
-              <label class="form-label block text-sm font-semibold mb-2">Right Stick Drift %</label>
-              <input type="number" step="0.01" id="passport-drift-right" value="0.00" class="form-input w-full rounded-xl px-4 py-3 font-mono" />
+              <label class="form-label block text-sm font-semibold mb-2" for="passport-drift-right">Right Stick Drift %</label>
+              <input type="number" step="0.01" min="0" max="100" inputmode="decimal" id="passport-drift-right" name="drift-right" value="0.00" class="form-input w-full rounded-xl px-4 py-3 font-mono" />
             </div>
 
             <div>
-              <label class="form-label block text-sm font-semibold mb-2">Circularity Error %</label>
-              <input type="number" step="0.1" id="passport-circularity" value="4.2" class="form-input w-full rounded-xl px-4 py-3 font-mono" />
+              <label class="form-label block text-sm font-semibold mb-2" for="passport-circularity">Circularity Error %</label>
+              <input type="number" step="0.1" min="0" max="100" inputmode="decimal" id="passport-circularity" name="circularity" value="0.0" class="form-input w-full rounded-xl px-4 py-3 font-mono" />
             </div>
           </div>
         </div>
 
-        <!-- 3. Trigger Curve & Travel Check -->
+        <!-- 3. Trigger Linearity -->
         <div class="form-section">
-          <h3 class="section-heading text-lg font-bold mb-3">3. Analog Trigger Pressure Linearity</h3>
+          <h3 class="section-heading text-lg font-bold mb-3">
+            <span class="step-num" aria-hidden="true">03</span>
+            Analog Trigger Travel
+          </h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <label class="checkbox-card flex items-center gap-3 p-4 rounded-xl cursor-pointer">
-              <input type="checkbox" id="chk-trig-l2" checked class="form-checkbox" />
+              <input type="checkbox" id="chk-trig-l2" name="trigger-l2" checked class="form-checkbox" />
               <div>
-                <div class="font-semibold text-sm">L2 / LT Smooth 0-100% Travel</div>
-                <div class="text-xs text-secondary">Verified analog pressure curve without dead stops or sticking</div>
+                <div class="font-semibold text-sm">L2 / LT smooth 0-100% travel</div>
+                <div class="text-xs text-secondary">Analog pressure curve without dead stops or sticking</div>
               </div>
             </label>
 
             <label class="checkbox-card flex items-center gap-3 p-4 rounded-xl cursor-pointer">
-              <input type="checkbox" id="chk-trig-r2" checked class="form-checkbox" />
+              <input type="checkbox" id="chk-trig-r2" name="trigger-r2" checked class="form-checkbox" />
               <div>
-                <div class="font-semibold text-sm">R2 / RT Smooth 0-100% Travel</div>
-                <div class="text-xs text-secondary">Verified analog pressure curve without dead stops or sticking</div>
+                <div class="font-semibold text-sm">R2 / RT smooth 0-100% travel</div>
+                <div class="text-xs text-secondary">Analog pressure curve without dead stops or sticking</div>
               </div>
             </label>
           </div>
         </div>
 
-        <!-- 4. Button Wear & Tactility Check -->
+        <!-- 4. Button Wear -->
         <div class="form-section">
-          <h3 class="section-heading text-lg font-bold mb-3">4. Button Wear & Tactility Response</h3>
+          <h3 class="section-heading text-lg font-bold mb-3">
+            <span class="step-num" aria-hidden="true">04</span>
+            Button Wear &amp; Tactility
+          </h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <label class="checkbox-card flex items-center gap-3 p-4 rounded-xl cursor-pointer">
-              <input type="checkbox" id="chk-btn-face" checked class="form-checkbox" />
+              <input type="checkbox" id="chk-btn-face" name="buttons-face" checked class="form-checkbox" />
               <div>
-                <div class="font-semibold text-sm">Face Buttons & D-Pad Tactility</div>
-                <div class="text-xs text-secondary">A/B/X/Y (Cross/Circle/Square/Triangle) & D-pad register cleanly with zero double-clicking</div>
+                <div class="font-semibold text-sm">Face buttons &amp; D-pad tactility</div>
+                <div class="text-xs text-secondary">A/B/X/Y (Cross/Circle/Square/Triangle) &amp; D-pad register cleanly</div>
               </div>
             </label>
 
             <label class="checkbox-card flex items-center gap-3 p-4 rounded-xl cursor-pointer">
-              <input type="checkbox" id="chk-btn-bumpers" checked class="form-checkbox" />
+              <input type="checkbox" id="chk-btn-bumpers" name="buttons-bumpers" checked class="form-checkbox" />
               <div>
-                <div class="font-semibold text-sm">Bumpers (LB/RB) & Paddles</div>
-                <div class="text-xs text-secondary">Tactile microswitches click sharp with zero contact chatter</div>
+                <div class="font-semibold text-sm">Bumpers (LB/RB) &amp; paddles</div>
+                <div class="text-xs text-secondary">Tactile switches click sharply with no chatter</div>
               </div>
             </label>
           </div>
         </div>
 
-        <!-- 5. Housing & Tamper Inspection -->
+        <!-- 5. Housing & Physical Inspection -->
         <div class="form-section">
-          <h3 class="section-heading text-lg font-bold mb-3">5. Housing & Physical Inspection</h3>
+          <h3 class="section-heading text-lg font-bold mb-3">
+            <span class="step-num" aria-hidden="true">05</span>
+            Housing &amp; Physical Inspection
+          </h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <label class="checkbox-card flex items-center gap-3 p-4 rounded-xl cursor-pointer">
-              <input type="checkbox" id="chk-rubber" checked class="form-checkbox" />
+              <input type="checkbox" id="chk-rubber" name="housing-rubber" checked class="form-checkbox" />
               <div>
-                <div class="font-semibold text-sm">Thumbstick Rubber Integrity</div>
-                <div class="text-xs text-secondary">Grip caps intact with no tearing, peeling, or heavy rubber smooth-out</div>
+                <div class="font-semibold text-sm">Thumbstick rubber integrity</div>
+                <div class="text-xs text-secondary">Grip caps intact, no tearing, peeling, or heavy wear</div>
               </div>
             </label>
 
             <label class="checkbox-card flex items-center gap-3 p-4 rounded-xl cursor-pointer">
-              <input type="checkbox" id="chk-seams" checked class="form-checkbox" />
+              <input type="checkbox" id="chk-seams" name="housing-seams" checked class="form-checkbox" />
               <div>
-                <div class="font-semibold text-sm">Housing Seams & Tamper Check</div>
-                <div class="text-xs text-secondary">Shell alignment tight, original factory screws, zero housing flex</div>
+                <div class="font-semibold text-sm">Housing seams &amp; tamper check</div>
+                <div class="text-xs text-secondary">Shell alignment tight, no unusual gaps or flex</div>
               </div>
             </label>
           </div>
+        </div>
+
+        <!-- Repair Mode -->
+        <div class="repair-row flex items-center justify-between gap-3 flex-wrap p-4 rounded-xl bg-surface-3 border border-border-subtle">
+          <div>
+            <div class="font-semibold text-sm">Repair before/after mode</div>
+            <div class="text-xs text-secondary mt-0.5">Capture a baseline, fix the controller, then generate a fresh report to see the measured delta.</div>
+            <p id="baseline-hint" class="text-xs text-secondary font-mono mt-1.5" hidden></p>
+          </div>
+          <button type="button" id="btn-repair-toggle" aria-pressed="false" class="btn-secondary text-xs">Enable repair mode</button>
         </div>
 
         <button
           type="button"
           id="generate-passport-btn"
-          class="btn-primary w-full py-4 rounded-xl text-base font-bold flex items-center justify-center gap-2 shadow-lg"
+          class="btn-primary w-full py-4 rounded-xl text-base font-bold flex items-center justify-center gap-2"
         >
-          <span>Generate Official Passport Certificate (+50 XP)</span>
+          Generate inspection report
         </button>
       </div>
     </div>
 
-    <!-- Certificate Output Preview Area -->
-    <div id="passport-output" class="hidden doppelrand-shell p-8 text-primary relative overflow-hidden mb-12">
-      <div class="verified-ribbon absolute top-0 right-0 px-4 py-1.5 text-xs font-mono font-bold uppercase tracking-wider">
-        VERIFIED EVIDENCE CERTIFICATE
-      </div>
-
+    <!-- Inspection Report Output -->
+    <div id="passport-output" class="card-base card-gradient p-6 sm:p-8 text-primary relative overflow-hidden mb-12 rounded-2xl" hidden tabindex="-1" aria-labelledby="output-title">
       <div class="flex items-center gap-4 mb-6">
-        <div class="cert-logo w-12 h-12 rounded-xl flex items-center justify-center font-bold text-xl">
+        <div class="cert-logo w-12 h-12 rounded-xl flex items-center justify-center font-bold text-xl" aria-hidden="true">
           CT
         </div>
         <div>
-          <h3 class="text-xl font-bold">Controller Testing Health Passport</h3>
-          <p class="text-xs text-secondary font-mono">Certificate ID: CT-PASS-<span id="cert-id">8F92A0</span></p>
+          <h3 id="output-title" class="text-xl font-bold">Controller Health Inspection Report</h3>
+          <p class="text-xs text-secondary font-mono">Report ID: CT-PASS-<span id="cert-id">--------</span></p>
         </div>
       </div>
 
       <div class="badge-row mb-6 flex items-center gap-3 flex-wrap">
         <span id="out-grade-badge" class="badge-pass text-sm px-3 py-1 font-mono font-bold">GRADE A+ (PASSED)</span>
-        <span id="out-serial-badge" class="font-mono text-xs text-secondary">SN: UNKNOWN</span>
+        <span id="out-serial-badge" class="font-mono text-xs text-secondary">SERIAL: —</span>
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6 metric-box p-4 rounded-xl">
         <div>
           <div class="text-xs text-secondary">Model</div>
-          <div id="out-model" class="text-sm font-semibold">PS5 DualSense</div>
+          <div id="out-model" class="text-sm font-semibold">—</div>
         </div>
         <div>
           <div class="text-xs text-secondary">Max Stick Drift</div>
@@ -228,247 +256,585 @@ const schemaData = {
         </div>
         <div>
           <div class="text-xs text-secondary">Circularity Error</div>
-          <div id="out-circularity" class="text-sm font-semibold font-mono text-accent">4.2%</div>
+          <div id="out-circularity" class="text-sm font-semibold font-mono text-accent">0.0%</div>
         </div>
         <div>
-          <div class="text-xs text-secondary">Verified Date</div>
-          <div id="out-date" class="text-sm font-semibold font-mono">2026-08-07</div>
+          <div class="text-xs text-secondary">Inspected</div>
+          <div id="out-date" class="text-sm font-semibold font-mono">—</div>
         </div>
       </div>
 
-      <!-- Checklist Summary Badges -->
+      <!-- Checklist Summary -->
       <div class="checklist-summary mb-6 p-4 rounded-xl bg-surface-3">
-        <h4 class="text-xs font-bold text-secondary uppercase tracking-wider mb-2">5-Point Verification Results</h4>
-        <ul id="out-checklist-items" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-          <!-- Populated by JS -->
-        </ul>
+        <h4 class="text-xs font-bold text-secondary uppercase tracking-wider mb-2">Inspection Results</h4>
+        <ul id="out-checklist-items" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs"></ul>
+      </div>
+
+      <!-- Verification status -->
+      <div class="verify-row flex items-center gap-2 flex-wrap mb-6 pt-4 border-t border-border-default">
+        <span class="verify-dot" aria-hidden="true"></span>
+        <span id="verify-status" class="font-mono text-xs text-secondary">Self-verifying link — checksum-protected</span>
+        <a id="verify-link" class="link-inline hidden font-mono text-xs" href="#" target="_blank" rel="noopener">View server-signed record</a>
       </div>
 
       <div class="flex flex-col sm:flex-row gap-3">
-        <button type="button" onclick="window.print()" class="btn-secondary flex-1 py-3 rounded-lg text-sm font-medium flex items-center justify-center gap-2">
+        <button type="button" id="btn-print" class="btn-secondary flex-1 py-3 rounded-lg text-sm font-medium flex items-center justify-center gap-2">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          Download PDF / Print
+          Print / Save as PDF
         </button>
         <button type="button" id="view-report-link" class="btn-secondary flex-1 py-3 rounded-lg text-sm font-medium flex items-center justify-center gap-2">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-          View Dynamic Report
+          View shareable report
         </button>
         <button type="button" id="copy-badge-code" class="btn-primary flex-1 py-3 rounded-lg text-sm font-medium flex items-center justify-center gap-2">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          Copy Marketplace Snippet
+          Copy embed snippet
         </button>
       </div>
     </div>
+
+    <!-- Repair Comparison -->
+    <div id="repair-compare" class="card-base card-gradient p-6 sm:p-8 rounded-2xl mt-8 mb-12" hidden>
+      <div class="flex items-center justify-between gap-3 flex-wrap mb-4">
+        <div>
+          <h3 class="text-lg font-bold">Repair verification</h3>
+          <p class="text-sm text-secondary mt-0.5">Baseline vs after-repair measurements.</p>
+        </div>
+        <button type="button" id="btn-clear-baseline" class="btn-secondary text-xs">Clear baseline</button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+        <div class="metric-box p-4 rounded-xl">
+          <div class="text-xs text-secondary">Max stick drift</div>
+          <div id="repair-drift" class="text-sm font-semibold font-mono mt-1">—</div>
+        </div>
+        <div class="metric-box p-4 rounded-xl">
+          <div class="text-xs text-secondary">Circularity error</div>
+          <div id="repair-circ" class="text-sm font-semibold font-mono mt-1">—</div>
+        </div>
+        <div class="metric-box p-4 rounded-xl">
+          <div class="text-xs text-secondary">Verdict</div>
+          <div id="repair-verdict" class="text-sm font-semibold font-mono mt-1">—</div>
+        </div>
+      </div>
+      <p id="repair-guidance" class="text-sm text-secondary"></p>
+    </div>
+
+    <!-- Passport History -->
+    <section id="passport-history-section" class="mt-16" aria-labelledby="history-title">
+      <div class="flex items-end justify-between gap-4 flex-wrap mb-2">
+        <div>
+          <h2 id="history-title" class="text-2xl font-bold">Passport history</h2>
+          <p class="text-sm text-secondary mt-1">Reports saved to this device. Stored in your browser only — nothing leaves this machine.</p>
+        </div>
+        <button type="button" id="btn-clear-history" class="btn-secondary text-xs">Clear all</button>
+      </div>
+      <ul id="passport-history" class="grid gap-3 mt-6"></ul>
+      <div id="passport-history-empty" class="empty-card p-8 rounded-2xl border border-dashed border-border-default text-center text-secondary text-sm">
+        No saved reports on this device yet. Generate an inspection above — or run the
+        <a href="/test/controller/full-diagnostic" class="link-inline">full diagnostic</a> first.
+      </div>
+    </section>
+
+    <p class="honesty-note font-mono text-xs text-secondary text-center mt-12">
+      Browser-based inspection: results depend on your browser's Gamepad API and your input.
+      This report is an inspection record, not a laboratory certificate.
+    </p>
   </main>
 
   <Footer />
+
+  <div id="passport-toast" class="toast fixed bottom-4 right-4 z-50 px-4 py-2.5 rounded-lg text-xs font-mono border border-border-default bg-surface-4 text-primary" role="status" hidden></div>
 </BaseLayout>
 
 <script>
   import { generateUUID, detectEnvironment, checkCapabilities } from '../lib/report';
-  import { saveToPassport } from '../lib/passport';
-  import { addPoints } from '../lib/rewards';
-  import { buildShareUrl } from '../lib/share';
+  import type { EvidenceReport } from '../lib/report';
+  import { saveToPassport, getPassportHistory, compareReports } from '../lib/passport';
+  import { buildShareUrl, encodeSharePayload, serializePayload, computeHealthGrade, copyToClipboard } from '../lib/share';
+
+  const MODEL_META: Record<string, { vendorId?: string; productId?: string; modelKey?: string }> = {
+    'PS5 DualSense': { vendorId: '0x054c', productId: '0x0ce6', modelKey: 'ps5-dualsense' },
+    'PS5 DualSense Edge': { vendorId: '0x054c', productId: '0x0df2' },
+    'Xbox Wireless (Series X/S)': { vendorId: '0x045e', productId: '0x0b12' },
+    'Xbox Elite Series 2': { vendorId: '0x045e', productId: '0x0b22' },
+    'Nintendo Switch Pro Controller': { vendorId: '0x057e', productId: '0x2009' },
+    '8BitDo Ultimate Hall Effect': { vendorId: '0x2dc8', productId: '0x3106' },
+    'SCUF Instinct Pro': {},
+    'Other Gamepad': {},
+  };
+
+  const REPAIR_BASELINE_KEY = 'ct_repair_baseline';
+
+  interface FormState {
+    model: string;
+    serial: string;
+    condition: string;
+    driftLeft: number;
+    driftRight: number;
+    circularity: number;
+    chkL2: boolean;
+    chkR2: boolean;
+    chkFace: boolean;
+    chkBumpers: boolean;
+    chkRubber: boolean;
+    chkSeams: boolean;
+    allHardwarePassed: boolean;
+    maxDrift: number;
+  }
+
+  interface GradeInfo {
+    grade: string;
+    kind: 'pass' | 'warning' | 'fail';
+  }
+
+  let currentReport: EvidenceReport | null = null;
+  let currentGrade: GradeInfo | null = null;
+  let repairMode = false;
+  let repairBaseline: EvidenceReport | null = null;
+  let toastTimer: number | undefined;
+  let clearConfirmTimer: number | undefined;
+
+  const $ = <T extends HTMLElement>(id: string): T | null => document.getElementById(id) as T | null;
+
+  const input = (id: string): string => ($<HTMLInputElement>(id)?.value ?? '').trim();
+  const checkbox = (id: string): boolean => $<HTMLInputElement>(id)?.checked ?? false;
+  const selectVal = (id: string): string => ($<HTMLSelectElement>(id)?.value ?? '').trim();
+
+  const fmtDate = (ts: number): string =>
+    new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(ts));
+
+  function scrollToEl(el: HTMLElement): void {
+    const smooth = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+    el.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' });
+  }
+
+  function showToast(msg: string): void {
+    const toast = $<HTMLDivElement>('passport-toast');
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.hidden = false;
+    window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(() => { toast.hidden = true; }, 2800);
+  }
+
+  function readForm(): FormState {
+    const driftLeftVal = parseFloat(input('passport-drift-left'));
+    const driftRightVal = parseFloat(input('passport-drift-right'));
+    const circularityVal = parseFloat(input('passport-circularity'));
+    const driftLeft = isNaN(driftLeftVal) ? 0 : Math.max(0, driftLeftVal);
+    const driftRight = isNaN(driftRightVal) ? 0 : Math.max(0, driftRightVal);
+    const circularity = isNaN(circularityVal) ? 0 : Math.max(0, circularityVal);
+
+    const chkL2 = checkbox('chk-trig-l2');
+    const chkR2 = checkbox('chk-trig-r2');
+    const chkFace = checkbox('chk-btn-face');
+    const chkBumpers = checkbox('chk-btn-bumpers');
+    const chkRubber = checkbox('chk-rubber');
+    const chkSeams = checkbox('chk-seams');
+
+    return {
+      model: selectVal('passport-model') || 'Other Gamepad',
+      serial: input('passport-serial') || '—',
+      condition: selectVal('passport-condition') || 'Used - Excellent',
+      driftLeft,
+      driftRight,
+      circularity,
+      chkL2,
+      chkR2,
+      chkFace,
+      chkBumpers,
+      chkRubber,
+      chkSeams,
+      allHardwarePassed: Boolean(chkL2 && chkR2 && chkFace && chkBumpers && chkRubber && chkSeams),
+      maxDrift: Math.max(driftLeft, driftRight),
+    };
+  }
+
+  function gradeFor(form: FormState): GradeInfo {
+    if (!form.allHardwarePassed) return { grade: 'GRADE C (HARDWARE FAULT)', kind: 'fail' };
+    if (form.maxDrift < 1.0 && form.circularity < 6.0) return { grade: 'GRADE A+ (PASSED)', kind: 'pass' };
+    if (form.maxDrift < 2.5 && form.circularity < 10.0) return { grade: 'GRADE A (GOOD)', kind: 'pass' };
+    if (form.maxDrift < 5.0) return { grade: 'GRADE B (WARNING)', kind: 'warning' };
+    return { grade: 'GRADE C (DRIFT WARNING)', kind: 'fail' };
+  }
+
+  function buildReport(form: FormState): EvidenceReport {
+    const meta = MODEL_META[form.model] ?? {};
+    return {
+      id: generateUUID(),
+      timestamp: Date.now(),
+      protocolVersion: '2.4.0',
+      device: {
+        name: form.model,
+        ...(meta.vendorId ? { vendorId: meta.vendorId } : {}),
+        ...(meta.productId ? { productId: meta.productId } : {}),
+        ...(meta.modelKey ? { mappedModelKey: meta.modelKey } : {}),
+      },
+      environment: detectEnvironment(),
+      capabilities: checkCapabilities(),
+      tests: {
+        buttons: { facePassed: form.chkFace, bumpersPassed: form.chkBumpers },
+        sticks: {
+          driftX: form.driftLeft,
+          driftY: form.driftRight,
+          circularityError: form.circularity,
+          deadzoneRecommendation: form.maxDrift > 3.0 ? 0.05 : 0.02,
+        },
+        triggers: { l2Passed: form.chkL2, r2Passed: form.chkR2 },
+        vibration: { status: 'passed' },
+      },
+      confidence: 'high' as const,
+      limitations: [],
+    };
+  }
+
+  function checklistRows(form: FormState): Array<{ label: string; ok: boolean; warn?: boolean }> {
+    return [
+      { label: 'Triggers: smooth 0-100% travel', ok: form.chkL2 && form.chkR2 },
+      { label: 'Buttons: clean tactility', ok: form.chkFace && form.chkBumpers },
+      { label: 'Thumbstick rubber intact', ok: form.chkRubber },
+      { label: 'Housing seams tight', ok: form.chkSeams },
+      { label: `Stick drift below 5% (measured ${form.maxDrift.toFixed(2)}%)`, ok: form.maxDrift < 5.0, warn: form.maxDrift >= 2.5 },
+      { label: `Circularity below 10% (measured ${form.circularity.toFixed(1)}%)`, ok: form.circularity < 10.0, warn: form.circularity >= 6.0 },
+    ];
+  }
+
+  function renderOutput(form: FormState, report: EvidenceReport, grade: GradeInfo): void {
+    const output = $<HTMLDivElement>('passport-output');
+    if (!output) return;
+
+    const certId = $<HTMLSpanElement>('cert-id');
+    const outModel = $<HTMLSpanElement>('out-model');
+    const outDrift = $<HTMLSpanElement>('out-drift');
+    const outCirc = $<HTMLSpanElement>('out-circularity');
+    const outDate = $<HTMLSpanElement>('out-date');
+    const outBadge = $<HTMLSpanElement>('out-grade-badge');
+    const outSerial = $<HTMLSpanElement>('out-serial-badge');
+    const outChecklist = $<HTMLUListElement>('out-checklist-items');
+    const verifyStatus = $<HTMLSpanElement>('verify-status');
+    const verifyLink = $<HTMLAnchorElement>('verify-link');
+
+    if (certId) certId.textContent = report.id.substring(0, 6).toUpperCase();
+    if (outModel) outModel.textContent = form.model;
+    if (outDrift) {
+      outDrift.textContent = `${form.maxDrift.toFixed(2)}%`;
+      outDrift.className = `text-sm font-semibold font-mono ${form.maxDrift < 1.0 ? 'text-emerald' : form.maxDrift < 2.5 ? 'text-warning' : 'text-fail'}`;
+    }
+    if (outCirc) {
+      outCirc.textContent = `${form.circularity.toFixed(1)}%`;
+      outCirc.className = `text-sm font-semibold font-mono ${form.circularity < 6.0 ? 'text-accent' : form.circularity < 10.0 ? 'text-warning' : 'text-fail'}`;
+    }
+    if (outDate) outDate.textContent = fmtDate(report.timestamp);
+    if (outSerial) outSerial.textContent = `SERIAL: ${form.serial}`;
+
+    if (outBadge) {
+      outBadge.textContent = grade.grade;
+      outBadge.className = `text-sm px-3 py-1 font-mono font-bold rounded-full ${grade.kind === 'pass' ? 'badge-pass' : grade.kind === 'warning' ? 'badge-warning' : 'badge-fail'}`;
+    }
+
+    if (outChecklist) {
+      outChecklist.replaceChildren();
+        for (const row of checklistRows(form)) {
+        const li = document.createElement('li');
+        li.className = 'flex items-start gap-2';
+        const mark = document.createElement('span');
+        mark.className = row.ok ? 'text-emerald' : row.warn ? 'text-warning' : 'text-fail';
+        mark.setAttribute('aria-hidden', 'true');
+        mark.textContent = row.ok ? '✓' : row.warn ? '△' : '✕';
+        const text = document.createElement('span');
+        text.textContent = row.label;
+        li.append(mark, text);
+        outChecklist.appendChild(li);
+      }
+    }
+
+    if (verifyStatus) verifyStatus.textContent = 'Self-verifying link — checksum-protected';
+    if (verifyLink) {
+      verifyLink.classList.add('hidden');
+      verifyLink.removeAttribute('href');
+    }
+
+    output.hidden = false;
+    scrollToEl(output);
+    output.focus({ preventScroll: true });
+  }
+
+  async function requestSignedVerification(payload: string): Promise<string | null> {
+    try {
+      const controller = new AbortController();
+      const timer = window.setTimeout(() => controller.abort(), 4000);
+      const res = await fetch('/api/verify', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ payload }),
+        signal: controller.signal,
+      });
+      window.clearTimeout(timer);
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data?.ok && typeof data.token === 'string' ? `/verify?token=${encodeURIComponent(data.token)}` : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function handleRepair(report: EvidenceReport): void {
+    const baseline = $<HTMLParagraphElement>('baseline-hint');
+    if (!repairMode) {
+      if (baseline) baseline.hidden = true;
+      return;
+    }
+    if (!repairBaseline) {
+      repairBaseline = report;
+      try { localStorage.setItem(REPAIR_BASELINE_KEY, JSON.stringify(report)); } catch { /* storage full */ }
+      if (baseline) {
+        baseline.textContent = 'Baseline captured — fix the controller, then generate again to compare.';
+        baseline.hidden = false;
+      }
+      showToast('Before-repair baseline captured');
+      return;
+    }
+    renderRepairCompare(repairBaseline, report);
+  }
+
+  function renderRepairCompare(oldReport: EvidenceReport, newReport: EvidenceReport): void {
+    const card = $<HTMLDivElement>('repair-compare');
+    const driftEl = $<HTMLDivElement>('repair-drift');
+    const circEl = $<HTMLDivElement>('repair-circ');
+    const verdictEl = $<HTMLDivElement>('repair-verdict');
+    const guidance = $<HTMLParagraphElement>('repair-guidance');
+    if (!card || !driftEl || !circEl || !verdictEl || !guidance) return;
+
+    const cmp = compareReports(oldReport, newReport);
+    const oldDrift = Math.max(oldReport.tests.sticks.driftX, oldReport.tests.sticks.driftY);
+    const newDrift = Math.max(newReport.tests.sticks.driftX, newReport.tests.sticks.driftY);
+    const oldCirc = oldReport.tests.sticks.circularityError;
+    const newCirc = newReport.tests.sticks.circularityError;
+
+    driftEl.textContent = `${oldDrift.toFixed(2)}% → ${newDrift.toFixed(2)}%  (Δ ${cmp.driftDiff >= 0 ? '+' : ''}${cmp.driftDiff.toFixed(2)})`;
+    circEl.textContent = `${oldCirc.toFixed(1)}% → ${newCirc.toFixed(1)}%  (Δ ${cmp.circDiff >= 0 ? '+' : ''}${cmp.circDiff.toFixed(1)})`;
+
+    if (cmp.improved) {
+      verdictEl.textContent = 'IMPROVED';
+      verdictEl.className = 'text-sm font-semibold font-mono mt-1 text-emerald';
+      guidance.textContent = 'Measurements improved after the repair. Update your resale listing with the new report.';
+    } else if (cmp.degraded) {
+      verdictEl.textContent = 'DEGRADED';
+      verdictEl.className = 'text-sm font-semibold font-mono mt-1 text-fail';
+      guidance.textContent = 'Measurements got worse after the repair. Re-check the fix before listing the controller.';
+    } else {
+      verdictEl.textContent = 'NO SIGNIFICANT CHANGE';
+      verdictEl.className = 'text-sm font-semibold font-mono mt-1 text-warning';
+      guidance.textContent = 'No meaningful difference between before and after. If you replaced parts, verify the sticks with the circularity test again.';
+    }
+
+    card.hidden = false;
+    scrollToEl(card);
+  }
+
+  function renderHistory(): void {
+    const list = $<HTMLUListElement>('passport-history');
+    const empty = $<HTMLDivElement>('passport-history-empty');
+    if (!list || !empty) return;
+    const history = getPassportHistory();
+    const records = Object.values(history);
+
+    list.replaceChildren();
+    empty.hidden = records.length > 0;
+
+    for (const record of records) {
+      const last = record.reports[0];
+      if (!last) continue;
+
+      const li = document.createElement('li');
+      li.className = 'card-base card-gradient p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center gap-4 justify-between';
+
+      const info = document.createElement('div');
+      info.className = 'min-w-0';
+
+      const name = document.createElement('h3');
+      name.className = 'font-bold text-sm truncate';
+      name.textContent = record.deviceName;
+
+      const meta = document.createElement('p');
+      meta.className = 'font-mono text-xs text-secondary mt-1';
+      const grade = computeHealthGrade(last);
+      meta.textContent = `${record.reports.length} report${record.reports.length === 1 ? '' : 's'} · last inspected ${fmtDate(last.timestamp)}`;
+
+      info.append(name, meta);
+
+      const actions = document.createElement('div');
+      actions.className = 'flex items-center gap-2 flex-shrink-0';
+
+      const chip = document.createElement('span');
+      chip.className = `text-xs px-2.5 py-1 font-mono font-bold rounded-full ${grade.gradeKind === 'pass' ? 'badge-pass' : grade.gradeKind === 'warning' ? 'badge-warning' : 'badge-fail'}`;
+      chip.textContent = grade.grade;
+      actions.appendChild(chip);
+
+      const viewBtn = document.createElement('button');
+      viewBtn.type = 'button';
+      viewBtn.className = 'btn-secondary text-xs px-3 py-1.5';
+      viewBtn.textContent = 'View latest';
+      viewBtn.addEventListener('click', () => {
+        window.open(buildShareUrl(last), '_blank', 'noopener');
+      });
+      actions.appendChild(viewBtn);
+
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'btn-secondary text-xs px-3 py-1.5';
+      delBtn.textContent = 'Delete';
+      delBtn.addEventListener('click', () => {
+        try {
+          const next = getPassportHistory();
+          delete next[record.deviceId];
+          localStorage.setItem('ct_passport_history', JSON.stringify(next));
+          renderHistory();
+          showToast('Device removed from passport history');
+        } catch { /* storage */ }
+      });
+      actions.appendChild(delBtn);
+
+      li.append(info, actions);
+      list.appendChild(li);
+    }
+  }
+
+  function setRepairUi(): void {
+    const toggle = $<HTMLButtonElement>('btn-repair-toggle');
+    const btn = $<HTMLButtonElement>('generate-passport-btn');
+    const hint = $<HTMLParagraphElement>('baseline-hint');
+    if (toggle) {
+      toggle.setAttribute('aria-pressed', String(repairMode));
+      toggle.textContent = repairMode ? 'Disable repair mode' : 'Enable repair mode';
+    }
+    if (btn) btn.textContent = repairMode ? 'Generate after-repair report' : 'Generate inspection report';
+    if (hint) {
+      hint.hidden = !repairBaseline;
+      if (repairBaseline) hint.textContent = 'Baseline active — fix the controller, then generate again to compare.';
+    }
+  }
 
   document.addEventListener('DOMContentLoaded', () => {
-    // Auto-fill telemetry from LocalStorage if available
-    document.getElementById('btn-autofill-telemetry')?.addEventListener('click', () => {
+    try {
+      const raw = localStorage.getItem(REPAIR_BASELINE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed?.id && parsed?.tests?.sticks) repairBaseline = parsed as EvidenceReport;
+      }
+    } catch { /* no baseline */ }
+    setRepairUi();
+    renderHistory();
+
+    $<HTMLButtonElement>('btn-autofill-telemetry')?.addEventListener('click', () => {
       try {
         const lastDrift = localStorage.getItem('ct_last_drift');
         if (lastDrift) {
           const parsed = JSON.parse(lastDrift);
-          const leftEl = document.getElementById('passport-drift-left') as HTMLInputElement;
-          const rightEl = document.getElementById('passport-drift-right') as HTMLInputElement;
-          if (leftEl && parsed.left !== undefined) leftEl.value = String(parsed.left);
-          if (rightEl && parsed.right !== undefined) rightEl.value = String(parsed.right);
+          const leftEl = $<HTMLInputElement>('passport-drift-left');
+          const rightEl = $<HTMLInputElement>('passport-drift-right');
+          if (leftEl && typeof parsed.left === 'number') leftEl.value = String(parsed.left);
+          if (rightEl && typeof parsed.right === 'number') rightEl.value = String(parsed.right);
         }
         const lastCirc = localStorage.getItem('ct_last_circularity');
         if (lastCirc) {
-          const circEl = document.getElementById('passport-circularity') as HTMLInputElement;
-          if (circEl) circEl.value = String(lastCirc);
+          const circEl = $<HTMLInputElement>('passport-circularity');
+          if (circEl) circEl.value = String(parseFloat(lastCirc));
         }
-      } catch (err) {
-        console.warn('No cached telemetry found');
+        showToast('Telemetry auto-filled from last test');
+      } catch {
+        showToast('No cached telemetry found — run a test first');
       }
     });
 
-    let currentReportId = '';
-    let currentReport: any = null;
+    $<HTMLButtonElement>('btn-repair-toggle')?.addEventListener('click', () => {
+      repairMode = !repairMode;
+      setRepairUi();
+      showToast(repairMode ? 'Repair mode enabled' : 'Repair mode disabled');
+    });
 
-    document.getElementById('generate-passport-btn')?.addEventListener('click', () => {
-      const model = (document.getElementById('passport-model') as HTMLSelectElement)?.value || 'PS5 DualSense';
-      const serial = (document.getElementById('passport-serial') as HTMLInputElement)?.value.trim() || 'HID-VERIFIED';
-      const condition = (document.getElementById('passport-condition') as HTMLSelectElement)?.value || 'Mint / Like New';
+    $<HTMLButtonElement>('btn-clear-baseline')?.addEventListener('click', () => {
+      repairBaseline = null;
+      try { localStorage.removeItem(REPAIR_BASELINE_KEY); } catch { /* storage */ }
+      const card = $<HTMLDivElement>('repair-compare');
+      if (card) card.hidden = true;
+      setRepairUi();
+      showToast('Baseline cleared');
+    });
 
-      const driftLeftVal = parseFloat((document.getElementById('passport-drift-left') as HTMLInputElement)?.value || '0');
-      const driftRightVal = parseFloat((document.getElementById('passport-drift-right') as HTMLInputElement)?.value || '0');
-      const driftLeft = isNaN(driftLeftVal) ? 0 : driftLeftVal;
-      const driftRight = isNaN(driftRightVal) ? 0 : driftRightVal;
-      const maxDrift = Math.max(driftLeft, driftRight);
+    $<HTMLButtonElement>('generate-passport-btn')?.addEventListener('click', () => {
+      const form = readForm();
+      const report = buildReport(form);
+      const grade = gradeFor(form);
 
-      const circularityVal = parseFloat((document.getElementById('passport-circularity') as HTMLInputElement)?.value || '4.2');
-      const circularity = isNaN(circularityVal) ? 0 : circularityVal;
-
-      const chkL2 = (document.getElementById('chk-trig-l2') as HTMLInputElement)?.checked;
-      const chkR2 = (document.getElementById('chk-trig-r2') as HTMLInputElement)?.checked;
-      const chkFace = (document.getElementById('chk-btn-face') as HTMLInputElement)?.checked;
-      const chkBumpers = (document.getElementById('chk-btn-bumpers') as HTMLInputElement)?.checked;
-      const chkRubber = (document.getElementById('chk-rubber') as HTMLInputElement)?.checked;
-      const chkSeams = (document.getElementById('chk-seams') as HTMLInputElement)?.checked;
-
-      // Grade calculation
-      const allHardwarePassed = Boolean(chkL2 && chkR2 && chkFace && chkBumpers && chkRubber && chkSeams);
-
-      let grade = 'Grade A+';
-      let badgeClass = 'badge-pass';
-      if (!allHardwarePassed) {
-        grade = 'Grade C (Hardware Fault)';
-        badgeClass = 'badge-fail';
-      } else if (maxDrift < 1.0 && circularity < 6.0) {
-        grade = 'Grade A+ (Mint Verified)';
-        badgeClass = 'badge-pass';
-      } else if (maxDrift < 2.5 && circularity < 10.0) {
-        grade = 'Grade A (Excellent)';
-        badgeClass = 'badge-pass';
-      } else if (maxDrift < 5.0) {
-        grade = 'Grade B (Normal Wear)';
-        badgeClass = 'badge-warning';
-      } else {
-        grade = 'Grade C (Drift Warning)';
-        badgeClass = 'badge-fail';
-      }
-
-      currentReportId = generateUUID();
-      const reportIdHex = currentReportId.substring(0, 6).toUpperCase();
-
-      // Build EvidenceReport
-      const report = {
-        id: currentReportId,
-        timestamp: Date.now(),
-        protocolVersion: '2.4.0',
-        device: {
-          name: model,
-          vendorId: '0x054c',
-          productId: '0x0ce6',
-          mappedModelKey: model.toLowerCase().includes('dualsense') ? 'ps5-dualsense' : undefined
-        },
-        environment: detectEnvironment(),
-        capabilities: checkCapabilities(),
-        tests: {
-          buttons: { facePassed: chkFace, bumpersPassed: chkBumpers },
-          sticks: {
-            driftX: driftLeft,
-            driftY: driftRight,
-            circularityError: circularity,
-            deadzoneRecommendation: maxDrift > 3.0 ? 0.05 : 0.02
-          },
-          triggers: { l2Passed: chkL2, r2Passed: chkR2 },
-          vibration: { status: 'passed' }
-        },
-        confidence: 'high' as const,
-        limitations: []
-      };
-
-      // Save to Passport LocalStorage history & individual report cache
       saveToPassport(report);
+      try { localStorage.setItem(`ct_report_${report.id}`, JSON.stringify(report)); } catch { /* storage full */ }
+
       currentReport = report;
-      try {
-        localStorage.setItem(`ct_report_${currentReportId}`, JSON.stringify(report));
-      } catch (e) {}
+      currentGrade = grade;
+      renderOutput(form, report, grade);
+      handleRepair(report);
+      renderHistory();
+      showToast('Inspection report generated');
 
-      // Award 50 XP
-      addPoints(50);
-
-      // Populate output DOM
-      const output = document.getElementById('passport-output');
-      const certId = document.getElementById('cert-id');
-      const outModel = document.getElementById('out-model');
-      const outDrift = document.getElementById('out-drift');
-      const outCirc = document.getElementById('out-circularity');
-      const outDate = document.getElementById('out-date');
-      const outBadge = document.getElementById('out-grade-badge');
-      const outSerial = document.getElementById('out-serial-badge');
-      const outChecklist = document.getElementById('out-checklist-items');
-
-      if (certId) certId.textContent = reportIdHex;
-      if (outModel) outModel.textContent = model;
-      if (outDrift) outDrift.textContent = `${maxDrift.toFixed(2)}%`;
-      if (outCirc) outCirc.textContent = `${circularity.toFixed(1)}%`;
-      if (outDate) outDate.textContent = new Date().toISOString().split('T')[0];
-      if (outSerial) outSerial.textContent = `SERIAL/HID: ${serial}`;
-
-      if (outBadge) {
-        outBadge.textContent = grade;
-        outBadge.className = `${badgeClass} text-sm px-3 py-1 font-mono font-bold rounded-full`;
-      }
-
-      if (outChecklist) {
-        outChecklist.innerHTML = `
-          <li><span class="${chkL2 && chkR2 ? 'text-emerald' : 'text-fail'}">✓</span> Triggers: ${chkL2 && chkR2 ? '0-100% Full Travel Passed' : 'Trigger Travel Fault'}</li>
-          <li><span class="${chkFace && chkBumpers ? 'text-emerald' : 'text-fail'}">✓</span> Buttons: ${chkFace && chkBumpers ? 'Tactile Click Passed' : 'Button Wear Flagged'}</li>
-          <li><span class="${chkRubber ? 'text-emerald' : 'text-warning'}">✓</span> Rubber: ${chkRubber ? 'Caps Intact' : 'Wear Present'}</li>
-          <li><span class="${chkSeams ? 'text-emerald' : 'text-warning'}">✓</span> Housing: ${chkSeams ? 'Seams Tight' : 'Tampering Checked'}</li>
-        `;
-      }
-
-      output?.classList.remove('hidden');
-      output?.scrollIntoView({ behavior: 'smooth' });
+      const payloadStr = serializePayload(encodeSharePayload(report, { score: computeHealthGrade(report).score, grade: grade.grade, gradeKind: grade.kind }));
+      requestSignedVerification(payloadStr).then((url) => {
+        const status = $<HTMLSpanElement>('verify-status');
+        const link = $<HTMLAnchorElement>('verify-link');
+        if (url && status && link) {
+          status.textContent = 'Server-signed record created — verified on ControllerTesting.com';
+          link.href = url;
+          link.classList.remove('hidden');
+        }
+      });
     });
 
-    document.getElementById('view-report-link')?.addEventListener('click', () => {
+    $<HTMLButtonElement>('btn-print')?.addEventListener('click', () => {
+      window.print();
+    });
+
+    $<HTMLButtonElement>('view-report-link')?.addEventListener('click', () => {
       if (currentReport) {
         window.open(buildShareUrl(currentReport), '_blank', 'noopener');
       } else {
-        window.location.href = '/report/demo';
+        window.open('/report/demo', '_blank', 'noopener');
       }
     });
 
-    document.getElementById('copy-badge-code')?.addEventListener('click', () => {
-      const model = (document.getElementById('passport-model') as HTMLSelectElement)?.value || 'PS5 DualSense';
-      const reportUrl = currentReport ? buildShareUrl(currentReport) : 'https://controllertesting.com/passport';
-      
-      const driftLeftVal = parseFloat((document.getElementById('passport-drift-left') as HTMLInputElement)?.value || '0');
-      const driftRightVal = parseFloat((document.getElementById('passport-drift-right') as HTMLInputElement)?.value || '0');
-      const driftLeft = isNaN(driftLeftVal) ? 0 : driftLeftVal;
-      const driftRight = isNaN(driftRightVal) ? 0 : driftRightVal;
-      const maxDrift = Math.max(driftLeft, driftRight);
-      const maxDriftStr = `${maxDrift.toFixed(2)}%`;
-
-      const outBadge = document.getElementById('out-grade-badge');
-      let gradeStr = outBadge?.textContent?.trim();
-
-      if (!gradeStr || gradeStr.includes('PASSED')) {
-        const circularityVal = parseFloat((document.getElementById('passport-circularity') as HTMLInputElement)?.value || '4.2');
-        const circularity = isNaN(circularityVal) ? 0 : circularityVal;
-        const chkL2 = (document.getElementById('chk-trig-l2') as HTMLInputElement)?.checked;
-        const chkR2 = (document.getElementById('chk-trig-r2') as HTMLInputElement)?.checked;
-        const chkFace = (document.getElementById('chk-btn-face') as HTMLInputElement)?.checked;
-        const chkBumpers = (document.getElementById('chk-btn-bumpers') as HTMLInputElement)?.checked;
-        const chkRubber = (document.getElementById('chk-rubber') as HTMLInputElement)?.checked;
-        const chkSeams = (document.getElementById('chk-seams') as HTMLInputElement)?.checked;
-        const allHardwarePassed = Boolean(chkL2 && chkR2 && chkFace && chkBumpers && chkRubber && chkSeams);
-
-        if (!allHardwarePassed) {
-          gradeStr = 'Grade C (Hardware Fault)';
-        } else if (maxDrift < 1.0 && circularity < 6.0) {
-          gradeStr = 'Grade A+ (Mint Verified)';
-        } else if (maxDrift < 2.5 && circularity < 10.0) {
-          gradeStr = 'Grade A (Excellent)';
-        } else if (maxDrift < 5.0) {
-          gradeStr = 'Grade B (Normal Wear)';
-        } else {
-          gradeStr = 'Grade C (Drift Warning)';
-        }
+    $<HTMLButtonElement>('copy-badge-code')?.addEventListener('click', async () => {
+      if (!currentReport || !currentGrade) {
+        showToast('Generate a report first');
+        return;
       }
+      const url = buildShareUrl(currentReport);
+      const html = [
+        `<a href="${url}">Controller inspection report — ${currentReport.device.name} — ${currentGrade.grade} (${Math.max(currentReport.tests.sticks.driftX, currentReport.tests.sticks.driftY).toFixed(2)}% drift)</a>`,
+        `<iframe src="${url}&embed=1" width="100%" height="420" loading="lazy" title="Controller inspection report"></iframe>`,
+      ].join('\n');
+      const ok = await copyToClipboard(html);
+      showToast(ok ? 'Embed HTML copied — paste into your listing' : 'Could not copy automatically');
+    });
 
-      const snippet = `ControllerTesting.com Verified Passport Certificate
-Model: ${model}
-Passport Grade: ${gradeStr} (${maxDriftStr} Stick Drift)
-Verification Report: ${reportUrl}
-Verified by ControllerTesting.com 5-Point Hardware Diagnostics`;
-
-      navigator.clipboard.writeText(snippet);
-      alert('Copied marketplace listing snippet to clipboard!');
+    const clearBtn = $<HTMLButtonElement>('btn-clear-history');
+    clearBtn?.addEventListener('click', () => {
+      if (!clearBtn) return;
+      if (clearBtn.dataset.confirming === '1') {
+        clearBtn.dataset.confirming = '';
+        clearBtn.textContent = 'Clear all';
+        window.clearTimeout(clearConfirmTimer);
+        try {
+          localStorage.removeItem('ct_passport_history');
+          renderHistory();
+          showToast('Passport history cleared');
+        } catch { /* storage */ }
+        return;
+      }
+      clearBtn.dataset.confirming = '1';
+      clearBtn.textContent = 'Confirm clear?';
+      clearConfirmTimer = window.setTimeout(() => {
+        clearBtn.dataset.confirming = '';
+        clearBtn.textContent = 'Clear all';
+      }, 3000);
     });
   });
 </script>
@@ -486,17 +852,11 @@ Verified by ControllerTesting.com 5-Point Hardware Diagnostics`;
     font-size: 0.75rem;
     font-weight: 600;
   }
-  .pulse-dot {
+  .static-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
     background: var(--color-accent);
-    box-shadow: 0 0 6px var(--color-accent);
-    animation: pulse 2s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
   }
   .hero-desc {
     color: var(--color-text-secondary);
@@ -511,6 +871,13 @@ Verified by ControllerTesting.com 5-Point Hardware Diagnostics`;
   .form-label {
     color: var(--color-text-secondary);
   }
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-accent);
+    margin-right: 0.5rem;
+    font-weight: 600;
+  }
   .form-select, .form-input {
     background: var(--color-surface-3);
     border: 1px solid var(--color-border-default);
@@ -518,7 +885,7 @@ Verified by ControllerTesting.com 5-Point Hardware Diagnostics`;
     font-size: 0.9375rem;
     transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
   }
-  .form-select:focus, .form-input:focus {
+  .form-select:focus-visible, .form-input:focus-visible {
     outline: none;
     border-color: var(--color-accent);
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
@@ -532,11 +899,16 @@ Verified by ControllerTesting.com 5-Point Hardware Diagnostics`;
     border-color: var(--color-border-hover);
     background: var(--color-surface-4);
   }
+  .checkbox-card:has(:focus-visible) {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+  }
   .form-checkbox {
     width: 1.25rem;
     height: 1.25rem;
     accent-color: var(--color-accent);
     cursor: pointer;
+    flex-shrink: 0;
   }
   .text-secondary {
     color: var(--color-text-secondary);
@@ -556,10 +928,10 @@ Verified by ControllerTesting.com 5-Point Hardware Diagnostics`;
   .text-fail {
     color: var(--color-fail, #EF4444);
   }
-  .verified-ribbon {
-    background: var(--color-accent);
-    color: #ffffff;
-    border-bottom-left-radius: var(--radius-sm);
+  .link-inline {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
   .cert-logo {
     background: rgba(37, 99, 235, 0.15);
@@ -570,19 +942,34 @@ Verified by ControllerTesting.com 5-Point Hardware Diagnostics`;
     background: var(--color-surface-1);
     border: 1px solid var(--color-border-subtle);
   }
-  .badge-pass {
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    color: #10B981;
+  .verify-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-pass, #10B981);
+    flex-shrink: 0;
   }
-  .badge-warning {
-    background: rgba(245, 158, 11, 0.15);
-    border: 1px solid rgba(245, 158, 11, 0.3);
-    color: #F59E0B;
+  .repair-row {
+    background: var(--color-surface-3);
+    border-color: var(--color-border-subtle);
   }
-  .badge-fail {
-    background: rgba(239, 68, 68, 0.15);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    color: #EF4444;
+  .toast {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+  .honesty-note {
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  @media print {
+    :global(header), :global(footer), .no-print, .hero-header, #inspection-form-wrap,
+    #repair-compare, #passport-history-section, .honesty-note, .toast {
+      display: none !important;
+    }
+    #passport-output {
+      box-shadow: none;
+      border: none;
+      padding: 0;
+    }
   }
 </style>

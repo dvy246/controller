@@ -10,7 +10,10 @@
   <!-- L2 / LT Trigger -->
   <div class="trigger-col flex flex-col items-center gap-1.5">
     <div class="trigger-label font-mono font-bold text-[10px] text-stone-400 tracking-wider">LT / L2</div>
-    <div class="trigger-bar-wrapper relative w-14 h-28 bg-black/60 rounded-xl overflow-hidden border border-white/10 shadow-inner backdrop-blur-md">
+    <div class="trigger-bar-wrapper relative w-14 h-28 bg-black/70 rounded-xl overflow-hidden border border-white/10 shadow-inner backdrop-blur-md">
+      <!-- Base Idle Track Overlay -->
+      <div class="absolute inset-0 bg-blue-500/5 pointer-events-none"></div>
+      
       <div id="l2-fill" class="trigger-fill absolute bottom-0 left-0 w-full bg-gradient-to-t from-blue-600 via-indigo-500 to-blue-400 origin-bottom shadow-[0_0_15px_rgba(37,99,235,0.6)]" style="height: 100%; transform: scaleY(0)"></div>
       
       <!-- Scale Tick Marks -->
@@ -22,13 +25,16 @@
         <div class="w-full h-px bg-white/20"></div>
       </div>
     </div>
-    <span class="trigger-value font-mono font-bold text-[10px] text-emerald-400 px-2 py-0.5 rounded bg-black/70 border border-emerald-500/30 shadow-sm" id="l2-val">0.000</span>
+    <span class="trigger-value font-mono font-bold text-[10px] text-emerald-400 px-2 py-0.5 rounded bg-black/80 border border-emerald-500/30 shadow-sm" id="l2-val">0.000</span>
   </div>
 
   <!-- R2 / RT Trigger -->
   <div class="trigger-col flex flex-col items-center gap-1.5">
     <div class="trigger-label font-mono font-bold text-[10px] text-stone-400 tracking-wider">RT / R2</div>
-    <div class="trigger-bar-wrapper relative w-14 h-28 bg-black/60 rounded-xl overflow-hidden border border-white/10 shadow-inner backdrop-blur-md">
+    <div class="trigger-bar-wrapper relative w-14 h-28 bg-black/70 rounded-xl overflow-hidden border border-white/10 shadow-inner backdrop-blur-md">
+      <!-- Base Idle Track Overlay -->
+      <div class="absolute inset-0 bg-blue-500/5 pointer-events-none"></div>
+
       <div id="r2-fill" class="trigger-fill absolute bottom-0 left-0 w-full bg-gradient-to-t from-blue-600 via-indigo-500 to-blue-400 origin-bottom shadow-[0_0_15px_rgba(37,99,235,0.6)]" style="height: 100%; transform: scaleY(0)"></div>
       
       <!-- Scale Tick Marks -->
@@ -40,7 +46,7 @@
         <div class="w-full h-px bg-white/20"></div>
       </div>
     </div>
-    <span class="trigger-value font-mono font-bold text-[10px] text-blue-400 px-2 py-0.5 rounded bg-black/70 border border-blue-500/30 shadow-sm" id="r2-val">0.000</span>
+    <span class="trigger-value font-mono font-bold text-[10px] text-blue-400 px-2 py-0.5 rounded bg-black/80 border border-blue-500/30 shadow-sm" id="r2-val">0.000</span>
   </div>
 
 </div>

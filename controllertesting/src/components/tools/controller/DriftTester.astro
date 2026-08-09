@@ -432,10 +432,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 1.5rem;
+    padding: 1rem 1.75rem;
     border-radius: 1rem;
     position: relative;
     z-index: 10;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
 
   .status-indicator {
@@ -479,10 +481,10 @@
 
   .stick-card {
     border-radius: 1.25rem;
-    padding: 1.5rem;
+    padding: 1.75rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.25rem;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s;
   }
   .stick-card:hover {
@@ -494,6 +496,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-bottom: 0.25rem;
   }
 
   .drift-value {

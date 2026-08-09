@@ -9,6 +9,7 @@ import Header from '../../components/global/Header.astro';
 import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
 import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
+import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -67,6 +68,29 @@ const schema = {
           <a href="/games" class="btn-secondary">Back to Arcade</a>
         </div>
       </div>
+
+      <GameHowToPlay
+        xp={50}
+        goal="Press the on-screen face button as fast as possible before the 20-second round ends. Each correct press scores 100 + 10 × current streak."
+        controls={[
+          { action: 'A / Cross', label: 'Press when prompted' },
+          { action: 'B / Circle', label: 'Press when prompted' },
+          { action: 'X / Square', label: 'Press when prompted' },
+          { action: 'Y / Triangle', label: 'Press when prompted' },
+          { action: 'J / K / L / ;', label: 'Face buttons (keyboard)' },
+        ]}
+        steps={[
+          'Press Start Game to begin the round.',
+          'Watch the prompt box — it shows which face button to press.',
+          'Hit the matching button the moment it appears. The faster and streakier you are, the more points you earn.',
+          'Pressing the wrong button resets your streak. The round ends after 20 seconds.',
+        ]}
+        tips={[
+          'Keep your thumb resting over all four face buttons so you can pivot to the prompt quickly.',
+          'A correct answer grows the streak multiplier — chain them for high scores.',
+          'Wrong presses are free in terms of score loss, but they wipe your streak, so accuracy beats speed.',
+        ]}
+      />
     </div>
   </main>
 

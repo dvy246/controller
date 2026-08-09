@@ -515,7 +515,7 @@ import LanguageSelector from './LanguageSelector.astro';
     });
 
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', syncThemeToggleState);
+      document.addEventListener('astro:page-load', syncThemeToggleState);
     } else {
       syncThemeToggleState();
     }
@@ -1056,7 +1056,7 @@ import LanguageSelector from './LanguageSelector.astro';
   }
   :global([data-theme="light"]) .badge-games {
     background: rgba(2, 132, 199, 0.1);
-    color: #0369a1;
+    color: #075985;
     border-color: rgba(2, 132, 199, 0.3);
   }
   :global([data-theme="light"]) .badge-widgets {

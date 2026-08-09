@@ -90,49 +90,37 @@ const faqSchema = {
     <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
   </Fragment>
 
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <div class="text-center mb-10">
-      <h1 class="text-h1 mb-4">
-        {controllerName} <span class="text-accent">Overclock Validator</span>
-      </h1>
-      <p class="text-lg text-surface-content-muted max-w-2xl mx-auto">
-        Testing connection type: <strong class="bg-surface-2 px-2 py-1 rounded-md">{connectionName}</strong>. 
-        Move your analog sticks continuously to generate real-time polling data and verify your hidusbf target.
-      </p>
-    </div>
-
-    <div class="mb-16">
-      <OverclockValidator />
-    </div>
+  <Fragment slot="tool">
+    <OverclockValidator />
+  </Fragment>
+  
+  <Fragment slot="content">
+    <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-6">About Controller Overclocking</h2>
     
-    <div class="prose max-w-3xl mx-auto mt-16">
-      <h2 class="text-h2 mb-4">About Controller Overclocking</h2>
-      
-      <div class="bg-surface-1 border border-surface-2 rounded-xl p-6 mb-8">
-        <h3 class="text-xl font-bold mb-2">How to use this validator</h3>
-        <ol class="list-decimal pl-5 space-y-2 text-surface-content">
-          <li>Ensure your {controllerName} is connected via {connectionName}.</li>
-          <li>Press any button to wake the Gamepad API.</li>
-          <li>Move the analog sticks in rapid, continuous circles.</li>
-          <li>Watch the telemetry graph stabilize to see your true hardware polling rate.</li>
-        </ol>
+    <div class="bg-[var(--color-surface-1)] border border-[var(--color-border-default)] rounded-2xl p-6 sm:p-8 mb-8">
+      <h3 class="text-lg font-bold text-[var(--color-text-primary)] mb-3">How to use this validator</h3>
+      <ol class="list-decimal pl-5 space-y-2 text-[var(--color-text-secondary)] leading-relaxed">
+        <li>Ensure your {controllerName} is connected via {connectionName}.</li>
+        <li>Press any button to wake the Gamepad API.</li>
+        <li>Move the analog sticks in rapid, continuous circles.</li>
+        <li>Watch the telemetry graph stabilize to see your true hardware polling rate.</li>
+      </ol>
+    </div>
+
+    <div class="space-y-8">
+      <div>
+        <h3 class="text-lg font-bold text-[var(--color-text-primary)] mt-6 mb-2">Is 1000Hz (1ms) always better?</h3>
+        <p class="text-[var(--color-text-secondary)] leading-relaxed">
+          Not necessarily. While 1000Hz reduces average input latency by a few milliseconds compared to 250Hz, it demands more CPU cycles. The key metric is <strong>stability (Jitter)</strong>. An overclock that results in severe frame pacing spikes can feel worse than a rock-solid lower polling rate.
+        </p>
       </div>
 
-      <div class="space-y-6">
-        <div>
-          <h3 class="font-bold mb-2">Is 1000Hz (1ms) always better?</h3>
-          <p class="text-surface-content">
-            Not necessarily. While 1000Hz reduces average input latency by a few milliseconds compared to 250Hz, it demands more CPU cycles. The key metric is <strong>stability (Jitter)</strong>. An overclock that results in severe frame pacing spikes can feel worse than a rock-solid lower polling rate.
-          </p>
-        </div>
-
-        <div>
-          <h3 class="font-bold mb-2">Does hidusbf work on Bluetooth?</h3>
-          <p class="text-surface-content">
-            No, the popular LordOfMice hidusbf utility only overrides USB device descriptor limits. Overclocking Bluetooth requires changing the polling interval in your OS Bluetooth stack or using custom dongles.
-          </p>
-        </div>
+      <div>
+        <h3 class="text-lg font-bold text-[var(--color-text-primary)] mt-6 mb-2">Does hidusbf work on Bluetooth?</h3>
+        <p class="text-surface-content">
+          No, the popular LordOfMice hidusbf utility only overrides USB device descriptor limits. Overclocking Bluetooth requires changing the polling interval in your OS Bluetooth stack or using custom dongles.
+        </p>
       </div>
     </div>
-  </div>
+  </Fragment>
 </ToolLayout>

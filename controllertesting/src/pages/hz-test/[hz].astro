@@ -65,20 +65,20 @@ const schema = {
     <HzVisualizer targetHz={numericHz} />
 
     <!-- AEO/GEO FAQ -->
-    <section class="mt-16 bg-surface-1 p-6 sm:p-8 rounded-2xl border border-surface-3">
-      <h2 class="text-h2 mb-6">Display Hz & Pixel Persistence FAQ</h2>
+    <section class="mt-16 bg-[var(--color-surface-1)] p-6 sm:p-8 rounded-2xl border border-[var(--color-border-default)]">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-6">Display Hz & Pixel Persistence FAQ</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-secondary">
-        <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
-          <h3 class="font-semibold mb-2">Why is my monitor locked at 60Hz instead of {numericHz}Hz?</h3>
-          <p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-[var(--color-text-secondary)]">
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">Why is my monitor locked at 60Hz instead of {numericHz}Hz?</h3>
+          <p class="leading-relaxed">
             Make sure your display settings in Windows/macOS are explicitly set to {numericHz}Hz. Also verify that you are using a high-bandwidth Cable (DisplayPort 1.4+ or HDMI 2.1).
           </p>
         </div>
 
-        <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
-          <h3 class="font-semibold mb-2">What causes monitor ghosting?</h3>
-          <p>
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">What causes monitor ghosting?</h3>
+          <p class="leading-relaxed">
             Ghosting occurs when monitor pixels fail to change colors fast enough to keep up with the refresh rate, leaving a visible trail behind moving objects. Adjusting your monitor's Overdrive setting can eliminate this artifact.
           </p>
         </div>

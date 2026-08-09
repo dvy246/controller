@@ -350,7 +350,7 @@ const { engine, effect } = Astro.props;
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initComposer);
+    document.addEventListener('astro:page-load', initComposer);
   } else {
     // Note: Astro ViewTransitions may require handling astro:page-load instead
     document.addEventListener('astro:page-load', initComposer, { once: true });

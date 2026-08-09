@@ -9,16 +9,17 @@
  */
 ---
 
-<div class="doppelrand-shell group relative" id="quick-health-app">
-  <div class="doppelrand-core flex flex-col gap-6 relative z-10 p-6">
+<div class="doppelrand-shell w-full mx-auto" style="isolation: isolate; position: relative;">
+  <div class="diagnostic-tool-shell diagnostic-workspace w-full p-6 sm:p-8 relative" id="quick-health-app">
+  <div class="flex flex-col gap-6 relative z-10">
     <!-- Status & Gamepad Connection Banner -->
-    <div class="header-status flex items-center justify-between pb-4 border-b border-border-subtle flex-wrap gap-3">
+    <div class="header-status flex items-center justify-between pb-4 border-b border-zinc-800 flex-wrap gap-3">
       <div class="flex items-center gap-3">
-        <div class="w-3 h-3 rounded-full bg-accent animate-pulse" id="conn-dot"></div>
-        <span class="font-mono text-sm font-semibold text-primary" id="conn-status-text">Press any button on your controller to start</span>
+        <div class="w-3 h-3 rounded-full bg-blue-500 animate-pulse" id="conn-dot"></div>
+        <span class="font-mono text-sm font-semibold text-white" id="conn-status-text">Press any button on your controller to start</span>
       </div>
       <div class="flex items-center gap-2">
-        <button type="button" id="btn-sim-mode" class="btn-secondary">
+        <button type="button" id="btn-sim-mode" class="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-zinc-200 transition-all">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1.5 inline" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
           Run 60s Simulation
         </button>
@@ -26,25 +27,25 @@
     </div>
 
     <!-- Timer & Phase Indicator Banner Card -->
-    <div class="card-gradient p-6 rounded-2xl border border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-6">
+    <div class="bg-[#141416] p-6 sm:p-7 rounded-2xl border border-zinc-800/80 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
       <div class="flex items-center gap-6">
         <div class="relative w-24 h-24 flex items-center justify-center flex-shrink-0">
           <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="46" stroke="var(--color-surface-3)" stroke-width="6" fill="none" />
-            <circle id="timer-ring" cx="50" cy="50" r="46" stroke="var(--color-accent)" stroke-width="6" fill="none" stroke-dasharray="289" stroke-dashoffset="0" stroke-linecap="round" style="transition: stroke-dashoffset 0.2s linear;" />
+            <circle cx="50" cy="50" r="46" stroke="#27272A" stroke-width="6" fill="none" />
+            <circle id="timer-ring" cx="50" cy="50" r="46" stroke="#3B82F6" stroke-width="6" fill="none" stroke-dasharray="289" stroke-dashoffset="0" stroke-linecap="round" style="transition: stroke-dashoffset 0.2s linear;" />
           </svg>
-          <span class="absolute font-mono text-2xl font-extrabold text-primary tabular-nums" id="timer-text" aria-live="polite">60s</span>
+          <span class="absolute font-mono text-2xl font-extrabold text-white tabular-nums" id="timer-text" aria-live="polite">60s</span>
         </div>
 
         <div class="text-left">
-          <span class="text-xs font-mono text-accent uppercase tracking-wider block font-bold mb-1" id="phase-badge" aria-live="polite">READY TO START</span>
-          <h3 class="text-2xl font-bold text-primary tracking-tight" id="phase-title">Express 60s Hardware Check</h3>
-          <p class="text-sm text-secondary mt-1 leading-relaxed" id="phase-desc">Click "Start 60s Check" or press any gamepad button to begin.</p>
+          <span class="text-xs font-mono text-blue-400 uppercase tracking-wider block font-bold mb-1" id="phase-badge" aria-live="polite">READY TO START</span>
+          <h3 class="text-2xl font-bold text-white tracking-tight" id="phase-title">Express 60s Hardware Check</h3>
+          <p class="text-sm text-zinc-400 mt-1 leading-relaxed" id="phase-desc">Click "Start 60s Check" or press any gamepad button to begin.</p>
         </div>
       </div>
 
       <div class="flex-shrink-0">
-        <button type="button" id="btn-start-qh" class="btn-primary">
+        <button type="button" id="btn-start-qh" class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition-all shadow-lg hover:shadow-blue-500/25">
           Start 60s Check
         </button>
       </div>
@@ -55,21 +56,21 @@
       <!-- Phase 1: Stick Drift Visualizer -->
       <div id="panel-phase-1" class="phase-panel">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
-          <div class="stick-box p-6 rounded-2xl card-gradient border border-surface-3 text-center shadow-lg">
-            <span class="text-xs text-secondary font-mono block mb-1 uppercase tracking-widest">Left Stick Drift</span>
-            <span class="text-3xl font-bold font-mono text-emerald tracking-tight tabular-nums" id="qh-drift-left" aria-live="polite">0.00%</span>
-            <div class="stick-crosshair-wrap mt-4 relative w-36 h-36 mx-auto border-2 border-surface-3 rounded-full bg-surface-1 shadow-inner overflow-hidden">
-              <div class="absolute inset-0 bg-radial from-accent/10 to-transparent pointer-events-none"></div>
-              <div id="crosshair-left" class="w-4 h-4 bg-accent rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-75 shadow-[0_0_15px_rgba(37,99,235,0.8)]"></div>
+          <div class="stick-box p-6 rounded-2xl bg-[#141416] border border-zinc-800 text-center shadow-xl">
+            <span class="text-xs text-zinc-400 font-mono block mb-1 uppercase tracking-widest">Left Stick Drift</span>
+            <span class="text-3xl font-bold font-mono text-emerald-400 tracking-tight tabular-nums" id="qh-drift-left" aria-live="polite">0.00%</span>
+            <div class="stick-crosshair-wrap mt-4 relative w-36 h-36 mx-auto border-2 border-zinc-800 rounded-full bg-[#0E0E10] shadow-inner overflow-hidden">
+              <div class="absolute inset-0 bg-radial from-blue-500/10 to-transparent pointer-events-none"></div>
+              <div id="crosshair-left" class="w-4 h-4 bg-blue-500 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-75 shadow-[0_0_15px_rgba(37,99,235,0.8)]"></div>
             </div>
           </div>
 
-          <div class="stick-box p-6 rounded-2xl card-gradient border border-surface-3 text-center shadow-lg">
-            <span class="text-xs text-secondary font-mono block mb-1 uppercase tracking-widest">Right Stick Drift</span>
-            <span class="text-3xl font-bold font-mono text-emerald tracking-tight tabular-nums" id="qh-drift-right" aria-live="polite">0.00%</span>
-            <div class="stick-crosshair-wrap mt-4 relative w-36 h-36 mx-auto border-2 border-surface-3 rounded-full bg-surface-1 shadow-inner overflow-hidden">
-              <div class="absolute inset-0 bg-radial from-accent/10 to-transparent pointer-events-none"></div>
-              <div id="crosshair-right" class="w-4 h-4 bg-accent rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-75 shadow-[0_0_15px_rgba(37,99,235,0.8)]"></div>
+          <div class="stick-box p-6 rounded-2xl bg-[#141416] border border-zinc-800 text-center shadow-xl">
+            <span class="text-xs text-zinc-400 font-mono block mb-1 uppercase tracking-widest">Right Stick Drift</span>
+            <span class="text-3xl font-bold font-mono text-emerald-400 tracking-tight tabular-nums" id="qh-drift-right" aria-live="polite">0.00%</span>
+            <div class="stick-crosshair-wrap mt-4 relative w-36 h-36 mx-auto border-2 border-zinc-800 rounded-full bg-[#0E0E10] shadow-inner overflow-hidden">
+              <div class="absolute inset-0 bg-radial from-blue-500/10 to-transparent pointer-events-none"></div>
+              <div id="crosshair-right" class="w-4 h-4 bg-blue-500 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-75 shadow-[0_0_15px_rgba(37,99,235,0.8)]"></div>
             </div>
           </div>
         </div>
@@ -160,6 +161,7 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 
 <script>

@@ -4,144 +4,664 @@ export interface Props {
 }
 
 const { layoutKey } = Astro.props;
+const layoutLabel = layoutKey === '60-percent' ? '60%' : layoutKey === 'tkl' ? 'TKL 80%' : 'Full 100%';
 ---
 
-<div class="w-full max-w-5xl mx-auto p-4 sm:p-6 bg-surface-1/90 backdrop-blur-md rounded-2xl border border-surface-3 shadow-2xl">
-  <!-- Controls & Switch Sound Selector -->
-  <div class="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-surface-2">
-    <div>
-      <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
-        <svg class="w-6 h-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path d="M12 4v16m8-8H4" />
+<!-- Keyboard tester outer shell: block layout, fully self-contained -->
+<div id="mech-keyboard-app" data-layout={layoutKey} class="w-full rounded-[20px] overflow-hidden border border-white/10 bg-[#0E0E10] text-stone-200 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)]" style="position:relative;">
+  <!-- Ambient accent hairline -->
+  <div style="position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(59,130,246,0.8),rgba(99,102,241,0.6),transparent);z-index:10;pointer-events:none;" aria-hidden="true"></div>
+
+  <!-- TOP TOOLBAR -->
+  <div class="w-full bg-[#141417] border-b border-[#27272A] px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3 font-mono relative z-20">
+    <div class="flex items-center gap-3 min-w-0">
+      <div class="w-7 h-7 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 shrink-0" aria-hidden="true">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="4" width="20" height="16" rx="3"/>
+          <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M8 16h8" stroke-linecap="round"/>
         </svg>
-        Mechanical Keyboard & Anti-Ghosting Matrix
-      </h2>
-      <p class="text-xs sm:text-sm text-slate-400 mt-1">Layout: <span class="capitalize font-semibold text-blue-400">{layoutKey.replace('-', ' ')}</span></p>
-    </div>
-
-    <!-- Switch Type Selector -->
-    <div class="flex items-center gap-2 text-xs">
-      <span class="text-slate-400">Switch Sound:</span>
-      <select id="switch-sound-select" class="bg-slate-950 border border-surface-3 rounded-lg px-3 py-1.5 text-slate-200 font-semibold focus:border-blue-500 focus:outline-none cursor-pointer">
-        <option value="blue">Clicky (Blue Switch)</option>
-        <option value="red">Linear (Red Switch)</option>
-        <option value="brown">Tactile (Brown Switch)</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Telemetry Badge Bar -->
-  <div class="flex flex-wrap items-center justify-between gap-4 mb-6 bg-slate-950 p-4 rounded-xl border border-surface-3 font-mono text-sm">
-    <div class="flex items-center gap-6">
-      <div>
-        <span class="text-slate-400 text-xs block">ACTIVE KEYS</span>
-        <span id="active-keys-count" class="text-emerald-400 font-bold text-lg">0</span>
       </div>
-      <div>
-        <span class="text-slate-400 text-xs block">MAX ROLLOVER (NKRO)</span>
-        <span id="max-nkro-count" class="text-blue-400 font-bold text-lg">0 Keys</span>
+      <span class="text-white font-bold text-sm font-sans tracking-tight">Mech-Matrix Tester</span>
+      <span class="text-[10px] font-bold text-purple-400 px-2 py-0.5 bg-purple-500/10 border border-purple-500/20 rounded-full shrink-0 uppercase tracking-wider hidden sm:inline-block">{layoutLabel}</span>
+    </div>
+    
+    <div class="flex items-center gap-4 shrink-0">
+      <!-- OS Toggle -->
+      <div class="flex items-center p-1 rounded-lg bg-black/40 border border-white/[0.08] shadow-inner" aria-label="Operating System Layout">
+        <button id="os-win" class="os-toggle-btn flex items-center justify-center gap-1.5 px-3 py-1.5 rounded text-[10px] uppercase tracking-wider font-bold transition-all text-white bg-white/10 shadow-[0_1px_2px_rgba(0,0,0,0.5)] border border-white/10" aria-pressed="true">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.951-1.801"/></svg>
+          Win
+        </button>
+        <button id="os-mac" class="os-toggle-btn flex items-center justify-center gap-1.5 px-3 py-1.5 rounded text-[10px] uppercase tracking-wider font-bold transition-all text-stone-400 hover:text-stone-200 border border-transparent" aria-pressed="false">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3v18M14 3v18M3 10h18M3 14h18"/></svg>
+          Mac
+        </button>
       </div>
-      <div>
-        <span class="text-slate-400 text-xs block">LAST KEY PRESSED</span>
-        <span id="last-key-pressed" class="text-amber-400 font-bold text-lg">None</span>
+
+      <!-- Switch Audio -->
+      <div class="flex items-center gap-2">
+        <select id="switch-sound-select" aria-label="Switch Audio" class="bg-black/30 border border-white/10 rounded-lg px-2.5 py-1.5 text-stone-300 text-[10px] uppercase tracking-wider font-bold cursor-pointer outline-none focus:border-purple-500/50 hover:bg-white/5 transition-colors">
+          <option value="blue">Blue (Clicky)</option>
+          <option value="red">Red (Linear)</option>
+          <option value="brown">Brown (Tactile)</option>
+        </select>
       </div>
     </div>
   </div>
 
-  <!-- 3D Styled Keyboard Grid Container -->
-  <div class="bg-slate-950 p-4 sm:p-6 rounded-xl border border-surface-3 overflow-x-auto">
-    <div class="min-w-[650px] grid grid-cols-12 gap-1.5" id="keyboard-grid">
-      <!-- Keys generated by JS -->
+  <!-- TELEMETRY STRIP -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 border-b border-[#27272A] bg-[#141417]/80 backdrop-blur-sm font-mono divide-x divide-[#27272A] relative z-10 shadow-[0_4px_24px_-8px_rgba(0,0,0,0.5)]">
+    <div class="px-5 py-4 flex flex-col justify-center bg-white/[0.01]">
+      <span class="block text-[10px] font-bold text-stone-500 uppercase tracking-widest mb-1.5">Active Keys</span>
+      <span id="active-keys-count" class="text-2xl font-black text-emerald-400 tabular-nums drop-shadow-[0_0_12px_rgba(52,211,153,0.3)]">0</span>
+    </div>
+    <div class="px-5 py-4 flex flex-col justify-center bg-white/[0.01]">
+      <span class="block text-[10px] font-bold text-stone-500 uppercase tracking-widest mb-1.5">Max Rollover</span>
+      <span id="max-nkro-count" class="text-2xl font-black text-blue-400 tabular-nums drop-shadow-[0_0_12px_rgba(96,165,250,0.3)]">0 Keys</span>
+    </div>
+    <div class="px-5 py-4 flex flex-col justify-center overflow-hidden bg-white/[0.01]">
+      <span class="block text-[10px] font-bold text-stone-500 uppercase tracking-widest mb-1.5">Last Pressed</span>
+      <span id="last-key-pressed" class="text-2xl font-black text-amber-400 tabular-nums truncate drop-shadow-[0_0_12px_rgba(251,191,36,0.3)]">—</span>
+    </div>
+    <div class="px-5 py-4 flex flex-col justify-center bg-white/[0.01]">
+      <span class="block text-[10px] font-bold text-stone-500 uppercase tracking-widest mb-1.5">Keys Tested</span>
+      <span id="keys-tested-count" class="text-2xl font-black text-purple-400 tabular-nums drop-shadow-[0_0_12px_rgba(192,132,252,0.3)]">0</span>
+    </div>
+  </div>
+
+  <!-- KEYBOARD STAGE: unified stage, matches PS5 workspace architecture -->
+  <div class="w-full bg-[#121214] p-6 sm:p-8 border-b border-[#27272A]">
+
+    <!-- KEYBOARD SCROLL CARD: overflow-x-auto contains the keyboard -->
+    <div class="bg-black/50 border border-white/[0.06] rounded-2xl p-4 sm:p-5 overflow-x-auto shadow-inner" style="-webkit-overflow-scrolling:touch;" role="group" aria-label="Keyboard layout">
+      <!-- keyboard-scroll-inner min-width set by JS based on layout -->
+      <div id="keyboard-scroll-inner" class="mx-auto" style="min-width:100%; width:max-content;">
+        <div id="keyboard-grid" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM DIAGNOSTIC CONSOLE (Full-Width Live Activity & Frequency Hub) -->
+  <div class="w-full bg-[#111114] p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+    <!-- Left Console: Live Key Activity (6 Cols) -->
+    <div class="lg:col-span-6 flex flex-col gap-3">
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+          <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+        </div>
+        <div>
+          <span class="text-sm font-bold text-white font-mono leading-none block">Live Key Activity</span>
+          <span class="text-[10px] text-emerald-400 font-mono block mt-1 font-semibold">Real-Time Key Press Log</span>
+        </div>
+      </div>
+      <div id="activity-feed" class="h-40 overflow-y-auto p-3 flex flex-col gap-2 font-mono text-[11px] bg-white/[0.03] border border-white/10 rounded-xl" aria-live="polite">
+        <div class="text-xs text-stone-500 text-center py-8">Start typing to see live key activity…</div>
+      </div>
+    </div>
+
+    <!-- Right Console: Key Frequency Chart (6 Cols) -->
+    <div class="lg:col-span-6 flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 shrink-0">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="5" rx="0.5"/><rect x="12" y="8" width="3" height="9" rx="0.5"/><rect x="17" y="5" width="3" height="12" rx="0.5"/></svg>
+          </div>
+          <div>
+            <span class="text-sm font-bold text-white font-mono leading-none block">Key Frequency</span>
+            <span class="text-[10px] text-purple-400 font-mono block mt-1 font-semibold">Press Count Per Key</span>
+          </div>
+        </div>
+        <button id="reset-freq" class="text-[10px] font-bold text-stone-400 hover:text-white uppercase tracking-wider font-mono transition-colors px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 shrink-0">Reset</button>
+      </div>
+      <div id="freq-chart" class="h-40 px-5 pb-6 pt-8 flex items-end gap-2 overflow-hidden relative min-w-0 bg-white/[0.03] border border-white/10 rounded-xl" aria-label="Key press frequency chart">
+        <div class="text-xs text-stone-500 text-center w-full self-center font-mono">Type keys to build chart…</div>
+      </div>
     </div>
   </div>
 </div>
 
+<style is:global>
+  #keyboard-grid {
+    display: grid;
+    gap: 4px;
+    grid-auto-rows: 38px;
+    padding: 10px;
+    background: #090A0D;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.9);
+  }
+
+  @media (min-width: 640px) {
+    #keyboard-grid {
+      gap: 5px;
+      grid-auto-rows: 44px;
+      padding: 14px;
+    }
+  }
+
+  /* 3D PBT Keycap Styling */
+  .mech-key {
+    background: linear-gradient(180deg, #2D2E36 0%, #1F2027 100%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-bottom: 4px solid #131418;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #E4E4E7;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 -1px 2px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.4);
+    transition: transform 0.05s ease, background 0.1s ease, box-shadow 0.05s ease, border-color 0.1s ease, color 0.1s ease;
+    user-select: none;
+    height: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 0 4px;
+    cursor: default;
+  }
+  
+  @media (min-width: 640px) {
+    .mech-key {
+      font-size: 0.75rem;
+      border-radius: 7px;
+    }
+  }
+
+  /* Custom Accent Keycaps */
+  .mech-key.key-esc {
+    background: linear-gradient(180deg, #451A20 0%, #2A1015 100%);
+    color: #FCA5A5;
+    border-color: rgba(239, 68, 68, 0.35);
+    border-bottom-color: #1A090C;
+  }
+
+  .mech-key.key-enter {
+    background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+    color: #93C5FD;
+    border-color: rgba(59, 130, 246, 0.35);
+    border-bottom-color: #0A0F1D;
+  }
+
+  /* Tested Keycap State */
+  .mech-key.is-tested {
+    background: linear-gradient(180deg, #064E3B 0%, #022C22 100%) !important;
+    border-color: rgba(52, 211, 153, 0.35) !important;
+    border-bottom-color: #011A14 !important;
+    color: #6EE7B7 !important;
+    box-shadow: inset 0 1px 0 rgba(52, 211, 153, 0.25), 0 0 10px rgba(16, 185, 129, 0.2) !important;
+  }
+  
+  /* Active Pressed Keycap State (3D Tactile Depress) */
+  .mech-key.is-active {
+    background: linear-gradient(180deg, #2563EB 0%, #1D4ED8 100%) !important;
+    border-color: rgba(147, 197, 253, 0.6) !important;
+    border-bottom-width: 1px !important;
+    color: #FFFFFF !important;
+    transform: translateY(3px) !important;
+    box-shadow: 0 0 16px rgba(37, 99, 235, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  }
+
+  /* Grid Spans */
+  .span-1 { grid-column: span 1; }
+  .span-2 { grid-column: span 2; }
+  .span-4 { grid-column: span 4; }
+  .span-5 { grid-column: span 5; }
+  .span-6 { grid-column: span 6; }
+  .span-7 { grid-column: span 7; }
+  .span-8 { grid-column: span 8; }
+  .span-9 { grid-column: span 9; }
+  .span-11 { grid-column: span 11; }
+  .span-14 { grid-column: span 14; }
+  .span-16 { grid-column: span 16; }
+  .span-18 { grid-column: span 18; }
+  .span-25 { grid-column: span 25; }
+  .row-span-2 { grid-row: span 2; }
+  /* Frequency Chart CSS rules (bypassing dynamic Tailwind scanner issues) */
+  .freq-bar-item {
+    flex: 1 1 0%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.25rem;
+    position: relative;
+    height: 100%;
+    min-width: 0;
+  }
+
+  .freq-bar-fill {
+    width: 100%;
+    background-color: rgba(168, 85, 247, 0.8);
+    border-top-left-radius: 0.125rem;
+    border-top-right-radius: 0.125rem;
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.3);
+    transition: all 300ms ease;
+  }
+
+  .freq-tooltip {
+    font-size: 8px;
+    font-family: var(--font-mono);
+    color: #e9d5ff;
+    opacity: 0;
+    transition: opacity 150ms ease;
+    position: absolute;
+    transform: translateY(-1.5rem);
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    pointer-events: none;
+  }
+
+  .freq-bar-item:hover .freq-tooltip {
+    opacity: 1;
+  }
+</style>
+
 <script>
-  let activeKeys = new Set<string>();
-  let maxNKRO = 0;
-  let audioCtx: AudioContext | null = null;
+  const _appEl = document.getElementById('mech-keyboard-app');
+  const layoutType = _appEl?.dataset?.layout || window.location.pathname.split('/').pop() || 'tkl';
+  
+  // OS Toggle Logic
+  let currentOS = 'win';
+  const osWinBtn = document.getElementById('os-win');
+  const osMacBtn = document.getElementById('os-mac');
 
-  const keyList = [
-    'Escape', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11',
-    'Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus',
-    'Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'Backspace',
-    'CapsLock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Enter',
-    'ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight',
-    'ControlLeft', 'AltLeft', 'Space', 'AltRight', 'ControlRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown', 'ArrowRight'
-  ];
+  if (osWinBtn && osMacBtn) {
+    const setActiveBtn = (activeBtn: HTMLElement, inactiveBtn: HTMLElement) => {
+      activeBtn.setAttribute('aria-pressed', 'true');
+      inactiveBtn.setAttribute('aria-pressed', 'false');
+      
+      activeBtn.classList.add('text-white', 'bg-white/10', 'shadow-[0_1px_2px_rgba(0,0,0,0.5)]', 'border-white/10');
+      activeBtn.classList.remove('text-stone-400', 'hover:text-stone-200', 'border-transparent');
+      
+      inactiveBtn.classList.add('text-stone-400', 'hover:text-stone-200', 'border-transparent');
+      inactiveBtn.classList.remove('text-white', 'bg-white/10', 'shadow-[0_1px_2px_rgba(0,0,0,0.5)]', 'border-white/10');
+    };
 
-  const grid = document.getElementById('keyboard-grid');
-  const activeCountEl = document.getElementById('active-keys-count');
-  const maxNkroEl = document.getElementById('max-nkro-count');
-  const lastKeyEl = document.getElementById('last-key-pressed');
-  const soundSelect = document.getElementById('switch-sound-select') as HTMLSelectElement;
+    osWinBtn.addEventListener('click', () => {
+      if (currentOS === 'win') return;
+      currentOS = 'win';
+      setActiveBtn(osWinBtn, osMacBtn);
+      renderGrid();
+    });
 
-  function initAudio() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-  }
-
-  function playKeySound() {
-    initAudio();
-    if (!audioCtx) return;
-
-    const soundType = soundSelect?.value || 'blue';
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-
-    osc.type = soundType === 'blue' ? 'square' : soundType === 'red' ? 'sine' : 'triangle';
-    osc.frequency.setValueAtTime(soundType === 'blue' ? 800 : 400, audioCtx.currentTime);
-
-    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.08);
-  }
-
-  function renderGrid() {
-    if (!grid) return;
-    grid.innerHTML = '';
-
-    keyList.forEach(code => {
-      const keyEl = document.createElement('div');
-      keyEl.id = `key-${code}`;
-      keyEl.className = 'h-10 bg-surface-2 border border-surface-3 rounded flex items-center justify-center text-xs font-mono text-slate-300 font-semibold transition-all duration-100 select-none';
-      keyEl.textContent = code.replace('Key', '').replace('Digit', '');
-      grid.appendChild(keyEl);
+    osMacBtn.addEventListener('click', () => {
+      if (currentOS === 'mac') return;
+      currentOS = 'mac';
+      setActiveBtn(osMacBtn, osWinBtn);
+      renderGrid();
     });
   }
 
+  // Switch Audio Logic
+  const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+  let currentSwitch = 'blue';
+  const switchSelect = document.getElementById('switch-sound-select') as HTMLSelectElement;
+  if (switchSelect) {
+    switchSelect.addEventListener('change', (e) => {
+      currentSwitch = (e.target as HTMLSelectElement).value;
+    });
+  }
+
+  function playSwitchSound(type: string, isPress: boolean) {
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    const filter = audioCtx.createBiquadFilter();
+    
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioCtx.destination);
+    
+    const now = audioCtx.currentTime;
+    
+    if (type === 'blue') {
+      osc.type = 'square';
+      filter.type = 'highpass';
+      filter.frequency.setValueAtTime(isPress ? 3000 : 2500, now);
+      
+      osc.frequency.setValueAtTime(isPress ? 800 : 700, now);
+      osc.frequency.exponentialRampToValueAtTime(100, now + 0.05);
+      
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(0.15, now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+      
+      osc.start(now);
+      osc.stop(now + 0.05);
+    } else if (type === 'red') {
+      osc.type = 'sine';
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(800, now);
+      
+      osc.frequency.setValueAtTime(isPress ? 120 : 150, now);
+      
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(0.2, now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + (isPress ? 0.08 : 0.05));
+      
+      osc.start(now);
+      osc.stop(now + 0.1);
+    } else {
+      osc.type = 'triangle';
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(1200, now);
+      
+      osc.frequency.setValueAtTime(isPress ? 200 : 220, now);
+      osc.frequency.linearRampToValueAtTime(100, now + 0.05);
+      
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(0.15, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+      
+      osc.start(now);
+      osc.stop(now + 0.08);
+    }
+  }
+
+  // Exact 1U = 4 spans. This ensures mathematical perfection in CSS grid.
+  const layouts = {
+    '60-percent': {
+      cols: 60,
+      keys: [
+        'Escape', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace',
+        'Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash',
+        'Capslock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter',
+        'ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight',
+        'ControlLeft', 'MetaLeft', 'AltLeft', 'Space', 'AltRight', 'MetaRight', 'ContextMenu', 'ControlRight'
+      ]
+    },
+    'tkl': {
+      cols: 74,
+      keys: [
+        'Escape', 'S-4', 'F1', 'F2', 'F3', 'F4', 'S-2', 'F5', 'F6', 'F7', 'F8', 'S-2', 'F9', 'F10', 'F11', 'F12', 'S-2', 'PrintScreen', 'ScrollLock', 'Pause',
+        'Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace', 'S-2', 'Insert', 'Home', 'PageUp',
+        'Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash', 'S-2', 'Delete', 'End', 'PageDown',
+        'Capslock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter', 'S-14',
+        'ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight', 'S-6', 'ArrowUp', 'S-4',
+        'ControlLeft', 'MetaLeft', 'AltLeft', 'Space', 'AltRight', 'MetaRight', 'ContextMenu', 'ControlRight', 'S-2', 'ArrowLeft', 'ArrowDown', 'ArrowRight'
+      ]
+    },
+    'full': {
+      cols: 92,
+      keys: [
+        'Escape', 'S-4', 'F1', 'F2', 'F3', 'F4', 'S-2', 'F5', 'F6', 'F7', 'F8', 'S-2', 'F9', 'F10', 'F11', 'F12', 'S-2', 'PrintScreen', 'ScrollLock', 'Pause', 'S-18',
+        'Backquote', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Digit0', 'Minus', 'Equal', 'Backspace', 'S-2', 'Insert', 'Home', 'PageUp', 'S-2', 'NumLock', 'NumpadDivide', 'NumpadMultiply', 'NumpadSubtract',
+        'Tab', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT', 'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash', 'S-2', 'Delete', 'End', 'PageDown', 'S-2', 'Numpad7', 'Numpad8', 'Numpad9', 'NumpadAdd',
+        'Capslock', 'KeyA', 'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'Enter', 'S-16', 'Numpad4', 'Numpad5', 'Numpad6',
+        'ShiftLeft', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma', 'Period', 'Slash', 'ShiftRight', 'S-6', 'ArrowUp', 'S-6', 'Numpad1', 'Numpad2', 'Numpad3', 'NumpadEnter',
+        'ControlLeft', 'MetaLeft', 'AltLeft', 'Space', 'AltRight', 'MetaRight', 'ContextMenu', 'ControlRight', 'S-2', 'ArrowLeft', 'ArrowDown', 'ArrowRight', 'S-2', 'Numpad0', 'NumpadDecimal'
+      ]
+    }
+  };
+
+  const layoutDef = layouts[layoutType as keyof typeof layouts] || layouts['tkl'];
+  const activeKeys = new Set<string>();
+  const testedKeys = new Set<string>();
+  let maxNKRO = 0;
+  
+  // Analytics & Telemetry State
+  let keyPressCount: Record<string, number> = {};
+  let activityLog: { code: string, time: number }[] = [];
+  
+  // DOM Elements
+  const gridEl = document.getElementById('keyboard-grid');
+  const activeCountEl = document.getElementById('active-keys-count');
+  const maxNkroEl = document.getElementById('max-nkro-count');
+  const lastKeyEl = document.getElementById('last-key-pressed');
+  const keysTestedEl = document.getElementById('keys-tested-count');
+  const activityFeed = document.getElementById('activity-feed');
+  const freqChart = document.getElementById('freq-chart');
+  const resetFreqBtn = document.getElementById('reset-freq');
+
+  function getLabel(code: string): string {
+    if (code.startsWith('S-')) return '';
+    if (code.startsWith('Key')) return code.replace('Key', '');
+    if (code.startsWith('Digit')) return code.replace('Digit', '');
+    if (code.startsWith('Numpad')) {
+      const n = code.replace('Numpad', '');
+      const map: Record<string, string> = { 'Divide': '/', 'Multiply': '*', 'Subtract': '-', 'Add': '+', 'Decimal': '.', 'Enter': '↵' };
+      return map[n] || n;
+    }
+    const map: Record<string, string> = {
+      'Escape': 'Esc', 'Backspace': 'Bksp', 'Tab': 'Tab', 'Capslock': 'Caps',
+      'Enter': '↵', 'ShiftLeft': 'Shift', 'ShiftRight': 'Shift',
+      'Space': 'Space',
+      'Minus': '-', 'Equal': '=', 'BracketLeft': '[', 'BracketRight': ']',
+      'Backslash': '\\', 'Semicolon': ';', 'Quote': "'", 'Comma': ',',
+      'Period': '.', 'Slash': '/', 'PrintScreen': 'PrtSc', 'ScrollLock': 'ScLk', 'Pause': 'Brk',
+      'Insert': 'Ins', 'Delete': 'Del', 'Home': 'Home', 'End': 'End', 'PageUp': 'PgUp', 'PageDown': 'PgDn',
+      'ArrowUp': '↑', 'ArrowDown': '↓', 'ArrowLeft': '←', 'ArrowRight': '→', 'NumLock': 'Num',
+      'Backquote': '`',
+    };
+
+    if (currentOS === 'mac') {
+      map['MetaLeft'] = '⌘ Cmd';
+      map['MetaRight'] = '⌘ Cmd';
+      map['AltLeft'] = '⌥ Opt';
+      map['AltRight'] = '⌥ Opt';
+      map['ControlLeft'] = '⌃ Ctrl';
+      map['ControlRight'] = '⌃ Ctrl';
+      map['ContextMenu'] = 'Fn';
+    } else {
+      map['MetaLeft'] = 'Win';
+      map['MetaRight'] = 'Win';
+      map['AltLeft'] = 'Alt';
+      map['AltRight'] = 'Alt';
+      map['ControlLeft'] = 'Ctrl';
+      map['ControlRight'] = 'Ctrl';
+      map['ContextMenu'] = 'Menu';
+    }
+
+    return map[code] || code;
+  }
+
+  function getClassMap(code: string): string {
+    if (code.startsWith('S-')) return `span-${code.split('-')[1]} opacity-0 pointer-events-none`;
+    if (code === 'Escape') return 'span-4 key-esc';
+    if (code === 'Enter') return 'span-9 key-enter';
+    if (code === 'NumpadEnter') return 'span-4 row-span-2 key-enter';
+    if (code === 'Space') return 'span-25';
+    if (code === 'ShiftLeft') return 'span-9';
+    if (code === 'ShiftRight') return 'span-11';
+    if (code === 'Capslock') return 'span-7';
+    if (code === 'Tab' || code === 'Backslash') return 'span-6';
+    if (code === 'Backspace' || code === 'Numpad0') return 'span-8';
+    if (code.startsWith('Control') || code.startsWith('Alt') || code.startsWith('Meta') || code === 'ContextMenu') return 'span-5';
+    if (code === 'NumpadAdd') return 'span-4 row-span-2';
+    return 'span-4';
+  }
+
+  function getKeysForOS(keys: string[]): string[] {
+    if (currentOS !== 'mac') return keys;
+    
+    // Copy array to avoid mutating layoutDef directly
+    const remapped = [...keys];
+    
+    // Replace the bottom row block with Mac key order
+    // Win bottom row: ControlLeft, MetaLeft, AltLeft, Space, AltRight, MetaRight, ContextMenu, ControlRight
+    // Mac bottom row: ContextMenu (Fn), ControlLeft (Ctrl), AltLeft (Option), MetaLeft (Cmd), Space, MetaRight (Cmd), AltRight (Option), ControlRight
+    const winPattern = ['ControlLeft', 'MetaLeft', 'AltLeft', 'Space', 'AltRight', 'MetaRight', 'ContextMenu', 'ControlRight'];
+    const macPattern = ['ContextMenu', 'ControlLeft', 'AltLeft', 'MetaLeft', 'Space', 'MetaRight', 'AltRight', 'ControlRight'];
+    
+    // Find index where pattern starts
+    for (let i = 0; i <= remapped.length - winPattern.length; i++) {
+      let match = true;
+      for (let j = 0; j < winPattern.length; j++) {
+        if (remapped[i + j] !== winPattern[j]) {
+          match = false;
+          break;
+        }
+      }
+      if (match) {
+        for (let j = 0; j < macPattern.length; j++) {
+          remapped[i + j] = macPattern[j];
+        }
+        break;
+      }
+    }
+    
+    return remapped;
+  }
+
+  function renderGrid() {
+    if (!gridEl) return;
+    gridEl.style.gridTemplateColumns = `repeat(${layoutDef.cols}, minmax(0, 1fr))`;
+
+    // Set minimum scroll width per layout so keys remain readable
+    const scrollInner = document.getElementById('keyboard-scroll-inner');
+    if (scrollInner) {
+      const minWidths: Record<string, string> = { 'full': '900px', 'tkl': '640px', '60-percent': '480px' };
+      scrollInner.style.minWidth = minWidths[layoutType] || '640px';
+    }
+    
+    let html = '';
+    const activeKeysList = getKeysForOS(layoutDef.keys);
+    activeKeysList.forEach(code => {
+      if (code.startsWith('S-')) {
+        html += `<div class="${getClassMap(code)}"></div>`;
+      } else {
+        html += `<div id="key-${code}" class="mech-key ${getClassMap(code)}" title="${getLabel(code)}">${getLabel(code)}</div>`;
+      }
+    });
+    gridEl.innerHTML = html;
+
+    // Re-apply persisted test results after a re-render (OS toggle)
+    testedKeys.forEach(code => {
+      gridEl.querySelector(`#key-${code}`)?.classList.add('is-tested');
+    });
+    activeKeys.forEach(code => {
+      gridEl.querySelector(`#key-${code}`)?.classList.add('is-active');
+    });
+  }
+
+  function updateFreqChart() {
+    if (!freqChart) return;
+    
+    const counts = Object.values(keyPressCount);
+    if (counts.length === 0) {
+      freqChart.innerHTML = '<div class="text-xs text-stone-500 text-center w-full self-center font-mono">Type keys to build chart…</div>';
+      return;
+    }
+    
+    const maxCount = Math.max(...counts, 1);
+    
+    // Sort by count desc, take top 12
+    const sortedKeys = Object.entries(keyPressCount)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 12);
+      
+    let html = '';
+    sortedKeys.forEach(([code, count]) => {
+      const heightPct = Math.max((count / maxCount) * 100, 8);
+      html += `
+        <div class="freq-bar-item">
+          <span class="freq-tooltip">${count}</span>
+          <div class="freq-bar-fill" style="height: ${heightPct}%;"></div>
+          <span class="text-[8px] font-mono text-stone-400 truncate w-full text-center">${getLabel(code).substring(0,3)}</span>
+        </div>
+      `;
+    });
+    
+    freqChart.innerHTML = html;
+  }
+
+  function addActivityEntry(code: string) {
+    if (!activityFeed) return;
+    
+    const now = new Date();
+    const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}.${now.getMilliseconds().toString().padStart(3,'0')}`;
+    
+    if (activityLog.length === 0) activityFeed.innerHTML = '';
+    
+    activityLog.unshift({ code, time: Date.now() });
+    if (activityLog.length > 15) activityLog.pop();
+    
+    const entry = document.createElement('div');
+    entry.className = 'text-[10px] font-mono text-stone-300 flex items-center gap-2 px-2 py-1 rounded bg-white/5 border border-white/5 animate-pulse';
+    entry.innerHTML = `<span class="text-purple-400 w-16 shrink-0 opacity-70">${timeStr.substring(0,8)}</span> <span>Pressed <strong class="text-white">${getLabel(code)}</strong></span>`;
+    
+    activityFeed.prepend(entry);
+    
+    setTimeout(() => {
+      entry.classList.remove('animate-pulse');
+      entry.classList.add('bg-transparent', 'border-transparent');
+      entry.classList.remove('bg-white/5', 'border-white/5');
+    }, 500);
+    
+    while (activityFeed.children.length > 15) {
+      activityFeed.removeChild(activityFeed.lastChild as Node);
+    }
+  }
+
   window.addEventListener('keydown', (e) => {
-    if (e.repeat) return;
-    activeKeys.add(e.code);
-    playKeySound();
+    if (e.repeat) return; // Ignore hold repeats for testing
 
+    // Never capture keystrokes typed into form fields (search, selects, etc.)
+    const t = e.target as HTMLElement | null;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable)) return;
+
+    let code = e.code;
+    if (code === 'Space') e.preventDefault();
+    
+    activeKeys.add(code);
+    testedKeys.add(code);
+    
+    keyPressCount[code] = (keyPressCount[code] || 0) + 1;
+    
     if (activeKeys.size > maxNKRO) maxNKRO = activeKeys.size;
-
-    const keyEl = document.getElementById(`key-${e.code}`);
+    
+    playSwitchSound(currentSwitch, true);
+    
+    const keyEl = document.getElementById(`key-${code}`);
     if (keyEl) {
-      keyEl.classList.remove('bg-surface-2', 'text-slate-300');
-      keyEl.classList.add('bg-blue-600', 'text-white', 'border-blue-400', 'shadow-md', 'shadow-blue-500/50', 'scale-95');
+      keyEl.classList.add('is-active');
     }
 
     if (activeCountEl) activeCountEl.textContent = activeKeys.size.toString();
     if (maxNkroEl) maxNkroEl.textContent = `${maxNKRO} Keys`;
-    if (lastKeyEl) lastKeyEl.textContent = e.code.replace('Key', '');
+    if (lastKeyEl) lastKeyEl.textContent = getLabel(code);
+    if (keysTestedEl) keysTestedEl.textContent = testedKeys.size.toString();
+
+    addActivityEntry(code);
+    updateFreqChart();
+
+    if (['Space','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(code)) e.preventDefault();
   });
 
   window.addEventListener('keyup', (e) => {
     activeKeys.delete(e.code);
-
+    
     const keyEl = document.getElementById(`key-${e.code}`);
     if (keyEl) {
-      keyEl.classList.remove('bg-blue-600', 'text-white', 'border-blue-400', 'shadow-md', 'shadow-blue-500/50', 'scale-95');
-      keyEl.classList.add('bg-emerald-600/40', 'text-emerald-300'); // Highlight tested keys in subtle green
+      keyEl.classList.remove('is-active');
+      keyEl.classList.add('is-tested');
     }
-
+    
     if (activeCountEl) activeCountEl.textContent = activeKeys.size.toString();
+  });
+
+  resetFreqBtn?.addEventListener('click', () => {
+    keyPressCount = {};
+    testedKeys.clear();
+    activityLog = [];
+    maxNKRO = 0;
+    if (maxNkroEl) maxNkroEl.textContent = '0 Keys';
+    if (keysTestedEl) keysTestedEl.textContent = '0';
+    if (lastKeyEl) lastKeyEl.textContent = '—';
+    if (activityFeed) activityFeed.innerHTML = '<div class="text-xs text-stone-500 text-center py-6">Start typing to see activity…</div>';
+    updateFreqChart();
+    
+    document.querySelectorAll('.mech-key').forEach(el => {
+      el.classList.remove('is-tested');
+      el.classList.remove('is-active');
+    });
   });
 
   renderGrid();

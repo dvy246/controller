@@ -103,7 +103,7 @@ function getHubIcon(href: string) {
 
       <div class="grid-tools">
         {controllerTools.map((tool) => (
-          <a href={tool.href} class={`tool-hub-card card-hover ${tool.badge === 'Flagship' ? 'card-gradient' : 'card-base'}`}>
+          <a href={tool.href} class="tool-hub-card card-base card-hover">
             <div class="card-top-bar">
               <span class="card-icon" set:html={getHubIcon(tool.href)} aria-hidden="true" />
               {tool.badge && <span class="badge-tag">{tool.badge}</span>}

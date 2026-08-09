@@ -42,7 +42,7 @@
   --color-text-primary: #f4f4f5;
   --color-text-secondary: #a1a1aa;
   --color-text-tertiary: #71717a;
-  --color-text-inverse: #09090b;
+  --color-text-inverse: #ffffff;
 
   /* ── Border tokens ── */
   --color-border-subtle: rgba(255, 255, 255, 0.08);
@@ -56,15 +56,15 @@
   --font-mono:
     "Geist Mono", "JetBrains Mono", ui-monospace, "Cascadia Code", monospace;
 
-  /* ── Type Scale (fluid, clamped) ── */
-  --text-hero: clamp(3.5rem, 7vw, 6.5rem); /* 56-104px — landing hero */
-  --text-display: clamp(2.75rem, 5vw, 5rem); /* 44-80px — page titles */
-  --text-h1: clamp(2.5rem, 4vw, 4rem); /* 40-64px — section h1 */
-  --text-h2: clamp(1.75rem, 3vw, 2.75rem); /* 28-44px — subsection h2 */
-  --text-h3: clamp(1.25rem, 2vw, 1.75rem); /* 20-28px — card titles */
-  --text-body: 1.0625rem; /* 17px — slightly larger for premium readability */
-  --text-small: 0.9375rem; /* 15px — captions */
-  --text-micro: 0.8125rem; /* 13px — labels, badges */
+  /* ── Type Scale (comfortable & full-proportions) ── */
+  --text-hero: clamp(2.75rem, 5.5vw, 4.5rem); /* 44-72px — landing hero */
+  --text-display: clamp(2rem, 3.8vw, 3rem); /* 32-48px — page titles */
+  --text-h1: clamp(1.75rem, 3vw, 2.5rem); /* 28-40px — section h1 / tool titles */
+  --text-h2: clamp(1.375rem, 2.2vw, 1.875rem); /* 22-30px — subsection h2 */
+  --text-h3: clamp(1.125rem, 1.6vw, 1.375rem); /* 18-22px — card titles */
+  --text-body: 1rem; /* 16px — standard readable body text */
+  --text-small: 0.875rem; /* 14px — captions */
+  --text-micro: 0.75rem; /* 12px — labels, badges */
 
   /* ── 8px Spatial Grid System ── */
   --space-1: 0.25rem; /* 4px */
@@ -117,36 +117,127 @@
 }
 
 /* ============================================================
-   FLAT UTILITARIAN CONTAINERS (Doppelrand removed)
+   DIAGNOSTIC TOOL CONTAINERS
+   doppelrand-shell: pure positioning wrapper, imposes NO visual
+   style — children supply their own backgrounds/borders/radii.
+   diagnostic-tool-shell: premium aurora-glass treatment for
+   the interactive tool workspace panels.
    ============================================================ */
 
 .doppelrand-shell {
-  background: var(--color-surface-1);
-  border: 1px solid var(--color-border-default);
-  padding: 0;
-  border-radius: 8px;
-  box-shadow: none;
-  backdrop-filter: none;
+  /* Pure positioning wrapper. Does NOT set background, border, or radius.
+     This allows child Tailwind gradient/border classes to take full effect. */
+  position: relative;
+  width: 100%;
+  overflow: visible;
 }
 
 .doppelrand-core {
   background: var(--color-surface-1);
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: var(--space-6);
 }
 
-[data-theme="light"] .doppelrand-shell {
-  background: rgba(244, 244, 245, 0.8);
-  border-color: rgba(0, 0, 0, 0.1);
+/* ── Premium diagnostic shell — the actual visual container ── */
+.diagnostic-tool-shell {
+  position: relative;
+  width: 100%;
+  border-radius: 20px;
+  background: #0E0E10;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow:
-    0 10px 30px -10px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    0 25px 60px -15px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(59, 130, 246, 0.3);
+  overflow: hidden;
+}
+
+/* Gradient hairline top glow */
+.diagnostic-tool-shell::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.8), rgba(99, 102, 241, 0.6), transparent);
+  pointer-events: none;
+  z-index: 30;
+}
+
+/* Ambient glow underneath */
+.diagnostic-tool-shell::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(99, 102, 241, 0.08) 50%, rgba(16, 185, 129, 0.1) 100%);
+  z-index: -1;
+  pointer-events: none;
+  filter: blur(20px);
+  opacity: 0.7;
+}
+
+[data-theme="light"] .diagnostic-tool-shell {
+  background: #0e0e10 !important;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(59, 130, 246, 0.3);
 }
 
 [data-theme="light"] .doppelrand-core {
   background: #ffffff;
   border-color: rgba(0, 0, 0, 0.06);
+}
+
+/* Dark bento "v2" action cards are hard-coded dark (#121215) and are NOT
+   remapped by the utility-class overrides below, so remap them explicitly
+   here to keep the light theme legible (matches .diagnostic-tool-shell). */
+[data-theme="light"] .action-card-v2 {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .action-card-v2:hover {
+  background: #fafafc !important;
+  border-color: rgba(37, 99, 235, 0.4) !important;
+}
+
+[data-theme="light"] .action-title-v2 {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .action-desc-v2 {
+  color: #3f3f46 !important;
+}
+
+[data-theme="light"] .action-cta {
+  background: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  color: #09090b !important;
+}
+
+[data-theme="light"] .action-cta:hover {
+  color: #09090b !important;
+}
+
+[data-theme="light"] .action-icon-v2--amber { background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.35); color: #b45309 !important; }
+[data-theme="light"] .action-icon-v2--emerald { background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.35); color: #047857 !important; }
+[data-theme="light"] .action-icon-v2--blue { background: rgba(37, 99, 235, 0.1); border-color: rgba(37, 99, 235, 0.35); color: #1d4ed8 !important; }
+
+/* Hover state title colors on light cards — use darker accents for AA */
+[data-theme="light"] .group:hover .action-title-v2--amber { color: #b45309 !important; }
+[data-theme="light"] .group:hover .action-title-v2--emerald { color: #047857 !important; }
+[data-theme="light"] .group:hover .action-title-v2--blue { color: #1d4ed8 !important; }
+
+[data-theme="light"] .action-badge-v2--amber { background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.3); color: #b45309 !important; }
+[data-theme="light"] .action-badge-v2--emerald { background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.3); color: #047857 !important; }
+[data-theme="light"] .action-badge-v2--blue { background: rgba(37, 99, 235, 0.1); border-color: rgba(37, 99, 235, 0.3); color: #1d4ed8 !important; }
+
+/* Small cobalt mono labels need the darker accent-hover in light mode to
+   clear AA (accent #2563EB is ~4.4:1 on light surfaces). */
+[data-theme="light"] .code-lang,
+[data-theme="light"] .tool-category-badge {
+  color: var(--color-accent-hover) !important;
 }
 
 /* ============================================================
@@ -180,7 +271,7 @@
 
   --color-text-primary: #09090b;
   --color-text-secondary: #3f3f46;
-  --color-text-tertiary: #71717a;
+  --color-text-tertiary: #63636b;
   --color-text-inverse: #ffffff;
 
   --color-border-subtle: rgba(0, 0, 0, 0.06);
@@ -224,7 +315,7 @@
   --color-text-primary: #f4f4f5;
   --color-text-secondary: #a1a1aa;
   --color-text-tertiary: #71717a;
-  --color-text-inverse: #09090b;
+  --color-text-inverse: #ffffff;
 
   --color-border-subtle: rgba(255, 255, 255, 0.08);
   --color-border-default: rgba(255, 255, 255, 0.12);
@@ -242,12 +333,18 @@
    BASE RESET & ELEMENT DEFAULTS
    ============================================================ */
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* Universal reset MUST live inside a cascade layer (@layer base) so it does not
+   override Tailwind's layered utility classes (un-layered author CSS beats all
+   layered rules regardless of specificity). Outside a layer this reset zeroes
+   every padding/margin utility sitewide. */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 }
 
 html {
@@ -290,6 +387,15 @@ a:hover {
   color: var(--color-accent-hover);
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+/* Links that carry explicit white text (e.g. text-white on blue CTA buttons)
+   must not inherit the accent link color — the un-layered `a` rule above beats
+   Tailwind's layered utility, so re-assert white at equal (higher) specificity. */
+a.text-white,
+a.text-white:hover {
+  color: #ffffff;
+  text-decoration: none;
 }
 
 /* ── Headings ── */
@@ -440,7 +546,144 @@ svg {
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: var(--color-text-primary);
+  text-wrap: balance;
 }
+
+/* ============================================================
+   PAGE HEADING SYSTEM — Single source of truth for every page
+   All hub pages, tool pages, content pages use these classes.
+   No per-file .hub-header / .page-header scattered definitions.
+   ============================================================ */
+
+/*
+ * .page-shell — wraps main content below the fixed header.
+ * pt-24 = 96px clears the 64px nav + 32px breathing room.
+ * Replaces: hub-page, .main-content, inline pt-24 on every page.
+ */
+.page-shell {
+  width: 100%;
+  padding-top: 6rem;        /* 96px — clears fixed 64px nav */
+  padding-bottom: var(--spacing-section);
+  overflow-x: hidden;       /* prevent any tool from blowing page width */
+}
+
+/*
+ * .page-header — the H1 + eyebrow + subtitle block.
+ * Canonical spacing: 0.5rem eyebrow → 0.5rem h1 → 1rem subtitle.
+ * max-width prevents awkwardly long one-liners on ultrawide.
+ */
+.page-header {
+  margin-bottom: 2.5rem;    /* 40px: gives tool/content card breathing room */
+  max-width: 72ch;          /* comfortable reading width for headings */
+}
+
+.page-header--centered {
+  text-align: center;
+  margin-inline: auto;
+}
+
+.page-header .page-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #60a5fa;
+  background: rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.28);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: 0.625rem;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.page-header h1,
+.page-header .page-title {
+  font-size: var(--text-h1);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--color-text-primary);
+  text-wrap: balance;
+  margin: 0 0 0.875rem;
+}
+
+.page-header p,
+.page-header .page-subtitle {
+  font-size: 1.0625rem;     /* 17px — between body and lead */
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  max-width: 60ch;
+  text-wrap: pretty;
+  margin: 0;
+}
+
+/*
+ * Hub-specific aliases — keep backwards compat with existing pages
+ * that use .hub-page / .hub-header / .hub-subtitle.
+ * These were previously defined per-file with mismatched values;
+ * now they are globally canonical.
+ */
+.hub-page {
+  width: 100%;
+  padding-top: 6rem;
+  padding-bottom: var(--spacing-section);
+  overflow-x: hidden;
+}
+
+.hub-header {
+  margin-bottom: 2.5rem;
+}
+
+.hub-header .hub-badge,
+.hub-header .badge-tag {
+  margin-bottom: 0.625rem;
+}
+
+.hub-subtitle {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+  max-width: 65ch;
+  text-wrap: pretty;
+}
+
+/*
+ * Tool page heading block — used on individual test pages.
+ * The h1 and subtitle below the breadcrumb.
+ */
+.tool-page-header {
+  margin-bottom: 2rem;
+}
+
+.tool-page-header h1 {
+  font-size: var(--text-h1);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--color-text-primary);
+  text-wrap: balance;
+  margin: 0 0 0.625rem;
+}
+
+.tool-page-header p {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  max-width: 64ch;
+  text-wrap: pretty;
+  margin: 0;
+}
+
+/* Also apply text-wrap to all heading utilities */
+.text-h1 { text-wrap: balance; }
+.text-h2 { text-wrap: balance; }
+.text-h3 { text-wrap: balance; }
+
 
 .section-eyebrow {
   font-family: var(--font-mono);
@@ -487,11 +730,10 @@ svg {
 
 [data-theme="light"] .badge-tag,
 [data-theme="light"] .eyebrow-badge {
-  color: var(--color-accent);
+  color: var(--color-accent-hover);
   background: rgba(37, 99, 235, 0.08);
   border-color: rgba(37, 99, 235, 0.2);
 }
-
 /* Dark theme: cobalt #2563EB text fails AA (~3:1) on tinted dark bg —
    use the Header badge pattern (blue-300 tint) for ≥4.5:1. */
 [data-theme="dark"] .badge-tag,
@@ -561,12 +803,16 @@ svg {
 .card-base {
   /* Core structure */
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   background: var(--color-surface-1);
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-card, 1.25rem);
-  padding: var(--spacing-card);
+  padding: 1.75rem 2rem;
   box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 
   /* Stable interaction */
   transform: translateY(0px);
@@ -577,6 +823,19 @@ svg {
   will-change: transform;
 }
 
+@media (max-width: 768px) {
+  .card-base {
+    padding: 1.375rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-base {
+    padding: 1.25rem;
+  }
+}
+
+/* Premium Gradient Hairline Mask for All Base Cards */
 .card-base::before,
 .card-gradient::before {
   content: "";
@@ -584,7 +843,7 @@ svg {
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(to bottom right, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(37, 99, 235, 0.25) 45%, rgba(255, 255, 255, 0.05) 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -592,18 +851,139 @@ svg {
   z-index: 10;
 }
 
+/* Top Glass Specular Highlight Bar */
+.card-base::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.6), transparent);
+  pointer-events: none;
+  z-index: 11;
+  opacity: 0.7;
+}
+
 [data-theme="light"] .card-base::before,
 [data-theme="light"] .card-gradient::before {
-  background: linear-gradient(to bottom right, rgba(0,0,0,0.1), rgba(0,0,0,0.02));
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.3) 0%, rgba(0, 0, 0, 0.08) 50%, rgba(37, 99, 235, 0.15) 100%);
 }
 
 .card-hover {
   &:hover {
-    border-color: rgba(37, 99, 235, 0.4);
-    box-shadow: var(--shadow-hover);
+    border-color: rgba(37, 99, 235, 0.5);
+    box-shadow: 0 16px 40px -10px rgba(37, 99, 235, 0.22), 0 0 20px rgba(37, 99, 235, 0.1);
     transform: translateY(-3px);
     text-decoration: none;
   }
+}
+
+/* Hub & Related Tool Cards — Image 2 Bento Grid Design */
+.tool-hub-card,
+.tool-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  background: #141416;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  overflow: visible;
+}
+
+.tool-hub-card:hover,
+.tool-card:hover {
+  background: #18181c;
+  border-color: rgba(59, 130, 246, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.15);
+  text-decoration: none;
+}
+
+.tool-hub-card .card-icon,
+.tool-card .tool-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+  margin-bottom: 0.875rem;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+  color: #60a5fa;
+}
+
+.tool-hub-card:hover .card-icon,
+.tool-card:hover .tool-icon {
+  transform: scale(1.08);
+}
+
+.card-top-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.tool-hub-card .card-tool-name,
+.tool-card .tool-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+  margin-bottom: 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.tool-hub-card:hover .card-tool-name,
+.tool-card:hover .tool-name {
+  color: #60a5fa;
+}
+
+.tool-hub-card .card-tool-desc,
+.tool-card .tool-desc {
+  font-size: 0.875rem;
+  color: #a1a1aa;
+  line-height: 1.55;
+  flex-grow: 1;
+  margin-bottom: 1.25rem;
+}
+
+.card-action-link {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #60a5fa;
+  margin-top: auto;
+}
+
+.card-action-link svg {
+  transition: transform var(--duration-fast);
+}
+
+.tool-hub-card:hover .card-action-link svg,
+.tool-card:hover .card-action-link svg {
+  transform: translateX(3px);
+}
+
+[data-theme="light"] .card-action-link {
+  color: #2563eb;
+}
+
+[data-theme="light"] .tool-hub-card:hover .card-action-link,
+[data-theme="light"] .tool-card:hover .card-action-link {
+  color: #1d4ed8;
 }
 
 .card-elevated {
@@ -614,21 +994,34 @@ svg {
 /* Tool card (darkest) */
 .card-tool {
   position: relative;
-  overflow: hidden;
   background: var(--color-surface-1);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-card);
-  padding: var(--spacing-card-lg);
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 /* Featured / showcase card */
 .card-gradient {
   position: relative;
-  overflow: hidden;
   background: var(--color-surface-1);
   border: 1px solid var(--color-border-default);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* Content inset — text must NEVER touch the border */
+  padding: 1.5rem 1.75rem;
+}
+
+@media (max-width: 768px) {
+  .card-gradient {
+    padding: 1.25rem;
+  }
 }
 
 .card-gradient::after {
@@ -647,7 +1040,7 @@ svg {
 }
 
 .card-gradient:hover::after {
-  opacity: 0.7;
+  opacity: 0.75;
 }
 
 /* Base Badge Primitive & Status Badges */
@@ -747,33 +1140,31 @@ svg {
   margin-block: var(--spacing-section);
 }
 
-/* Grid patterns - Responsive Stacking added */
-.grid-tools {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-  gap: var(--space-5);
-}
-
-.grid-actions {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-5);
-}
-
-.grid-related {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-5);
-}
-
+/* Grid patterns - Responsive Stacking & Auto-fit minmax */
+.grid-tools,
+.grid-actions,
+.grid-related,
 .grid-content {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-5);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
 }
 
-@media (max-width: 768px) {
-  .grid-actions, .grid-related, .grid-content {
+@media (min-width: 1280px) {
+  .grid-actions {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .grid-related {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-tools,
+  .grid-actions,
+  .grid-related,
+  .grid-content {
     grid-template-columns: 1fr;
   }
 }
@@ -1130,28 +1521,52 @@ svg {
 .tooltip {
   position: relative;
   display: inline-block;
+  /* Ensure tooltip never clips behind container edges */
+  isolation: isolate;
 }
 
 .tooltip::after {
   content: attr(data-tip);
   position: absolute;
-  bottom: calc(100% + 6px);
+  bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
   background: var(--color-surface-4);
   color: var(--color-text-primary);
-  padding: 0.375rem 0.75rem;
+  padding: 0.4rem 0.8rem;
   border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-subtle);
   font-size: var(--text-small);
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
   transition: opacity var(--duration-fast);
-  z-index: 50;
+  /* High z-index so tooltip renders above all containers */
+  z-index: 9999;
+  /* Allow overflow to be visible */
+  max-width: min(280px, 90vw);
+  text-align: center;
+  text-wrap: wrap;
+  white-space: normal;
+  line-height: 1.4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .tooltip:hover::after {
   opacity: 1;
+}
+
+/* Left-edge clamped tooltip variant */
+.tooltip--left::after {
+  left: 0;
+  transform: none;
+}
+
+/* Right-edge clamped tooltip variant */
+.tooltip--right::after {
+  left: auto;
+  right: 0;
+  transform: none;
 }
 
 /* ============================================================
@@ -1245,6 +1660,197 @@ svg {
 [data-theme="light"] .bg-indigo-600.text-white,
 [data-theme="light"] [class*="bg-gradient-to-r"].text-white {
   color: #ffffff !important;
+}
+
+/* Dark instrument workspaces (diagnostic-tool-shell) are intentionally
+   dark in BOTH themes. The remaps above would turn their light text dark,
+   so restore the dark palette inside these hard-coded dark shells. */
+[data-theme="light"] .diagnostic-workspace,
+[data-theme="light"] .diagnostic-tool-shell {
+  color: #e4e4e7 !important;
+}
+
+[data-theme="light"] .diagnostic-workspace .text-white,
+[data-theme="light"] .diagnostic-tool-shell .text-white,
+[data-theme="light"] #mech-keyboard-app .text-white {
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .diagnostic-workspace .text-stone-200,
+[data-theme="light"] .diagnostic-workspace .text-zinc-200,
+[data-theme="light"] .diagnostic-tool-shell .text-stone-200,
+[data-theme="light"] #mech-keyboard-app .text-stone-200 {
+  color: #e4e4e7 !important;
+}
+
+[data-theme="light"] .diagnostic-workspace .text-stone-300,
+[data-theme="light"] .diagnostic-workspace .text-zinc-300,
+[data-theme="light"] .diagnostic-tool-shell .text-stone-300,
+[data-theme="light"] #mech-keyboard-app .text-stone-300 {
+  color: #d4d4d8 !important;
+}
+
+[data-theme="light"] .diagnostic-workspace .text-stone-400,
+[data-theme="light"] .diagnostic-workspace .text-zinc-400,
+[data-theme="light"] .diagnostic-tool-shell .text-stone-400,
+[data-theme="light"] #mech-keyboard-app .text-stone-400 {
+  color: #a1a1aa !important;
+}
+
+[data-theme="light"] .diagnostic-workspace .text-stone-500,
+[data-theme="light"] .diagnostic-workspace .text-zinc-500,
+[data-theme="light"] .diagnostic-tool-shell .text-stone-500,
+[data-theme="light"] #mech-keyboard-app .text-stone-500 {
+  color: #71717a !important;
+}
+
+[data-theme="light"] .diagnostic-workspace .text-blue-400,
+[data-theme="light"] .diagnostic-tool-shell .text-blue-400,
+[data-theme="light"] #mech-keyboard-app .text-blue-400 {
+  color: #60a5fa !important;
+}
+
+[data-theme="light"] .diagnostic-workspace .text-emerald-400,
+[data-theme="light"] .diagnostic-workspace .text-green-400,
+[data-theme="light"] .diagnostic-tool-shell .text-emerald-400,
+[data-theme="light"] #mech-keyboard-app .text-emerald-400 {
+  color: #34d399 !important;
+}
+
+[data-theme="light"] .diagnostic-workspace .text-amber-400,
+[data-theme="light"] .diagnostic-workspace .text-yellow-400,
+[data-theme="light"] .diagnostic-tool-shell .text-amber-400,
+[data-theme="light"] #mech-keyboard-app .text-amber-400 {
+  color: #fbbf24 !important;
+}
+
+[data-theme="light"] .diagnostic-workspace .text-purple-400,
+[data-theme="light"] .diagnostic-workspace .text-violet-400,
+[data-theme="light"] .diagnostic-tool-shell .text-purple-400,
+[data-theme="light"] #mech-keyboard-app .text-purple-400 {
+  color: #c084fc !important;
+}
+
+[data-theme="light"] .diagnostic-workspace .text-fuchsia-400,
+[data-theme="light"] .diagnostic-workspace .text-pink-400,
+[data-theme="light"] .diagnostic-workspace .text-cyan-400,
+[data-theme="light"] .diagnostic-workspace .text-sky-400,
+[data-theme="light"] .diagnostic-tool-shell .text-fuchsia-400,
+[data-theme="light"] .diagnostic-tool-shell .text-pink-400,
+[data-theme="light"] .diagnostic-tool-shell .text-cyan-400,
+[data-theme="light"] .diagnostic-tool-shell .text-sky-400,
+[data-theme="light"] #mech-keyboard-app .text-fuchsia-400,
+[data-theme="light"] #mech-keyboard-app .text-pink-400,
+[data-theme="light"] #mech-keyboard-app .text-cyan-400,
+[data-theme="light"] #mech-keyboard-app .text-sky-400 {
+  color: #22d3ee !important;
+}
+
+/* Legacy doppelrand-shell diagnostic workspaces (pre-diagnostic-workspace
+   refactor) are also intentionally dark in both themes. Their roots carry a
+   -tester-root/-wizard id. Re-declare the dark palette on the roots so every
+   var()-based color in their child cards (text, surface, accent, border,
+   badges, buttons) resolves back to dark values in light mode. */
+[data-theme="light"] #drift-tester-root,
+[data-theme="light"] #btn-tester-root,
+[data-theme="light"] #dz-tester-root,
+[data-theme="light"] #circ-tester-root,
+[data-theme="light"] #vib-tester-root,
+[data-theme="light"] #diag-wizard,
+[data-theme="light"] #trig-tester-root,
+[data-theme="light"] #grader-root,
+[data-theme="light"] #health-score-app,
+[data-theme="light"] #quick-health-app {
+  color-scheme: dark;
+
+  --color-surface-0: #09090b;
+  --color-surface-1: #121215;
+  --color-surface-2: #18181b;
+  --color-surface-3: #27272a;
+  --color-surface-4: #3f3f46;
+
+  --color-accent: #2563eb;
+  --color-accent-hover: #3b82f6;
+  --color-accent-glow: rgba(37, 99, 235, 0.25);
+
+  --color-emerald: #10b981;
+
+  --color-pass: #10b981;
+  --color-pass-bg: rgba(16, 185, 129, 0.12);
+  --color-warning: #f59e0b;
+  --color-warning-bg: rgba(245, 158, 11, 0.12);
+  --color-fail: #ef4444;
+  --color-fail-bg: rgba(239, 68, 68, 0.12);
+  --color-info: #3b82f6;
+  --color-info-bg: rgba(59, 130, 246, 0.12);
+  --color-neutral: #9ca3af;
+  --color-neutral-bg: rgba(255, 255, 255, 0.05);
+
+  --color-text-primary: #f4f4f5;
+  --color-text-secondary: #a1a1aa;
+  --color-text-tertiary: #71717a;
+  --color-text-inverse: #ffffff;
+
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
+  --color-border-default: rgba(255, 255, 255, 0.12);
+  --color-border-strong: rgba(255, 255, 255, 0.25);
+}
+
+/* The generic light-mode card overrides below apply !important white
+   backgrounds/text to .card-base/.card-gradient/.doppelrand-core; scope
+   dark equivalents onto the legacy roots so their instrument surfaces stay
+   dark in light mode. */
+[data-theme="light"] #drift-tester-root .card-base,
+[data-theme="light"] #drift-tester-root .card-gradient,
+[data-theme="light"] #drift-tester-root .doppelrand-core,
+[data-theme="light"] #drift-tester-root .stick-card,
+[data-theme="light"] #btn-tester-root .card-base,
+[data-theme="light"] #btn-tester-root .card-gradient,
+[data-theme="light"] #btn-tester-root .doppelrand-core,
+[data-theme="light"] #btn-tester-root .btn-group-card,
+[data-theme="light"] #dz-tester-root .card-base,
+[data-theme="light"] #dz-tester-root .card-gradient,
+[data-theme="light"] #dz-tester-root .doppelrand-core,
+[data-theme="light"] #circ-tester-root .card-base,
+[data-theme="light"] #circ-tester-root .card-gradient,
+[data-theme="light"] #circ-tester-root .doppelrand-core,
+[data-theme="light"] #vib-tester-root .card-base,
+[data-theme="light"] #vib-tester-root .card-gradient,
+[data-theme="light"] #vib-tester-root .doppelrand-core,
+[data-theme="light"] #diag-wizard .card-base,
+[data-theme="light"] #diag-wizard .card-gradient,
+[data-theme="light"] #diag-wizard .doppelrand-core,
+[data-theme="light"] #trig-tester-root .card-base,
+[data-theme="light"] #trig-tester-root .card-gradient,
+[data-theme="light"] #trig-tester-root .doppelrand-core,
+[data-theme="light"] #health-score-app .card-base,
+[data-theme="light"] #quick-health-app .card-base,
+[data-theme="light"] #health-score-app .card-gradient,
+[data-theme="light"] #quick-health-app .card-gradient,
+[data-theme="light"] #health-score-app .doppelrand-core,
+[data-theme="light"] #quick-health-app .doppelrand-core {
+  background: var(--color-surface-1) !important;
+  border-color: var(--color-border-subtle) !important;
+  color: var(--color-text-primary) !important;
+  box-shadow: none !important;
+}
+
+/* Glass panels & secondary buttons inside the legacy dark workspaces must
+   stay dark (the global light-mode .glass-panel override would turn them
+   light gray with near-white text). */
+[data-theme="light"] #drift-tester-root .glass-panel,
+[data-theme="light"] #btn-tester-root .glass-panel,
+[data-theme="light"] #dz-tester-root .glass-panel,
+[data-theme="light"] #circ-tester-root .glass-panel,
+[data-theme="light"] #vib-tester-root .glass-panel,
+[data-theme="light"] #diag-wizard .glass-panel,
+[data-theme="light"] #trig-tester-root .glass-panel,
+[data-theme="light"] #grader-root .glass-panel,
+[data-theme="light"] #health-score-app .glass-panel,
+[data-theme="light"] #quick-health-app .glass-panel {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-color: var(--color-border-subtle) !important;
+  backdrop-filter: blur(8px);
 }
 
 /* SVGs inherit semantic color instead of becoming monochrome decoration. */
@@ -1622,11 +2228,8 @@ svg {
   }
 }
 
-[data-theme="light"] .doppelrand-shell {
-  background: rgba(241, 245, 249, 0.8) !important;
-  border-color: rgba(0, 0, 0, 0.1) !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06) !important;
-}
+/* doppelrand-shell is a positioning wrapper — no theme-specific visual override needed */
+/* diagnostic-tool-shell light mode override is handled in the shell definition above */
 
 [data-theme="light"] .card-tool-name,
 [data-theme="light"] .action-title,
@@ -1647,6 +2250,94 @@ svg {
 [data-theme="light"] .trust-desc,
 [data-theme="light"] p {
   color: #475569 !important;
+}
+
+/* Headings/paragraphs inside legacy dark instrument workspaces must keep the
+   dark palette (the generic h1-h4/p !important rules above would force dark
+   text onto dark surfaces). Scope dark values back inside those roots. */
+[data-theme="light"] #drift-tester-root h1,
+[data-theme="light"] #drift-tester-root h2,
+[data-theme="light"] #drift-tester-root h3,
+[data-theme="light"] #drift-tester-root h4,
+[data-theme="light"] #drift-tester-root strong,
+[data-theme="light"] #btn-tester-root h1,
+[data-theme="light"] #btn-tester-root h2,
+[data-theme="light"] #btn-tester-root h3,
+[data-theme="light"] #btn-tester-root h4,
+[data-theme="light"] #btn-tester-root strong,
+[data-theme="light"] #dz-tester-root h1,
+[data-theme="light"] #dz-tester-root h2,
+[data-theme="light"] #dz-tester-root h3,
+[data-theme="light"] #dz-tester-root h4,
+[data-theme="light"] #dz-tester-root strong,
+[data-theme="light"] #circ-tester-root h1,
+[data-theme="light"] #circ-tester-root h2,
+[data-theme="light"] #circ-tester-root h3,
+[data-theme="light"] #circ-tester-root h4,
+[data-theme="light"] #circ-tester-root strong,
+[data-theme="light"] #vib-tester-root h1,
+[data-theme="light"] #vib-tester-root h2,
+[data-theme="light"] #vib-tester-root h3,
+[data-theme="light"] #vib-tester-root h4,
+[data-theme="light"] #vib-tester-root strong,
+[data-theme="light"] #diag-wizard h1,
+[data-theme="light"] #diag-wizard h2,
+[data-theme="light"] #diag-wizard h3,
+[data-theme="light"] #diag-wizard h4,
+[data-theme="light"] #diag-wizard strong,
+[data-theme="light"] #trig-tester-root h1,
+[data-theme="light"] #trig-tester-root h2,
+[data-theme="light"] #trig-tester-root h3,
+[data-theme="light"] #trig-tester-root h4,
+[data-theme="light"] #trig-tester-root strong,
+[data-theme="light"] #health-score-app h1,
+[data-theme="light"] #health-score-app h2,
+[data-theme="light"] #health-score-app h3,
+[data-theme="light"] #health-score-app h4,
+[data-theme="light"] #health-score-app strong,
+[data-theme="light"] #quick-health-app h1,
+[data-theme="light"] #quick-health-app h2,
+[data-theme="light"] #quick-health-app h3,
+[data-theme="light"] #quick-health-app h4,
+[data-theme="light"] #quick-health-app strong,
+[data-theme="light"] #grader-root h1,
+[data-theme="light"] #grader-root h2,
+[data-theme="light"] #grader-root h3,
+[data-theme="light"] #grader-root h4,
+[data-theme="light"] #grader-root strong {
+  color: var(--color-text-primary) !important;
+}
+
+[data-theme="light"] #drift-tester-root p,
+[data-theme="light"] #btn-tester-root p,
+[data-theme="light"] #dz-tester-root p,
+[data-theme="light"] #circ-tester-root p,
+[data-theme="light"] #vib-tester-root p,
+[data-theme="light"] #diag-wizard p,
+[data-theme="light"] #trig-tester-root p,
+[data-theme="light"] #health-score-app p,
+[data-theme="light"] #quick-health-app p,
+[data-theme="light"] #grader-root p {
+  color: var(--color-text-secondary) !important;
+}
+
+/* God-Mode dark instruments: haptic composer canvas labels and
+   overclock-validator diagnostic shell paragraphs keep the dark palette. */
+[data-theme="light"] #grader-root,
+[data-theme="light"] #grader-root .glass-panel {
+  color: #e4e4e7 !important;
+}
+[data-theme="light"] .haptic-composer .canvas-wrapper {
+  background: #0d0d0e !important;
+  border-color: #27272a !important;
+  color: #d4d4d8 !important;
+}
+[data-theme="light"] .haptic-composer .canvas-wrapper .text-stone-400,
+[data-theme="light"] .haptic-composer .canvas-wrapper .text-stone-300 {
+  color: #a1a1aa !important;
+}
+[data-theme="light"] .diagnostic-tool-shell p {
+  color: #d4d4d8 !important;
 }
 
 [data-theme="light"] .card-icon {
@@ -1691,13 +2382,22 @@ svg {
   }
 
   .doppelrand-shell {
-    padding: 0.25rem !important;
-    border-radius: 1.25rem !important;
+    /* positioning wrapper only — no border-radius/padding to override */
   }
 
   .doppelrand-core {
-    border-radius: calc(1.25rem - 0.25rem) !important;
+    border-radius: 0.875rem !important;
     padding: 1.25rem !important;
+  }
+
+  /* Diagnostic tool shell mobile adjustments */
+  .diagnostic-tool-shell {
+    border-radius: 16px !important;
+  }
+
+  /* Diagnostic workspace mobile: ensure toolbars wrap gracefully */
+  .diagnostic-workspace {
+    border-radius: 16px !important;
   }
 
   .controller-3d-wrapper {

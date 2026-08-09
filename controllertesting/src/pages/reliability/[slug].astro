@@ -83,8 +83,8 @@ const schemaData = {
       </div>
     </div>
 
-    <section class="percentile-section card-base mb-12">
-      <h2 class="text-h2 mb-6">Drift Magnitude Percentiles</h2>
+    <section class="percentile-section card-base mb-12 p-6 sm:p-10">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-6">Drift Magnitude Percentiles</h2>
       <div class="table-container" aria-label="Drift magnitude percentile thresholds for {modelData.name}">
         <table class="data-table">
           <thead>
@@ -125,8 +125,8 @@ const schemaData = {
       </div>
     </section>
 
-    <section class="issues-section card-base mb-12">
-      <h2 class="text-h2 mb-4">Documented Wear Characteristics</h2>
+    <section class="issues-section card-base mb-12 p-6 sm:p-10">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-6">Documented Wear Characteristics</h2>
       <ul class="issues-list">
         {modelData.commonIssues.map((issue: string) => (
           <li>{issue}</li>

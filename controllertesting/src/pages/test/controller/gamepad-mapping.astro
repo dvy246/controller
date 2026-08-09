@@ -5,7 +5,8 @@
  */
 
 import ToolLayout from '../../../layouts/ToolLayout.astro';
-import DriftTester from '../../../components/tools/controller/DriftTester.astro';
+import ButtonTester from '../../../components/tools/controller/ButtonTester.astro';
+import PremiumGuideCard from '../../../components/seo/PremiumGuideCard.astro';
 
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
@@ -91,7 +92,7 @@ const schemaData = {
 
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
-    <DriftTester />
+    <ButtonTester />
   </Fragment>
 
   {/* ── Results Slot ── */}
@@ -117,17 +118,16 @@ const schemaData = {
 
   {/* ── SEO Repair Guide Section ── */}
   <Fragment slot="export">
-    <div class="repair-guide mt-12 bg-[var(--color-surface-2)] p-8 rounded-[var(--radius-card)] border border-[var(--color-border-subtle)]">
-      <h2 class="text-h2 mb-4">How do you verify custom gamepad button mappings?</h2>
-      <p class="mb-6 text-[var(--color-text-secondary)] leading-relaxed"><strong>Verify custom gamepad button mappings by using an online controller mapping tool. Press each remapped button on your controller and check if the on-screen display registers the intended virtual output. This ensures software-level rebinds are functioning correctly before you launch a game.</strong></p>
+    <PremiumGuideCard title="How do you verify custom gamepad button mappings?">
+      <p class="text-[var(--color-text-secondary)] leading-relaxed">
+        <strong>Verify custom gamepad button mappings by using an online controller mapping tool. Press each remapped button on your controller and check if the on-screen display registers the intended virtual output. This ensures software-level rebinds are functioning correctly before you launch a game.</strong>
+      </p>
       
-      <div class="flex flex-col gap-6">
-        <div>
-          <h3 class="text-[var(--color-accent)] mb-2 font-bold">Recommended Actions</h3>
-          <p class="text-[var(--color-text-secondary)] leading-relaxed">Before you chase a rebind problem, rule out the hardware: run the <a href="/test/controller/drift">Stick Drift Test</a>. A stick that reports movement while idle will corrupt any mapping test and look like a broken rebind.</p>
-        </div>
-      </div>
-    </div>
+      <h3 class="text-lg font-bold text-[var(--color-text-primary)] mt-8 mb-3">Recommended Actions</h3>
+      <p class="text-[var(--color-text-secondary)] leading-relaxed">
+        Before you chase a rebind problem, rule out the hardware: run the <a href="/test/controller/drift">Stick Drift Test</a>. A stick that reports movement while idle will corrupt any mapping test and look like a broken rebind.
+      </p>
+    </PremiumGuideCard>
   </Fragment>
 
   {/* ── Related Tools Slot ── */}

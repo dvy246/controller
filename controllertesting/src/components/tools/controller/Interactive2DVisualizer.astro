@@ -5,271 +5,271 @@
  */
 import PremiumStickCanvas from './PremiumStickCanvas.astro';
 import TriggerBars from './TriggerBars.astro';
+import DualJoyConSVG from './DualJoyConSVG.astro';
+import SwitchProSVG from './SwitchProSVG.astro';
+import PlayStationSVG from './PlayStationSVG.astro';
+import XboxSVG from './XboxSVG.astro';
 
 export interface Props {
   isRigid?: boolean;
+  mode?: 'default' | 'joycon' | 'switch-pro' | 'playstation' | 'xbox';
 }
 
-const { isRigid = false } = Astro.props;
+const { isRigid = false, mode = 'default' } = Astro.props;
 ---
 
-<div class="competitor-bento-layout w-full max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-12 gap-5 select-none text-stone-200">
-  
-  <!-- LEFT COLUMN: Controller Visualizer Main Card (7 Cols) -->
-  <div class="xl:col-span-7 bg-[#161618] border border-[#27272A] rounded-[28px] p-6 flex flex-col justify-between relative shadow-2xl min-h-[500px]">
-    
-    <!-- Top Header inside Left Card -->
-    <div class="flex items-center justify-between mb-4">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="6" y1="12" x2="10" y2="12"></line>
-            <line x1="8" y1="10" x2="8" y2="14"></line>
-            <circle cx="15" cy="13" r="1" fill="currentColor"></circle>
-            <circle cx="17.5" cy="10.5" r="1" fill="currentColor"></circle>
-            <path d="M17.32 5H6.68a4 4 0 0 0-3.97 3.58L1.6 16.51A3.5 3.5 0 0 0 5.08 20h.1a3.5 3.5 0 0 0 3.32-2.41L9 16h6l.5 1.59A3.5 3.5 0 0 0 18.82 20h.1a3.5 3.5 0 0 0 3.48-3.49l-1.11-7.93A4 4 0 0 0 17.32 5z"></path>
+<div class="doppelrand-shell w-full max-w-7xl mx-auto group" style="isolation: isolate; position: relative;">
+  <!-- Ambient glow via inline style to match brandkit -->
+  <div style="position: absolute; inset: -4px; border-radius: 24px; background: radial-gradient(ellipse at 50% -20%, rgba(139,92,246,0.15) 0%, rgba(59,130,246,0.1) 50%, transparent 70%); filter: blur(16px); z-index: -1; pointer-events: none;" aria-hidden="true"></div>
+
+  <div class="diagnostic-tool-shell diagnostic-workspace w-full bg-[#0E0E10] select-none text-stone-200 relative z-10 flex flex-col">
+      
+      <!-- ── 1. DEVICE & TELEMETRY CONTROL STRIP (Top Header Toolbar) ── -->
+      <div class="w-full bg-[#141417] border-b border-[#27272A] px-6 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-3 font-mono">
+    <!-- Left: Device Name & Live Status -->
+    <div class="flex flex-wrap items-center gap-3">
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="6" width="20" height="12" rx="4"></rect>
+            <path d="M6 12h4m-2-2v4"></path>
+            <circle cx="15" cy="11" r="1" fill="currentColor"></circle>
+            <circle cx="17.5" cy="13" r="1" fill="currentColor"></circle>
           </svg>
         </div>
-        <div>
-          <h2 class="text-white font-bold text-xl tracking-tight">Controller Visualizer</h2>
-          <p id="connection-subtext" class="text-stone-400 font-mono text-xs mt-0.5">Press any button to connect</p>
-        </div>
+        <span class="text-white font-bold text-xs sm:text-sm tracking-tight font-sans whitespace-nowrap">
+          {mode === 'joycon' ? 'Nintendo Switch Joy-Con Suite' : mode === 'switch-pro' ? 'Switch Pro Controller Suite' : mode === 'xbox' ? 'Xbox Controller Suite' : 'PlayStation Controller Suite'}
+        </span>
       </div>
-
-      <!-- Player Indicator Pills (P1 P2 P3 P4) -->
-      <div class="flex items-center gap-3 px-3 py-1.5 rounded-full bg-[#242427] border border-[#3F3F46] font-mono text-xs font-bold text-stone-400">
-        <span id="player-p1" class="flex items-center gap-1.5 text-white">
-          P1 <span class="w-2 h-2 rounded-full bg-emerald-400 inline-block shadow-[0_0_6px_#10B981]"></span>
-        </span>
-        <span id="player-p2" class="flex items-center gap-1.5 opacity-40 hover:opacity-100 transition-opacity cursor-pointer">
-          P2 <span class="w-1.5 h-1.5 rounded-full bg-stone-600 inline-block"></span>
-        </span>
-        <span id="player-p3" class="flex items-center gap-1.5 opacity-40 hover:opacity-100 transition-opacity cursor-pointer">
-          P3 <span class="w-1.5 h-1.5 rounded-full bg-stone-600 inline-block"></span>
-        </span>
-        <span id="player-p4" class="flex items-center gap-1.5 opacity-40 hover:opacity-100 transition-opacity cursor-pointer">
-          P4 <span class="w-1.5 h-1.5 rounded-full bg-stone-600 inline-block"></span>
+      <div class="flex items-center gap-1.5">
+        <span class="text-stone-600 font-bold hidden sm:inline">•</span>
+        <span id="controller-status" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 animate-pulse">
+          Press any button to connect
         </span>
       </div>
     </div>
 
-    <!-- Center: Interactive 2D Controller Vector Viewport -->
-    <div class="w-full flex-1 flex items-center justify-center py-2 relative">
-      <svg id="ps5-svg" viewBox="0 0 700 500" class="w-full max-w-[500px] max-h-[360px] select-none transition-transform duration-300 filter drop-shadow-[0_15px_35px_rgba(0,0,0,0.6)]" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <filter id="glow-blue" x="-50%" y="-50%" width="200%" height="200%">
-            <feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="#3b82f6" flood-opacity="0.9" />
-          </filter>
-        </defs>
-
-        <!-- Triggers & Bumpers -->
-        <g id="group-triggers">
-          <g id="btn-l2" data-btn="6" class="button-path cursor-pointer">
-            <rect x="250" y="20" width="44" height="60" rx="14" class="fill-[#1F1F24] stroke-[#3A3A42] transition-colors" stroke-width="2" />
-            <rect id="l2-wire-fill" x="252" y="22" width="40" height="56" rx="12" fill="#3B82F6" class="opacity-0 transition-opacity" />
-          </g>
-          <g id="btn-r2" data-btn="7" class="button-path cursor-pointer">
-            <rect x="406" y="20" width="44" height="60" rx="14" class="fill-[#1F1F24] stroke-[#3A3A42] transition-colors" stroke-width="2" />
-            <rect id="r2-wire-fill" x="408" y="22" width="40" height="56" rx="12" fill="#3B82F6" class="opacity-0 transition-opacity" />
-          </g>
-          <g id="btn-l1" data-btn="4" class="button-path cursor-pointer">
-            <rect x="238" y="82" width="68" height="26" rx="10" class="fill-[#26262C] stroke-[#444450] transition-colors" stroke-width="2" />
-            <text x="272" y="99" class="fill-stone-300 font-mono font-bold text-[11px]" text-anchor="middle">L1</text>
-          </g>
-          <g id="btn-r1" data-btn="5" class="button-path cursor-pointer">
-            <rect x="394" y="82" width="68" height="26" rx="10" class="fill-[#26262C] stroke-[#444450] transition-colors" stroke-width="2" />
-            <text x="428" y="99" class="fill-stone-300 font-mono font-bold text-[11px]" text-anchor="middle">R1</text>
-          </g>
-        </g>
-
-        <!-- Body Outer Path -->
-        <path d="M 230,105 C 310,95 390,95 470,105 C 520,110 570,135 595,185 C 625,250 645,350 655,435 C 660,475 625,495 590,490 C 555,485 520,410 500,345 C 470,335 430,340 350,340 C 270,340 230,335 200,345 C 180,410 145,485 110,490 C 75,495 40,475 45,435 C 55,350 75,250 105,185 C 130,135 180,110 230,105 Z" fill="#18181C" stroke="#3F3F46" stroke-width="2.5" />
-        <path d="M 125,230 C 180,260 235,320 235,320 M 575,230 C 520,260 465,320 465,320" fill="none" stroke="#27272A" stroke-width="2" stroke-dasharray="4,4" />
-
-        <!-- Touchpad -->
-        <g id="touchpad-group" class="cursor-pointer" data-btn="17">
-          <rect id="btn-touchpad" data-btn="17" x="260" y="112" width="180" height="96" rx="12" class="button-path fill-[#222226] stroke-[#3F3F46] transition-all" stroke-width="2" />
-          <path d="M 255,108 L 445,108" fill="none" stroke="#3B82F6" stroke-width="3" stroke-linecap="round" class="opacity-70" />
-          <text x="350" y="165" class="fill-stone-400 font-mono font-semibold text-[11px] tracking-widest" text-anchor="middle">TOUCHPAD</text>
-        </g>
-
-        <!-- D-PAD -->
-        <g id="group-dpad" transform="translate(170, 240)">
-          <circle cx="0" cy="0" r="52" fill="#222226" stroke="#3F3F46" stroke-width="2" />
-          <path id="btn-dpad-up" data-btn="12" d="M -14,-16 L 14,-16 L 14,-44 C 14,-48 8,-52 0,-52 C -8,-52 -14,-48 -14,-44 Z" class="dpad-btn button-path cursor-pointer fill-[#2A2A30] stroke-[#4B4B56]" stroke-width="1.5" />
-          <path id="btn-dpad-down" data-btn="13" d="M -14,16 L 14,16 L 14,44 C 14,48 8,52 0,52 C -8,52 -14,48 -14,44 Z" class="dpad-btn button-path cursor-pointer fill-[#2A2A30] stroke-[#4B4B56]" stroke-width="1.5" />
-          <path id="btn-dpad-left" data-btn="14" d="M -16,-14 L -16,14 L -44,14 C -48,14 -52,8 -52,0 C -52,-8 -48,-14 -44,-14 Z" class="dpad-btn button-path cursor-pointer fill-[#2A2A30] stroke-[#4B4B56]" stroke-width="1.5" />
-          <path id="btn-dpad-right" data-btn="15" d="M 16,-14 L 16,14 L 44,14 C 48,14 52,8 52,0 C 52,-8 48,-14 46,-14 Z" class="dpad-btn button-path cursor-pointer fill-[#2A2A30] stroke-[#4B4B56]" stroke-width="1.5" />
-        </g>
-
-        <!-- ACTION BUTTONS -->
-        <g id="group-action-buttons" transform="translate(530, 240)">
-          <circle cx="0" cy="0" r="52" fill="#222226" stroke="#3F3F46" stroke-width="2" />
-          <g id="btn-triangle" data-btn="3" class="action-btn cursor-pointer">
-            <circle cx="0" cy="-32" r="16" class="button-path fill-[#2A2A30] stroke-[#4B4B56]" stroke-width="1.5" />
-            <polygon points="0,-39 -6,-27 6,-27" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linejoin="round" />
-          </g>
-          <g id="btn-circle" data-btn="1" class="action-btn cursor-pointer">
-            <circle cx="32" cy="0" r="16" class="button-path fill-[#2A2A30] stroke-[#4B4B56]" stroke-width="1.5" />
-            <circle cx="32" cy="0" r="7" fill="none" stroke="#EF4444" stroke-width="2.5" />
-          </g>
-          <g id="btn-cross" data-btn="0" class="action-btn cursor-pointer">
-            <circle cx="0" cy="32" r="16" class="button-path fill-[#2A2A30] stroke-[#4B4B56]" stroke-width="1.5" />
-            <path d="M -5,27 L 5,37 M 5,27 L -5,37" fill="none" stroke="#3B82F6" stroke-width="2.5" stroke-linecap="round" />
-          </g>
-          <g id="btn-square" data-btn="2" class="action-btn cursor-pointer">
-            <circle cx="-32" cy="0" r="16" class="button-path fill-[#2A2A30] stroke-[#4B4B56]" stroke-width="1.5" />
-            <rect x="-37" y="-5" width="10" height="10" fill="none" stroke="#EC4899" stroke-width="2.5" />
-          </g>
-        </g>
-
-        <!-- ANALOG THUMBSTICKS -->
-        <g id="group-left-stick" transform="translate(265, 350)">
-          <circle cx="0" cy="0" r="42" fill="#222226" stroke="#3F3F46" stroke-width="2" />
-          <g id="stick-l-cap" data-btn="10" class="button-path cursor-pointer stick-cap-node">
-            <circle cx="0" cy="0" r="33" fill="#2A2A30" stroke="#4B4B56" stroke-width="2" />
-            <circle cx="0" cy="0" r="24" fill="none" stroke="#3F3F46" stroke-width="1.5" stroke-dasharray="3,3" />
-            <text x="0" y="4" class="fill-stone-400 font-mono font-bold text-[10px]" text-anchor="middle">L3</text>
-          </g>
-        </g>
-
-        <g id="group-right-stick" transform="translate(435, 350)">
-          <circle cx="0" cy="0" r="42" fill="#222226" stroke="#3F3F46" stroke-width="2" />
-          <g id="stick-r-cap" data-btn="11" class="button-path cursor-pointer stick-cap-node">
-            <circle cx="0" cy="0" r="33" fill="#2A2A30" stroke="#4B4B56" stroke-width="2" />
-            <circle cx="0" cy="0" r="24" fill="none" stroke="#3F3F46" stroke-width="1.5" stroke-dasharray="3,3" />
-            <text x="0" y="4" class="fill-stone-400 font-mono font-bold text-[10px]" text-anchor="middle">R3</text>
-          </g>
-        </g>
-
-        <!-- META BUTTONS -->
-        <g id="btn-create" data-btn="8" class="button-path cursor-pointer">
-          <rect x="226" y="140" width="16" height="24" rx="6" fill="#2A2A30" stroke="#4B4B56" stroke-width="1.5" />
-        </g>
-        <g id="btn-options" data-btn="9" class="button-path cursor-pointer">
-          <rect x="458" y="140" width="16" height="24" rx="6" fill="#2A2A30" stroke="#4B4B56" stroke-width="1.5" />
-        </g>
-        <g id="btn-ps" data-btn="16" class="button-path cursor-pointer">
-          <circle cx="350" cy="275" r="14" fill="#222226" stroke="#3F3F46" stroke-width="1.5" />
-          <path d="M 347,269 C 347,269 353,269 353,274 C 353,279 347,278 347,283 M 344,280 L 356,280" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" />
-        </g>
-      </svg>
-    </div>
-
-    <!-- Bottom Legend inside Left Card -->
-    <div class="flex items-center justify-center gap-6 font-mono text-xs text-stone-400 pt-3 border-t border-[#27272A]">
-      <div class="flex items-center gap-2">
-        <span class="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block shadow-[0_0_8px_#3B82F6]"></span>
-        <span>Button Pressed</span>
+    <!-- Right: Hz, Latency ms & P1-P4 Selector -->
+    <div class="flex items-center gap-4 text-xs">
+      <div class="flex items-center gap-3 text-stone-400 font-medium">
+        <span>POLLING: <strong id="polling-rate-val" class="text-blue-400 font-bold">0 Hz</strong></span>
+        <span class="text-stone-700">|</span>
+        <span>LATENCY: <strong id="latency-val" class="text-emerald-400 font-bold">0.0 ms</strong></span>
       </div>
-      <div class="flex items-center gap-2">
-        <span class="w-2.5 h-2.5 rounded-full bg-stone-600 inline-block"></span>
-        <span>Waiting for Input</span>
+      <div class="flex items-center gap-1 bg-[#1A1A1E] p-1 rounded-lg border border-[#2B2B32]">
+        <button id="p1-btn" class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-600 text-white shadow-sm transition-all">P1</button>
+        <button id="p2-btn" class="px-2 py-0.5 rounded text-[10px] font-bold text-stone-500 hover:text-stone-300 transition-all">P2</button>
+        <button id="p3-btn" class="px-2 py-0.5 rounded text-[10px] font-bold text-stone-500 hover:text-stone-300 transition-all">P3</button>
+        <button id="p4-btn" class="px-2 py-0.5 rounded text-[10px] font-bold text-stone-500 hover:text-stone-300 transition-all">P4</button>
       </div>
     </div>
   </div>
 
-  <!-- RIGHT COLUMN: 2x2 Bento Grid (4 Separate Floating Cards) (5 Cols) -->
-  <div class="xl:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <!-- ── 2. MAIN SPLIT VIEWPORT (Controller Stage + Primary Metrics Stack) ── -->
+  <div class="w-full grid grid-cols-1 lg:grid-cols-12 items-stretch border-b border-[#27272A]">
     
-    <!-- Bento Card 1: Analog Sticks -->
-    <div class="bg-[#161618] border border-[#27272A] rounded-[24px] p-4 flex flex-col justify-between shadow-2xl min-h-[235px]">
-      <div class="flex items-start justify-between mb-1">
-        <div class="flex items-center gap-2.5 min-w-0">
-          <div class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
-          </div>
-          <div class="min-w-0">
-            <h3 class="text-xs font-bold text-white font-mono leading-snug tracking-tight">Analog Sticks</h3>
-            <span class="text-[9px] text-emerald-400 font-mono leading-none block mt-0.5">Linearity & Drift</span>
-          </div>
-        </div>
-        <button id="recenter-btn" title="Re-center Sticks" class="text-stone-400 hover:text-white transition-colors p-1 shrink-0 mt-0.5">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-        </button>
-      </div>
+    <!-- LEFT STAGE: Real-Time Vector Controller Viewport (7 Cols) -->
+    <div class="lg:col-span-7 bg-[#121214] p-6 sm:p-8 flex flex-col items-center relative border-b lg:border-b-0 lg:border-r border-[#27272A]">
       
-      <div class="flex-1 flex items-center justify-center py-1">
-        <PremiumStickCanvas />
+      <!-- Interactive SVG Controller -->
+      <div class="w-full flex-1 flex items-center justify-center py-2 relative">
+        {mode === 'joycon' ? (
+          <DualJoyConSVG />
+        ) : mode === 'switch-pro' ? (
+          <SwitchProSVG />
+        ) : mode === 'xbox' ? (
+          <XboxSVG />
+        ) : (
+          <PlayStationSVG />
+        )}
+      </div>
+
+      <!-- Integrated Input State Legend -->
+      <div class="flex items-center gap-6 font-mono text-xs text-stone-400 px-4 py-1.5 rounded-full bg-black/40 border border-white/10 mt-2">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block shadow-[0_0_8px_#3B82F6]"></span>
+          <span>Button Pressed</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-stone-600 inline-block"></span>
+          <span>Rest / Default</span>
+        </div>
       </div>
     </div>
 
-    <!-- Bento Card 2: Triggers -->
-    <div class="bg-[#161618] border border-[#27272A] rounded-[24px] p-4 flex flex-col justify-between shadow-2xl min-h-[235px]">
-      <div class="flex items-center gap-2.5 mb-1">
-        <div class="w-7 h-7 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 11V3M1 14h6M9 8h6M17 16h6"/></svg>
-        </div>
-        <div class="min-w-0">
-          <h3 class="text-xs font-bold text-white font-mono leading-snug tracking-tight">Triggers</h3>
-          <span class="text-[9px] text-indigo-400 font-mono leading-none block mt-0.5">Analog Pressure (0-1)</span>
-        </div>
-      </div>
+    <!-- RIGHT STAGE: Vertical Diagnostic Telemetry Stack (5 Cols) -->
+    <div class="lg:col-span-5 bg-[#161618] p-6 flex flex-col gap-6">
       
-      <div class="flex-1 flex items-center justify-center py-1">
-        <TriggerBars />
+      <!-- Top Section: Analog Sticks & Drift (Full Width - Title Never Wraps!) -->
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+              <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+            </div>
+            <div>
+              <span class="text-sm font-bold text-white font-mono leading-none block whitespace-nowrap">Analog Sticks & Drift</span>
+              <span class="text-[10px] text-emerald-400 font-mono leading-none block mt-1 font-semibold">Linearity, Offset & Circularity</span>
+            </div>
+          </div>
+          <button id="recenter-btn" title="Re-center Sticks" class="text-stone-400 hover:text-white transition-colors p-1 shrink-0">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          </button>
+        </div>
+        
+        <div class="w-full pt-1">
+          <PremiumStickCanvas />
+        </div>
       </div>
-    </div>
 
-    <!-- Bento Card 3: Raw Data -->
-    <div class="bg-[#161618] border border-[#27272A] rounded-[24px] p-4 flex flex-col justify-between shadow-2xl min-h-[235px]">
-      <div class="flex items-center gap-2.5 mb-1">
+      <!-- Bottom Section: Analog Triggers (Full Width - Title Never Wraps!) -->
+      <div class="flex flex-col gap-2 pt-4 border-t border-[#27272A]">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 shrink-0">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 11V3M1 14h6M9 8h6M17 16h6"/></svg>
+          </div>
+          <div>
+            <span class="text-sm font-bold text-white font-mono leading-none block whitespace-nowrap">Analog Triggers (L2 / R2)</span>
+            <span class="text-[10px] text-indigo-400 font-mono leading-none block mt-1 font-semibold">Pressure Curve (0.000 – 1.000)</span>
+          </div>
+        </div>
+        
+        <div class="w-full pt-1">
+          <TriggerBars />
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 3. BOTTOM DIAGNOSTIC CONSOLE (Full-Width Raw Telemetry & Vibration Hub) ── -->
+  <div class="w-full bg-[#111114] p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- Left Console: Gamepad API Telemetry & Button Matrix (6 Cols) -->
+    <div class="lg:col-span-6 flex flex-col gap-3">
+      <div class="flex items-center gap-2.5">
         <div class="w-7 h-7 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
         </div>
-        <div class="min-w-0">
-          <h3 class="text-xs font-bold text-white font-mono leading-snug tracking-tight">Raw Data</h3>
-          <span class="text-[9px] text-blue-400 font-mono leading-none block mt-0.5">Gamepad API Output</span>
+        <div>
+          <span class="text-sm font-bold text-white font-mono leading-none block">Raw Gamepad API Data</span>
+          <span class="text-[10px] text-blue-400 font-mono block mt-1 font-semibold">0-17 Buttons & Active Axes</span>
         </div>
       </div>
 
       <!-- Button Matrix -->
-      <div class="flex-1 flex flex-col justify-between mt-2">
-        <div class="grid grid-cols-6 gap-1" id="competitor-matrix">
-          <!-- Rendered via JS -->
+      <div class="grid grid-cols-6 gap-1.5" id="competitor-matrix">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- Raw Axes 0-3 Telemetry -->
+      <div class="pt-1.5 flex flex-col gap-1.5 font-mono">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] font-bold text-stone-400 tracking-wider">ANALOG AXES (0 - 3)</span>
+          <span class="text-[9px] text-stone-500 font-medium">Bipolar [-1.00 to +1.00]</span>
         </div>
-        <div class="text-center mt-2">
-          <span id="bento-status-subtext" class="text-[9px] font-mono text-stone-500 uppercase tracking-wider font-bold truncate block">NO CONTROLLER DETECTED</span>
+        <div class="grid grid-cols-2 gap-2">
+          <!-- Axis 0 (L-Stick X) -->
+          <div class="flex items-center gap-2 bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">
+            <span class="text-[10px] font-bold text-emerald-400 w-3">0</span>
+            <div class="flex-1 h-2 bg-black/60 rounded-full overflow-hidden relative">
+              <div class="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/30 -translate-x-1/2 z-10"></div>
+              <div id="raw-axis-0-bar" class="h-full bg-emerald-500 transition-all duration-75" style="width: 0%; margin-left: 50%;"></div>
+            </div>
+            <span id="raw-axis-0-val" class="text-[10px] font-bold text-emerald-400 w-11 text-right tabular-nums">+0.00</span>
+          </div>
+          <!-- Axis 1 (L-Stick Y) -->
+          <div class="flex items-center gap-2 bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">
+            <span class="text-[10px] font-bold text-emerald-400 w-3">1</span>
+            <div class="flex-1 h-2 bg-black/60 rounded-full overflow-hidden relative">
+              <div class="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/30 -translate-x-1/2 z-10"></div>
+              <div id="raw-axis-1-bar" class="h-full bg-emerald-500 transition-all duration-75" style="width: 0%; margin-left: 50%;"></div>
+            </div>
+            <span id="raw-axis-1-val" class="text-[10px] font-bold text-emerald-400 w-11 text-right tabular-nums">+0.00</span>
+          </div>
+          <!-- Axis 2 (R-Stick X) -->
+          <div class="flex items-center gap-2 bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">
+            <span class="text-[10px] font-bold text-blue-400 w-3">2</span>
+            <div class="flex-1 h-2 bg-black/60 rounded-full overflow-hidden relative">
+              <div class="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/30 -translate-x-1/2 z-10"></div>
+              <div id="raw-axis-2-bar" class="h-full bg-blue-500 transition-all duration-75" style="width: 0%; margin-left: 50%;"></div>
+            </div>
+            <span id="raw-axis-2-val" class="text-[10px] font-bold text-blue-400 w-11 text-right tabular-nums">+0.00</span>
+          </div>
+          <!-- Axis 3 (R-Stick Y) -->
+          <div class="flex items-center gap-2 bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">
+            <span class="text-[10px] font-bold text-blue-400 w-3">3</span>
+            <div class="flex-1 h-2 bg-black/60 rounded-full overflow-hidden relative">
+              <div class="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/30 -translate-x-1/2 z-10"></div>
+              <div id="raw-axis-3-bar" class="h-full bg-blue-500 transition-all duration-75" style="width: 0%; margin-left: 50%;"></div>
+            </div>
+            <span id="raw-axis-3-val" class="text-[10px] font-bold text-blue-400 w-11 text-right tabular-nums">+0.00</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Diagnostic Helper / Status Line -->
+      <div class="flex items-center gap-2 py-2 px-3.5 rounded-xl bg-white/[0.03] border border-white/10 font-mono text-xs w-full overflow-hidden">
+        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" id="bento-status-dot"></span>
+        <span id="bento-status-subtext" class="text-stone-300 font-medium whitespace-normal leading-normal">Connect a controller or press any button to inspect live Gamepad API telemetry.</span>
+      </div>
+    </div>
+
+    <!-- Right Console: Haptic Vibration Diagnostics (6 Cols) -->
+    <div class="lg:col-span-6 flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white font-mono leading-none m-0">Haptic Vibration Test</h3>
+            <span class="text-[10px] text-amber-400 font-mono block mt-1 font-semibold">Dual Rumble Actuators</span>
+          </div>
+        </div>
+        <span id="vibe-feedback-tag" class="text-[10px] font-mono text-stone-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded font-semibold">Awaiting Command</span>
+      </div>
+
+      <p class="text-xs text-stone-400 font-mono leading-relaxed">
+        Tests dual-rumble actuators (Left Heavy & Right Light) via browser Vibration API.
+      </p>
+
+      <div class="grid grid-cols-4 gap-2 w-full">
+        <button class="comp-vibe-btn text-[10px] font-mono font-bold uppercase py-2 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors cursor-pointer text-center flex flex-col items-center justify-center gap-1" data-vibe="heavy">
+          <span>HEAVY</span>
+          <span class="w-4 h-1 bg-amber-500 rounded-full"></span>
+        </button>
+        <button class="comp-vibe-btn text-[10px] font-mono font-bold uppercase py-2 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors cursor-pointer text-center flex flex-col items-center justify-center gap-1" data-vibe="light">
+          <span>LIGHT</span>
+          <span class="w-4 h-1 bg-blue-500 rounded-full"></span>
+        </button>
+        <button class="comp-vibe-btn text-[10px] font-mono font-bold uppercase py-2 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors cursor-pointer text-center flex flex-col items-center justify-center gap-1" data-vibe="burst">
+          <span>BURST</span>
+          <span class="w-4 h-1 bg-purple-500 rounded-full"></span>
+        </button>
+        <button class="comp-vibe-btn text-[10px] font-mono font-bold uppercase py-2 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors cursor-pointer text-center flex flex-col items-center justify-center gap-1" data-vibe="pulse">
+          <span>PULSE</span>
+          <span class="w-4 h-1 bg-rose-500 rounded-full"></span>
+        </button>
+      </div>
+
+      <!-- Custom Vibration Intensity Slider -->
+      <div class="mt-1 pt-3 border-t border-white/10 flex flex-col gap-2 font-mono">
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Custom Intensity</span>
+          <span id="vibe-slider-val" class="text-xs font-bold text-amber-400 tabular-nums">70%</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <input type="range" id="vibe-intensity-slider" min="0" max="100" value="70" class="flex-1 h-1.5 bg-black/60 rounded-lg appearance-none cursor-pointer accent-amber-500 border border-white/10" />
+          <button id="vibe-slider-test-btn" class="px-3 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-mono text-[10px] font-bold uppercase transition-colors shrink-0 cursor-pointer">
+            Vibrate
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Bento Card 4: Vibration Test -->
-    <div class="bg-[#161618] border border-[#27272A] rounded-[24px] p-4 flex flex-col justify-between shadow-2xl min-h-[235px]">
-      <div class="flex items-center gap-2.5 mb-1">
-        <div class="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
-          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        </div>
-        <div class="min-w-0">
-          <h3 class="text-xs font-bold text-amber-400 font-mono leading-snug tracking-tight">Vibration Test</h3>
-          <span class="text-[9px] text-amber-500/70 font-mono leading-none block mt-0.5">Dual Motor Setup</span>
-        </div>
-      </div>
-
-      <div class="flex-1 flex flex-col items-center justify-center gap-3 py-1">
-        <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-          <svg class="w-5 h-5 text-stone-400 animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M8 6v12M16 6v12M4 9v6M20 9v6"/></svg>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2 w-full">
-          <button class="comp-vibe-btn text-[10px] font-mono font-bold uppercase py-2 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors" data-vibe="heavy">
-            HEAVY <div class="w-4 h-1 bg-amber-500 rounded-full mx-auto mt-1"></div>
-          </button>
-          <button class="comp-vibe-btn text-[10px] font-mono font-bold uppercase py-2 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors" data-vibe="light">
-            LIGHT <div class="w-4 h-1 bg-blue-500 rounded-full mx-auto mt-1"></div>
-          </button>
-          <button class="comp-vibe-btn text-[10px] font-mono font-bold uppercase py-2 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors" data-vibe="burst">
-            BURST <div class="w-4 h-1 bg-purple-500 rounded-full mx-auto mt-1"></div>
-          </button>
-          <button class="comp-vibe-btn text-[10px] font-mono font-bold uppercase py-2 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors" data-vibe="pulse">
-            PULSE <div class="w-4 h-1 bg-rose-500 rounded-full mx-auto mt-1"></div>
-          </button>
-        </div>
-      </div>
     </div>
-
   </div>
-</div>
 
 <script>
   import { GamepadLoop } from '../../../lib/gamepad';
@@ -278,6 +278,10 @@ const { isRigid = false } = Astro.props;
     const subtext = document.getElementById('connection-subtext');
     const matrixContainer = document.getElementById('competitor-matrix');
     const bentoStatusSubtext = document.getElementById('bento-status-subtext');
+    const bentoStatusDot = document.getElementById('bento-status-dot');
+    const masterHz = document.getElementById('master-hz');
+    const masterLatency = document.getElementById('master-latency');
+    const vibeFeedbackTag = document.getElementById('vibe-feedback-tag');
     const stickLCap = document.getElementById('stick-l-cap');
     const stickRCap = document.getElementById('stick-r-cap');
     const l2Fill = document.getElementById('l2-wire-fill');
@@ -297,19 +301,36 @@ const { isRigid = false } = Astro.props;
       }
     }
 
+    let frameCount = 0;
+    let lastHzTime = performance.now();
+
     GamepadLoop.subscribe((state) => {
+      const now = performance.now();
+      frameCount++;
+      if (now - lastHzTime >= 1000) {
+        const hz = Math.round((frameCount * 1000) / (now - lastHzTime));
+        frameCount = 0;
+        lastHzTime = now;
+        if (masterHz) masterHz.textContent = `${hz} Hz`;
+        if (masterLatency) masterLatency.textContent = `${(1000 / (hz || 60)).toFixed(1)} ms`;
+      }
+
       if (state && state.connected) {
         const idLower = (state.id || '').toLowerCase();
         const isPS = idLower.includes('dualsense') || idLower.includes('playstation') || idLower.includes('dualshock') || idLower.includes('054c') || idLower.includes('wireless controller');
 
         if (subtext) {
           subtext.textContent = isPS ? `PS5 DualSense Connected (${state.id.substring(0, 16)}...)` : `Controller Connected (${state.id.substring(0, 16)}...)`;
-          subtext.className = "text-emerald-400 font-mono text-xs font-bold mt-0.5";
+          subtext.className = "text-emerald-400 font-mono text-xs font-bold";
         }
         
         if (bentoStatusSubtext) {
-          bentoStatusSubtext.textContent = isPS ? "PS5 DUALSENSE CONNECTED" : "CONTROLLER CONNECTED";
-          bentoStatusSubtext.className = "text-[10px] font-mono text-emerald-400 uppercase tracking-wider font-bold";
+          bentoStatusSubtext.textContent = isPS ? "PS5 DUALSENSE CONNECTED (GAMEPAD API ACTIVE)" : "CONTROLLER CONNECTED (GAMEPAD API ACTIVE)";
+          bentoStatusSubtext.className = "text-stone-300 font-mono text-xs font-semibold truncate";
+        }
+
+        if (bentoStatusDot) {
+          bentoStatusDot.className = "w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#10B981] shrink-0";
         }
 
         const touchpadEl = document.getElementById('btn-touchpad');
@@ -345,7 +366,7 @@ const { isRigid = false } = Astro.props;
           }
         });
 
-        // Sticks
+        // Sticks & Raw Axes 0-3
         const lx = state.leftStick ? state.leftStick.x : 0;
         const ly = state.leftStick ? state.leftStick.y : 0;
         const rx = state.rightStick ? state.rightStick.x : 0;
@@ -353,14 +374,36 @@ const { isRigid = false } = Astro.props;
 
         if (stickLCap) stickLCap.style.transform = `translate(${lx * 18}px, ${ly * 18}px)`;
         if (stickRCap) stickRCap.style.transform = `translate(${rx * 18}px, ${ry * 18}px)`;
+
+        const rawAxes = [lx, ly, rx, ry];
+        rawAxes.forEach((val, idx) => {
+          const valEl = document.getElementById(`raw-axis-${idx}-val`);
+          const barEl = document.getElementById(`raw-axis-${idx}-bar`);
+          if (valEl) {
+            valEl.textContent = (val >= 0 ? '+' : '') + val.toFixed(2);
+          }
+          if (barEl) {
+            const mag = Math.min(Math.abs(val), 1.0) * 50;
+            if (val >= 0) {
+              barEl.style.marginLeft = '50%';
+              barEl.style.width = `${mag}%`;
+            } else {
+              barEl.style.marginLeft = `${50 - mag}%`;
+              barEl.style.width = `${mag}%`;
+            }
+          }
+        });
       } else {
         if (subtext) {
           subtext.textContent = "Press any button to connect";
-          subtext.className = "text-stone-400 font-mono text-xs mt-0.5";
+          subtext.className = "text-stone-400 font-mono text-xs font-semibold";
         }
         if (bentoStatusSubtext) {
-          bentoStatusSubtext.textContent = "NO CONTROLLER DETECTED";
-          bentoStatusSubtext.className = "text-[10px] font-mono text-stone-500 uppercase tracking-wider font-bold";
+          bentoStatusSubtext.textContent = "Connect a controller or press any button to inspect live Gamepad API telemetry.";
+          bentoStatusSubtext.className = "text-stone-400 font-mono text-xs truncate";
+        }
+        if (bentoStatusDot) {
+          bentoStatusDot.className = "w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0";
         }
         const touchpadEl = document.getElementById('btn-touchpad');
         if (touchpadEl) {
@@ -393,12 +436,75 @@ const { isRigid = false } = Astro.props;
               weakMagnitude: weak,
               strongMagnitude: strong
             });
+            if (vibeFeedbackTag) {
+              vibeFeedbackTag.textContent = `Sent ${type?.toUpperCase()} [${duration}ms]`;
+              vibeFeedbackTag.className = "text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded font-bold";
+            }
           } catch (err) {
             console.warn("Vibration API failed", err);
+            if (vibeFeedbackTag) {
+              vibeFeedbackTag.textContent = "API Error";
+              vibeFeedbackTag.className = "text-[10px] font-mono text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded font-bold";
+            }
+          }
+        } else {
+          if (vibeFeedbackTag) {
+            vibeFeedbackTag.textContent = "No Rumble Motor Detected";
+            vibeFeedbackTag.className = "text-[10px] font-mono text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded font-bold";
           }
         }
       });
     });
+
+    // Custom Vibration Intensity Slider Handlers
+    const vibeSlider = document.getElementById('vibe-intensity-slider') as HTMLInputElement | null;
+    const vibeSliderVal = document.getElementById('vibe-slider-val');
+    const vibeSliderTestBtn = document.getElementById('vibe-slider-test-btn');
+
+    function triggerCustomVibe(intensityPct: number) {
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let activeGp: any = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i]?.connected) { activeGp = gamepads[i]; break; }
+      }
+      const mag = Math.min(Math.max(intensityPct / 100, 0), 1.0);
+      if (activeGp && activeGp.vibrationActuator) {
+        try {
+          activeGp.vibrationActuator.playEffect("dual-rumble", {
+            startDelay: 0,
+            duration: 350,
+            weakMagnitude: mag,
+            strongMagnitude: mag
+          });
+          if (vibeFeedbackTag) {
+            vibeFeedbackTag.textContent = `Custom Rumble [${intensityPct}%]`;
+            vibeFeedbackTag.className = "text-[10px] font-mono text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded font-bold";
+          }
+        } catch (err) {
+          console.warn("Vibration API error", err);
+        }
+      } else {
+        if (vibeFeedbackTag) {
+          vibeFeedbackTag.textContent = `Set ${intensityPct}% (No Controller Connected)`;
+          vibeFeedbackTag.className = "text-[10px] font-mono text-stone-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded font-semibold";
+        }
+      }
+    }
+
+    if (vibeSlider && vibeSliderVal) {
+      vibeSlider.addEventListener('input', () => {
+        const val = Number(vibeSlider.value);
+        vibeSliderVal.textContent = `${val}%`;
+        triggerCustomVibe(val);
+      });
+    }
+
+    if (vibeSliderTestBtn && vibeSlider) {
+      vibeSliderTestBtn.addEventListener('click', () => {
+        const val = Number(vibeSlider.value);
+        triggerCustomVibe(val);
+      });
+    }
   });
 </script>
 

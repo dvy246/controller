@@ -77,20 +77,20 @@ const schema = {
     <SensConverterUI fromGameKey={from} toGameKey={to} />
 
     <!-- AEO/GEO FAQ -->
-    <section class="mt-16 bg-surface-1 p-6 sm:p-8 rounded-2xl border border-surface-3">
-      <h2 class="text-h2 mb-6">Sensitivity Conversion & Motor Memory Guide</h2>
+    <section class="mt-16 bg-[var(--color-surface-1)] p-6 sm:p-8 rounded-2xl border border-[var(--color-border-default)]">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-6">Sensitivity Conversion & Motor Memory Guide</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-secondary">
-        <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
-          <h3 class="font-semibold mb-2">Why does sensitivity differ between {fromName} and {toName}?</h3>
-          <p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-[var(--color-text-secondary)]">
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">Why does sensitivity differ between {fromName} and {toName}?</h3>
+          <p class="leading-relaxed">
             Different game engines use different <strong>Yaw multipliers</strong> (the angular degree change per mouse counts or analog stick tick). For instance, Valorant uses a yaw of 0.07 while CS2 uses 0.022. Direct numerical sensitivity numbers are non-transferable without conversion.
           </p>
         </div>
 
-        <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
-          <h3 class="font-semibold mb-2">What is cm/360° distance?</h3>
-          <p>
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">What is cm/360° distance?</h3>
+          <p class="leading-relaxed">
             It is the physical distance (in centimeters or inches) your hand must move across the mousepad to rotate your in-game camera 360 degrees. Matching cm/360° distance ensures 1:1 muscle memory transfer.
           </p>
         </div>

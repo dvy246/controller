@@ -6,6 +6,7 @@
 
 import ToolLayout from '../../../layouts/ToolLayout.astro';
 import DriftTester from '../../../components/tools/controller/DriftTester.astro';
+import PremiumGuideCard from '../../../components/seo/PremiumGuideCard.astro';
 
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
@@ -117,17 +118,16 @@ const schemaData = {
 
   {/* ── SEO Repair Guide Section ── */}
   <Fragment slot="export">
-    <div class="repair-guide mt-12 bg-[var(--color-surface-2)] p-8 rounded-[var(--radius-card)] border border-[var(--color-border-subtle)]">
-      <h2 class="text-h2 mb-4">How do you calibrate a flight stick or HOTAS system?</h2>
-      <p class="mb-6 text-[var(--color-text-secondary)] leading-relaxed"><strong>You calibrate a flight stick or HOTAS by navigating to your operating system's USB game controller settings, selecting the device, and running the calibration wizard. Move all axes, including the throttle and rudders, to their maximum extents to register full range of motion accurately.</strong></p>
+    <PremiumGuideCard title="How do you calibrate a flight stick or HOTAS system?">
+      <p class="text-[var(--color-text-secondary)] leading-relaxed">
+        <strong>You calibrate a flight stick or HOTAS by navigating to your operating system's USB game controller settings, selecting the device, and running the calibration wizard. Move all axes, including the throttle and rudders, to their maximum extents to register full range of motion accurately.</strong>
+      </p>
       
-      <div class="flex flex-col gap-6">
-        <div>
-          <h3 class="text-[var(--color-accent)] mb-2 font-bold">Recommended Actions</h3>
-          <p class="text-[var(--color-text-secondary)] leading-relaxed">Start with the <a href="/test/controller/drift">Stick Drift Test</a> to check every axis at rest. A centered stick should sit near zero on pitch, roll, and yaw before you calibrate the throttle and hats.</p>
-        </div>
-      </div>
-    </div>
+      <h3 class="text-lg font-bold text-[var(--color-text-primary)] mt-8 mb-3">Recommended Actions</h3>
+      <p class="text-[var(--color-text-secondary)] leading-relaxed">
+        Start with the <a href="/test/controller/drift">Stick Drift Test</a> to check every axis at rest. A centered stick should sit near zero on pitch, roll, and yaw before you calibrate the throttle and hats.
+      </p>
+    </PremiumGuideCard>
   </Fragment>
 
   {/* ── Related Tools Slot ── */}

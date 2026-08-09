@@ -4,6 +4,7 @@ import Header from '../../components/global/Header.astro';
 import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
 import MechKeyboard from '../../components/features/MechKeyboard.astro';
+import PremiumFaqAccordion from '../../components/seo/PremiumFaqAccordion.astro';
 
 export function getStaticPaths() {
   const layouts = ['60-percent', 'tkl', 'full'];
@@ -25,65 +26,165 @@ const breadcrumbs = [
   { name: `${formattedLayout} Keyboard` }
 ];
 
-const schema = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": title,
-  "url": canonical,
-  "description": description,
-  "applicationCategory": "UtilitiesApplication",
-  "operatingSystem": "All",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
+const keyboardFaqs = [
+  {
+    question: 'What is keyboard ghosting?',
+    answer: 'Keyboard ghosting occurs when pressing certain key combinations causes an unpressed key to falsely register, or prevents an active keypress from being detected due to shared wiring channels in low-cost key matrices.'
+  },
+  {
+    question: 'What is N-Key Rollover (NKRO)?',
+    answer: 'N-Key Rollover (NKRO) means every key on your keyboard is wired independently. You can press as many keys simultaneously as you want, and every single keypress will register accurately with zero ghosting or dropped inputs.'
+  },
+  {
+    question: 'How do I test for mechanical switch chatter or double-typing?',
+    answer: 'Switch chatter occurs when a mechanical switch contact bounces rapidly on press, registering two or more keypresses instantly. Use our key activity feed above to monitor press timestamps in milliseconds. If a single tap produces multiple log entries in under 15ms, the switch has contact bounce chatter.'
+  },
+  {
+    question: 'What is the difference between 60%, TKL 80%, and Full 100% layouts?',
+    answer: 'A Full 100% keyboard includes all 104/105 ANSI keys including Numpad, F-row, and Navigation cluster. TKL (Tenkeyless 80%) removes the numeric keypad for mouse space. 60% compact keyboards remove the F-row, navigation cluster, and arrow keys, accessing them via Fn key combinations.'
+  },
+  {
+    question: 'Does this test support Mac and Windows modifier keys?',
+    answer: 'Yes! This online keyboard tester detects hardware scancodes natively via standard browser Web APIs. Command (⌘), Option (⌥), Windows (⊞), Alt, Control, and Fn modifier keys are mapped in real time.'
   }
-};
+];
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": title,
+    "url": canonical,
+    "description": description,
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": keyboardFaqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  }
+];
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs}>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
   <Header />
-  <main class="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-    <!-- Breadcrumb -->
-    <div class="mb-6">
-      <Breadcrumbs items={breadcrumbs} />
-    </div>
-
-    <!-- Header -->
-    <div class="mb-8 text-center sm:text-left">
-      <h1 class="text-h1">
-        Mechanical Keyboard Tester ({formattedLayout})
-      </h1>
-      <p class="mt-2 text-secondary max-w-3xl">
-        Benchmark key chatter, N-Key Rollover (NKRO) ghosting limit, and listen to synthesized switch sounds (Clicky Blue, Linear Red, Tactile Brown).
-      </p>
-    </div>
-
-    <!-- Component -->
-    <MechKeyboard layoutKey={layout} />
-
-    <!-- AEO/GEO FAQ -->
-    <section class="mt-16 bg-surface-1 p-6 sm:p-8 rounded-2xl border border-surface-3">
-      <h2 class="text-h2 mb-6">Keyboard Ghosting & NKRO FAQ</h2>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-secondary">
-        <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
-          <h3 class="font-semibold mb-2">What is keyboard ghosting?</h3>
-          <p>
-            Ghosting occurs when pressing certain combinations of keys causes an unpressed key to register, or causes an additional keypress to be ignored due to shared PCB wiring matrices.
-          </p>
-        </div>
-
-        <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
-          <h3 class="font-semibold mb-2">What is N-Key Rollover (NKRO)?</h3>
-          <p>
-            N-Key Rollover means every single key on the keyboard is wired independently. You can press as many keys simultaneously as you want, and every single one will register accurately.
-          </p>
-        </div>
+  <main id="main-content" class="hub-page py-12">
+    <div class="container-site space-y-16 sm:space-y-24">
+      <!-- Breadcrumb -->
+      <div>
+        <Breadcrumbs items={breadcrumbs} />
       </div>
-    </section>
+
+      <!-- Page Header: Centered & Middle-Aligned -->
+      <header class="page-header page-header--centered text-center max-w-3xl mx-auto">
+        <span class="badge-tag mb-3 inline-flex items-center gap-1.5">Keyboard Diagnostic Tool</span>
+        <h1 class="text-h1 mb-3">
+          Mechanical Keyboard Tester <span class="text-stone-400 font-normal">({formattedLayout})</span>
+        </h1>
+        <p class="hub-subtitle mx-auto">
+          Benchmark {formattedLayout} key layout for chatter, N-Key Rollover (NKRO) ghosting, and switch audio profiles.
+        </p>
+
+        <!-- Layout Switcher Controls -->
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-2 font-mono" role="navigation" aria-label="Select Keyboard Layout">
+          <a href="/keyboard-tester/60-percent" class={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${layout === '60-percent' ? 'bg-blue-600/20 text-blue-400 border-blue-500/40 shadow-[0_0_12px_rgba(59,130,246,0.2)]' : 'bg-surface-1 text-text-secondary border-border-default hover:border-text-secondary'}`}>60% Compact</a>
+          <a href="/keyboard-tester/tkl" class={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${layout === 'tkl' ? 'bg-blue-600/20 text-blue-400 border-blue-500/40 shadow-[0_0_12px_rgba(59,130,246,0.2)]' : 'bg-surface-1 text-text-secondary border-border-default hover:border-text-secondary'}`}>TKL 80%</a>
+          <a href="/keyboard-tester/full" class={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all border ${layout === 'full' ? 'bg-blue-600/20 text-blue-400 border-blue-500/40 shadow-[0_0_12px_rgba(59,130,246,0.2)]' : 'bg-surface-1 text-text-secondary border-border-default hover:border-text-secondary'}`}>Full 100% ANSI</a>
+        </div>
+      </header>
+
+      <!-- Component Stage -->
+      <div>
+        <MechKeyboard layoutKey={layout} />
+      </div>
+
+      <!-- Recommended Diagnostic Actions (Asymmetric Banner) -->
+      <section aria-label="Recommended keyboard diagnostic actions">
+        <div class="mb-8">
+          <span class="badge-tag mb-3 inline-block">Diagnostic Suites</span>
+          <h2 class="section-title">Specialized Mechanical Diagnostics</h2>
+          <p class="text-secondary text-base sm:text-lg mt-2 max-w-2xl text-balance">Comprehensive matrix verification and switch bounce diagnostic utilities.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+
+          <!-- Main Feature Banner: Switch Chatter & Matrix Diagnostic (8 Cols) -->
+          <div class="lg:col-span-8 bg-surface-1 border border-border-default rounded-3xl p-8 sm:p-10 flex flex-col min-h-fit justify-between hover:border-blue-500/40 transition-all shadow-2xl relative group">
+            <!-- Background Glow Container with strict rounded bounds -->
+            <div class="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none" aria-hidden="true">
+              <div class="absolute -top-24 -right-24 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all"></div>
+            </div>
+            
+            <div class="relative z-10">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 font-mono text-xs font-bold mb-6">
+                <span>Switch Hardware Diagnostic</span>
+              </div>
+              <h3 class="text-2xl sm:text-3xl font-bold text-text-primary mb-4">Mechanical Switch Bounce & Chatter Test</h3>
+              <p class="text-text-secondary text-base sm:text-lg leading-relaxed max-w-xl mb-8">
+                Detect microsecond contact bounce chatter causing accidental double-typing faults on worn mechanical switches. Real-time timestamp monitoring logs press frequencies below 15ms.
+              </p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-4 mt-auto pt-6 border-t border-white/5 relative z-10">
+              <a href="/keyboard-tester/tkl" class="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+                <span>Run Switch Chatter Diagnostic</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
+              <span class="text-xs text-text-tertiary font-mono">Compatible with Cherry, Gateron, Kailh switches</span>
+            </div>
+          </div>
+
+          <!-- Secondary Feature Banner: Polling Rate & Latency (4 Cols) -->
+          <div class="lg:col-span-4 bg-surface-1 border border-border-default rounded-3xl p-8 flex flex-col min-h-fit justify-between hover:border-purple-500/40 transition-all shadow-xl relative group">
+            <!-- Background Glow Container -->
+            <div class="absolute inset-0 rounded-3xl overflow-hidden pointer-events-none" aria-hidden="true">
+              <div class="absolute -top-20 -right-20 w-48 h-48 bg-purple-500/10 rounded-full blur-2xl group-hover:bg-purple-500/20 transition-all"></div>
+            </div>
+
+            <div class="relative z-10">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 font-mono text-xs font-bold mb-6">
+                <span>Latency Benchmark</span>
+              </div>
+              <h3 class="text-xl font-bold text-text-primary mb-3">USB Polling Rate (Hz)</h3>
+              <p class="text-text-secondary text-sm leading-relaxed mb-6">
+                Measure USB input report frequency up to 8000Hz (8K) and estimate hardware latency responsiveness.
+              </p>
+            </div>
+
+            <a href="/test/mouse/polling-rate" class="mt-auto pt-6 inline-flex items-center justify-between w-full px-5 py-3 rounded-xl bg-purple-500/10 border border-purple-500/20 hover:bg-purple-500/20 text-purple-300 font-bold text-sm transition-all group relative z-10">
+              <span>Check Polling Rate</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="transform group-hover:translate-x-1 transition-transform"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- FAQ Section: Premium Accordion -->
+      <section class="relative pt-8">
+        <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" aria-hidden="true"></div>
+        <PremiumFaqAccordion 
+          faqs={keyboardFaqs}
+          title="Keyboard Ghosting & NKRO FAQ"
+          subtitle={`Everything you need to know about testing your ${formattedLayout} keyboard matrix, switch chatter, and rollover limits.`}
+        />
+      </section>
+    </div>
   </main>
   <Footer />
 </BaseLayout>

@@ -1,0 +1,186 @@
+---
+/**
+ * SwitchProSVG.astro
+ * 1:1 Pixel-Perfect 2D Vector Graphic of the Nintendo Switch Pro Controller.
+ * Features translucent dark charcoal body shell, Nintendo Switch logo, asymmetrical sticks,
+ * cross D-Pad, face buttons (X,Y,A,B), center controls (+/-/Capture/Home), and real-time telemetry tracking.
+ */
+---
+<svg id="switch-pro-svg" viewBox="0 0 700 500" class="w-full max-w-[480px] max-h-[350px] select-none transition-transform duration-300 drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)]" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Drop Shadow Filter for Buttons and Sticks -->
+    <filter id="pro-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.65" />
+    </filter>
+    <filter id="pro-glow-blue" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#3b82f6" flood-opacity="0.9" />
+    </filter>
+  </defs>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       1. TOP SHOULDERS (L / ZL & R / ZR)
+       ════════════════════════════════════════════════════════════════════════ -->
+  <g id="group-pro-triggers">
+    <!-- Left Triggers (ZL & L) -->
+    <g id="btn-zl" data-btn="6" class="button-path cursor-pointer">
+      <path d="M 210,88 C 210,65 240,48 290,48 L 335,48 L 335,70 L 270,70 C 235,70 210,78 210,88 Z" fill="#1C1D21" stroke="#484B56" stroke-width="2" />
+      <path id="zl-wire-fill" d="M 212,89 C 212,67 240,50 290,50 L 333,50 L 333,68 L 270,68 C 235,68 212,76 212,89 Z" fill="#3B82F6" class="opacity-0 transition-opacity" />
+    </g>
+    <g id="btn-l" data-btn="4" class="button-path cursor-pointer">
+      <path d="M 228,86 L 335,86 L 335,102 L 245,102 C 235,102 228,95 228,86 Z" fill="#23242A" stroke="#484B56" stroke-width="1.5" />
+      <text x="278" y="97" class="fill-stone-400 font-mono font-bold text-[10px]" text-anchor="middle">L</text>
+    </g>
+
+    <!-- Right Triggers (ZR & R) -->
+    <g id="btn-zr" data-btn="7" class="button-path cursor-pointer">
+      <path d="M 490,88 C 490,65 460,48 410,48 L 365,48 L 365,70 L 430,70 C 465,70 490,78 490,88 Z" fill="#1C1D21" stroke="#484B56" stroke-width="2" />
+      <path id="zr-wire-fill" d="M 488,89 C 488,67 460,50 410,50 L 367,50 L 367,68 L 430,68 C 465,68 488,76 488,89 Z" fill="#3B82F6" class="opacity-0 transition-opacity" />
+    </g>
+    <g id="btn-r" data-btn="5" class="button-path cursor-pointer">
+      <path d="M 472,86 L 365,86 L 365,102 L 455,102 C 465,102 472,95 472,86 Z" fill="#23242A" stroke="#484B56" stroke-width="1.5" />
+      <text x="422" y="97" class="fill-stone-400 font-mono font-bold text-[10px]" text-anchor="middle">R</text>
+    </g>
+  </g>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       2. MAIN TRANSLUCENT BODY SHELL & ERGONOMIC GRIPS
+       ════════════════════════════════════════════════════════════════════════ -->
+  <!-- Outer Body Path (Translucent Dark Grey) -->
+  <path d="M 230,105 C 310,95 390,95 470,105 C 525,110 575,135 600,190 C 630,255 650,355 660,430 C 665,470 630,490 595,485 C 560,480 525,405 505,340 C 475,330 435,335 350,335 C 265,335 225,330 195,340 C 175,405 140,480 105,485 C 70,490 35,470 40,430 C 50,355 70,255 100,190 C 125,135 175,110 230,105 Z" fill="#2A2C34" stroke="#4B4E5A" stroke-width="2.5" />
+
+  <!-- Translucent Internal Circuit Pattern Mockup -->
+  <path d="M 200,135 C 280,120 420,120 500,135 M 240,160 H 460 M 270,310 H 430" fill="none" stroke="#363842" stroke-width="1.5" stroke-dasharray="6,4" class="opacity-50" />
+  
+  <!-- Left Handle Textured Grip Overlay -->
+  <path d="M 100,190 C 70,255 50,355 40,430 C 35,470 70,490 105,485 C 130,480 155,435 170,380 C 145,320 120,255 100,190 Z" fill="#222329" stroke="#393B44" stroke-width="1.5" class="opacity-90" />
+  
+  <!-- Right Handle Textured Grip Overlay -->
+  <path d="M 600,190 C 630,255 650,355 660,430 C 665,470 630,490 595,485 C 570,480 545,435 530,380 C 555,320 580,255 600,190 Z" fill="#222329" stroke="#393B44" stroke-width="1.5" class="opacity-90" />
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       3. TOP CENTER LOGO & CENTER CONTROLS (+ / - / Capture / Home)
+       ════════════════════════════════════════════════════════════════════════ -->
+  <!-- Nintendo Switch Logo ([o|o] NINTENDO SWITCH) -->
+  <g transform="translate(350, 138)">
+    <rect x="-24" y="-12" width="10" height="22" rx="3" fill="none" stroke="#A1A1AA" stroke-width="2" />
+    <circle cx="-19" cy="-5" r="2" fill="#A1A1AA" />
+    <rect x="-11" y="-12" width="10" height="22" rx="3" fill="#A1A1AA" />
+    <circle cx="-6" cy="2" r="2" fill="#2A2C34" />
+    <text x="4" y="-2" class="fill-stone-300 font-sans font-bold text-[9px] tracking-widest">NINTENDO</text>
+    <text x="4" y="8" class="fill-stone-300 font-sans font-bold text-[9px] tracking-widest">SWITCH</text>
+  </g>
+
+  <!-- Minus [-] Button (Center-Left Round) -->
+  <g id="btn-minus" data-btn="8" class="button-path cursor-pointer" transform="translate(298, 170)" filter="url(#pro-shadow)">
+    <circle cx="0" cy="0" r="13" fill="#1C1D21" stroke="#484B56" stroke-width="1.5" />
+    <rect x="-6" y="-1.5" width="12" height="3" rx="1" fill="#D4D4D8" />
+  </g>
+
+  <!-- Plus [+] Button (Center-Right Round) -->
+  <g id="btn-plus" data-btn="9" class="button-path cursor-pointer" transform="translate(402, 170)" filter="url(#pro-shadow)">
+    <circle cx="0" cy="0" r="13" fill="#1C1D21" stroke="#484B56" stroke-width="1.5" />
+    <path d="M -6,0 H 6 M 0,-6 V 6" stroke="#D4D4D8" stroke-width="3" stroke-linecap="round" />
+  </g>
+
+  <!-- Square Capture Button [o] (Below Minus) -->
+  <g id="btn-capture" data-btn="16" class="button-path cursor-pointer" transform="translate(330, 215)" filter="url(#pro-shadow)">
+    <rect x="-10" y="-10" width="20" height="20" rx="4" fill="#1C1D21" stroke="#484B56" stroke-width="1.5" />
+    <circle cx="0" cy="0" r="5.5" fill="none" stroke="#A1A1AA" stroke-width="1.5" />
+  </g>
+
+  <!-- Circular HOME Button (⌂) (Below Plus) -->
+  <g id="btn-home" data-btn="17" class="button-path cursor-pointer" transform="translate(370, 215)" filter="url(#pro-shadow)">
+    <circle cx="0" cy="0" r="11" fill="#1C1D21" stroke="#484B56" stroke-width="1.5" />
+    <circle cx="0" cy="0" r="14" fill="none" stroke="#3B82F6" stroke-width="1.5" class="opacity-60" />
+    <path d="M -4,3 L -4,-1 L 0,-5 L 4,-1 L 4,3 Z" fill="none" stroke="#D4D4D8" stroke-width="1.5" stroke-linejoin="round" />
+  </g>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       4. ASYMMETRICAL ANALOG THUMBSTICKS (L3 Upper-Left, R3 Lower-Right)
+       ════════════════════════════════════════════════════════════════════════ -->
+  <!-- Upper Left Stick (L3, Axes 0, 1) -->
+  <g id="group-left-stick" transform="translate(225, 220)">
+    <!-- Base Outer Ring -->
+    <circle cx="0" cy="0" r="42" fill="#1B1C20" stroke="#484B56" stroke-width="2" />
+    
+    <!-- Interactive Cap Node -->
+    <g id="stick-l-cap" data-btn="10" class="button-path cursor-pointer stick-cap-node" filter="url(#pro-shadow)">
+      <circle cx="0" cy="0" r="33" fill="#25272E" stroke="#525663" stroke-width="2" />
+      <circle cx="0" cy="0" r="24" fill="#1F2026" stroke="#3D3F48" stroke-width="1.5" />
+      <circle cx="0" cy="0" r="15" fill="#2B2D35" />
+      <!-- 4 Tactile Ridge Marks -->
+      <line x1="0" y1="-29" x2="0" y2="-23" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+      <line x1="0" y1="23" x2="0" y2="29" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+      <line x1="-29" y1="0" x2="-23" y2="0" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+      <line x1="23" y1="0" x2="29" y2="0" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+      <text x="0" y="4" class="fill-stone-400 font-mono font-bold text-[10px]" text-anchor="middle">L3</text>
+    </g>
+  </g>
+
+  <!-- Lower Right Stick (R3, Axes 2, 3) -->
+  <g id="group-right-stick" transform="translate(435, 335)">
+    <!-- Base Outer Ring -->
+    <circle cx="0" cy="0" r="42" fill="#1B1C20" stroke="#484B56" stroke-width="2" />
+    
+    <!-- Interactive Cap Node -->
+    <g id="stick-r-cap" data-btn="11" class="button-path cursor-pointer stick-cap-node" filter="url(#pro-shadow)">
+      <circle cx="0" cy="0" r="33" fill="#25272E" stroke="#525663" stroke-width="2" />
+      <circle cx="0" cy="0" r="24" fill="#1F2026" stroke="#3D3F48" stroke-width="1.5" />
+      <circle cx="0" cy="0" r="15" fill="#2B2D35" />
+      <!-- 4 Tactile Ridge Marks -->
+      <line x1="0" y1="-29" x2="0" y2="-23" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+      <line x1="0" y1="23" x2="0" y2="29" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+      <line x1="-29" y1="0" x2="-23" y2="0" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+      <line x1="23" y1="0" x2="29" y2="0" stroke="#484B56" stroke-width="2" stroke-linecap="round" />
+      <text x="0" y="4" class="fill-stone-400 font-mono font-bold text-[10px]" text-anchor="middle">R3</text>
+    </g>
+  </g>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       5. CROSS-SHAPED D-PAD (Lower-Left)
+       ════════════════════════════════════════════════════════════════════════ -->
+  <g id="group-dpad-pro" transform="translate(265, 335)">
+    <!-- Base D-Pad Recess Outer Ring -->
+    <circle cx="0" cy="0" r="46" fill="#1C1D21" stroke="#393B44" stroke-width="2" />
+
+    <!-- Up ▲ (Button 12) -->
+    <path id="btn-dpad-up" data-btn="12" d="M -13,-14 L 13,-14 L 13,-40 C 13,-43 7,-45 0,-45 C -7,-45 -13,-43 -13,-40 Z" class="dpad-btn button-path cursor-pointer fill-[#23242B] stroke-[#4B4E5A]" stroke-width="1.5" filter="url(#pro-shadow)" />
+    <!-- Down ▼ (Button 13) -->
+    <path id="btn-dpad-down" data-btn="13" d="M -13,14 L 13,14 L 13,40 C 13,43 7,45 0,45 C -7,45 -13,43 -13,40 Z" class="dpad-btn button-path cursor-pointer fill-[#23242B] stroke-[#4B4E5A]" stroke-width="1.5" filter="url(#pro-shadow)" />
+    <!-- Left ◀ (Button 14) -->
+    <path id="btn-dpad-left" data-btn="14" d="M -14,-13 L -14,13 L -40,13 C -43,13 -45,7 -45,0 C -45,-7 -43,-13 -40,-13 Z" class="dpad-btn button-path cursor-pointer fill-[#23242B] stroke-[#4B4E5A]" stroke-width="1.5" filter="url(#pro-shadow)" />
+    <!-- Right ▶ (Button 15) -->
+    <path id="btn-dpad-right" data-btn="15" d="M 14,-13 L 14,13 L 40,13 C 43,13 45,7 45,0 C 45,-7 43,-13 40,-13 Z" class="dpad-btn button-path cursor-pointer fill-[#23242B] stroke-[#4B4E5A]" stroke-width="1.5" filter="url(#pro-shadow)" />
+    <!-- Center D-Pad Hub -->
+    <rect x="-13" y="-13" width="26" height="26" fill="#23242B" stroke="none" />
+  </g>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       6. FACE BUTTONS (X, Y, A, B - Upper-Right)
+       ════════════════════════════════════════════════════════════════════════ -->
+  <g id="group-action-buttons-pro" transform="translate(535, 220)">
+    <!-- Base Recess Circle -->
+    <circle cx="0" cy="0" r="50" fill="#1C1D21" stroke="#393B44" stroke-width="2" />
+
+    <!-- X Button (Top) -->
+    <g id="btn-x" data-btn="3" class="action-btn cursor-pointer" filter="url(#pro-shadow)">
+      <circle cx="0" cy="-32" r="16" class="button-path fill-[#23242B] stroke-[#4B4E5A]" stroke-width="1.5" />
+      <text x="0" y="-26.5" class="fill-stone-200 font-sans font-bold text-[14px]" text-anchor="middle">X</text>
+    </g>
+    <!-- Y Button (Left) -->
+    <g id="btn-y" data-btn="2" class="action-btn cursor-pointer" filter="url(#pro-shadow)">
+      <circle cx="-32" cy="0" r="16" class="button-path fill-[#23242B] stroke-[#4B4E5A]" stroke-width="1.5" />
+      <text x="-32" y="5.5" class="fill-stone-200 font-sans font-bold text-[14px]" text-anchor="middle">Y</text>
+    </g>
+    <!-- A Button (Right) -->
+    <g id="btn-a" data-btn="1" class="action-btn cursor-pointer" filter="url(#pro-shadow)">
+      <circle cx="32" cy="0" r="16" class="button-path fill-[#23242B] stroke-[#4B4E5A]" stroke-width="1.5" />
+      <text x="32" y="5.5" class="fill-stone-200 font-sans font-bold text-[14px]" text-anchor="middle">A</text>
+    </g>
+    <!-- B Button (Bottom) -->
+    <g id="btn-b" data-btn="0" class="action-btn cursor-pointer" filter="url(#pro-shadow)">
+      <circle cx="0" cy="32" r="16" class="button-path fill-[#23242B] stroke-[#4B4E5A]" stroke-width="1.5" />
+      <text x="0" y="37.5" class="fill-stone-200 font-sans font-bold text-[14px]" text-anchor="middle">B</text>
+    </g>
+  </g>
+</svg>

@@ -9,6 +9,7 @@ import Header from '../../components/global/Header.astro';
 import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
 import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
+import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -58,6 +59,28 @@ const breadcrumbs = [
         </div>
       </div>
     </div>
+
+    <GameHowToPlay
+      xp={150}
+      goal="Squeeze R2 / RT to rev the engine until your tachometer bar sits inside the glowing green zone. Hold it there — every frame in the zone scores +10. Reach 1000 points to finish the race."
+      controls={[
+        { action: 'R2 / RT', label: 'Rev the throttle up' },
+        { action: 'Release R2', label: 'Ease the throttle down' },
+        { action: '↑ / W', label: 'Rev (keyboard)' },
+        { action: '↓ / S', label: 'Release (keyboard)' },
+      ]}
+      steps={[
+        'Press Start Race — a random green target zone appears on the tachometer.',
+        'Squeeze R2/RT (or hold ↑/W) to raise your throttle bar toward the green zone.',
+        'Feather the trigger to keep the bar inside the zone; drifting out stops the scoring.',
+        'Keep the bar in-zone until the score hits 1000 to cross the finish line.',
+      ]}
+      tips={[
+        'The zone is ~8% wide — a full pull overshoots it, so ramp up slowly and settle.',
+        'Micro-adjustments near the threshold score far more than big trigger sweeps.',
+        'A steady, controlled trigger hand beats jittery taps: consistency is what racks up points.',
+      ]}
+    />
   </div>
   <Footer />
 </BaseLayout>
@@ -73,6 +96,7 @@ const breadcrumbs = [
     const canvas = document.getElementById('trig-canvas') as HTMLCanvasElement;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
+      if (!ctx) return;
     if (!ctx) return;
 
     const overPanel = document.getElementById('trig-over') as HTMLElement | null;

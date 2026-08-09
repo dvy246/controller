@@ -98,7 +98,7 @@ const { gameName, gameRange, controllerName } = Astro.props;
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', renderOptimizer);
+    document.addEventListener('astro:page-load', renderOptimizer);
   } else {
     renderOptimizer();
   }

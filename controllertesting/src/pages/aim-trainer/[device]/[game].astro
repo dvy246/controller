@@ -72,32 +72,32 @@ const schema = {
     <AimTrainerCanvas device={device} game={game} />
 
     <!-- AEO/GEO FAQ Section -->
-    <section class="mt-16 bg-surface-1 p-6 sm:p-8 rounded-2xl border border-surface-3">
-      <h2 class="text-h2 mb-6">Frequently Asked Questions & Benchmark Guide</h2>
+    <section class="mt-16 bg-[var(--color-surface-1)] p-6 sm:p-8 rounded-2xl border border-[var(--color-border-default)]">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-6">Frequently Asked Questions & Benchmark Guide</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-secondary">
-        <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
-          <h3 class="font-semibold mb-2">How does controller stick drift impact aim accuracy?</h3>
-          <p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-[var(--color-text-secondary)]">
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">How does controller stick drift impact aim accuracy?</h3>
+          <p class="leading-relaxed">
             Stick drift causes subtle, unwanted motion inputs when your analog stick is at rest. In fast-paced shooters like {formattedGame}, stick drift pulls your crosshair away from targets during micro-adjustments, reducing your effective hit rate by up to 15%.
           </p>
         </div>
 
-        <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
-          <h3 class="font-semibold mb-2">How do I calibrate my deadzones for {formattedGame}?</h3>
-          <p>
-            First, run our <a href="/test/controller/drift" class="text-accent hover:underline font-semibold">Stick Drift Tester</a> to measure your hardware error rate. Set your in-game inner deadzone slightly above your hardware error percentage to eliminate drift without losing fine control.
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">How do I calibrate my deadzones for {formattedGame}?</h3>
+          <p class="leading-relaxed">
+            First, run our <a href="/test/controller/drift" class="text-[var(--color-accent)] hover:underline font-semibold">Stick Drift Tester</a> to measure your hardware error rate. Set your in-game inner deadzone slightly above your hardware error percentage to eliminate drift without losing fine control.
           </p>
         </div>
 
-        <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
-          <h3 class="font-semibold mb-2">Is this aim trainer completely free and web-based?</h3>
-          <p>
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">Is this aim trainer completely free and web-based?</h3>
+          <p class="leading-relaxed">
             Yes! It runs entirely client-side using browser HTML5 Canvas and the Gamepad API. No software downloads, accounts, or database tracking required.
           </p>
         </div>
 
-        <div class="bg-surface-2 p-5 rounded-xl border border-surface-3">
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
           <h3 class="font-semibold mb-2">What is a good accuracy score for {formattedDevice}?</h3>
           <p>
             A competitive score for {formattedDevice} users on {formattedGame} settings is <strong>85%+ accuracy</strong> with over 25 targets hit in 30 seconds.

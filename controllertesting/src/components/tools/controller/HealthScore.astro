@@ -1,434 +1,596 @@
 ---
 /**
- * HealthScore.astro — Proprietary 0-100 Controller Health Score™ & Report Card Generator
- * Calculates overall score, letter grade (A+ to F), breakdown sub-scores (Drift, Circularity, Buttons, Triggers, Polling),
- * and renders a shareable/printable summary card.
+ * HealthScore.astro — Controller Health Score™ (v2)
  */
 ---
 
-<script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<div class="doppelrand-shell w-full max-w-5xl mx-auto" style="isolation: isolate; position: relative;" id="health-score-app">
+  <!-- Ambient glow -->
+  <div style="position: absolute; inset: -4px; border-radius: 24px; background: radial-gradient(ellipse at 50% -20%, rgba(37,99,235,0.2) 0%, rgba(99,102,241,0.1) 50%, transparent 70%); filter: blur(16px); z-index: -1; pointer-events: none;" aria-hidden="true"></div>
 
-<div class="health-wizard" id="hs-wizard">
-  {/* Step 1: Intro */}
-  <div id="step-intro" class="wizard-step active card-tool card-base">
-    <h2 class="section-title">Ready for your checkup?</h2>
-    <p class="tool-description">Connect your controller and click start to begin the comprehensive hardware analysis. If no hardware is available, you can run a simulated test.</p>
-    <div class="wizard-actions">
-       <button id="btn-start" class="btn-primary">Start Diagnostics</button>
-       <button id="btn-simulate" class="btn-secondary">Simulation Mode</button>
-    </div>
-  </div>
-
-  {/* Step 2: Testing */}
-  <div id="step-testing" class="wizard-step sr-only card-tool card-base">
-    <h2 class="section-title">Scanning Hardware...</h2>
-    <div class="progress-bar-container">
-       <div id="progress-fill" class="progress-bar-fill"></div>
-    </div>
-    <p id="test-status" class="mono text-small text-accent">Awaiting input...</p>
-  </div>
-
-  {/* Step 3: Result */}
-  <div id="step-result" class="wizard-step sr-only">
+  <!-- Main container using diagnostic-tool-shell CSS class -->
+  <div class="diagnostic-tool-shell" style="display: flex; flex-direction: column; min-height: 520px;">
     
-    <div id="report-card" class="report-card card-gradient">
-      <div class="report-header">
-         <h3 class="report-title">Controller Health Score™</h3>
-         <p id="rc-model" class="rc-model mono text-accent">Model Name</p>
+    <!-- TOP TOOLBAR -->
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 20px; background: #0a0a0c; border-bottom: 1px solid rgba(255,255,255,0.06); min-height: 52px; font-family: var(--font-mono);">
+      <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
+        <div style="width: 28px; height: 28px; border-radius: 8px; background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); display: flex; align-items: center; justify-content: center; color: #60a5fa; flex-shrink: 0;" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <span style="color: #ffffff; font-weight: 700; font-size: 0.875rem; letter-spacing: -0.01em; font-family: var(--font-sans); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Health Score Wizard</span>
       </div>
-      
-      <div class="hs-score-hero">
-        <span class="hs-score-number text-gradient" id="hs-num-display">--</span>
-        <span class="hs-grade-tag badge-pass" id="hs-grade-display">Status Unknown</span>
-      </div>
-      
-      <div class="hs-metadata text-small mono">
-         <p>ID: <span id="report-uuid" class="text-accent">Pending</span></p>
-         <p>Env: <span id="report-env">Unknown</span></p>
-      </div>
-      
-      <div class="hs-breakdown-grid">
-         <div class="hs-cat-box">
-            <div class="cat-header">
-               <span>Stick Drift</span>
-               <span id="sub-drift-score" class="mono text-accent tabular-nums">100%</span>
-            </div>
-            <div class="cat-bar" aria-hidden="true"><div class="cat-bar-fill" id="bar-drift" style="width:100%"></div></div>
-         </div>
-         <div class="hs-cat-box">
-            <div class="cat-header">
-               <span>Circularity</span>
-               <span id="sub-circ-score" class="mono text-accent tabular-nums">95%</span>
-            </div>
-            <div class="cat-bar" aria-hidden="true"><div class="cat-bar-fill" id="bar-circ" style="width:95%"></div></div>
-         </div>
-         <div class="hs-cat-box">
-            <div class="cat-header">
-               <span>Triggers</span>
-               <span id="sub-trig-score" class="mono text-accent tabular-nums">100%</span>
-            </div>
-            <div class="cat-bar" aria-hidden="true"><div class="cat-bar-fill" id="bar-trig" style="width:100%"></div></div>
-         </div>
-         <div class="hs-cat-box">
-            <div class="cat-header">
-               <span>Buttons</span>
-               <span id="sub-btn-score" class="mono text-accent tabular-nums">100%</span>
-            </div>
-            <div class="cat-bar" aria-hidden="true"><div class="cat-bar-fill" id="bar-btn" style="width:100%"></div></div>
-         </div>
-      </div>
-      
-      <div class="report-footer">
-        <span class="mono">controllertesting.com</span>
+      <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
+        <!-- Step indicator -->
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span style="font-size: 0.6875rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.08em;">Phase</span>
+          <span style="font-size: 0.8125rem; font-weight: 700; color: #ffffff; padding: 2px 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; font-family: var(--font-mono);" id="step-indicator">0 / 4</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 8px rgba(239,68,68,0.5);" id="hs-conn-dot"></div>
+          <span style="font-size: 0.6875rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap;" id="hs-conn-text">No Device</span>
+        </div>
       </div>
     </div>
-    
-    <div class="wizard-actions result-actions">
-      <button id="btn-download" class="btn-primary">Download Report Card</button>
-      <button id="btn-share-hs" class="btn-secondary">Copy Share Link</button>
-      <button id="btn-restart" class="btn-secondary">Test Again</button>
+
+    <!-- MAIN STAGE -->
+    <div style="flex: 1; position: relative; background: linear-gradient(180deg, #111113 0%, #0E0E10 100%); display: flex; flex-direction: column;">
+      
+      <!-- STEP 0: CONNECT GATE -->
+      <div id="step-0" class="step-panel" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; transition: opacity 300ms ease;">
+        <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; animation: pulse-slow 3s ease-in-out infinite;" aria-hidden="true">
+          <svg style="color: #60a5fa;" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="6" width="20" height="12" rx="4"></rect>
+            <path d="M6 12h4m-2-2v4"></path>
+            <circle cx="15" cy="11" r="1" fill="currentColor"></circle>
+            <circle cx="17.5" cy="13" r="1" fill="currentColor"></circle>
+          </svg>
+        </div>
+        <h2 style="font-size: 1.5rem; font-weight: 700; color: #ffffff; margin: 0 0 8px; text-align: center;">Connect Your Controller</h2>
+        <p style="font-size: 0.9375rem; color: #6b7280; text-align: center; max-width: 360px; line-height: 1.6; margin: 0 0 28px;">Please connect your gamepad via USB or Bluetooth and press any button to begin the diagnostic wizard.</p>
+        <div style="padding: 10px 20px; background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 10px; color: #f59e0b; font-size: 0.875rem; font-weight: 600;">
+          Waiting for input...
+        </div>
+      </div>
+
+      <!-- STEP 1: STICK DRIFT -->
+      <div id="step-1" class="step-panel" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; opacity: 0; pointer-events: none; transition: opacity 300ms ease;">
+        <h2 style="font-size: 1.5rem; font-weight: 700; color: #ffffff; margin: 0 0 8px; text-align: center;">Resting Stick Drift</h2>
+        <p style="font-size: 0.9375rem; color: #6b7280; text-align: center; margin: 0 0 28px; line-height: 1.6;">Leave both analog sticks completely untouched. Do not move them.</p>
+        
+        <div style="display: flex; align-items: center; gap: 32px; margin-bottom: 28px;">
+          <!-- Left Stick -->
+          <div style="width: 120px; height: 120px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.08); background: rgba(20,20,24,0.8); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);">
+            <div style="text-align: center; position: relative; z-index: 1;">
+              <span style="display: block; font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; font-weight: 700; margin-bottom: 4px;">Left Stick</span>
+              <span id="drift-l" style="font-size: 1.5rem; font-family: var(--font-mono); font-weight: 900; color: #ffffff; font-variant-numeric: tabular-nums;">0.0%</span>
+            </div>
+            <div id="drift-l-bg" style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(59,130,246,0.2); height: 0; transition: height 75ms linear;"></div>
+          </div>
+          <!-- Right Stick -->
+          <div style="width: 120px; height: 120px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.08); background: rgba(20,20,24,0.8); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);">
+            <div style="text-align: center; position: relative; z-index: 1;">
+              <span style="display: block; font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.1em; color: #6b7280; font-weight: 700; margin-bottom: 4px;">Right Stick</span>
+              <span id="drift-r" style="font-size: 1.5rem; font-family: var(--font-mono); font-weight: 900; color: #ffffff; font-variant-numeric: tabular-nums;">0.0%</span>
+            </div>
+            <div id="drift-r-bg" style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(16,185,129,0.2); height: 0; transition: height 75ms linear;"></div>
+          </div>
+        </div>
+        
+        <div style="text-align: center;">
+          <span style="display: block; font-size: 0.6875rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Analyzing...</span>
+          <div style="font-size: 3rem; font-weight: 900; color: #ffffff; font-family: var(--font-mono); font-variant-numeric: tabular-nums;" id="drift-timer">5.0</div>
+        </div>
+      </div>
+
+      <!-- STEP 2: BUTTONS MATRIX -->
+      <div id="step-2" class="step-panel" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; padding: 32px 24px; opacity: 0; pointer-events: none; transition: opacity 300ms ease; overflow-y: auto;">
+        <h2 style="font-size: 1.5rem; font-weight: 700; color: #ffffff; margin: 0 0 8px; text-align: center;">Button Actuation</h2>
+        <p style="font-size: 0.9375rem; color: #6b7280; text-align: center; margin: 0 0 24px; line-height: 1.6;">Press each of the highlighted buttons to verify their response.</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; max-width: 400px;" id="button-grid">
+          <!-- Populated via JS -->
+        </div>
+        
+        <div style="margin-top: 24px; padding: 12px 20px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 0.9375rem; font-weight: 700; color: #ffffff;"><span id="buttons-pressed">0</span> / 12</span>
+          <span style="font-size: 0.875rem; color: #6b7280;">Buttons Verified</span>
+        </div>
+        <button id="skip-buttons-btn" style="margin-top: 12px; font-size: 0.75rem; color: #6b7280; background: none; border: none; cursor: pointer; text-decoration: underline; text-underline-offset: 3px;">Skip remaining buttons</button>
+      </div>
+
+      <!-- STEP 3: TRIGGER LINEARITY -->
+      <div id="step-3" class="step-panel" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 24px; opacity: 0; pointer-events: none; transition: opacity 300ms ease;">
+        <h2 style="font-size: 1.5rem; font-weight: 700; color: #ffffff; margin: 0 0 8px; text-align: center;">Trigger Linearity</h2>
+        <p style="font-size: 0.9375rem; color: #6b7280; text-align: center; margin: 0 0 28px; line-height: 1.6;">Squeeze L2 and R2 all the way down to 100%.</p>
+        
+        <div style="display: flex; gap: 48px; margin-bottom: 28px;">
+          <!-- Left Trigger -->
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+            <span style="font-size: 0.6875rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em;">L2 / LT</span>
+            <div style="width: 52px; height: 160px; background: rgba(20,20,24,0.8); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; position: relative; overflow: hidden; box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);">
+              <div id="trigger-l-bar" style="position: absolute; bottom: 0; left: 0; right: 0; background: #3b82f6; border-radius: 0 0 9px 9px; transition: height 75ms linear; height: 0%; box-shadow: 0 0 12px rgba(37,99,235,0.5);"></div>
+            </div>
+            <span id="trigger-l-val" style="font-size: 1.5rem; font-family: var(--font-mono); font-weight: 900; color: #ffffff; font-variant-numeric: tabular-nums;">0%</span>
+          </div>
+          
+          <!-- Right Trigger -->
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+            <span style="font-size: 0.6875rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em;">R2 / RT</span>
+            <div style="width: 52px; height: 160px; background: rgba(20,20,24,0.8); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; position: relative; overflow: hidden; box-shadow: inset 0 2px 8px rgba(0,0,0,0.4);">
+              <div id="trigger-r-bar" style="position: absolute; bottom: 0; left: 0; right: 0; background: #10b981; border-radius: 0 0 9px 9px; transition: height 75ms linear; height: 0%; box-shadow: 0 0 12px rgba(16,185,129,0.5);"></div>
+            </div>
+            <span id="trigger-r-val" style="font-size: 1.5rem; font-family: var(--font-mono); font-weight: 900; color: #ffffff; font-variant-numeric: tabular-nums;">0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4: REPORT CARD -->
+      <div id="step-4" class="step-panel" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; padding: 32px 24px; opacity: 0; pointer-events: none; transition: opacity 300ms ease; overflow-y: auto;">
+        <h2 style="font-size: 1.75rem; font-weight: 800; color: #ffffff; margin: 0 0 6px; text-align: center; letter-spacing: -0.02em;">Diagnostic Complete</h2>
+        <p style="font-size: 0.9375rem; color: #6b7280; text-align: center; margin: 0 0 32px; line-height: 1.6;">Here is your official Controller Health Score™</p>
+        
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 28px; width: 100%; max-width: 480px;" class="hs-result-layout">
+          <!-- Score Ring -->
+          <div style="position: relative; width: 160px; height: 160px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+            <svg style="width: 100%; height: 100%; transform: rotate(-90deg);" viewBox="0 0 100 100" aria-hidden="true">
+              <circle cx="50" cy="50" r="46" stroke="rgba(255,255,255,0.06)" stroke-width="6" fill="none" />
+              <circle id="final-score-ring" cx="50" cy="50" r="46" stroke="#10B981" stroke-width="6" fill="none" stroke-dasharray="289" stroke-dashoffset="289" stroke-linecap="round" style="transition: stroke-dashoffset 1s ease, stroke 0.5s ease;" />
+            </svg>
+            <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <span style="font-size: 3rem; font-weight: 900; color: #ffffff; font-variant-numeric: tabular-nums; letter-spacing: -0.04em; font-family: var(--font-mono);" id="final-score">0</span>
+              <span style="font-size: 0.8125rem; font-weight: 700; color: #6b7280;">/ 100</span>
+            </div>
+          </div>
+          
+          <!-- Grade Details -->
+          <div style="flex: 1; width: 100%; text-align: center;">
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); font-size: 2rem; font-weight: 900; color: #ffffff; margin-bottom: 12px;" id="final-grade">?</div>
+            <h3 style="font-size: 1.375rem; font-weight: 700; color: #ffffff; margin: 0 0 8px; letter-spacing: -0.01em;" id="grade-title">Calculating...</h3>
+            <p style="font-size: 0.9375rem; color: #6b7280; line-height: 1.6; margin: 0 0 20px; max-width: 36ch; margin-inline: auto;" id="grade-desc">Analyzing test data.</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; text-align: left;">
+              <div style="padding: 12px 14px; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                <span style="display: block; font-size: 0.625rem; color: #6b7280; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">Max Drift</span>
+                <span style="font-size: 1.125rem; font-family: var(--font-mono); color: #ffffff; font-weight: 700; font-variant-numeric: tabular-nums;" id="res-drift">--</span>
+              </div>
+              <div style="padding: 12px 14px; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                <span style="display: block; font-size: 0.625rem; color: #6b7280; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">Button Matrix</span>
+                <span style="font-size: 1.125rem; font-family: var(--font-mono); color: #ffffff; font-weight: 700; font-variant-numeric: tabular-nums;" id="res-btns">--</span>
+              </div>
+              <div style="padding: 12px 14px; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); grid-column: 1 / -1;">
+                <span style="display: block; font-size: 0.625rem; color: #6b7280; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px;">Max Trigger (L/R)</span>
+                <span style="font-size: 1.125rem; font-family: var(--font-mono); color: #ffffff; font-weight: 700; font-variant-numeric: tabular-nums;" id="res-trig">--</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div style="margin-top: 28px; display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 280px;">
+          <button id="btn-export" style="width: 100%; padding: 14px 24px; background: #2563eb; border: none; border-radius: 12px; color: #ffffff; font-size: 0.9375rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 200ms ease, box-shadow 200ms ease; box-shadow: 0 0 20px rgba(37,99,235,0.35);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Certificate
+          </button>
+          <a href="/test/controller/health-score" style="font-size: 0.8125rem; color: #6b7280; text-decoration: underline; text-underline-offset: 3px;">Retest another controller</a>
+        </div>
+        
+        <!-- Hidden Canvas for Export -->
+        <canvas id="export-canvas" width="1200" height="630" style="display: none;" aria-hidden="true"></canvas>
+      </div>
+      
     </div>
   </div>
 </div>
 
 <style>
-  .wizard-step {
-    transition: opacity var(--duration-normal) var(--ease-smooth);
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(0.97); }
   }
-  .wizard-actions {
-    display: flex;
-    gap: var(--spacing-gap);
-    margin-top: var(--spacing-card);
-    flex-wrap: wrap;
+
+  /* Mobile step panels */
+  @media (max-width: 600px) {
+    .step-panel {
+      padding: 20px 16px !important;
+    }
+    .hs-result-layout {
+      gap: 20px !important;
+    }
   }
-  .result-actions {
-    margin-top: var(--spacing-card-lg);
+
+  /* Btn-export hover */
+  #btn-export:hover {
+    background: #1d4ed8 !important;
+    box-shadow: 0 0 28px rgba(37,99,235,0.5) !important;
   }
-  .progress-bar-container {
-    background: var(--color-surface-1);
-    height: 12px;
-    border-radius: var(--radius-pill);
-    overflow: hidden;
-    margin: var(--spacing-card) 0;
-    border: 1px solid var(--color-border-subtle);
-  }
-  .progress-bar-fill {
-    width: 0%;
-    height: 100%;
-    background: var(--color-accent);
-    transition: width 0.1s linear;
-  }
-  .report-card {
-    padding: var(--spacing-card-lg);
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-card);
-  }
-  .report-header {
-    text-align: center;
-  }
-  .report-title {
-    font-size: var(--text-h2);
-    font-weight: 700;
-  }
-  .rc-model {
-    font-size: var(--text-small);
-    margin-top: 0.25rem;
-  }
-  .hs-score-hero {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1rem 0;
-  }
-  .hs-metadata {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: space-between;
-    padding: 0.5rem 1rem;
-    background: var(--color-surface-2);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--color-border-subtle);
-  }
-  .hs-score-number {
-    font-size: clamp(4rem, 8vw, 6rem);
-    font-weight: 800;
+
+  /* Button grid items (generated by JS) */
+  #button-grid > div {
+    background: rgba(20,20,24,0.8);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 10px 8px;
     font-family: var(--font-mono);
-    font-variant-numeric: tabular-nums;
-    line-height: 1;
-    /* Do NOT set color here — .text-gradient sets it via background-clip */
-  }
-  .hs-grade-tag {
-    font-size: 1rem;
-    padding: 0.35rem 1.25rem;
+    font-size: 0.6875rem;
     font-weight: 700;
-    letter-spacing: 0.04em;
-  }
-  .hs-breakdown-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-  }
-  .hs-cat-box {
-    background: var(--color-surface-2);
-    padding: var(--spacing-card-sm);
-    border-radius: var(--radius-card);
-    border: 1px solid var(--color-border-subtle);
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .cat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    font-weight: 600;
-    font-size: 0.875rem;
-  }
-  .cat-bar {
-    height: 4px;
-    background: var(--color-surface-3);
-    border-radius: var(--radius-pill);
-    overflow: hidden;
-  }
-  .cat-bar-fill {
-    height: 100%;
-    background: var(--color-accent);
-    border-radius: var(--radius-pill);
-    width: 0%;
-    transition: width 0.6s var(--ease-smooth);
-  }
-  .report-footer {
+    color: #6b7280;
     text-align: center;
-    font-size: var(--text-micro);
-    color: var(--color-text-tertiary);
-    margin-top: 1rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
   }
-  @media (max-width: 640px) {
-    .hs-breakdown-grid { grid-template-columns: 1fr; }
+
+  #button-grid > div.pressed {
+    background: rgba(16,185,129,0.12) !important;
+    border-color: rgba(16,185,129,0.3) !important;
+    color: #34d399 !important;
+  }
+
+  /* Connection dot states */
+  #hs-conn-dot.connected {
+    background: #10b981 !important;
+    box-shadow: 0 0 8px rgba(16,185,129,0.5) !important;
   }
 </style>
 
+
 <script>
-  import { addPoints } from '../../../lib/rewards';
-  import { parseGamepadState } from '../../../lib/gamepad';
-  import { generateUUID, detectEnvironment } from '../../../lib/report';
-  import { saveToPassport } from '../../../lib/passport';
-  import { buildShareUrl } from '../../../lib/share';
-
-  let isTesting = false;
-  let simulate = false;
-  let activeGpId = '';
-  let maxDrift = 0;
-  let lastReport: any = null;
-
-  const btnStart = document.getElementById('btn-start');
-  const btnSimulate = document.getElementById('btn-simulate');
-  const btnDownload = document.getElementById('btn-download');
-  const btnRestart = document.getElementById('btn-restart');
-
-  const stepIntro = document.getElementById('step-intro');
-  const stepTesting = document.getElementById('step-testing');
-  const stepResult = document.getElementById('step-result');
-  const progressFill = document.getElementById('progress-fill');
-  const testStatus = document.getElementById('test-status');
-
-  btnStart?.addEventListener('click', () => runTest(false));
-  btnSimulate?.addEventListener('click', () => runTest(true));
-  btnRestart?.addEventListener('click', resetTest);
-
-  document.getElementById('btn-share-hs')?.addEventListener('click', async () => {
-    if (!lastReport) {
-      alert('Run the Health Score test first to generate a certificate.');
-      return;
+  // High-performance Vanilla JS Wizard Logic
+  class HealthScoreApp {
+    constructor() {
+      // DOM Elements
+      this.connDot = document.getElementById('hs-conn-dot');
+      this.connText = document.getElementById('hs-conn-text');
+      this.stepInd = document.getElementById('step-indicator');
+      
+      this.panels = [
+        document.getElementById('step-0'),
+        document.getElementById('step-1'),
+        document.getElementById('step-2'),
+        document.getElementById('step-3'),
+        document.getElementById('step-4'),
+      ];
+      
+      // Step 1: Drift
+      this.driftL = document.getElementById('drift-l');
+      this.driftLBg = document.getElementById('drift-l-bg');
+      this.driftR = document.getElementById('drift-r');
+      this.driftRBg = document.getElementById('drift-r-bg');
+      this.driftTimer = document.getElementById('drift-timer');
+      
+      // Step 2: Buttons
+      this.btnGrid = document.getElementById('button-grid');
+      this.btnCounter = document.getElementById('buttons-pressed');
+      this.btnSkip = document.getElementById('skip-buttons-btn');
+      
+      // Step 3: Triggers
+      this.trigLBar = document.getElementById('trigger-l-bar');
+      this.trigLVal = document.getElementById('trigger-l-val');
+      this.trigRBar = document.getElementById('trigger-r-bar');
+      this.trigRVal = document.getElementById('trigger-r-val');
+      
+      // Step 4: Results
+      this.finalScore = document.getElementById('final-score');
+      this.finalScoreRing = document.getElementById('final-score-ring');
+      this.finalGrade = document.getElementById('final-grade');
+      this.gradeTitle = document.getElementById('grade-title');
+      this.gradeDesc = document.getElementById('grade-desc');
+      this.resDrift = document.getElementById('res-drift');
+      this.resBtns = document.getElementById('res-btns');
+      this.resTrig = document.getElementById('res-trig');
+      this.btnExport = document.getElementById('btn-export');
+      this.exportCanvas = document.getElementById('export-canvas');
+      
+      // State
+      this.currentStep = 0;
+      this.gamepadIndex = null;
+      this.rAF = null;
+      
+      // Test Data
+      this.driftData = { maxL: 0, maxR: 0, timeLeft: 5.0, lastTime: 0 };
+      this.buttonData = {
+        required: [0, 1, 2, 3, 4, 5, 12, 13, 14, 15], // A,B,X,Y, L1,R1, D-Pad
+        pressed: new Set(),
+        names: {0:'A/Cross', 1:'B/Circle', 2:'X/Square', 3:'Y/Triangle', 4:'L1/LB', 5:'R1/RB', 12:'Up', 13:'Down', 14:'Left', 15:'Right'}
+      };
+      this.triggerData = { maxL: 0, maxR: 0 };
+      
+      this.init();
     }
-    const url = buildShareUrl(lastReport);
-    let okCopy = false;
-    try {
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(url);
-        okCopy = true;
+    
+    init() {
+      // Build button grid
+      if (this.btnGrid) {
+        this.buttonData.required.forEach(i => {
+          const btn = document.createElement('div');
+          btn.id = `req-btn-${i}`;
+          btn.className = 'py-3 rounded-lg border border-[#27272A] bg-[#141417] text-stone-500 font-mono text-[11px] sm:text-xs font-bold text-center transition-colors shadow-sm';
+          btn.innerText = this.buttonData.names[i] || `Btn ${i}`;
+          this.btnGrid.appendChild(btn);
+        });
       }
-    } catch {}
-    if (okCopy) {
-      alert('Share link copied to clipboard! It opens on any device.');
-    } else {
-      window.open(url, '_blank', 'noopener');
+      
+      this.btnSkip?.addEventListener('click', () => this.goToStep(3));
+      this.btnExport?.addEventListener('click', () => this.exportReport());
+      
+      window.addEventListener('gamepadconnected', (e) => this.onConnect(e));
+      window.addEventListener('gamepaddisconnected', (e) => this.onDisconnect(e));
+      
+      // Check already connected
+      const gps = navigator.getGamepads ? navigator.getGamepads() : [];
+      for (let g of gps) {
+        if (g) { this.onConnect({ gamepad: g }); break; }
+      }
+      
+      this.loop = this.loop.bind(this);
+      this.rAF = requestAnimationFrame(this.loop);
     }
-  });
-
-  btnDownload?.addEventListener('click', async () => {
-    // @ts-ignore
-    if (typeof window.html2canvas !== 'undefined') {
-      const card = document.getElementById('report-card');
-      if (!card) return;
-      
-      const originalTransform = card.style.transform;
-      card.style.transform = 'none';
-      
-      // @ts-ignore
-      const canvas = await window.html2canvas(card, {
-        backgroundColor: '#1a1a36',
-        scale: 2,
-        logging: false
-      });
-      
-      card.style.transform = originalTransform;
-      
-      const link = document.createElement('a');
-      link.download = 'Controller-Health-Score.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
+    
+    onConnect(e) {
+      this.gamepadIndex = e.gamepad.index;
+      if (this.connDot) {
+        this.connDot.classList.remove('bg-red-500');
+        this.connDot.classList.add('bg-emerald-500');
+        this.connDot.style.boxShadow = '0 0 10px rgba(16,185,129,0.6)';
+      }
+      if (this.connText) this.connText.innerText = e.gamepad.id.substring(0, 20) || 'Gamepad Connected';
     }
-  });
-
-  function resetTest() {
-    stepResult?.classList.add('sr-only');
-    stepIntro?.classList.remove('sr-only');
-    testProgress = 0;
-  }
-
-  let testProgress = 0;
-
-  function runTest(isSim: boolean) {
-    simulate = isSim;
-    isTesting = true;
-    maxDrift = 0;
-    testProgress = 0;
-    activeGpId = 'Unknown Gamepad';
-
-    stepIntro?.classList.add('sr-only');
-    stepTesting?.classList.remove('sr-only');
-
-    if (testStatus) testStatus.textContent = 'Initializing test...';
-
-    if (!simulate) {
-      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-      let found = false;
-      for (let i=0; i<gamepads.length; i++) {
-        if (gamepads[i] && gamepads[i]?.connected) {
-           activeGpId = gamepads[i]?.id || 'Unknown Controller';
-           found = true;
-           break;
+    
+    onDisconnect(e) {
+      if (e.gamepad.index === this.gamepadIndex) {
+        this.gamepadIndex = null;
+        if (this.connDot) {
+          this.connDot.classList.remove('bg-emerald-500');
+          this.connDot.classList.add('bg-red-500');
+          this.connDot.style.boxShadow = '0 0 10px rgba(239,68,68,0.6)';
         }
-      }
-      if (!found) {
-        if (testStatus) testStatus.textContent = 'No Gamepad detected. Switching to simulation...';
-        simulate = true;
+        if (this.connText) this.connText.innerText = 'No Device';
       }
     }
     
-    if (simulate) {
-      activeGpId = 'Simulated Controller (Generic)';
+    showPanel(idx) {
+      this.panels.forEach((p, i) => {
+        if (!p) return;
+        if (i === idx) {
+          p.classList.remove('opacity-0', 'pointer-events-none');
+          p.style.display = 'flex';
+        } else {
+          p.classList.add('opacity-0', 'pointer-events-none');
+        }
+      });
+      if (this.stepInd && idx > 0) {
+        this.stepInd.innerText = `${idx} / 4`;
+      }
     }
-
-    const testDuration = 3000;
-    const startTime = performance.now();
-
-    function poll(now: number) {
-      if (!isTesting) return;
-      const elapsed = now - startTime;
-      testProgress = Math.min((elapsed / testDuration) * 100, 100);
-      if (progressFill) progressFill.style.width = `${testProgress}%`;
-
-      if (simulate) {
-        if (testStatus) testStatus.textContent = 'Running simulation metrics...';
-        maxDrift = Math.max(maxDrift, Math.random() * 0.08);
-      } else {
-        if (testStatus) testStatus.textContent = `Analyzing ${activeGpId}...`;
-        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-        for (let i = 0; i < gamepads.length; i++) {
-          const gp = gamepads[i];
-          if (gp && gp.connected) {
-             const state = parseGamepadState(gp);
-             const d = Math.max(state.leftStick.driftPct, state.rightStick.driftPct);
-             if (d > maxDrift) maxDrift = d;
+    
+    goToStep(idx) {
+      this.currentStep = idx;
+      this.showPanel(idx);
+      
+      if (idx === 1) {
+        this.driftData.lastTime = performance.now();
+      } else if (idx === 4) {
+        this.calculateFinalScore();
+      }
+    }
+    
+    loop(timestamp) {
+      if (this.gamepadIndex !== null) {
+        const gp = navigator.getGamepads()[this.gamepadIndex];
+        if (gp) {
+          if (this.currentStep === 0) {
+            // Any button press moves to step 1
+            if (gp.buttons.some(b => b.pressed)) {
+              this.goToStep(1);
+            }
+          } else if (this.currentStep === 1) {
+            // Step 1: Drift
+            const dt = (timestamp - this.driftData.lastTime) / 1000;
+            this.driftData.lastTime = timestamp;
+            this.driftData.timeLeft -= dt;
+            
+            // Calc drift
+            const lX = gp.axes[0] || 0;
+            const lY = gp.axes[1] || 0;
+            const rX = gp.axes[2] || 0;
+            const rY = gp.axes[3] || 0;
+            
+            const lDrift = Math.sqrt(lX*lX + lY*lY) * 100;
+            const rDrift = Math.sqrt(rX*rX + rY*rY) * 100;
+            
+            this.driftData.maxL = Math.max(this.driftData.maxL, lDrift);
+            this.driftData.maxR = Math.max(this.driftData.maxR, rDrift);
+            
+            if (this.driftL) this.driftL.innerText = lDrift.toFixed(1) + '%';
+            if (this.driftR) this.driftR.innerText = rDrift.toFixed(1) + '%';
+            if (this.driftLBg) this.driftLBg.style.height = `${Math.min(lDrift, 100)}%`;
+            if (this.driftRBg) this.driftRBg.style.height = `${Math.min(rDrift, 100)}%`;
+            
+            if (this.driftTimer) {
+              if (this.driftData.timeLeft > 0) {
+                this.driftTimer.innerText = this.driftData.timeLeft.toFixed(1);
+              } else {
+                this.driftTimer.innerText = '0.0';
+                this.goToStep(2);
+              }
+            }
+          } else if (this.currentStep === 2) {
+            // Step 2: Buttons
+            let anyNew = false;
+            this.buttonData.required.forEach(idx => {
+              if (gp.buttons[idx] && gp.buttons[idx].pressed) {
+                if (!this.buttonData.pressed.has(idx)) {
+                  this.buttonData.pressed.add(idx);
+                  anyNew = true;
+                  const btnEl = document.getElementById(`req-btn-${idx}`);
+                  if (btnEl) {
+                    btnEl.classList.remove('bg-[#141417]', 'text-stone-500', 'border-[#27272A]');
+                    btnEl.classList.add('bg-blue-600', 'text-white', 'border-blue-500', 'shadow-[0_0_15px_rgba(37,99,235,0.4)]');
+                  }
+                }
+              }
+            });
+            if (anyNew && this.btnCounter) {
+              this.btnCounter.innerText = this.buttonData.pressed.size;
+              if (this.buttonData.pressed.size >= this.buttonData.required.length) {
+                setTimeout(() => this.goToStep(3), 500);
+              }
+            }
+          } else if (this.currentStep === 3) {
+            // Step 3: Triggers
+            const l2 = gp.buttons[6] ? gp.buttons[6].value * 100 : 0;
+            const r2 = gp.buttons[7] ? gp.buttons[7].value * 100 : 0;
+            
+            this.triggerData.maxL = Math.max(this.triggerData.maxL, l2);
+            this.triggerData.maxR = Math.max(this.triggerData.maxR, r2);
+            
+            if (this.trigLVal) this.trigLVal.innerText = Math.round(l2) + '%';
+            if (this.trigRVal) this.trigRVal.innerText = Math.round(r2) + '%';
+            if (this.trigLBar) this.trigLBar.style.height = `${l2}%`;
+            if (this.trigRBar) this.trigRBar.style.height = `${r2}%`;
+            
+            if (this.triggerData.maxL > 98 && this.triggerData.maxR > 98) {
+              // Both fully pressed
+              if (!this._t3Done) {
+                this._t3Done = true;
+                setTimeout(() => this.goToStep(4), 500);
+              }
+            }
           }
         }
       }
-
-      if (elapsed >= testDuration) {
-        finishTest();
-      } else {
-        requestAnimationFrame(poll);
-      }
+      this.rAF = requestAnimationFrame(this.loop);
     }
-    requestAnimationFrame(poll);
-  }
-
-  function finishTest() {
-    isTesting = false;
-    stepTesting?.classList.add('sr-only');
-    stepResult?.classList.remove('sr-only');
-
-    let driftScore = Math.max(0, Math.round(100 - (maxDrift * 5)));
-    let totalScore = Math.round((driftScore * 0.40) + (95 * 0.20) + (100 * 0.20) + (100 * 0.20));
-
-    const numDisplay = document.getElementById('hs-num-display');
-    const gradeDisplay = document.getElementById('hs-grade-display');
-    const modelDisplay = document.getElementById('rc-model');
-    const uuidDisplay = document.getElementById('report-uuid');
-    const envDisplay = document.getElementById('report-env');
     
-    if (modelDisplay) modelDisplay.textContent = activeGpId;
-    if (numDisplay) numDisplay.textContent = String(totalScore);
-
-    const reportId = generateUUID();
-    const envInfo = detectEnvironment();
-    
-    if (uuidDisplay) uuidDisplay.textContent = reportId.split('-')[0].toUpperCase();
-    if (envDisplay) envDisplay.textContent = `${envInfo.os} / ${envInfo.browser}`;
-
-    if (gradeDisplay) {
-      if (totalScore >= 95) {
-        gradeDisplay.textContent = 'Normal within observed range';
-        gradeDisplay.className = 'hs-grade-tag badge-pass';
-      } else if (totalScore >= 85) {
-        gradeDisplay.textContent = 'Minor anomaly observed';
-        gradeDisplay.className = 'hs-grade-tag badge-pass';
-      } else if (totalScore >= 70) {
-        gradeDisplay.textContent = 'Repeat test recommended';
-        gradeDisplay.className = 'hs-grade-tag badge-warning';
-      } else {
-        gradeDisplay.textContent = 'Likely hardware issue';
-        gradeDisplay.className = 'hs-grade-tag badge-fail';
-      }
-    }
-
-    const subDriftScore = document.getElementById('sub-drift-score');
-    if (subDriftScore) subDriftScore.textContent = `${driftScore}%`;
-
-    // Save to Passport
-    try {
-      const reportData = {
-        id: reportId,
-        timestamp: Date.now(),
-        protocolVersion: '1.0.0',
-        device: { name: activeGpId },
-        environment: envInfo,
-        capabilities: { gamepad: 'supported', haptics: 'unsupported', webhid: 'unsupported' },
-        tests: {
-          sticks: { driftX: maxDrift, driftY: maxDrift, circularityError: 5.0, deadzoneRecommendation: 0.1 },
-          buttons: {}, triggers: {}, vibration: {}
-        },
-        confidence: totalScore >= 70 ? 'high' : 'repeat-test-recommended',
-        limitations: []
-      };
+    calculateFinalScore() {
+      // Logic from requirements
+      let score = 100;
       
-      // We will only save if telemetry consent is granted or local-only passport is used
-      // For Passport, it's local-only.
-      saveToPassport(reportData as any);
-      lastReport = reportData;
-    } catch (err) {
-      console.warn("Could not save to passport.", err);
+      // Drift Penalty (max drift over 5% loses points fast)
+      const maxDrift = Math.max(this.driftData.maxL, this.driftData.maxR);
+      if (maxDrift > 5) score -= (maxDrift - 5) * 2;
+      if (maxDrift > 20) score -= 20; // severe penalty
+      
+      // Buttons Penalty
+      const btnRatio = this.buttonData.pressed.size / this.buttonData.required.length;
+      score -= (1 - btnRatio) * 30; // 30 points if no buttons work
+      
+      // Triggers Penalty
+      const l2missing = 100 - this.triggerData.maxL;
+      const r2missing = 100 - this.triggerData.maxR;
+      score -= (l2missing + r2missing) * 0.5;
+      
+      score = Math.max(0, Math.min(100, Math.round(score)));
+      
+      // Grade
+      let grade = 'F';
+      let title = 'Repair Required';
+      let desc = 'Critical failures detected. Stick replacement or board repair advised.';
+      let ringColor = '#EF4444'; // Red
+      
+      if (score >= 95) { grade = 'A+'; title = 'Tournament Grade'; desc = 'Flawless hardware. Competition ready.'; ringColor = '#10B981'; }
+      else if (score >= 85) { grade = 'A'; title = 'Excellent Condition'; desc = 'Top tier performance with minimal wear.'; ringColor = '#10B981'; }
+      else if (score >= 75) { grade = 'B'; title = 'Standard Play'; desc = 'Normal wear and tear. Manageable with deadzones.'; ringColor = '#F59E0B'; }
+      else if (score >= 60) { grade = 'C'; title = 'Moderate Wear'; desc = 'Noticeable drift or trigger loss. Might affect gameplay.'; ringColor = '#F59E0B'; }
+      
+      if (this.finalScore) this.finalScore.innerText = score;
+      if (this.finalGrade) {
+        this.finalGrade.innerText = grade;
+        this.finalGrade.style.color = ringColor;
+      }
+      if (this.gradeTitle) this.gradeTitle.innerText = title;
+      if (this.gradeDesc) this.gradeDesc.innerText = desc;
+      
+      if (this.finalScoreRing) {
+        this.finalScoreRing.style.stroke = ringColor;
+        // 289 is the total stroke-dasharray (2 * pi * 46)
+        const offset = 289 - (score / 100) * 289;
+        this.finalScoreRing.style.strokeDashoffset = offset;
+      }
+      
+      if (this.resDrift) this.resDrift.innerText = maxDrift.toFixed(1) + '%';
+      if (this.resBtns) this.resBtns.innerText = `${this.buttonData.pressed.size}/${this.buttonData.required.length}`;
+      if (this.resTrig) this.resTrig.innerText = `${Math.round(this.triggerData.maxL)}% | ${Math.round(this.triggerData.maxR)}%`;
+      
+      this.finalScoreObj = { score, grade, maxDrift };
+      
+      // Optional: Telemetry integration (if recordTelemetry exists)
+      try {
+        if (typeof window.recordTelemetry === 'function') {
+          window.recordTelemetry('health-score', { score, maxDrift });
+        }
+      } catch(e) {}
     }
-
-    // Add reward points for completing test
-    addPoints(50);
+    
+    exportReport() {
+      if (!this.exportCanvas) return;
+      const ctx = this.exportCanvas.getContext('2d');
+      if (!ctx) return;
+      
+      // Draw premium dark card
+      ctx.fillStyle = '#0E0E10';
+      ctx.fillRect(0, 0, 1200, 630);
+      
+      // Draw grid pattern (subtle)
+      ctx.strokeStyle = '#27272A';
+      ctx.lineWidth = 1;
+      for(let x=0; x<=1200; x+=60) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,630); ctx.stroke(); }
+      for(let y=0; y<=630; y+=60) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(1200,y); ctx.stroke(); }
+      
+      // Title
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 56px system-ui, -apple-system, sans-serif';
+      ctx.fillText('Controller Health Score™', 80, 120);
+      
+      ctx.fillStyle = '#A8A29E'; // stone-400
+      ctx.font = '32px system-ui';
+      ctx.fillText('Generated at ControllerTesting.com', 80, 170);
+      
+      // Grade Box
+      ctx.fillStyle = '#1A1A1E';
+      ctx.strokeStyle = '#2B2B32';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.roundRect(80, 240, 200, 200, 20);
+      ctx.fill();
+      ctx.stroke();
+      
+      // Grade Text
+      const grade = this.finalScoreObj?.grade || '?';
+      ctx.fillStyle = (grade.includes('A') || grade.includes('B')) ? '#10B981' : (grade.includes('F') ? '#EF4444' : '#F59E0B');
+      ctx.font = '900 100px system-ui';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(grade, 180, 345);
+      
+      // Score Text
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'black 120px monospace';
+      ctx.fillText(this.finalScoreObj?.score || '0', 320, 370);
+      ctx.font = '32px monospace';
+      ctx.fillStyle = '#A8A29E';
+      ctx.fillText('/ 100 SCORE', 330 + ctx.measureText(this.finalScoreObj?.score || '0').width, 370);
+      
+      // Stats
+      ctx.font = '28px monospace';
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillText(`Max Drift: ${this.resDrift.innerText}`, 80, 520);
+      ctx.fillText(`Buttons: ${this.resBtns.innerText}`, 80, 570);
+      
+      // Download
+      const link = document.createElement('a');
+      link.download = `Controller-Health-Score-${grade}.png`;
+      link.href = this.exportCanvas.toDataURL('image/png');
+      link.click();
+    }
   }
+
+  // Initialize only on client
+  document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('health-score-app')) {
+      new HealthScoreApp();
+    }
+  });
 </script>

@@ -107,7 +107,7 @@ const live = formspreeEnabled();
 <script>
   import { formspreeEnabled } from "../../lib/site";
 
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("astro:page-load", () => {
     const form = document.getElementById("wl-form") as HTMLFormElement | null;
     if (!form) return;
 

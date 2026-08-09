@@ -9,6 +9,7 @@ import Header from '../../components/global/Header.astro';
 import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
 import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
+import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -57,6 +58,26 @@ const breadcrumbs = [
         </div>
       </div>
     </div>
+
+    <GameHowToPlay
+      xp={100}
+      goal="Steer the orb through the corridor maze from the left edge to the green finish zone without touching the walls or red obstacles. Reaching the finish scores a +500 stage bonus."
+      controls={[
+        { action: 'Left / Right Stick', label: 'Move the orb' },
+        { action: 'WASD / Arrows', label: 'Move (keyboard)' },
+      ]}
+      steps={[
+        'Press Start Run to drop the orb at the starting position.',
+        'Guide the orb along the corridors with either stick (or WASD/arrows).',
+        'Thread the gaps around the red obstacle blocks without making contact.',
+        'Reach the green finish zone to clear the stage. Hitting any wall or obstacle ends the run immediately.',
+      ]}
+      tips={[
+        'Small, deliberate stick movements are far safer than sweeping flicks in tight corridors.',
+        'The orb moves faster diagonally than cardinally — ease off the stick on the approach to each turn.',
+        'The finish zone is forgiving: touching its green edge counts as a stage clear.',
+      ]}
+    />
   </div>
   <Footer />
 </BaseLayout>
@@ -93,6 +114,7 @@ const breadcrumbs = [
     let ballY = 200;
     let score = 0;
     let isPlaying = false;
+    let rafId = 0;
 
     const keys = new Set<string>();
     window.addEventListener('keydown', (e: KeyboardEvent) => {
@@ -225,25 +247,14 @@ const breadcrumbs = [
           ballY + BALL_RADIUS > LOGICAL_H - BORDER
         ) {
           endGame(false);
-          return;
-        }
-
-        // Obstacle check
-        for (const o of OBSTACLES) {
-          if (circleRectHit(ballX, ballY, BALL_RADIUS, o)) {
-            endGame(false);
-            return;
-          }
-        }
-
-        // Finish check
-        if (circleRectHit(ballX, ballY, BALL_RADIUS, FINISH)) {
+        } else if (OBSTACLES.some((o) => circleRectHit(ballX, ballY, BALL_RADIUS, o))) {
+          endGame(false);
+        } else if (circleRectHit(ballX, ballY, BALL_RADIUS, FINISH)) {
           endGame(true);
-          return;
         }
       }
 
-      rafId =       requestAnimationFrame(draw);
+      rafId = requestAnimationFrame(draw);
     }
 
     document.getElementById('btn-start-maze')?.addEventListener('click', startRun);

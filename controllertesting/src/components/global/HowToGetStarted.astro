@@ -1,0 +1,169 @@
+---
+/**
+ * HowToGetStarted.astro — ControllerTesting.com
+ * Standardized 3-Step Guide component matching user reference design 1:1.
+ */
+interface Step {
+  num: string;
+  title: string;
+  desc: string;
+}
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+  steps?: Step[];
+}
+
+const {
+  title = "How to Get Started",
+  subtitle = "Just three steps to run a complete controller test and understand your controller's health status.",
+  steps = [
+    {
+      num: "01",
+      title: "Connect Controller",
+      desc: "Connect your controller to your computer via USB cable or Bluetooth. If the browser doesn't respond, press any button on the controller to activate the connection."
+    },
+    {
+      num: "02",
+      title: "Button Detection",
+      desc: "Press each button in the visual interface and confirm the corresponding area lights up on screen. This helps troubleshoot unresponsive or double-clicking buttons."
+    },
+    {
+      num: "03",
+      title: "Sticks & Vibration",
+      desc: "Rotate the sticks to check linearity and drift issues; click the vibration test button to feel if the left and right motor feedback is working properly."
+    }
+  ]
+} = Astro.props;
+---
+
+<section class="how-to-get-started-card">
+  {/* Top Settings Icon Badge */}
+  <div class="how-to-icon-wrap" aria-hidden="true">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+    </svg>
+  </div>
+
+  {/* Section Heading & Subtitle */}
+  <h2 class="how-to-title">{title}</h2>
+  <p class="how-to-subtitle">{subtitle}</p>
+
+  {/* 3 Step Cards Grid */}
+  <div class="how-to-grid">
+    {steps.map((step) => (
+      <div class="how-to-step">
+        <div class="step-number">{step.num}</div>
+        <h3 class="step-title">{step.title}</h3>
+        <p class="step-desc">{step.desc}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .how-to-get-started-card {
+    width: 100%;
+    margin-bottom: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .how-to-icon-wrap {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.875rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-primary, #f4f4f5);
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  .how-to-title {
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--color-text-primary, #ffffff);
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  .how-to-subtitle {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary, #a1a1aa);
+    max-width: 560px;
+    line-height: 1.6;
+    margin-bottom: 3rem;
+    text-align: center;
+  }
+
+  .how-to-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+    width: 100%;
+    max-width: 1100px;
+  }
+
+  @media (max-width: 768px) {
+    .how-to-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .how-to-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .step-number {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: var(--color-surface-1, #18181b);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text-primary, #f4f4f5);
+    margin-bottom: 1.5rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+  }
+
+  .how-to-step:hover .step-number {
+    border-color: rgba(59, 130, 246, 0.5);
+    color: var(--color-accent, #3b82f6);
+    transform: scale(1.06);
+  }
+
+  .step-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-text-primary, #ffffff);
+    margin-bottom: 0.75rem;
+    text-align: center;
+  }
+
+  .step-desc {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary, #a1a1aa);
+    line-height: 1.65;
+    max-width: 340px;
+    text-align: center;
+  }
+</style>

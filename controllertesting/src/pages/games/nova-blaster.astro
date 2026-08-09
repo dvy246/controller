@@ -1,0 +1,418 @@
+---
+/**
+ * /games/nova-blaster — Nova Blaster Twin-Stick Arena Shooter
+ * Twin-stick shooter: move with left stick, aim with right stick.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
+import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
+
+const breadcrumbs = [
+  { name: 'Games Arcade', url: '/games' },
+  { name: 'Nova Blaster' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoGame',
+  name: 'Nova Blaster Twin-Stick Shooter',
+  description: 'Twin-stick arena shooter for gamepads. Survive enemy waves and chase high scores.',
+  gamePlatform: 'Web Browser',
+};
+---
+
+<BaseLayout
+  title="Nova Blaster — Twin-Stick Arena Shooter Game | ControllerTesting.com"
+  description="Play Nova Blaster, a twin-stick arena shooter for PS5, Xbox, and Switch controllers. Survive enemy waves and chase the high score."
+  schema={schema}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+  <div class="game-container">
+    <div class="hero-card card-base">
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="hero-badge">TWIN-STICK SHOOTER</span>
+      <h1 class="hero-title text-gradient">Nova Blaster</h1>
+      <p class="hero-desc">
+        Move with the left stick, aim and fire with the right. Survive endless enemy waves — every kill grows your combo multiplier.
+      </p>
+    </div>
+
+    <div class="canvas-card card-base">
+      <div class="game-score-bar">
+        <span>SCORE: <strong class="mono" id="nova-score">0</strong></span>
+        <span>COMBO: <strong class="mono" id="nova-combo">x1</strong></span>
+        <span>LIVES: <strong class="mono" id="nova-lives">3</strong></span>
+        <span>WAVE: <strong class="mono" id="nova-wave">1</strong></span>
+      </div>
+
+      <canvas id="nova-canvas" width="720" height="440"></canvas>
+
+      <p class="nova-hint">Gamepad: left stick move · right stick aim + R2/RT fire · Keyboard: WASD move, mouse aim, Space fire</p>
+
+      <div class="game-controls">
+        <button type="button" class="btn-primary" id="btn-start-nova">Start Run</button>
+      </div>
+
+      <div class="game-over-panel glass-panel" id="nova-over" role="status" hidden>
+        <span class="over-eyebrow" id="nova-over-title">Run Over</span>
+        <div class="over-score mono text-gradient" id="nova-over-score">0</div>
+        <p class="over-sub">Final score</p>
+        <ArcadeRewardsLine baseId="nova" xp={100} />
+        <div class="over-actions">
+          <button type="button" class="btn-primary" id="btn-nova-again">Play Again</button>
+          <a href="/games" class="btn-secondary">Back to Arcade</a>
+        </div>
+      </div>
+    </div>
+
+    <GameHowToPlay
+      xp={100}
+      goal="Survive waves of enemy ships for as long as you can. Each kill scores 100 × your combo multiplier; the combo climbs with every hit and resets when you take damage."
+      controls={[
+        { action: 'Left Stick', label: 'Move the ship' },
+        { action: 'Right Stick', label: 'Aim the cannon' },
+        { action: 'R2 / RT', label: 'Fire (hold for stream)' },
+        { action: 'WASD + Mouse', label: 'Move + aim (keyboard)' },
+        { action: 'Space', label: 'Fire (keyboard)' },
+      ]}
+      steps={[
+        'Press Start Run to enter the arena with 3 lives.',
+        'Steer with the left stick while aiming with the right stick — the cannon tracks your aim.',
+        'Hold R2/RT to fire a continuous stream. Red enemy ships close in from the edges.',
+        'Survive. Each wave spawns more, faster enemies. Your run ends when all lives are gone.',
+      ]}
+      tips={[
+        'Keep moving — standing still is the fastest way to get surrounded.',
+        'The combo multiplier is everything: stay hitless to keep it stacking higher.',
+        'Aim at the closest enemy cluster and strafe in a wide arc to keep them off your tail.',
+      ]}
+    />
+  </div>
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { parseGamepadState } from '../../lib/gamepad';
+  import {
+    claimArcadeXp,
+    getArcadeRewardEls,
+    renderArcadeRewards,
+  } from '../../lib/arcadeRewards';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('nova-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const overPanel = document.getElementById('nova-over') as HTMLElement | null;
+    const overTitleEl = document.getElementById('nova-over-title') as HTMLElement | null;
+    const overScoreEl = document.getElementById('nova-over-score') as HTMLElement | null;
+
+    let isPlaying = false;
+    let score = 0;
+    let combo = 1;
+    let lives = 3;
+    let wave = 0;
+
+    let player = { x: 360, y: 220, r: 12 };
+    let aimAngle = 0;
+    let firing = false;
+    let bullets: { x: number; y: number; vx: number; vy: number }[] = [];
+    let enemies: { x: number; y: number; vx: number; vy: number; r: number; hp: number; t: number }[] = [];
+    let spawnTimer = 0;
+    let hitFlash = 0;
+
+    const keys = new Set<string>();
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) e.preventDefault();
+      keys.add(e.code);
+    });
+    window.addEventListener('keyup', (e: KeyboardEvent) => keys.delete(e.code));
+
+    let mouseX = 360;
+    let mouseY = 220;
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseX = ((e.clientX - rect.left) / rect.width) * canvas.width;
+      mouseY = ((e.clientY - rect.top) / rect.height) * canvas.height;
+    });
+    window.addEventListener('keydown', (e) => { if (e.code === 'Space') firing = true; });
+    window.addEventListener('keyup', (e) => { if (e.code === 'Space') firing = false; });
+
+    function readInput() {
+      let dx = 0;
+      let dy = 0;
+      let aimX = 0;
+      let aimY = 0;
+      let fire = false;
+
+      if (keys.has('KeyW')) dy -= 1;
+      if (keys.has('KeyS')) dy += 1;
+      if (keys.has('KeyA')) dx -= 1;
+      if (keys.has('KeyD')) dx += 1;
+
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let gp: Gamepad | null = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) { gp = gamepads[i]; break; }
+      }
+
+      if (gp) {
+        const st = parseGamepadState(gp);
+        if (Math.abs(st.leftStick.x) > 0.08 || Math.abs(st.leftStick.y) > 0.08) {
+          dx = st.leftStick.x;
+          dy = st.leftStick.y;
+        }
+        const ax = st.rightStick.x;
+        const ay = st.rightStick.y;
+        if (Math.abs(ax) > 0.08 || Math.abs(ay) > 0.08) {
+          aimX = ax;
+          aimY = ay;
+        }
+        fire = st.triggers.r2 > 0.4;
+      } else {
+        aimX = mouseX - player.x;
+        aimY = mouseY - player.y;
+        fire = firing;
+      }
+
+      return { dx, dy, aimX, aimY, fire };
+    }
+
+    function resetRun() {
+      score = 0;
+      combo = 1;
+      lives = 3;
+      wave = 0;
+      player = { x: canvas.width / 2, y: canvas.height / 2, r: 12 };
+      bullets = [];
+      enemies = [];
+      spawnTimer = 0;
+      hitFlash = 0;
+    }
+
+    function spawnWave(n: number) {
+      for (let i = 0; i < n; i++) {
+        const side = Math.floor(Math.random() * 4);
+        let x = 0;
+        let y = 0;
+        if (side === 0) { x = -20; y = Math.random() * canvas.height; }
+        if (side === 1) { x = canvas.width + 20; y = Math.random() * canvas.height; }
+        if (side === 2) { x = Math.random() * canvas.width; y = -20; }
+        if (side === 3) { x = Math.random() * canvas.width; y = canvas.height + 20; }
+        const sp = 1 + wave * 0.25 + Math.random() * 1.2;
+        enemies.push({ x, y, vx: 0, vy: 0, r: 11, hp: 1, t: sp });
+      }
+    }
+
+    function endGame() {
+      isPlaying = false;
+      const result = claimArcadeXp('nova', 100);
+      renderArcadeRewards(
+        getArcadeRewardEls('nova'),
+        result ? { kind: 'award', result, amount: 100 } : { kind: 'claimed', amount: 100 },
+      );
+      if (overTitleEl) overTitleEl.textContent = 'Run Over';
+      if (overScoreEl) overScoreEl.textContent = String(score);
+      if (overPanel) overPanel.hidden = false;
+    }
+
+    function startRun() {
+      if (isPlaying) return;
+      resetRun();
+      isPlaying = true;
+      if (overPanel) overPanel.hidden = true;
+      updateHud();
+    }
+
+    function updateHud() {
+      const s = document.getElementById('nova-score');
+      const c = document.getElementById('nova-combo');
+      const l = document.getElementById('nova-lives');
+      const w = document.getElementById('nova-wave');
+      if (s) s.textContent = String(score);
+      if (c) c.textContent = `x${combo}`;
+      if (l) l.textContent = String(lives);
+      if (w) w.textContent = String(wave);
+    }
+
+    function frame() {
+      ctx.fillStyle = '#0a0d14';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Grid
+      ctx.strokeStyle = 'rgba(37, 99, 235, 0.07)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < canvas.width; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+      }
+      for (let y = 0; y < canvas.height; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+      }
+
+      if (isPlaying) {
+        const inp = readInput();
+
+        // Move player
+        const spd = 4.5;
+        player.x += inp.dx * spd;
+        player.y += inp.dy * spd;
+        player.x = Math.max(16, Math.min(canvas.width - 16, player.x));
+        player.y = Math.max(16, Math.min(canvas.height - 16, player.y));
+
+        if (inp.aimX !== 0 || inp.aimY !== 0) {
+          aimAngle = Math.atan2(inp.aimY, inp.aimX);
+        }
+
+        // Fire
+        if (inp.fire) {
+          const bx = player.x + Math.cos(aimAngle) * 18;
+          const by = player.y + Math.sin(aimAngle) * 18;
+          bullets.push({ x: bx, y: by, vx: Math.cos(aimAngle) * 9, vy: Math.sin(aimAngle) * 9 });
+        }
+
+        // Spawn wave progression
+        if (enemies.length === 0) {
+          wave++;
+          spawnWave(Math.min(3 + wave, 14));
+          updateHud();
+        }
+
+        // Move bullets
+        bullets = bullets.filter((b) => b.x > -10 && b.x < canvas.width + 10 && b.y > -10 && b.y < canvas.height + 10);
+        bullets.forEach((b) => { b.x += b.vx; b.y += b.vy; });
+
+        // Move enemies toward player
+        enemies.forEach((e) => {
+          const dx = player.x - e.x;
+          const dy = player.y - e.y;
+          const d = Math.hypot(dx, dy) || 1;
+          e.vx = (dx / d) * e.t;
+          e.vy = (dy / d) * e.t;
+          e.x += e.vx;
+          e.y += e.vy;
+        });
+
+        // Bullet vs enemy
+        for (let bi = bullets.length - 1; bi >= 0; bi--) {
+          const b = bullets[bi];
+          for (let ei = enemies.length - 1; ei >= 0; ei--) {
+            const e = enemies[ei];
+            if (Math.hypot(b.x - e.x, b.y - e.y) < e.r + 3) {
+              e.hp--;
+              bullets.splice(bi, 1);
+              if (e.hp <= 0) {
+                enemies.splice(ei, 1);
+                score += 100 * combo;
+                combo = Math.min(10, combo + 1);
+              }
+              break;
+            }
+          }
+        }
+
+        // Enemy vs player
+        for (let ei = enemies.length - 1; ei >= 0; ei--) {
+          const e = enemies[ei];
+          if (Math.hypot(player.x - e.x, player.y - e.y) < e.r + player.r) {
+            enemies.splice(ei, 1);
+            lives--;
+            combo = 1;
+            hitFlash = 12;
+            if (lives <= 0) {
+              endGame();
+              updateHud();
+              return;
+            }
+          }
+        }
+
+        updateHud();
+      }
+
+      // Draw bullets
+      bullets.forEach((b) => {
+        ctx.fillStyle = '#60a5fa';
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Draw enemies
+      enemies.forEach((e) => {
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.moveTo(e.x + e.r, e.y);
+        ctx.lineTo(e.x - e.r * 0.7, e.y - e.r * 0.7);
+        ctx.lineTo(e.x - e.r * 0.7, e.y + e.r * 0.7);
+        ctx.closePath();
+        ctx.fill();
+      });
+
+      // Draw aim line
+      if (isPlaying) {
+        ctx.strokeStyle = 'rgba(96, 165, 250, 0.35)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(player.x, player.y);
+        ctx.lineTo(player.x + Math.cos(aimAngle) * 34, player.y + Math.sin(aimAngle) * 34);
+        ctx.stroke();
+      }
+
+      // Draw player
+      const flash = hitFlash > 0;
+      ctx.fillStyle = flash ? '#ffffff' : '#2563eb';
+      ctx.beginPath();
+      ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = flash ? '#ffffff' : '#3b82f6';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(player.x, player.y, player.r, aimAngle - 0.8, aimAngle + 0.8);
+      ctx.stroke();
+
+      if (hitFlash > 0) hitFlash--;
+
+      if (isPlaying) requestAnimationFrame(frame);
+    }
+
+    document.getElementById('btn-start-nova')?.addEventListener('click', startRun);
+    document.getElementById('btn-nova-again')?.addEventListener('click', startRun);
+
+    // Idle render so the arena shows before the first run
+    function idle() {
+      frame();
+      if (!isPlaying) requestAnimationFrame(idle);
+    }
+    frame();
+  });
+</script>
+
+<style>
+  .game-container { max-width: 900px; padding-top: calc(var(--header-height, 64px) + 2rem); margin: 0 auto 2rem; padding-left: 1.5rem; padding-right: 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
+  .hero-card { padding: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
+  .hero-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.15; }
+  .hero-desc { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .canvas-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+  .game-score-bar { width: 100%; display: flex; justify-content: space-between; font-size: 1rem; font-weight: 600; }
+  #nova-canvas { width: 100%; max-width: 720px; aspect-ratio: 720 / 440; height: auto; display: block; border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); background: var(--color-surface-1); touch-action: manipulation; user-select: none; cursor: crosshair; }
+  .nova-hint { font-family: var(--font-mono); font-size: var(--text-micro); color: var(--color-text-tertiary); text-align: center; margin: 0; }
+  .game-controls { display: flex; justify-content: center; width: 100%; margin-top: 0.5rem; }
+  .game-controls .btn-primary { touch-action: manipulation; }
+  .game-over-panel { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 100%; max-width: 480px; margin-inline: auto; padding: 2rem; text-align: center; }
+  .game-over-panel[hidden] { display: none; }
+  .over-eyebrow { font-family: var(--font-mono); font-size: var(--text-micro); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-tertiary); }
+  .over-score { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1; }
+  .over-sub { margin: 0; font-size: var(--text-small); color: var(--color-text-secondary); }
+  .over-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 0.5rem; }
+  .over-actions .btn-primary,
+  .over-actions .btn-secondary { touch-action: manipulation; }
+  @media (max-width: 768px) { .game-score-bar { flex-direction: column; gap: 0.375rem; } }
+</style>

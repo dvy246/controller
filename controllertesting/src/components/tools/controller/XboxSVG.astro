@@ -1,0 +1,168 @@
+---
+/**
+ * XboxSVG.astro
+ * 1:1 Pixel-Perfect 2D Vector Graphic of the Xbox Wireless Controller (Carbon Black).
+ * Features Xbox Guide Nexus emblem, View/Menu/Share buttons, asymmetrical thumbsticks (L3/R3),
+ * 8-way hybrid faceted D-Pad, vibrant A/B/X/Y colored action buttons, and LB/LT/RB/RT triggers.
+ */
+---
+<svg id="xbox-svg" viewBox="0 0 700 500" class="w-full max-w-[480px] max-h-[350px] select-none transition-transform duration-300 drop-shadow-[0_20px_40px_rgba(0,0,0,0.85)]" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Drop Shadow Filter for Buttons and Caps -->
+    <filter id="xbox-shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.7" />
+    </filter>
+    <filter id="xbox-glow-white" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#ffffff" flood-opacity="0.8" />
+    </filter>
+  </defs>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       1. TOP SHOULDERS (LB / LT & RB / RT)
+       ════════════════════════════════════════════════════════════════════════ -->
+  <g id="group-xbox-triggers">
+    <!-- LT Trigger (Top Left Slider) -->
+    <g id="btn-lt" data-btn="6" class="button-path cursor-pointer">
+      <path d="M 215,88 C 215,65 245,46 295,46 L 338,46 L 338,68 L 275,68 C 240,68 215,76 215,88 Z" fill="#1A1B1F" stroke="#454854" stroke-width="2" />
+      <path id="lt-wire-fill" d="M 217,89 C 217,67 245,48 295,48 L 336,48 L 336,66 L 275,66 C 240,66 217,74 217,89 Z" fill="#3B82F6" class="opacity-0 transition-opacity" />
+    </g>
+    <!-- LB Bumper -->
+    <g id="btn-lb" data-btn="4" class="button-path cursor-pointer">
+      <path d="M 230,86 L 338,86 L 338,102 L 248,102 C 238,102 230,95 230,86 Z" fill="#24262E" stroke="#484B56" stroke-width="1.5" />
+      <text x="282" y="97" class="fill-stone-400 font-mono font-bold text-[10px]" text-anchor="middle">LB</text>
+    </g>
+
+    <!-- RT Trigger (Top Right Slider) -->
+    <g id="btn-rt" data-btn="7" class="button-path cursor-pointer">
+      <path d="M 485,88 C 485,65 455,46 405,46 L 362,46 L 362,68 L 425,68 C 460,68 485,76 485,88 Z" fill="#1A1B1F" stroke="#454854" stroke-width="2" />
+      <path id="rt-wire-fill" d="M 483,89 C 483,67 455,48 405,48 L 364,48 L 364,66 L 425,66 C 460,66 483,74 483,89 Z" fill="#3B82F6" class="opacity-0 transition-opacity" />
+    </g>
+    <!-- RB Bumper -->
+    <g id="btn-rb" data-btn="5" class="button-path cursor-pointer">
+      <path d="M 470,86 L 362,86 L 362,102 L 452,102 C 462,102 470,95 470,86 Z" fill="#24262E" stroke="#484B56" stroke-width="1.5" />
+      <text x="418" y="97" class="fill-stone-400 font-mono font-bold text-[10px]" text-anchor="middle">RB</text>
+    </g>
+  </g>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       2. MAIN BODY SHELL & ERGONOMIC GRIPS
+       ════════════════════════════════════════════════════════════════════════ -->
+  <!-- Outer Body Path (Carbon Black Matte Finish Shell) -->
+  <path d="M 230,105 C 310,95 390,95 470,105 C 525,110 575,135 600,190 C 630,255 650,355 660,430 C 665,470 630,490 595,485 C 560,480 525,405 505,340 C 475,330 435,335 350,335 C 265,335 225,330 195,340 C 175,405 140,480 105,485 C 70,490 35,470 40,430 C 50,355 70,255 100,190 C 125,135 175,110 230,105 Z" fill="#1F2026" stroke="#484B56" stroke-width="2.5" />
+
+  <!-- Left Handle Textured Grip Overlay -->
+  <path d="M 100,190 C 70,255 50,355 40,430 C 35,470 70,490 105,485 C 130,480 155,435 170,380 C 145,320 120,255 100,190 Z" fill="#18191E" stroke="#353742" stroke-width="1.5" />
+
+  <!-- Right Handle Textured Grip Overlay -->
+  <path d="M 600,190 C 630,255 650,355 660,430 C 665,470 630,490 595,485 C 570,480 545,435 530,380 C 555,320 580,255 600,190 Z" fill="#18191E" stroke="#353742" stroke-width="1.5" />
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       3. TOP XBOX GUIDE NEXUS EMBLEM & CENTER CONTROLS (View / Menu / Share)
+       ════════════════════════════════════════════════════════════════════════ -->
+  <!-- Glowing Xbox Guide Nexus Emblem (Button 16) -->
+  <g id="btn-xbox" data-btn="16" class="button-path cursor-pointer" transform="translate(350, 135)" filter="url(#xbox-shadow)">
+    <circle cx="0" cy="0" r="18" fill="#F4F4F5" stroke="#A1A1AA" stroke-width="1.5" />
+    <circle cx="0" cy="0" r="22" fill="none" stroke="#FFFFFF" stroke-width="1.5" class="opacity-40" />
+    <!-- Iconic Cut-Out Xbox X Logo -->
+    <path d="M -12,-11 C -7,-5 -3,-1 0,10 C 3,-1 7,-5 12,-11 C 7,-7 3,-4 0,-2 C -3,-4 -7,-7 -12,-11 Z" fill="#1E1F24" />
+    <path d="M -16,4 C -10,2 -4,0 0,10 C 4,0 10,2 16,4 C 11,-2 6,-3 0,-2 C -6,-3 -11,-2 -16,4 Z" fill="#1E1F24" />
+  </g>
+
+  <!-- View Button [⧉] (Center-Left, Button 8) -->
+  <g id="btn-view" data-btn="8" class="button-path cursor-pointer" transform="translate(300, 175)" filter="url(#xbox-shadow)">
+    <circle cx="0" cy="0" r="12" fill="#24262E" stroke="#484B56" stroke-width="1.5" />
+    <rect x="-5" y="-5" width="7" height="7" rx="1" fill="none" stroke="#D4D4D8" stroke-width="1.2" />
+    <rect x="-2" y="-2" width="7" height="7" rx="1" fill="none" stroke="#D4D4D8" stroke-width="1.2" />
+  </g>
+
+  <!-- Menu Button [≡] (Center-Right, Button 9) -->
+  <g id="btn-menu" data-btn="9" class="button-path cursor-pointer" transform="translate(400, 175)" filter="url(#xbox-shadow)">
+    <circle cx="0" cy="0" r="12" fill="#24262E" stroke="#484B56" stroke-width="1.5" />
+    <line x1="-5" y1="-4" x2="5" y2="-4" stroke="#D4D4D8" stroke-width="1.5" stroke-linecap="round" />
+    <line x1="-5" y1="0" x2="5" y2="0" stroke="#D4D4D8" stroke-width="1.5" stroke-linecap="round" />
+    <line x1="-5" y1="4" x2="5" y2="4" stroke="#D4D4D8" stroke-width="1.5" stroke-linecap="round" />
+  </g>
+
+  <!-- Share Button [↑] (Center Bottom Pill, Button 17) -->
+  <g id="btn-share" data-btn="17" class="button-path cursor-pointer" transform="translate(350, 205)" filter="url(#xbox-shadow)">
+    <rect x="-10" y="-8" width="20" height="16" rx="6" fill="#24262E" stroke="#484B56" stroke-width="1.5" />
+    <path d="M 0,3 V -4 M -3,-1 L 0,-4 L 3,-1" fill="none" stroke="#D4D4D8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       4. ASYMMETRICAL ANALOG THUMBSTICKS (L3 Upper-Left, R3 Lower-Right)
+       ════════════════════════════════════════════════════════════════════════ -->
+  <!-- Upper Left Stick (L3, Axes 0, 1) -->
+  <g id="group-left-stick" transform="translate(225, 215)">
+    <circle cx="0" cy="0" r="42" fill="#18191E" stroke="#484B56" stroke-width="2" />
+    <g id="stick-l-cap" data-btn="10" class="button-path cursor-pointer stick-cap-node" filter="url(#xbox-shadow)">
+      <circle cx="0" cy="0" r="33" fill="#25272E" stroke="#525663" stroke-width="2" />
+      <circle cx="0" cy="0" r="24" fill="#1C1D23" stroke="#3D3F48" stroke-width="1.5" />
+      <circle cx="0" cy="0" r="15" fill="#292B34" />
+      <text x="0" y="4" class="fill-stone-400 font-mono font-bold text-[10px]" text-anchor="middle">L3</text>
+    </g>
+  </g>
+
+  <!-- Lower Right Stick (R3, Axes 2, 3) -->
+  <g id="group-right-stick" transform="translate(435, 335)">
+    <circle cx="0" cy="0" r="42" fill="#18191E" stroke="#484B56" stroke-width="2" />
+    <g id="stick-r-cap" data-btn="11" class="button-path cursor-pointer stick-cap-node" filter="url(#xbox-shadow)">
+      <circle cx="0" cy="0" r="33" fill="#25272E" stroke="#525663" stroke-width="2" />
+      <circle cx="0" cy="0" r="24" fill="#1C1D23" stroke="#3D3F48" stroke-width="1.5" />
+      <circle cx="0" cy="0" r="15" fill="#292B34" />
+      <text x="0" y="4" class="fill-stone-400 font-mono font-bold text-[10px]" text-anchor="middle">R3</text>
+    </g>
+  </g>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       5. HYBRID FACETED D-PAD (Lower-Left)
+       ════════════════════════════════════════════════════════════════════════ -->
+  <g id="group-dpad-xbox" transform="translate(265, 335)">
+    <!-- Metallic Faceted Outer Dish Housing -->
+    <circle cx="0" cy="0" r="46" fill="#1B1C22" stroke="#3F424E" stroke-width="2" />
+    <circle cx="0" cy="0" r="36" fill="#23252C" stroke="#484B56" stroke-width="1" />
+
+    <!-- Up ▲ (Button 12) -->
+    <path id="btn-dpad-up" data-btn="12" d="M -12,-12 L 12,-12 L 12,-38 C 12,-41 6,-43 0,-43 C -6,-43 -12,-41 -12,-38 Z" class="dpad-btn button-path cursor-pointer fill-[#2A2C35] stroke-[#525664]" stroke-width="1.5" filter="url(#xbox-shadow)" />
+    <!-- Down ▼ (Button 13) -->
+    <path id="btn-dpad-down" data-btn="13" d="M -12,12 L 12,12 L 12,38 C 12,41 6,43 0,43 C -6,43 -12,41 -12,38 Z" class="dpad-btn button-path cursor-pointer fill-[#2A2C35] stroke-[#525664]" stroke-width="1.5" filter="url(#xbox-shadow)" />
+    <!-- Left ◀ (Button 14) -->
+    <path id="btn-dpad-left" data-btn="14" d="M -12,-12 L -12,12 L -38,12 C -41,12 -43,6 -43,0 C -43,-6 -41,-12 -38,-12 Z" class="dpad-btn button-path cursor-pointer fill-[#2A2C35] stroke-[#525664]" stroke-width="1.5" filter="url(#xbox-shadow)" />
+    <!-- Right ▶ (Button 15) -->
+    <path id="btn-dpad-right" data-btn="15" d="M 12,-12 L 12,12 L 38,12 C 41,12 43,6 43,0 C 43,-6 41,-12 38,-12 Z" class="dpad-btn button-path cursor-pointer fill-[#2A2C35] stroke-[#525664]" stroke-width="1.5" filter="url(#xbox-shadow)" />
+    <!-- Center D-Pad Facet Hub -->
+    <rect x="-12" y="-12" width="24" height="24" fill="#2A2C35" stroke="none" />
+  </g>
+
+  <!-- ════════════════════════════════════════════════════════════════════════
+       6. ACTION BUTTONS (Y, B, A, X - Upper-Right)
+       ════════════════════════════════════════════════════════════════════════ -->
+  <g id="group-action-buttons-xbox" transform="translate(535, 215)">
+    <!-- Base Recess Housing -->
+    <circle cx="0" cy="0" r="50" fill="#1B1C22" stroke="#393B44" stroke-width="2" />
+
+    <!-- Y Button (Yellow, Top, Button 3) -->
+    <g id="btn-y" data-btn="3" class="action-btn cursor-pointer" filter="url(#xbox-shadow)">
+      <circle cx="0" cy="-32" r="16" class="button-path fill-[#23252C] stroke-[#484B56]" stroke-width="1.5" />
+      <text x="0" y="-26" class="fill-[#EAB308] font-sans font-bold text-[15px]" text-anchor="middle">Y</text>
+    </g>
+
+    <!-- B Button (Red, Right, Button 1) -->
+    <g id="btn-b" data-btn="1" class="action-btn cursor-pointer" filter="url(#xbox-shadow)">
+      <circle cx="32" cy="0" r="16" class="button-path fill-[#23252C] stroke-[#484B56]" stroke-width="1.5" />
+      <text x="32" y="5.5" class="fill-[#EF4444] font-sans font-bold text-[15px]" text-anchor="middle">B</text>
+    </g>
+
+    <!-- A Button (Green, Bottom, Button 0) -->
+    <g id="btn-a" data-btn="0" class="action-btn cursor-pointer" filter="url(#xbox-shadow)">
+      <circle cx="0" cy="32" r="16" class="button-path fill-[#23252C] stroke-[#484B56]" stroke-width="1.5" />
+      <text x="0" y="37.5" class="fill-[#22C55E] font-sans font-bold text-[15px]" text-anchor="middle">A</text>
+    </g>
+
+    <!-- X Button (Blue, Left, Button 2) -->
+    <g id="btn-x" data-btn="2" class="action-btn cursor-pointer" filter="url(#xbox-shadow)">
+      <circle cx="-32" cy="0" r="16" class="button-path fill-[#23252C] stroke-[#484B56]" stroke-width="1.5" />
+      <text x="-32" y="5.5" class="fill-[#3B82F6] font-sans font-bold text-[15px]" text-anchor="middle">X</text>
+    </g>
+  </g>
+</svg>

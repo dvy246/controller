@@ -9,6 +9,7 @@ import Header from '../../components/global/Header.astro';
 import Footer from '../../components/global/Footer.astro';
 import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
 import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
+import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
 
 const breadcrumbs = [
   { name: 'Games Arcade', url: '/games' },
@@ -58,6 +59,26 @@ const breadcrumbs = [
         </div>
       </div>
     </div>
+
+    <GameHowToPlay
+      xp={75}
+      goal="Press any button the instant the signal turns green. Your reaction time in milliseconds is your score — the lower, the better."
+      controls={[
+        { action: 'Any Button', label: 'Press when green' },
+        { action: 'Space / Enter', label: 'Fire (keyboard)' },
+      ]}
+      steps={[
+        'Press Start Quick Draw — the box enters standby and waits 2–5 seconds.',
+        'Do not press anything while the signal is red; pressing early is a false start.',
+        'The instant the box turns green, hit any button on your controller.',
+        'Your reaction time appears in milliseconds. A false start records no time.',
+      ]}
+      tips={[
+        'Rest your finger on the trigger rather than hovering — travel time is part of your reaction.',
+        'Anticipate the switch, but never pre-fire: false starts waste the whole attempt.',
+        'The 2–5 second random window rewards sustained focus over predicting the moment.',
+      ]}
+    />
   </div>
   <Footer />
 </BaseLayout>

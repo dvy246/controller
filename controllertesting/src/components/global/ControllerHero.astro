@@ -72,7 +72,7 @@
   .loading-text {
     font-family: var(--font-mono, monospace);
     font-size: 0.7rem;
-    color: rgba(255,255,255,0.6);
+    color: var(--color-text-secondary);
     letter-spacing: 0.15em;
   }
 
@@ -109,9 +109,9 @@
   }
 
   .status-indicator {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(9, 9, 11, 0.72);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     padding: 6px 14px;
     border-radius: 20px;
     display: flex;
@@ -119,7 +119,7 @@
     gap: 8px;
     font-family: var(--font-mono, monospace);
     font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.92);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
@@ -139,11 +139,16 @@
   .telemetry-data {
     font-family: var(--font-mono, monospace);
     font-size: 0.65rem;
-    color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.6);
     display: flex;
     gap: 16px;
+    background: rgba(9, 9, 11, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    padding: 6px 14px;
+    border-radius: 20px;
   }
-  .telemetry-data span { color: rgba(255,255,255,0.7); }
+  .telemetry-data span { color: rgba(255,255,255,0.92); }
 </style>
 
 <script>
@@ -365,7 +370,7 @@
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startHero3D);
+    document.addEventListener('astro:page-load', startHero3D);
   } else {
     startHero3D();
   }

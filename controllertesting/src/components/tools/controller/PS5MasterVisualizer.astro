@@ -10,144 +10,220 @@ import PremiumStickCanvas from './PremiumStickCanvas.astro';
 import TriggerBars from './TriggerBars.astro';
 ---
 
-<div class="ps5-master-frame relative w-full rounded-[24px] bg-[#090A0F] border border-white/10 shadow-2xl overflow-hidden select-none">
-  <!-- Ambient Backlight Glow -->
-  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.12)_0%,rgba(0,0,0,0)_80%)] pointer-events-none"></div>
+<div class="relative w-full max-w-7xl mx-auto group">
+  <!-- Radiant Ambient Under-Glow -->
+  <div class="absolute -inset-1 rounded-[30px] bg-gradient-to-r from-blue-600/30 via-indigo-600/20 to-emerald-500/20 blur-xl opacity-60 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
 
-  <!-- Top Header Bar -->
-  <div class="relative z-20 w-full flex flex-col sm:flex-row items-center justify-between p-6 border-b border-white/10 bg-black/40 gap-4 font-mono">
-    <div class="flex items-center gap-3">
-      <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_#10B981]" id="master-status-dot"></span>
-      <span id="master-status-text" class="text-sm font-bold text-gray-200 uppercase tracking-wider">Awaiting DualSense Input</span>
+  <!-- Shimmering Multi-Stop Gradient Hairline Shell -->
+  <div class="relative p-[1px] rounded-[28px] bg-gradient-to-b from-blue-500/40 via-white/10 to-indigo-500/30 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] overflow-hidden">
+    
+    <!-- Top Glass Specular Highlight Glow Bar -->
+    <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-400/80 to-transparent pointer-events-none z-30 shadow-[0_0_12px_#3B82F6]"></div>
+
+    <div class="ps5-master-frame relative w-full rounded-[27px] bg-[#090A0F] overflow-hidden select-none z-10">
+      <!-- Ambient Backlight Glow -->
+      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.12)_0%,rgba(0,0,0,0)_80%)] pointer-events-none"></div>
+
+      <!-- Top Header Bar -->
+      <div class="relative z-20 w-full flex flex-wrap items-center justify-between px-6 sm:px-8 py-4 border-b border-white/10 bg-[#141417] gap-3 font-mono">
+    <div class="flex items-center justify-between sm:justify-start gap-2.5 w-full sm:w-auto">
+      <div class="flex items-center gap-2.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_#10B981] shrink-0" id="master-status-dot"></span>
+        <span id="master-status-text" class="text-xs font-bold text-gray-200 uppercase tracking-wider whitespace-nowrap">Awaiting DualSense Input</span>
+      </div>
     </div>
     
-    <div class="flex items-center gap-4">
-      <div class="bg-white/5 border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs">
-        <span class="text-gray-400">POLLING:</span>
-        <span id="master-hz" class="text-blue-400 font-bold tabular-nums">-- Hz</span>
+    <div class="flex flex-wrap items-center justify-between sm:justify-end gap-2 text-xs font-mono w-full sm:w-auto">
+      <div class="flex items-center gap-2">
+        <div class="bg-black/50 border border-white/10 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
+          <span class="text-stone-400 text-[10px] sm:text-[11px]">POLLING:</span>
+          <span id="master-hz" class="text-blue-400 font-bold tabular-nums text-[11px] sm:text-xs">-- Hz</span>
+        </div>
+        <div class="bg-black/50 border border-white/10 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
+          <span class="text-stone-400 text-[10px] sm:text-[11px]">LATENCY:</span>
+          <span id="master-latency" class="text-emerald-400 font-bold tabular-nums text-[11px] sm:text-xs">-- ms</span>
+        </div>
       </div>
-      <div class="bg-white/5 border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs">
-        <span class="text-gray-400">LATENCY:</span>
-        <span id="master-latency" class="text-emerald-400 font-bold tabular-nums">-- ms</span>
-      </div>
-      <div class="hidden md:flex items-center p-1 rounded-full bg-black/50 border border-white/10 text-[10px] font-bold text-gray-400">
-        <span class="px-2.5 py-0.5 rounded-full text-white bg-blue-600 shadow-sm">P1 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block ml-0.5"></span></span>
-        <span class="px-2 py-0.5 rounded-full opacity-50">P2</span>
-        <span class="px-2 py-0.5 rounded-full opacity-50">P3</span>
-        <span class="px-2 py-0.5 rounded-full opacity-50">P4</span>
+      <div class="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-black/50 border border-white/10 font-bold text-[10px] sm:text-[11px] text-stone-400">
+        <span class="px-2 py-0.5 rounded-full text-white bg-blue-600 shadow-sm flex items-center gap-1">P1 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span></span>
+        <span class="px-1.5 py-0.5 rounded-full opacity-40">P2</span>
+        <span class="px-1.5 py-0.5 rounded-full opacity-40">P3</span>
+        <span class="px-1.5 py-0.5 rounded-full opacity-40">P4</span>
       </div>
     </div>
   </div>
 
   <!-- Main Single-Frame 2-Column Grid -->
-  <div class="relative z-10 w-full grid grid-cols-1 xl:grid-cols-12 items-stretch">
+  <div class="relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 items-stretch border-b border-white/10">
     
-    <!-- LEFT COLUMN: Realtime 2D Vector DualSense Controller -->
-    <div class="xl:col-span-6 p-6 sm:p-8 flex flex-col justify-center items-center bg-black/20 border-b xl:border-b-0 xl:border-r border-white/10">
-      <div class="w-full text-center mb-2">
-        <span class="text-xs font-mono font-bold text-gray-400 uppercase tracking-widest">Real-Time Vector Controller</span>
+    <!-- LEFT STAGE: Real-Time Vector Controller Viewport (7 Cols) -->
+    <div class="lg:col-span-7 p-6 sm:p-8 flex flex-col items-center bg-black/20 border-b lg:border-b-0 lg:border-r border-white/10">
+      <div class="w-full flex items-center justify-between mb-2 font-mono text-xs text-stone-400">
+        <span class="font-bold text-gray-300 uppercase tracking-widest">Real-Time DualSense Telemetry</span>
+        <span id="master-status-sub" class="text-emerald-400 font-bold">0-Latency Vector Pipeline</span>
       </div>
       <div class="w-full flex-1 flex items-center justify-center py-4">
         <DualSenseSilhouette />
       </div>
-    </div>
-
-    <!-- RIGHT COLUMN: 2x2 Bento Telemetry Grid -->
-    <div class="xl:col-span-6 p-6 sm:p-8 bg-black/40">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full h-full">
-        
-        <!-- Bento Cell 1: Analog Sticks (Drift & Circularity) -->
-        <div class="bento-cell bg-white/[0.03] border border-white/10 rounded-2xl p-4 flex flex-col justify-between shadow-xl">
-          <div class="cell-header flex items-center justify-between mb-2">
-            <div class="flex items-center gap-2">
-              <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
-              <div>
-                <h3 class="text-xs font-bold text-white font-mono">Analog Sticks</h3>
-                <span class="text-[9px] text-gray-400 font-mono block">Linearity, Drift & Circularity</span>
-              </div>
-            </div>
-            <button id="recenter-sticks-btn" title="Re-center Sticks" class="text-gray-400 hover:text-white transition-colors p-1">
-              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
-            </button>
-          </div>
-          <div class="flex-1 flex items-center justify-center min-h-[160px] w-full">
-            <PremiumStickCanvas />
-          </div>
+      <div class="flex items-center gap-6 font-mono text-xs text-stone-400 px-4 py-1.5 rounded-full bg-black/40 border border-white/10">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block shadow-[0_0_8px_#3B82F6]"></span>
+          <span>Button Active</span>
         </div>
-
-        <!-- Bento Cell 2: Triggers (Analog Pressure 0-1) -->
-        <div class="bento-cell bg-white/[0.03] border border-white/10 rounded-2xl p-4 flex flex-col justify-between shadow-xl">
-          <div class="cell-header mb-2">
-            <div class="flex items-center gap-2">
-              <svg class="w-4 h-4 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 11V3M1 14h6M9 8h6M17 16h6"/></svg>
-              <div>
-                <h3 class="text-xs font-bold text-white font-mono">Triggers</h3>
-                <span class="text-[9px] text-gray-400 font-mono block">Analog Pressure (0-1)</span>
-              </div>
-            </div>
-          </div>
-          <div class="flex-1 flex items-center justify-center min-h-[160px] w-full">
-            <TriggerBars />
-          </div>
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-stone-600 inline-block"></span>
+          <span>Rest State</span>
         </div>
-
-        <!-- Bento Cell 3: Raw Data (Gamepad API Output) -->
-        <div class="bento-cell bg-white/[0.03] border border-white/10 rounded-2xl p-4 flex flex-col justify-between shadow-xl">
-          <div class="cell-header mb-3">
-            <div class="flex items-center gap-2">
-              <svg class="w-4 h-4 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-              <div>
-                <h3 class="text-xs font-bold text-white font-mono">Raw Data</h3>
-                <span class="text-[9px] text-gray-400 font-mono block">Gamepad API Output</span>
-              </div>
-            </div>
-          </div>
-          <!-- Button Matrix Grid -->
-          <div class="flex-1 flex flex-col justify-center gap-3">
-            <div class="grid grid-cols-6 gap-1.5" id="master-btn-matrix">
-              <!-- Rendered via JS -->
-            </div>
-            <div class="text-center">
-              <span id="raw-data-subtext" class="text-[10px] font-mono text-gray-400 uppercase tracking-wider">Awaiting Input</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Bento Cell 4: Vibration Test (Dual Motor) -->
-        <div class="bento-cell bg-white/[0.03] border border-white/10 rounded-2xl p-4 flex flex-col justify-between shadow-xl">
-          <div class="cell-header mb-2">
-            <div class="flex items-center gap-2">
-              <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-              <div>
-                <h3 class="text-xs font-bold text-amber-400 font-mono">Vibration Test</h3>
-                <span class="text-[9px] text-gray-400 font-mono block">Dual Motor Setup</span>
-              </div>
-            </div>
-          </div>
-          <div class="flex-1 flex flex-col items-center justify-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-              <svg class="w-5 h-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v.01"/><path d="M8 12v.01"/><path d="M12 12v.01"/><path d="M16 12v.01"/><path d="M20 12v.01"/><path d="m2 8 20-4"/><path d="m2 16 20 4"/></svg>
-            </div>
-            <div class="grid grid-cols-2 gap-2 w-full">
-              <button class="master-vibe-btn text-[10px] font-mono font-bold uppercase tracking-wider py-1.5 px-2 rounded bg-white/5 border border-white/10 hover:bg-white/15 text-gray-300 transition-colors" data-vibe="heavy">
-                HEAVY <div class="w-3 h-0.5 bg-amber-500 rounded-full mx-auto mt-1"></div>
-              </button>
-              <button class="master-vibe-btn text-[10px] font-mono font-bold uppercase tracking-wider py-1.5 px-2 rounded bg-white/5 border border-white/10 hover:bg-white/15 text-gray-300 transition-colors" data-vibe="light">
-                LIGHT <div class="w-3 h-0.5 bg-blue-500 rounded-full mx-auto mt-1"></div>
-              </button>
-              <button class="master-vibe-btn text-[10px] font-mono font-bold uppercase tracking-wider py-1.5 px-2 rounded bg-white/5 border border-white/10 hover:bg-white/15 text-gray-300 transition-colors" data-vibe="burst">
-                BURST <div class="w-3 h-0.5 bg-purple-500 rounded-full mx-auto mt-1"></div>
-              </button>
-              <button class="master-vibe-btn text-[10px] font-mono font-bold uppercase tracking-wider py-1.5 px-2 rounded bg-white/5 border border-white/10 hover:bg-white/15 text-gray-300 transition-colors" data-vibe="pulse">
-                PULSE <div class="w-3 h-0.5 bg-rose-500 rounded-full mx-auto mt-1"></div>
-              </button>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
 
+    <!-- RIGHT STAGE: Vertical Diagnostic Telemetry Stack (5 Cols) -->
+    <div class="lg:col-span-5 p-6 bg-black/40 flex flex-col gap-6">
+      
+      <!-- Top Section: Analog Sticks & Drift (Full Width) -->
+      <div class="flex flex-col gap-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+            <div>
+              <h3 class="text-xs font-bold text-white font-mono leading-none m-0">Analog Sticks & Drift</h3>
+              <span class="text-[9px] text-emerald-400 font-mono leading-none block mt-1">Linearity, Drift & Circularity</span>
+            </div>
+          </div>
+          <button id="recenter-sticks-btn" title="Re-center Sticks" class="text-gray-400 hover:text-white transition-colors p-1 shrink-0">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+          </button>
+        </div>
+        <div class="w-full pt-1">
+          <PremiumStickCanvas />
+        </div>
+      </div>
+
+      <!-- Bottom Section: Triggers (Full Width) -->
+      <div class="flex flex-col gap-2 pt-4 border-t border-white/10">
+        <div class="flex items-center gap-2.5">
+          <svg class="w-4 h-4 text-indigo-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 11V3M1 14h6M9 8h6M17 16h6"/></svg>
+          <div>
+            <h3 class="text-xs font-bold text-white font-mono leading-none m-0">Analog Triggers (L2 / R2)</h3>
+            <span class="text-[9px] text-indigo-400 font-mono leading-none block mt-1">Pressure Curve (0.000 – 1.000)</span>
+          </div>
+        </div>
+        <div class="w-full pt-1">
+          <TriggerBars />
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- BOTTOM CONSOLE: Raw Telemetry & Vibration Diagnostics -->
+  <div class="relative z-10 w-full bg-black/60 p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+       <!-- Left Console: Raw Data (6 Cols) -->
+    <div class="lg:col-span-6 flex flex-col gap-0">
+      <!-- Section panel with inset -->
+      <div class="vis-panel">
+        <div class="flex items-center gap-2.5 mb-3">
+          <svg class="w-4 h-4 text-blue-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          <div>
+            <h3 class="text-xs font-bold text-white font-mono leading-none m-0">Raw Gamepad API Data</h3>
+            <span class="text-[9px] text-blue-400 font-mono block mt-1">0-17 Buttons &amp; Active Axes</span>
+          </div>
+        </div>
+        <div class="grid grid-cols-6 gap-1.5" id="master-btn-matrix">
+          <!-- Rendered via JS -->
+        </div>
+        
+        <!-- Raw Axes 0-3 Telemetry -->
+        <div class="pt-3 flex flex-col gap-1.5 font-mono">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-[10px] font-bold text-stone-400 tracking-wider">ANALOG AXES (0 - 3)</span>
+            <span class="text-[9px] text-stone-500 font-medium">Bipolar [-1.00 to +1.00]</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <!-- Axis 0 (L-Stick X) -->
+            <div class="flex items-center gap-2 bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/5">
+              <span class="text-[10px] font-bold text-emerald-400 w-3">0</span>
+              <div class="flex-1 h-2 bg-black/60 rounded-full overflow-hidden relative">
+                <div class="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/30 -translate-x-1/2 z-10"></div>
+                <div id="master-raw-axis-0-bar" class="h-full bg-emerald-500 transition-all duration-75" style="width: 0%; margin-left: 50%;"></div>
+              </div>
+              <span id="master-raw-axis-0-val" class="text-[10px] font-bold text-emerald-400 w-11 text-right tabular-nums">+0.00</span>
+            </div>
+            <!-- Axis 1 (L-Stick Y) -->
+            <div class="flex items-center gap-2 bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/5">
+              <span class="text-[10px] font-bold text-emerald-400 w-3">1</span>
+              <div class="flex-1 h-2 bg-black/60 rounded-full overflow-hidden relative">
+                <div class="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/30 -translate-x-1/2 z-10"></div>
+                <div id="master-raw-axis-1-bar" class="h-full bg-emerald-500 transition-all duration-75" style="width: 0%; margin-left: 50%;"></div>
+              </div>
+              <span id="master-raw-axis-1-val" class="text-[10px] font-bold text-emerald-400 w-11 text-right tabular-nums">+0.00</span>
+            </div>
+            <!-- Axis 2 (R-Stick X) -->
+            <div class="flex items-center gap-2 bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/5">
+              <span class="text-[10px] font-bold text-blue-400 w-3">2</span>
+              <div class="flex-1 h-2 bg-black/60 rounded-full overflow-hidden relative">
+                <div class="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/30 -translate-x-1/2 z-10"></div>
+                <div id="master-raw-axis-2-bar" class="h-full bg-blue-500 transition-all duration-75" style="width: 0%; margin-left: 50%;"></div>
+              </div>
+              <span id="master-raw-axis-2-val" class="text-[10px] font-bold text-blue-400 w-11 text-right tabular-nums">+0.00</span>
+            </div>
+            <!-- Axis 3 (R-Stick Y) -->
+            <div class="flex items-center gap-2 bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/5">
+              <span class="text-[10px] font-bold text-blue-400 w-3">3</span>
+              <div class="flex-1 h-2 bg-black/60 rounded-full overflow-hidden relative">
+                <div class="absolute top-0 bottom-0 left-1/2 w-0.5 bg-white/30 -translate-x-1/2 z-10"></div>
+                <div id="master-raw-axis-3-bar" class="h-full bg-blue-500 transition-all duration-75" style="width: 0%; margin-left: 50%;"></div>
+              </div>
+              <span id="master-raw-axis-3-val" class="text-[10px] font-bold text-blue-400 w-11 text-right tabular-nums">+0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 mt-3 py-2 px-3 rounded-xl bg-white/[0.04] border border-white/10 font-mono text-xs w-full">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
+          <span id="raw-data-subtext" class="text-stone-300 font-medium leading-normal">Connect a controller or press any button to inspect live Gamepad API telemetry.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Console: Vibration (6 Cols) -->
+    <div class="lg:col-span-6 flex flex-col gap-0">
+      <div class="p-5 rounded-2xl bg-black/40 border border-white/5">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2.5">
+            <svg class="w-4 h-4 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <div>
+              <h3 class="text-xs font-bold text-white font-mono leading-none m-0">Haptic Vibration Test</h3>
+              <span class="text-[9px] text-amber-400 font-mono block mt-1 font-semibold">Dual Rumble Actuators</span>
+            </div>
+          </div>
+          <span id="master-vibe-tag" class="text-[10px] font-mono text-stone-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded font-semibold whitespace-nowrap">Awaiting Command</span>
+        </div>
+        <p class="text-xs text-stone-400 font-mono leading-relaxed mb-3">
+          Tests dual-rumble actuators (Left Heavy &amp; Right Light) via browser Vibration API.
+        </p>
+        <div class="grid grid-cols-4 gap-2 w-full">
+          <button class="master-vibe-btn text-[10px] font-mono font-bold uppercase py-2.5 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors cursor-pointer text-center flex flex-col items-center justify-center gap-1.5" data-vibe="heavy">
+            <span>HEAVY</span>
+            <span class="w-4 h-1 bg-amber-500 rounded-full"></span>
+          </button>
+          <button class="master-vibe-btn text-[10px] font-mono font-bold uppercase py-2.5 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors cursor-pointer text-center flex flex-col items-center justify-center gap-1.5" data-vibe="light">
+            <span>LIGHT</span>
+            <span class="w-4 h-1 bg-blue-500 rounded-full"></span>
+          </button>
+          <button class="master-vibe-btn text-[10px] font-mono font-bold uppercase py-2.5 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors cursor-pointer text-center flex flex-col items-center justify-center gap-1.5" data-vibe="burst">
+            <span>BURST</span>
+            <span class="w-4 h-1 bg-purple-500 rounded-full"></span>
+          </button>
+          <button class="master-vibe-btn text-[10px] font-mono font-bold uppercase py-2.5 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors cursor-pointer text-center flex flex-col items-center justify-center gap-1.5" data-vibe="pulse">
+            <span>PULSE</span>
+            <span class="w-4 h-1 bg-rose-500 rounded-full"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    </div>
   </div>
 </div>
 
@@ -202,6 +278,30 @@ import TriggerBars from './TriggerBars.astro';
               matrixEls[idx].className = "h-6 flex items-center justify-center text-[10px] font-mono font-bold rounded border transition-all duration-75 bg-blue-600 text-white border-blue-400 shadow-[0_0_10px_rgba(37,99,235,0.8)] scale-105";
             } else {
               matrixEls[idx].className = "h-6 flex items-center justify-center text-[10px] font-mono font-bold rounded border transition-all duration-75 bg-white/5 text-gray-500 border-white/5";
+            }
+          }
+        });
+        // Update Raw Axes 0-3
+        const lx = state.leftStick ? state.leftStick.x : 0;
+        const ly = state.leftStick ? state.leftStick.y : 0;
+        const rx = state.rightStick ? state.rightStick.x : 0;
+        const ry = state.rightStick ? state.rightStick.y : 0;
+
+        const rawAxes = [lx, ly, rx, ry];
+        rawAxes.forEach((val, idx) => {
+          const valEl = document.getElementById(`master-raw-axis-${idx}-val`);
+          const barEl = document.getElementById(`master-raw-axis-${idx}-bar`);
+          if (valEl) {
+            valEl.textContent = (val >= 0 ? '+' : '') + val.toFixed(2);
+          }
+          if (barEl) {
+            const mag = Math.min(Math.abs(val), 1.0) * 50;
+            if (val >= 0) {
+              barEl.style.marginLeft = '50%';
+              barEl.style.width = `${mag}%`;
+            } else {
+              barEl.style.marginLeft = `${50 - mag}%`;
+              barEl.style.width = `${mag}%`;
             }
           }
         });

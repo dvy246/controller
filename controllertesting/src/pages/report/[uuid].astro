@@ -14,13 +14,13 @@ export function getStaticPaths() {
 const { uuid } = Astro.params;
 const breadcrumbs = [
   { name: 'Controller Passport', url: '/passport' },
-  { name: `Evidence Report ${uuid}` }
+  { name: `Diagnostic Report ${uuid}` }
 ];
 ---
 
 <BaseLayout
-  title={`Verifiable Hardware Evidence Report ${uuid} | ControllerTesting.com`}
-  description="Verified controller diagnostic evidence report. View stick drift %, circularity error, and button latency telemetry."
+  title={`Controller Diagnostic Report ${uuid} | ControllerTesting.com`}
+  description="Controller diagnostic report stored on this device. View stick drift %, circularity error, and button telemetry."
   noindex={true}
   breadcrumbs={breadcrumbs}
 >

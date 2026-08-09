@@ -1,0 +1,367 @@
+---
+/**
+ * /games/asteroid-dash — Asteroid Dash Survival Game
+ * Dodge asteroids and collect orbs. Left stick movement, R2 boost.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
+import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
+
+const breadcrumbs = [
+  { name: 'Games Arcade', url: '/games' },
+  { name: 'Asteroid Dash' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoGame',
+  name: 'Asteroid Dash Survival Game',
+  description: 'Dodge asteroids and collect energy orbs in a gamepad-driven survival game.',
+  gamePlatform: 'Web Browser',
+};
+---
+
+<BaseLayout
+  title="Asteroid Dash — Dodge & Collect Survival Game | ControllerTesting.com"
+  description="Play Asteroid Dash, a dodge-and-collect survival game for PS5, Xbox, and Switch controllers. Collect orbs, dodge asteroids, survive."
+  schema={schema}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+  <div class="game-container">
+    <div class="hero-card card-base">
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="hero-badge">SURVIVAL GAME</span>
+      <h1 class="hero-title text-gradient">Asteroid Dash</h1>
+      <p class="hero-desc">
+        Weave through drifting asteroids, collect energy orbs, and survive as long as you can. Boost with R2 when the gap closes.
+      </p>
+    </div>
+
+    <div class="canvas-card card-base">
+      <div class="game-score-bar">
+        <span>SCORE: <strong class="mono" id="ast-score">0</strong></span>
+        <span>ORBS: <strong class="mono" id="ast-orbs">0</strong></span>
+        <span>STAMINA: <strong class="mono" id="ast-stamina">100%</strong></span>
+        <span>TIME: <strong class="mono" id="ast-time">0.0s</strong></span>
+      </div>
+
+      <canvas id="ast-canvas" width="680" height="440"></canvas>
+
+      <p class="ast-hint">Gamepad: left stick move · R2 / RT boost · Keyboard: WASD move, Shift boost</p>
+
+      <div class="game-controls">
+        <button type="button" class="btn-primary" id="btn-start-ast">Start Run</button>
+      </div>
+
+      <div class="game-over-panel glass-panel" id="ast-over" role="status" hidden>
+        <span class="over-eyebrow" id="ast-over-title">Ship Destroyed</span>
+        <div class="over-score mono text-gradient" id="ast-over-score">0</div>
+        <p class="over-sub">Final score</p>
+        <ArcadeRewardsLine baseId="ast" xp={125} />
+        <div class="over-actions">
+          <button type="button" class="btn-primary" id="btn-ast-again">Play Again</button>
+          <a href="/games" class="btn-secondary">Back to Arcade</a>
+        </div>
+      </div>
+    </div>
+
+    <GameHowToPlay
+      xp={125}
+      goal="Survive the asteroid field for as long as you can. Collect blue orbs for +50 points, and use R2 to boost through tight gaps — but watch your stamina."
+      controls={[
+        { action: 'Left Stick', label: 'Move the ship' },
+        { action: 'R2 / RT', label: 'Boost (uses stamina)' },
+        { action: 'WASD + Shift', label: 'Move + boost (keyboard)' },
+      ]}
+      steps={[
+        'Press Start Run to enter the asteroid field with 3 lives.',
+        'Steer with the left stick around drifting red asteroids — any contact costs a life.',
+        'Collect blue orbs to score points; they spawn in the gaps between rocks.',
+        'Boost with R2 when a gap is closing fast. Stamina refills when you stop boosting. Survive all 3 lives to keep scoring.',
+      ]}
+      tips={[
+        'Use short R2 taps to feather through gaps instead of holding boost into a wall of rocks.',
+        'Orbs pull toward your path — a slight detour to grab one is almost always worth it.',
+        'Keep the ship in the open center of the field; the edges funnel you into asteroid clusters.',
+      ]}
+    />
+  </div>
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { parseGamepadState } from '../../lib/gamepad';
+  import {
+    claimArcadeXp,
+    getArcadeRewardEls,
+    renderArcadeRewards,
+  } from '../../lib/arcadeRewards';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('ast-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const overPanel = document.getElementById('ast-over') as HTMLElement | null;
+    const overTitleEl = document.getElementById('ast-over-title') as HTMLElement | null;
+    const overScoreEl = document.getElementById('ast-over-score') as HTMLElement | null;
+
+    let isPlaying = false;
+    let score = 0;
+    let orbs = 0;
+    let lives = 3;
+    let stamina = 100;
+    let elapsed = 0;
+    let lastTime = 0;
+
+    let ship = { x: 340, y: 220, r: 12 };
+    let asteroids: { x: number; y: number; vx: number; vy: number; r: number }[] = [];
+    let orbItems: { x: number; y: number; r: number; t: number }[] = [];
+    let spawnTimer = 0;
+    let hitFlash = 0;
+
+    const keys = new Set<string>();
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'ShiftLeft', 'ShiftRight'].includes(e.code)) e.preventDefault();
+      keys.add(e.code);
+    });
+    window.addEventListener('keyup', (e: KeyboardEvent) => keys.delete(e.code));
+
+    function readInput() {
+      let dx = 0;
+      let dy = 0;
+      let boost = false;
+
+      if (keys.has('KeyW')) dy -= 1;
+      if (keys.has('KeyS')) dy += 1;
+      if (keys.has('KeyA')) dx -= 1;
+      if (keys.has('KeyD')) dx += 1;
+      boost = keys.has('ShiftLeft') || keys.has('ShiftRight');
+
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+      let gp: Gamepad | null = null;
+      for (let i = 0; i < gamepads.length; i++) {
+        if (gamepads[i] && gamepads[i]?.connected) { gp = gamepads[i]; break; }
+      }
+      if (gp) {
+        const st = parseGamepadState(gp);
+        if (Math.abs(st.leftStick.x) > 0.08 || Math.abs(st.leftStick.y) > 0.08) {
+          dx = st.leftStick.x;
+          dy = st.leftStick.y;
+        }
+        boost = st.triggers.r2 > 0.4;
+      }
+      return { dx, dy, boost };
+    }
+
+    function updateHud() {
+      const s = document.getElementById('ast-score');
+      const o = document.getElementById('ast-orbs');
+      const st = document.getElementById('ast-stamina');
+      const t = document.getElementById('ast-time');
+      if (s) s.textContent = String(score);
+      if (o) o.textContent = String(orbs);
+      if (st) st.textContent = `${Math.round(stamina)}%`;
+      if (t) t.textContent = `${elapsed.toFixed(1)}s`;
+    }
+
+    function endGame() {
+      isPlaying = false;
+      const result = claimArcadeXp('ast', 125);
+      renderArcadeRewards(
+        getArcadeRewardEls('ast'),
+        result ? { kind: 'award', result, amount: 125 } : { kind: 'claimed', amount: 125 },
+      );
+      if (overTitleEl) overTitleEl.textContent = 'Ship Destroyed';
+      if (overScoreEl) overScoreEl.textContent = String(score);
+      if (overPanel) overPanel.hidden = false;
+    }
+
+    function startRun() {
+      if (isPlaying) return;
+      score = 0;
+      orbs = 0;
+      lives = 3;
+      stamina = 100;
+      elapsed = 0;
+      ship = { x: canvas.width / 2, y: canvas.height / 2, r: 12 };
+      asteroids = [];
+      orbItems = [];
+      spawnTimer = 0;
+      hitFlash = 0;
+      isPlaying = true;
+      lastTime = performance.now();
+      if (overPanel) overPanel.hidden = true;
+      updateHud();
+    }
+
+    function spawnAsteroid() {
+      const side = Math.floor(Math.random() * 4);
+      let x = 0;
+      let y = 0;
+      if (side === 0) { x = -30; y = Math.random() * canvas.height; }
+      if (side === 1) { x = canvas.width + 30; y = Math.random() * canvas.height; }
+      if (side === 2) { x = Math.random() * canvas.width; y = -30; }
+      if (side === 3) { x = Math.random() * canvas.width; y = canvas.height + 30; }
+      const ang = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x) + (Math.random() - 0.5) * 0.8;
+      const sp = 1 + Math.random() * 1.6;
+      asteroids.push({ x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, r: 16 + Math.random() * 14 });
+    }
+
+    function frame(ts: number) {
+      ctx.fillStyle = '#0a0d14';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Stars
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      for (let i = 0; i < 60; i++) {
+        const sx = (i * 137.5) % canvas.width;
+        const sy = (i * 73.1) % canvas.height;
+        ctx.fillRect(sx, sy, 1.5, 1.5);
+      }
+
+      if (isPlaying) {
+        const dt = Math.min(0.05, (ts - lastTime) / 1000);
+        lastTime = ts;
+        elapsed += dt;
+
+        const inp = readInput();
+        const speed = inp.boost && stamina > 1 ? 6.5 : 3.5;
+        if (inp.boost && stamina > 1) stamina = Math.max(0, stamina - 30 * dt);
+        else stamina = Math.min(100, stamina + 18 * dt);
+
+        ship.x += inp.dx * speed;
+        ship.y += inp.dy * speed;
+        ship.x = Math.max(14, Math.min(canvas.width - 14, ship.x));
+        ship.y = Math.max(14, Math.min(canvas.height - 14, ship.y));
+
+        // Spawns
+        spawnTimer++;
+        if (spawnTimer > 26) {
+          spawnTimer = 0;
+          spawnAsteroid();
+          if (asteroids.length < 12 && Math.random() < 0.3) spawnAsteroid();
+        }
+        if (orbItems.length < 3 && Math.random() < 0.008) {
+          orbItems.push({
+            x: 30 + Math.random() * (canvas.width - 60),
+            y: 30 + Math.random() * (canvas.height - 60),
+            r: 8,
+            t: 0,
+          });
+        }
+
+        asteroids.forEach((a) => { a.x += a.vx; a.y += a.vy; });
+        asteroids = asteroids.filter((a) => a.x > -40 && a.x < canvas.width + 40 && a.y > -40 && a.y < canvas.height + 40);
+
+        // Orbs
+        orbItems.forEach((o) => { o.t++; });
+        for (let i = orbItems.length - 1; i >= 0; i--) {
+          const o = orbItems[i];
+          if (Math.hypot(ship.x - o.x, ship.y - o.y) < o.r + ship.r) {
+            orbItems.splice(i, 1);
+            orbs++;
+            score += 50;
+          }
+        }
+
+        // Collisions
+        for (let i = asteroids.length - 1; i >= 0; i--) {
+          const a = asteroids[i];
+          if (Math.hypot(ship.x - a.x, ship.y - a.y) < a.r + ship.r) {
+            asteroids.splice(i, 1);
+            lives--;
+            hitFlash = 12;
+            if (lives <= 0) {
+              endGame();
+              updateHud();
+              return;
+            }
+          }
+        }
+
+        score += Math.round(1 * dt);
+        updateHud();
+      }
+
+      // Draw orbs
+      orbItems.forEach((o) => {
+        const pulse = 1 + Math.sin(o.t * 0.12) * 0.15;
+        ctx.fillStyle = 'rgba(37, 99, 235, 0.3)';
+        ctx.beginPath();
+        ctx.arc(o.x, o.y, o.r * 1.8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#60a5fa';
+        ctx.beginPath();
+        ctx.arc(o.x, o.y, o.r * pulse, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Draw asteroids
+      asteroids.forEach((a) => {
+        ctx.fillStyle = '#7c3aed';
+        ctx.beginPath();
+        ctx.moveTo(a.x + a.r, a.y);
+        for (let i = 1; i <= 6; i++) {
+          const ang = (i / 6) * Math.PI * 2;
+          const rr = a.r * (0.75 + Math.random() * 0.25);
+          ctx.lineTo(a.x + Math.cos(ang) * rr, a.y + Math.sin(ang) * rr);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+
+      // Draw ship
+      const flash = hitFlash > 0;
+      ctx.fillStyle = flash ? '#ffffff' : '#2563eb';
+      ctx.beginPath();
+      ctx.moveTo(ship.x + ship.r + 4, ship.y);
+      ctx.lineTo(ship.x - ship.r, ship.y - ship.r * 0.8);
+      ctx.lineTo(ship.x - ship.r * 0.5, ship.y);
+      ctx.lineTo(ship.x - ship.r, ship.y + ship.r * 0.8);
+      ctx.closePath();
+      ctx.fill();
+
+      if (hitFlash > 0) hitFlash--;
+
+      requestAnimationFrame(frame);
+    }
+
+    document.getElementById('btn-start-ast')?.addEventListener('click', startRun);
+    document.getElementById('btn-ast-again')?.addEventListener('click', startRun);
+
+    requestAnimationFrame(frame);
+  });
+</script>
+
+<style>
+  .game-container { max-width: 900px; padding-top: calc(var(--header-height, 64px) + 2rem); margin: 0 auto 2rem; padding-left: 1.5rem; padding-right: 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
+  .hero-card { padding: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
+  .hero-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.15; }
+  .hero-desc { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .canvas-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+  .game-score-bar { width: 100%; display: flex; justify-content: space-between; font-size: 1rem; font-weight: 600; }
+  #ast-canvas { width: 100%; max-width: 680px; aspect-ratio: 680 / 440; height: auto; display: block; border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); background: var(--color-surface-1); touch-action: manipulation; user-select: none; }
+  .ast-hint { font-family: var(--font-mono); font-size: var(--text-micro); color: var(--color-text-tertiary); text-align: center; margin: 0; }
+  .game-controls { display: flex; justify-content: center; width: 100%; margin-top: 0.5rem; }
+  .game-controls .btn-primary { touch-action: manipulation; }
+  .game-over-panel { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 100%; max-width: 480px; margin-inline: auto; padding: 2rem; text-align: center; }
+  .game-over-panel[hidden] { display: none; }
+  .over-eyebrow { font-family: var(--font-mono); font-size: var(--text-micro); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-tertiary); }
+  .over-score { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1; }
+  .over-sub { margin: 0; font-size: var(--text-small); color: var(--color-text-secondary); }
+  .over-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 0.5rem; }
+  .over-actions .btn-primary,
+  .over-actions .btn-secondary { touch-action: manipulation; }
+  @media (max-width: 768px) { .game-score-bar { flex-direction: column; gap: 0.375rem; } }
+</style>

@@ -1,0 +1,293 @@
+---
+/**
+ * /games/memory-pulse — Memory Pulse Pattern Recall Game
+ * Simon-style: repeat the face-button sequence as it grows.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
+import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
+
+const breadcrumbs = [
+  { name: 'Games Arcade', url: '/games' },
+  { name: 'Memory Pulse' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoGame',
+  name: 'Memory Pulse Pattern Recall Game',
+  description: 'Simon-style memory game for gamepads. Repeat the growing face-button sequence.',
+  gamePlatform: 'Web Browser',
+};
+---
+
+<BaseLayout
+  title="Memory Pulse — Pattern Memory Game | ControllerTesting.com"
+  description="Play Memory Pulse, a Simon-style memory game for PS5, Xbox, and Switch controllers. Repeat the growing face-button sequence."
+  schema={schema}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+  <div class="game-container">
+    <div class="hero-card card-base">
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="hero-badge">MEMORY GAME</span>
+      <h1 class="hero-title text-gradient">Memory Pulse</h1>
+      <p class="hero-desc">
+        Four pads flash a sequence. Watch closely, then repeat it. Every correct round adds one more step.
+      </p>
+    </div>
+
+    <div class="canvas-card card-base">
+      <div class="game-score-bar">
+        <span>ROUND: <strong class="mono" id="mem-round">0</strong></span>
+        <span>SCORE: <strong class="mono" id="mem-score">0</strong></span>
+        <span>STATUS: <strong class="mono pass" id="mem-status">READY</strong></span>
+      </div>
+
+      <canvas id="mem-canvas" width="520" height="520"></canvas>
+
+      <p class="mem-hint">Gamepad: A / B / X / Y map to the four pads · Keyboard: J / K / L / ;</p>
+
+      <div class="game-controls">
+        <button type="button" class="btn-primary" id="btn-start-mem">Start Sequence</button>
+      </div>
+
+      <div class="game-over-panel glass-panel" id="mem-over" role="status" hidden>
+        <span class="over-eyebrow" id="mem-over-title">Sequence Broken</span>
+        <div class="over-score mono text-gradient" id="mem-over-score">0</div>
+        <p class="over-sub">Final score</p>
+        <ArcadeRewardsLine baseId="mem" xp={125} />
+        <div class="over-actions">
+          <button type="button" class="btn-primary" id="btn-mem-again">Play Again</button>
+          <a href="/games" class="btn-secondary">Back to Arcade</a>
+        </div>
+      </div>
+    </div>
+
+    <GameHowToPlay
+      xp={125}
+      goal="Memorize and repeat a face-button sequence that grows by one step every round. Each correct round scores 100 × round number."
+      controls={[
+        { action: 'A / Cross', label: 'Pad 1 (top-left)' },
+        { action: 'B / Circle', label: 'Pad 2 (top-right)' },
+        { action: 'X / Square', label: 'Pad 3 (bottom-left)' },
+        { action: 'Y / Triangle', label: 'Pad 4 (bottom-right)' },
+        { action: 'J / K / L / ;', label: 'Pads 1–4 (keyboard)' },
+      ]}
+      steps={[
+        'Press Start Sequence — the pads flash in a random order.',
+        'Wait for the full sequence to finish playing before you touch anything.',
+        'Repeat the sequence from memory by pressing the matching buttons.',
+        'Get it right and a new step is added. One wrong press ends the run.',
+      ]}
+      tips={[
+        'Chunk the sequence into groups of two or three steps instead of memorizing every press alone.',
+        'Say the pattern out loud or trace it with your eyes — verbal and spatial encoding both help.',
+        'Watch the pad order on your controller, not the screen: the physical layout is your memory map.',
+      ]}
+    />
+  </div>
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { parseGamepadState } from '../../lib/gamepad';
+  import {
+    claimArcadeXp,
+    getArcadeRewardEls,
+    renderArcadeRewards,
+  } from '../../lib/arcadeRewards';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('mem-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const overPanel = document.getElementById('mem-over') as HTMLElement | null;
+    const overTitleEl = document.getElementById('mem-over-title') as HTMLElement | null;
+    const overScoreEl = document.getElementById('mem-over-score') as HTMLElement | null;
+
+    const padColors = ['#ef4444', '#f59e0b', '#2563eb', '#10b981'];
+    const padPos = [
+      { x: 130, y: 130 },
+      { x: 390, y: 130 },
+      { x: 130, y: 390 },
+      { x: 390, y: 390 },
+    ];
+
+    let isPlaying = false;
+    let isShowing = false;
+    let sequence: number[] = [];
+    let playerIndex = 0;
+    let score = 0;
+    let flashPad = -1;
+    let flashTimer = 0;
+
+    const keys = new Set<string>();
+    const keyMap = ['KeyJ', 'KeyK', 'KeyL', 'Semicolon'];
+    window.addEventListener('keydown', (e: KeyboardEvent) => keys.add(e.code));
+    window.addEventListener('keyup', (e: KeyboardEvent) => keys.delete(e.code));
+
+    let prevButtons: boolean[] = [];
+    let prevKeys: boolean[] = [];
+
+    function updateHud() {
+      const r = document.getElementById('mem-round');
+      const s = document.getElementById('mem-score');
+      const st = document.getElementById('mem-status');
+      if (r) r.textContent = String(sequence.length);
+      if (s) s.textContent = String(score);
+      if (st) st.textContent = isShowing ? 'WATCH...' : isPlaying ? 'YOUR TURN' : 'READY';
+    }
+
+    function showSequence() {
+      isShowing = true;
+      playerIndex = 0;
+      let i = 0;
+      const interval = window.setInterval(() => {
+        flashPad = sequence[i];
+        flashTimer = 0;
+        i++;
+        if (i >= sequence.length) {
+          window.clearInterval(interval);
+          flashPad = -1;
+          isShowing = false;
+        }
+      }, 600);
+    }
+
+    function endGame() {
+      isPlaying = false;
+      const result = claimArcadeXp('mem', 125);
+      renderArcadeRewards(
+        getArcadeRewardEls('mem'),
+        result ? { kind: 'award', result, amount: 125 } : { kind: 'claimed', amount: 125 },
+      );
+      if (overTitleEl) overTitleEl.textContent = 'Sequence Broken';
+      if (overScoreEl) overScoreEl.textContent = String(score);
+      if (overPanel) overPanel.hidden = false;
+    }
+
+    function startMem() {
+      if (isPlaying) return;
+      sequence = [];
+      playerIndex = 0;
+      score = 0;
+      isPlaying = true;
+      if (overPanel) overPanel.hidden = true;
+      sequence.push(Math.floor(Math.random() * 4));
+      updateHud();
+      window.setTimeout(showSequence, 600);
+    }
+
+    function pressPad(pad: number) {
+      if (!isPlaying || isShowing) return;
+      flashPad = pad;
+      flashTimer = 0;
+      if (pad === sequence[playerIndex]) {
+        playerIndex++;
+        if (playerIndex >= sequence.length) {
+          score += 100 * sequence.length;
+          updateHud();
+          sequence.push(Math.floor(Math.random() * 4));
+          window.setTimeout(() => {
+            updateHud();
+            showSequence();
+          }, 700);
+        }
+      } else {
+        endGame();
+        updateHud();
+      }
+    }
+
+    function frame() {
+      ctx.fillStyle = '#0a0d14';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Pads
+      padPos.forEach((p, i) => {
+        const lit = flashPad === i && flashTimer < 22;
+        ctx.fillStyle = lit ? '#ffffff' : padColors[i];
+        ctx.globalAlpha = lit ? 0.95 : 0.75;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 86, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.strokeStyle = padColors[i];
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 86, 0, Math.PI * 2);
+        ctx.stroke();
+        if (lit) {
+          ctx.fillStyle = '#0a0d14';
+          ctx.font = 'bold 22px ui-monospace, monospace';
+          const labels = ['A', 'B', 'X', 'Y'];
+          ctx.fillText(labels[i], p.x - 10, p.y + 8);
+        }
+      });
+
+      if (flashTimer < 22) flashTimer++;
+      if (flashTimer === 22) flashPad = -1;
+
+      if (isPlaying && !isShowing) {
+        const buttonsDown = [false, false, false, false];
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        let activeGp: Gamepad | null = null;
+        for (let i = 0; i < gamepads.length; i++) {
+          if (gamepads[i] && gamepads[i]?.connected) { activeGp = gamepads[i]; break; }
+        }
+        if (activeGp) {
+          const st = parseGamepadState(activeGp);
+          [0, 1, 2, 3].forEach((b) => {
+            if (st.buttons[b]?.pressed) buttonsDown[b] = true;
+          });
+        } else {
+          [0, 1, 2, 3].forEach((b) => {
+            if (keys.has(keyMap[b])) buttonsDown[b] = true;
+          });
+        }
+        [0, 1, 2, 3].forEach((b) => {
+          if (buttonsDown[b] && !prevButtons[b]) pressPad(b);
+          prevButtons[b] = buttonsDown[b];
+        });
+      }
+
+      requestAnimationFrame(frame);
+    }
+
+    document.getElementById('btn-start-mem')?.addEventListener('click', startMem);
+    document.getElementById('btn-mem-again')?.addEventListener('click', startMem);
+
+    frame();
+  });
+</script>
+
+<style>
+  .game-container { max-width: 900px; padding-top: calc(var(--header-height, 64px) + 2rem); margin: 0 auto 2rem; padding-left: 1.5rem; padding-right: 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
+  .hero-card { padding: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
+  .hero-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.15; }
+  .hero-desc { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .canvas-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+  .game-score-bar { width: 100%; display: flex; justify-content: space-between; font-size: 1rem; font-weight: 600; }
+  #mem-canvas { width: 100%; max-width: 520px; aspect-ratio: 1 / 1; height: auto; display: block; border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); background: var(--color-surface-1); touch-action: manipulation; user-select: none; }
+  .mem-hint { font-family: var(--font-mono); font-size: var(--text-micro); color: var(--color-text-tertiary); text-align: center; margin: 0; }
+  .game-controls { display: flex; justify-content: center; width: 100%; margin-top: 0.5rem; }
+  .game-controls .btn-primary { touch-action: manipulation; }
+  .game-over-panel { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 100%; max-width: 480px; margin-inline: auto; padding: 2rem; text-align: center; }
+  .game-over-panel[hidden] { display: none; }
+  .over-eyebrow { font-family: var(--font-mono); font-size: var(--text-micro); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-tertiary); }
+  .over-score { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1; }
+  .over-sub { margin: 0; font-size: var(--text-small); color: var(--color-text-secondary); }
+  .over-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 0.5rem; }
+  .over-actions .btn-primary,
+  .over-actions .btn-secondary { touch-action: manipulation; }
+  @media (max-width: 768px) { .game-score-bar { flex-direction: column; gap: 0.375rem; } }
+</style>

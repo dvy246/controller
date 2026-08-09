@@ -1,0 +1,234 @@
+---
+/**
+ * GameHowToPlay.astro — Reusable "How to Play" section for arcade games.
+ * Renders goal, controls, how-to steps, and pro tips on a unified card
+ * consistent with the site's surface/typography design system.
+ */
+
+interface Props {
+  goal: string;
+  controls: { label: string; action: string }[];
+  steps: string[];
+  tips?: string[];
+  xp?: number;
+}
+
+const {
+  goal,
+  controls,
+  steps,
+  tips = [],
+  xp,
+} = Astro.props;
+---
+
+<section class="howto-section" aria-labelledby="howto-title" data-reveal>
+  <div class="howto-card card-base">
+    <header class="howto-head">
+      <div class="howto-head-top">
+        <span class="badge-tag">How to Play</span>
+        {xp && <span class="howto-xp mono">+{xp} XP per round</span>}
+      </div>
+      <h2 class="howto-title" id="howto-title">How to Play</h2>
+      <p class="howto-goal">{goal}</p>
+    </header>
+
+    <div class="howto-grid">
+      <div class="howto-col">
+        <h3 class="howto-col-title">Controls</h3>
+        <ul class="howto-list howto-controls" role="list">
+          {controls.map((c) => (
+            <li class="howto-control" role="listitem">
+              <span class="howto-key mono">{c.action}</span>
+              <span class="howto-control-label">{c.label}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="howto-col">
+        <h3 class="howto-col-title">Objective</h3>
+        <ol class="howto-list howto-steps" role="list">
+          {steps.map((s, i) => (
+            <li class="howto-step" role="listitem">
+              <span class="howto-step-num mono">{String(i + 1).padStart(2, '0')}</span>
+              <span class="howto-step-text">{s}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+
+    {tips.length > 0 && (
+      <div class="howto-tips">
+        <h3 class="howto-col-title">Pro Tips</h3>
+        <ul class="howto-tips-list" role="list">
+          {tips.map((t) => (
+            <li class="howto-tip" role="listitem">
+              <svg class="howto-tip-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+              <span>{t}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .howto-section {
+    margin-top: 2rem;
+  }
+
+  .howto-card {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .howto-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .howto-head-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .howto-xp {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--color-pass);
+    background: var(--color-pass-bg);
+    padding: 0.2em 0.6em;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-pass);
+  }
+
+  .howto-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--color-text-primary);
+  }
+
+  .howto-goal {
+    font-size: var(--text-body);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+    max-width: 65ch;
+    margin: 0;
+  }
+
+  .howto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 1.5rem;
+  }
+
+  .howto-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .howto-col-title {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-tertiary);
+    margin: 0;
+  }
+
+  .howto-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .howto-control {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .howto-key {
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    padding: 0.3em 0.6em;
+    white-space: nowrap;
+  }
+
+  .howto-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .howto-step-num {
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--color-accent);
+    background: var(--color-info-bg);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    border-radius: var(--radius-pill);
+    padding: 0.2em 0.55em;
+    margin-top: 0.1em;
+  }
+
+  .howto-tips {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .howto-tips-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 0.625rem;
+  }
+
+  .howto-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+
+  .howto-tip-icon {
+    flex-shrink: 0;
+    color: var(--color-warning);
+    margin-top: 0.25em;
+  }
+</style>

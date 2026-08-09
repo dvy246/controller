@@ -140,6 +140,7 @@ const { mode, uuid = "demo", embed = false } = Astro.props;
     buildShareUrl,
     computeHealthGrade,
     payloadToReport,
+    parsePayload,
     type ShareReportPayload,
   } from "../../../lib/share";
   import { getPassportHistory, saveToPassport } from "../../../lib/passport";
@@ -182,7 +183,12 @@ const { mode, uuid = "demo", embed = false } = Astro.props;
     setText("device", report.device.name);
     setText("uuid", report.id);
     setText("version", report.protocolVersion || "2.4.0");
-    setText("timestamp", new Date(report.timestamp).toISOString().replace("T", " ").substring(0, 16) + " UTC");
+    setText(
+      "timestamp",
+      new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }).format(
+        new Date(report.timestamp),
+      ) + " UTC",
+    );
     setText("score", String(grade.score));
     setText("drift-l", (sticks?.driftX ?? 0).toFixed(2) + "%");
     setText("drift-r", (sticks?.driftY ?? 0).toFixed(2) + "%");
@@ -284,7 +290,7 @@ const { mode, uuid = "demo", embed = false } = Astro.props;
     setTimeout(() => (el.hidden = true), 3000);
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("astro:page-load", () => {
     const params = new URLSearchParams(window.location.search);
     const embedMode = params.get("embed") === "1" || params.get("embed") === "true";
     if (embedMode) {
@@ -295,6 +301,33 @@ const { mode, uuid = "demo", embed = false } = Astro.props;
     }
 
     if (mode === "url") {
+      const token = params.get("token");
+
+      // Server-signed record: verify against the backend, then render.
+      if (token) {
+        setStatus("info", "Verifying server-signed record…");
+        fetch(`/api/verify/${encodeURIComponent(token)}`)
+          .then((res) => res.json())
+          .then((data) => {
+            if (data?.ok && data.verified && typeof data.payload === "string") {
+              const payload = parsePayload(data.payload);
+              if (payload) {
+                const report = payloadToReport(payload);
+                render(report, {
+                  kind: "ok",
+                  text: "Server-signed record — verified on ControllerTesting.com",
+                });
+                return;
+              }
+            }
+            setStatus("error", "Verification record not found or invalid");
+          })
+          .catch(() => {
+            setStatus("error", "Could not reach the verification service");
+          });
+        return;
+      }
+
       const d = params.get("d");
       const c = params.get("c");
       const decoded = decodeShareQuery(d, c);

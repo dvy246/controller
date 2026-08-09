@@ -1,0 +1,344 @@
+---
+/**
+ * /games/beat-drop — Beat Drop Rhythm Game
+ * Rhythm game: tap face buttons as notes cross the hit line.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
+import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
+
+const breadcrumbs = [
+  { name: 'Games Arcade', url: '/games' },
+  { name: 'Beat Drop' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoGame',
+  name: 'Beat Drop Rhythm Game',
+  description: 'Rhythm game for gamepads. Tap face buttons as notes cross the beat line.',
+  gamePlatform: 'Web Browser',
+};
+---
+
+<BaseLayout
+  title="Beat Drop — Rhythm & Button Timing Game | ControllerTesting.com"
+  description="Play Beat Drop, a rhythm game for PS5, Xbox, and Switch controllers. Tap face buttons in time with falling notes and build your combo."
+  schema={schema}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+  <div class="game-container">
+    <div class="hero-card card-base">
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="hero-badge">RHYTHM GAME</span>
+      <h1 class="hero-title text-gradient">Beat Drop</h1>
+      <p class="hero-desc">
+        Four lanes. Falling notes. Tap the matching face button the instant a note crosses the hit line.
+      </p>
+    </div>
+
+    <div class="canvas-card card-base">
+      <div class="game-score-bar">
+        <span>SCORE: <strong class="mono" id="beat-score">0</strong></span>
+        <span>COMBO: <strong class="mono" id="beat-combo">0</strong></span>
+        <span>ACCURACY: <strong class="mono" id="beat-acc">100%</strong></span>
+      </div>
+
+      <canvas id="beat-canvas" width="600" height="400"></canvas>
+
+      <p class="beat-hint">Gamepad: A / B / X / Y hit lanes 1–4 · Keyboard: J / K / L / ;</p>
+
+      <div class="game-controls">
+        <button type="button" class="btn-primary" id="btn-start-beat">Start the Beat</button>
+      </div>
+
+      <div class="game-over-panel glass-panel" id="beat-over" role="status" hidden>
+        <span class="over-eyebrow">Track Complete</span>
+        <div class="over-score mono text-gradient" id="beat-over-score">0</div>
+        <p class="over-sub">Final score</p>
+        <ArcadeRewardsLine baseId="beat" xp={75} />
+        <div class="over-actions">
+          <button type="button" class="btn-primary" id="btn-beat-again">Play Again</button>
+          <a href="/games" class="btn-secondary">Back to Arcade</a>
+        </div>
+      </div>
+    </div>
+
+    <GameHowToPlay
+      xp={75}
+      goal="Tap the correct face button as each note crosses the hit line. Perfect timing scores 100, good timing scores 50 — every miss breaks your combo."
+      controls={[
+        { action: 'A / Cross', label: 'Hit lane 1' },
+        { action: 'B / Circle', label: 'Hit lane 2' },
+        { action: 'X / Square', label: 'Hit lane 3' },
+        { action: 'Y / Triangle', label: 'Hit lane 4' },
+        { action: 'J / K / L / ;', label: 'Lanes 1–4 (keyboard)' },
+      ]}
+      steps={[
+        'Press Start the Beat to begin a 30-second track.',
+        'Watch the four lanes — colored notes fall toward the glowing hit line.',
+        'Press the matching button when a note touches the line. The note color maps to the face button.',
+        'Build your combo by staying accurate. The track ends after 30 seconds.',
+      ]}
+      tips={[
+        'Look slightly ahead of the hit line, not at the note itself — your eyes should lead your thumbs.',
+        'Rest all four fingers lightly on the face buttons so any lane is one quick press away.',
+        'A steady rhythm beats frantic mashing: wait for the note to arrive, then commit.',
+      ]}
+    />
+  </div>
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { parseGamepadState } from '../../lib/gamepad';
+  import {
+    claimArcadeXp,
+    getArcadeRewardEls,
+    renderArcadeRewards,
+  } from '../../lib/arcadeRewards';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('beat-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const overPanel = document.getElementById('beat-over') as HTMLElement | null;
+    const overScoreEl = document.getElementById('beat-over-score') as HTMLElement | null;
+
+    const LANES = 4;
+    const HIT_Y = 330;
+    const NOTE_SPEED = 2.4;
+
+    let isPlaying = false;
+    let score = 0;
+    let combo = 0;
+    let hits = 0;
+    let totalNotes = 0;
+    let timeLeft = 30;
+    let timerId: number | null = null;
+    let spawnTimer = 0;
+    let notes: { lane: number; y: number; color: string }[] = [];
+    let hitFx: { lane: number; good: boolean; age: number }[] = [];
+
+    const laneColors = ['#ef4444', '#f59e0b', '#2563eb', '#10b981'];
+
+    const keys = new Set<string>();
+    const keyMap = ['KeyJ', 'KeyK', 'KeyL', 'Semicolon'];
+    window.addEventListener('keydown', (e: KeyboardEvent) => keys.add(e.code));
+    window.addEventListener('keyup', (e: KeyboardEvent) => keys.delete(e.code));
+
+    let prevButtons: boolean[] = [];
+
+    function spawnNote() {
+      const lane = Math.floor(Math.random() * LANES);
+      notes.push({ lane, y: -20, color: laneColors[lane] });
+      totalNotes++;
+    }
+
+    function pressLane(lane: number) {
+      if (!isPlaying) return;
+      const candidates = notes.filter((n) => n.lane === lane && n.y > HIT_Y - 70 && n.y < HIT_Y + 70);
+      if (candidates.length === 0) {
+        combo = 0;
+        return;
+      }
+      let best = candidates[0];
+      let bestDist = Math.abs(best.y - HIT_Y);
+      candidates.forEach((c) => {
+        const d = Math.abs(c.y - HIT_Y);
+        if (d < bestDist) { best = c; bestDist = d; }
+      });
+      const idx = notes.indexOf(best);
+      notes.splice(idx, 1);
+      const good = bestDist < 24;
+      score += good ? 100 : 50;
+      combo = good ? combo + 1 : 0;
+      hits += good ? 1 : 0;
+      hitFx.push({ lane, good, age: 0 });
+    }
+
+    function updateHud() {
+      const s = document.getElementById('beat-score');
+      const c = document.getElementById('beat-combo');
+      const a = document.getElementById('beat-acc');
+      if (s) s.textContent = String(score);
+      if (c) c.textContent = String(combo);
+      if (a) a.textContent = totalNotes ? `${Math.round((hits / Math.max(1, totalNotes)) * 100)}%` : '100%';
+    }
+
+    function endGame() {
+      isPlaying = false;
+      if (timerId) clearInterval(timerId);
+      timerId = null;
+      const result = claimArcadeXp('beat', 75);
+      renderArcadeRewards(
+        getArcadeRewardEls('beat'),
+        result ? { kind: 'award', result, amount: 75 } : { kind: 'claimed', amount: 75 },
+      );
+      if (overScoreEl) overScoreEl.textContent = String(score);
+      if (overPanel) overPanel.hidden = false;
+    }
+
+    function startBeat() {
+      if (isPlaying) return;
+      if (timerId) clearInterval(timerId);
+      score = 0;
+      combo = 0;
+      hits = 0;
+      totalNotes = 0;
+      timeLeft = 30;
+      notes = [];
+      hitFx = [];
+      spawnTimer = 0;
+      prevButtons = [];
+      isPlaying = true;
+      if (overPanel) overPanel.hidden = true;
+      updateHud();
+
+      timerId = window.setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) endGame();
+      }, 1000);
+    }
+
+    function frame() {
+      ctx.fillStyle = '#0a0d14';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const laneW = canvas.width / LANES;
+
+      // Lanes
+      for (let i = 0; i < LANES; i++) {
+        ctx.strokeStyle = 'rgba(37, 99, 235, 0.12)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(i * laneW, 0);
+        ctx.lineTo(i * laneW, canvas.height);
+        ctx.stroke();
+      }
+
+      // Hit line
+      ctx.strokeStyle = 'rgba(96, 165, 250, 0.8)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(0, HIT_Y);
+      ctx.lineTo(canvas.width, HIT_Y);
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(96, 165, 250, 0.08)';
+      ctx.fillRect(0, HIT_Y - 24, canvas.width, 48);
+
+      // Lane labels
+      ctx.font = '12px ui-monospace, monospace';
+      ctx.fillStyle = 'rgba(161, 161, 170, 0.6)';
+      const labels = ['A', 'B', 'X', 'Y'];
+      for (let i = 0; i < LANES; i++) {
+        ctx.fillText(labels[i], i * laneW + laneW / 2 - 5, 20);
+      }
+
+      if (isPlaying) {
+        // Spawn notes
+        spawnTimer++;
+        if (spawnTimer > 28) {
+          spawnTimer = 0;
+          spawnNote();
+        }
+
+        // Move notes
+        notes.forEach((n) => { n.y += NOTE_SPEED; });
+        notes = notes.filter((n) => n.y < canvas.height + 30);
+        const missed = notes.filter((n) => n.y > HIT_Y + 30 && n.y < canvas.height - 10);
+        if (missed.length) {
+          combo = 0;
+          notes = notes.filter((n) => !(n.y > HIT_Y + 30 && n.y < canvas.height - 10));
+        }
+
+        // Read buttons
+        const buttonsDown = [false, false, false, false];
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        let activeGp: Gamepad | null = null;
+        for (let i = 0; i < gamepads.length; i++) {
+          if (gamepads[i] && gamepads[i]?.connected) { activeGp = gamepads[i]; break; }
+        }
+        if (activeGp) {
+          const st = parseGamepadState(activeGp);
+          [0, 1, 2, 3].forEach((b) => {
+            if (st.buttons[b]?.pressed) buttonsDown[b] = true;
+          });
+        } else {
+          [0, 1, 2, 3].forEach((b) => {
+            if (keys.has(keyMap[b])) buttonsDown[b] = true;
+          });
+        }
+        [0, 1, 2, 3].forEach((b) => {
+          if (buttonsDown[b] && !prevButtons[b]) pressLane(b);
+          prevButtons[b] = buttonsDown[b];
+        });
+
+        updateHud();
+      }
+
+      // Draw notes
+      notes.forEach((n) => {
+        ctx.fillStyle = n.color;
+        ctx.beginPath();
+        ctx.arc(n.lane * laneW + laneW / 2, n.y, 13, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(n.lane * laneW + laneW / 2, n.y, 13, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      // Hit FX
+      hitFx = hitFx.filter((f) => f.age < 20);
+      hitFx.forEach((f) => {
+        f.age++;
+        const x = f.lane * laneW + laneW / 2;
+        const a = 1 - f.age / 20;
+        ctx.strokeStyle = f.good ? `rgba(16, 185, 129, ${a})` : `rgba(245, 158, 11, ${a})`;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(x, HIT_Y, 12 + f.age, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      if (isPlaying) requestAnimationFrame(frame);
+    }
+
+    document.getElementById('btn-start-beat')?.addEventListener('click', startBeat);
+    document.getElementById('btn-beat-again')?.addEventListener('click', startBeat);
+
+    frame();
+  });
+</script>
+
+<style>
+  .game-container { max-width: 900px; padding-top: calc(var(--header-height, 64px) + 2rem); margin: 0 auto 2rem; padding-left: 1.5rem; padding-right: 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
+  .hero-card { padding: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
+  .hero-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.15; }
+  .hero-desc { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .canvas-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+  .game-score-bar { width: 100%; display: flex; justify-content: space-between; font-size: 1rem; font-weight: 600; }
+  #beat-canvas { width: 100%; max-width: 600px; aspect-ratio: 600 / 400; height: auto; display: block; border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); background: var(--color-surface-1); touch-action: manipulation; user-select: none; }
+  .beat-hint { font-family: var(--font-mono); font-size: var(--text-micro); color: var(--color-text-tertiary); text-align: center; margin: 0; }
+  .game-controls { display: flex; justify-content: center; width: 100%; margin-top: 0.5rem; }
+  .game-controls .btn-primary { touch-action: manipulation; }
+  .game-over-panel { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 100%; max-width: 480px; margin-inline: auto; padding: 2rem; text-align: center; }
+  .game-over-panel[hidden] { display: none; }
+  .over-eyebrow { font-family: var(--font-mono); font-size: var(--text-micro); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-tertiary); }
+  .over-score { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1; }
+  .over-sub { margin: 0; font-size: var(--text-small); color: var(--color-text-secondary); }
+  .over-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 0.5rem; }
+  .over-actions .btn-primary,
+  .over-actions .btn-secondary { touch-action: manipulation; }
+  @media (max-width: 768px) { .game-score-bar { flex-direction: column; gap: 0.375rem; } }
+</style>

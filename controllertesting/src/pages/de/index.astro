@@ -291,15 +291,19 @@ function getToolIcon(icon: string) {
           {/* Tool grid cells */}
           <div class="tools-grid">
             {tools.slice(0, 7).map((tool) => (
-              <a href={tool.href} class="tool-card card-base card-hover" data-reveal>
-                <div class="tool-card-top">
-                  <span class="tool-icon" aria-hidden="true" set:html={getToolIcon(tool.icon)} />
+              <a href={tool.href} class="tool-hub-card card-base card-hover" data-reveal>
+                <div class="card-top-bar">
+                  <span class="card-icon" aria-hidden="true" set:html={getToolIcon(tool.icon)} />
                   {tool.badge && (
-                    <span class="tool-badge">{tool.badge}</span>
+                    <span class="badge-tag">{tool.badge}</span>
                   )}
                 </div>
-                <h3 class="text-h3">{tool.name}</h3>
-                <p class="tool-desc">{tool.desc}</p>
+                <h3 class="card-tool-name">{tool.name}</h3>
+                <p class="card-tool-desc">{tool.desc}</p>
+                <span class="card-action-link">
+                  Run test
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </span>
               </a>
             ))}
           </div>
@@ -1272,65 +1276,6 @@ function getToolIcon(icon: string) {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 1rem;
-  }
-
-  .tool-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 0.75rem;
-    text-decoration: none;
-    padding: 1.35rem;
-    cursor: pointer;
-    background: var(--color-surface-2);
-    border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-card);
-    transition: background var(--duration-fast), border-color var(--duration-fast), transform var(--duration-fast);
-  }
-
-  .tool-card:hover {
-    text-decoration: none;
-    background: var(--color-surface-3);
-    border-color: var(--color-border-default);
-    transform: translateY(-2px);
-  }
-
-  .tool-card-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0.25rem;
-  }
-
-  .tool-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius-sm);
-    background: var(--color-surface-3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-accent);
-  }
-
-  .tool-badge {
-    font-family: var(--font-mono);
-    font-size: 0.55rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    background: rgba(37, 99, 235, 0.12);
-    color: var(--color-accent);
-    padding: 0.2em 0.5em;
-    border-radius: 3px;
-    border: 1px solid rgba(37, 99, 235, 0.2);
-  }
-
-
-  .tool-desc {
-    font-size: var(--text-small);
-    color: var(--color-text-secondary);
-    line-height: 1.5;
   }
 
   .tools-see-all {

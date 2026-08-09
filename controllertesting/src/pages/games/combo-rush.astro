@@ -1,0 +1,321 @@
+---
+/**
+ * /games/combo-rush — Combo Rush Full-Controller Challenge
+ * Simon-says across every input: sticks, triggers, face buttons, dpad.
+ */
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/global/Header.astro';
+import Footer from '../../components/global/Footer.astro';
+import Breadcrumbs from '../../components/global/Breadcrumbs.astro';
+import ArcadeRewardsLine from '../../components/games/ArcadeRewardsLine.astro';
+import GameHowToPlay from '../../components/games/GameHowToPlay.astro';
+
+const breadcrumbs = [
+  { name: 'Games Arcade', url: '/games' },
+  { name: 'Combo Rush' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoGame',
+  name: 'Combo Rush Controller Challenge',
+  description: 'Full-controller combo challenge. Perform the on-screen input as fast as possible.',
+  gamePlatform: 'Web Browser',
+};
+---
+
+<BaseLayout
+  title="Combo Rush — Full-Controller Combo Challenge | ControllerTesting.com"
+  description="Play Combo Rush, a full-controller combo challenge for PS5, Xbox, and Switch controllers. Perform on-screen inputs as fast as you can."
+  schema={schema}
+  breadcrumbs={breadcrumbs}
+>
+  <Header />
+  <div class="game-container">
+    <div class="hero-card card-base">
+      <Breadcrumbs items={breadcrumbs} />
+      <span class="hero-badge">FULL-CONTROLLER CHALLENGE</span>
+      <h1 class="hero-title text-gradient">Combo Rush</h1>
+      <p class="hero-desc">
+        The game throws inputs at you — face buttons, triggers, sticks, dpad. Perform them as fast as you can and chain the combo.
+      </p>
+    </div>
+
+    <div class="canvas-card card-base">
+      <div class="game-score-bar">
+        <span>SCORE: <strong class="mono" id="combo-score">0</strong></span>
+        <span>COMBO: <strong class="mono" id="combo-chain">0</strong></span>
+        <span>SPEED: <strong class="mono" id="combo-speed">--</strong></span>
+      </div>
+
+      <div class="combo-prompt-box" id="combo-box">
+        <span class="combo-prompt-text text-gradient" id="combo-prompt">PRESS START</span>
+      </div>
+
+      <p class="combo-hint">Gamepad: any button, trigger, stick, or dpad input · Keyboard: see each prompt</p>
+
+      <div class="game-controls">
+        <button type="button" class="btn-primary" id="btn-start-combo">Start Challenge</button>
+      </div>
+
+      <div class="game-over-panel glass-panel" id="combo-over" role="status" hidden>
+        <span class="over-eyebrow">Time's Up</span>
+        <div class="over-score mono text-gradient" id="combo-over-score">0</div>
+        <p class="over-sub">Final score</p>
+        <ArcadeRewardsLine baseId="combo" xp={150} />
+        <div class="over-actions">
+          <button type="button" class="btn-primary" id="btn-combo-again">Play Again</button>
+          <a href="/games" class="btn-secondary">Back to Arcade</a>
+        </div>
+      </div>
+    </div>
+
+    <GameHowToPlay
+      xp={150}
+      goal="Perform as many on-screen controller inputs as you can in 30 seconds. Each input scores 100 × combo multiplier — faster chains grow the multiplier."
+      controls={[
+        { action: 'Face Buttons', label: 'A / B / X / Y prompts' },
+        { action: 'Triggers', label: 'L2 / R2 pressure prompts' },
+        { action: 'Sticks', label: 'Tilt direction prompts' },
+        { action: 'D-Pad', label: 'Direction prompts' },
+        { action: 'Bumpers', label: 'L1 / R1 prompts' },
+      ]}
+      steps={[
+        'Press Start Challenge — a 30-second timer begins.',
+        'Read the prompt box: it tells you which controller input to perform.',
+        'Execute the input correctly and instantly — each success scores and grows your combo.',
+        'Miss or hesitate past the time window and your combo resets. Chain inputs to multiply points.',
+      ]}
+      tips={[
+        'Keep both thumbs resting on the sticks and both index fingers on the triggers for fastest access.',
+        'The prompt disappears if you take too long — learn the movement, then speed wins.',
+        'Combo speed feeds the multiplier, so a fast correct input beats a slow perfect one every time.',
+      ]}
+    />
+  </div>
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { parseGamepadState } from '../../lib/gamepad';
+  import {
+    claimArcadeXp,
+    getArcadeRewardEls,
+    renderArcadeRewards,
+  } from '../../lib/arcadeRewards';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const promptEl = document.getElementById('combo-prompt');
+    const box = document.getElementById('combo-box');
+    const overPanel = document.getElementById('combo-over') as HTMLElement | null;
+    const overScoreEl = document.getElementById('combo-over-score') as HTMLElement | null;
+
+    const KEY_HINTS: Record<string, string> = {
+      face0: 'Keyboard: J',
+      face1: 'Keyboard: K',
+      face2: 'Keyboard: L',
+      face3: 'Keyboard: ;',
+      bump0: 'Keyboard: Q',
+      bump1: 'Keyboard: E',
+      trig0: 'Keyboard: hold ↑',
+      trig1: 'Keyboard: hold →',
+      dpad0: 'Keyboard: Arrows',
+    };
+
+    let isPlaying = false;
+    let score = 0;
+    let chain = 0;
+    let timeLeft = 30;
+    let timerId: number | null = null;
+    let promptTimeout: number | null = null;
+    let currentPrompt: string | null = null;
+    let lastTriggerVal = [0, 0];
+
+    const keys = new Set<string>();
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) e.preventDefault();
+      keys.add(e.code);
+    });
+    window.addEventListener('keyup', (e: KeyboardEvent) => keys.delete(e.code));
+
+    const keyMap = ['KeyJ', 'KeyK', 'KeyL', 'Semicolon'];
+    const keyMapBump = ['KeyQ', 'KeyE'];
+
+    function pickPrompt(): string {
+      const pool = [
+        'face0', 'face1', 'face2', 'face3',
+        'bump0', 'bump1',
+        'trig0', 'trig1',
+        'dpad0',
+      ];
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function showPrompt() {
+      currentPrompt = pickPrompt();
+      if (promptEl) promptEl.textContent = formatPrompt(currentPrompt);
+      box?.classList.add('active');
+      // Clear prompt if not answered in time
+      if (promptTimeout) window.clearTimeout(promptTimeout);
+      promptTimeout = window.setTimeout(() => {
+        if (currentPrompt) {
+          chain = 0;
+          if (promptEl) promptEl.textContent = 'TOO SLOW!';
+          box?.classList.remove('active');
+          currentPrompt = null;
+          updateHud();
+          window.setTimeout(showPrompt, 400);
+        }
+      }, 2500);
+    }
+
+    function formatPrompt(p: string): string {
+      switch (p) {
+        case 'face0': return 'PRESS A';
+        case 'face1': return 'PRESS B';
+        case 'face2': return 'PRESS X';
+        case 'face3': return 'PRESS Y';
+        case 'bump0': return 'PRESS LB / L1';
+        case 'bump1': return 'PRESS RB / R1';
+        case 'trig0': return 'PULL L2 / LT';
+        case 'trig1': return 'PULL R2 / RT';
+        case 'dpad0': return 'TILT D-PAD';
+        default: return 'GO';
+      }
+    }
+
+    function trySolve(kind: string) {
+      if (!isPlaying || !currentPrompt) return;
+      if (currentPrompt === kind) {
+        chain++;
+        const mult = Math.min(5, Math.floor(chain / 3) + 1);
+        score += 100 * mult;
+        if (promptTimeout) window.clearTimeout(promptTimeout);
+        box?.classList.remove('active');
+        if (promptEl) promptEl.textContent = `+${100 * mult}`;
+        currentPrompt = null;
+        updateHud();
+        window.setTimeout(showPrompt, 350);
+      }
+    }
+
+    function updateHud() {
+      const s = document.getElementById('combo-score');
+      const c = document.getElementById('combo-chain');
+      if (s) s.textContent = String(score);
+      if (c) c.textContent = String(chain);
+    }
+
+    function endGame() {
+      isPlaying = false;
+      if (timerId) clearInterval(timerId);
+      timerId = null;
+      if (promptTimeout) window.clearTimeout(promptTimeout);
+      promptTimeout = null;
+      currentPrompt = null;
+      if (promptEl) promptEl.textContent = 'GAME OVER!';
+      box?.classList.remove('active');
+      const result = claimArcadeXp('combo', 150);
+      renderArcadeRewards(
+        getArcadeRewardEls('combo'),
+        result ? { kind: 'award', result, amount: 150 } : { kind: 'claimed', amount: 150 },
+      );
+      if (overScoreEl) overScoreEl.textContent = String(score);
+      if (overPanel) overPanel.hidden = false;
+    }
+
+    function startCombo() {
+      if (isPlaying) return;
+      if (timerId) clearInterval(timerId);
+      score = 0;
+      chain = 0;
+      timeLeft = 30;
+      isPlaying = true;
+      if (overPanel) overPanel.hidden = true;
+      updateHud();
+      showPrompt();
+
+      timerId = window.setInterval(() => {
+        timeLeft--;
+        if (timeLeft <= 0) endGame();
+      }, 1000);
+    }
+
+    let prevButtons: boolean[] = [];
+
+    function pollCombo() {
+      if (isPlaying) {
+        const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+        let gp: Gamepad | null = null;
+        for (let i = 0; i < gamepads.length; i++) {
+          if (gamepads[i] && gamepads[i]?.connected) { gp = gamepads[i]; break; }
+        }
+
+        if (gp) {
+          const st = parseGamepadState(gp);
+          [0, 1, 2, 3].forEach((b) => {
+            if (st.buttons[b]?.pressed && !prevButtons[b]) trySolve(`face${b}`);
+          });
+          [4, 5].forEach((b, i) => {
+            if (st.buttons[b]?.pressed && !prevButtons[b]) trySolve(`bump${i}`);
+          });
+          // Triggers as edge detection
+          [6, 7].forEach((ti, i) => {
+            const val = gp?.buttons[ti]?.value ?? 0;
+            if (val > 0.4 && lastTriggerVal[i] <= 0.4) trySolve(`trig${i}`);
+            lastTriggerVal[i] = val;
+          });
+          // D-pad (standard mapping: up=12, down=13, left=14, right=15)
+          if (st.buttons[12]?.pressed || st.buttons[13]?.pressed || st.buttons[14]?.pressed || st.buttons[15]?.pressed) trySolve('dpad0');
+        } else {
+          [0, 1, 2, 3].forEach((b) => {
+            if (keys.has(keyMap[b])) trySolve(`face${b}`);
+          });
+          [0, 1].forEach((b) => {
+            if (keys.has(keyMapBump[b])) trySolve(`bump${b}`);
+          });
+          if (keys.has('ArrowUp')) trySolve('trig0');
+          if (keys.has('ArrowRight')) trySolve('trig1');
+          if (keys.has('ArrowLeft') || keys.has('ArrowDown')) trySolve('dpad0');
+        }
+
+        [0, 1, 2, 3].forEach((b) => {
+          prevButtons[b] = gp ? !!gp.buttons[b]?.pressed : keys.has(keyMap[b]);
+        });
+      }
+
+      requestAnimationFrame(pollCombo);
+    }
+
+    document.getElementById('btn-start-combo')?.addEventListener('click', startCombo);
+    document.getElementById('btn-combo-again')?.addEventListener('click', startCombo);
+
+    pollCombo();
+  });
+</script>
+
+<style>
+  .game-container { max-width: 900px; padding-top: calc(var(--header-height, 64px) + 2rem); margin: 0 auto 2rem; padding-left: 1.5rem; padding-right: 1.5rem; display: flex; flex-direction: column; gap: 2rem; }
+  .hero-card { padding: 2.5rem; display: flex; flex-direction: column; gap: 1rem; }
+  .hero-badge { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
+  .hero-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; line-height: 1.15; }
+  .hero-desc { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .canvas-card { padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem; align-items: center; }
+  .game-score-bar { width: 100%; display: flex; justify-content: space-between; font-size: 1rem; font-weight: 600; }
+  .combo-prompt-box { width: 100%; max-width: 560px; height: 200px; background: var(--color-surface-1); border: 2px dashed var(--color-accent); border-radius: var(--radius-card); display: flex; align-items: center; justify-content: center; text-align: center; touch-action: manipulation; user-select: none; transition: border-color var(--duration-fast) var(--ease-smooth); }
+  .combo-prompt-box.active { border-color: var(--color-pass); box-shadow: 0 0 24px rgba(16, 185, 129, 0.15); }
+  .combo-prompt-text { font-family: var(--font-mono); font-size: clamp(1.75rem, 4vw, 3rem); font-weight: 800; }
+  .combo-hint { font-family: var(--font-mono); font-size: var(--text-micro); color: var(--color-text-tertiary); text-align: center; margin: 0; }
+  .game-controls { display: flex; justify-content: center; width: 100%; }
+  .game-controls .btn-primary { touch-action: manipulation; }
+  .game-over-panel { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 100%; max-width: 480px; margin-inline: auto; padding: 2rem; text-align: center; }
+  .game-over-panel[hidden] { display: none; }
+  .over-eyebrow { font-family: var(--font-mono); font-size: var(--text-micro); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-tertiary); }
+  .over-score { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1; }
+  .over-sub { margin: 0; font-size: var(--text-small); color: var(--color-text-secondary); }
+  .over-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 0.5rem; }
+  .over-actions .btn-primary,
+  .over-actions .btn-secondary { touch-action: manipulation; }
+  @media (max-width: 768px) { .game-score-bar { flex-direction: column; gap: 0.375rem; } }
+</style>
