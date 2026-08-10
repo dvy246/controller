@@ -17,13 +17,13 @@ const availableLangs = Object.keys(languages);
     id="lang-select"
     class="lang-select"
     aria-label="Language selector"
-    onchange="try{const val=this.value; const lang = this.options[this.selectedIndex].getAttribute('data-lang'); if(lang) localStorage.setItem('ct_preferred_lang', lang); window.location.href=val;}catch(e){window.location.href=this.value;}"
+    onchange="window.location.href = this.value;"
   >
     {availableLangs.map((code) => {
       const url = getLocalizedUrl(Astro.url, code as keyof typeof languages);
       const name = languages[code as keyof typeof languages];
       return (
-        <option value={url} data-lang={code} selected={code === currentLang}>
+        <option value={url} selected={code === currentLang}>
           {name}
         </option>
       );

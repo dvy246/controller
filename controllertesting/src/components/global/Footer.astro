@@ -1,7 +1,8 @@
 ---
-import { getLangFromUrl, getLocalizedUrl } from '../../i18n/utils';
+import { getLangFromUrl } from '../../i18n/utils';
 const currentLang = getLangFromUrl(Astro.url);
-const l = (path: string) => getLocalizedUrl(Astro.url, currentLang, path);
+const l = (path: string) =>
+  currentLang === 'en' ? path : path === '/' ? `/${currentLang}` : `/${currentLang}${path}`;
 
 /**
  * Footer.astro — ControllerTesting.com

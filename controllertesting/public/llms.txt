@@ -1,0 +1,67 @@
+# ControllerTesting.com
+
+> Free browser-based controller and gamepad diagnostic suite. Test stick drift, buttons, triggers, vibration, polling rate, deadzone, and more — no download required.
+
+ControllerTesting.com is an independent hardware diagnostic platform built on the Web Gamepad API, WebHID API, Web MIDI API, and Web Audio API. All processing is 100% client-side; no game controller input data leaves your device.
+
+## Core Diagnostic Tools (39 total)
+
+### Controller Diagnostics
+- [Stick Drift Detector](https://controllertesting.com/test/controller/drift) — Detects analog stick drift to 0.1% precision
+- [Full Diagnostic Wizard](https://controllertesting.com/test/controller/full-diagnostic) — 5-step hardware health checkup (2 minutes)
+- [Controller Health Score](https://controllertesting.com/test/controller/health-score) — 0–100 grade with printable PDF report
+- [Button Tester](https://controllertesting.com/test/controller/buttons) — Tests every button for ghosting and response
+- [Trigger Pressure Tester](https://controllertesting.com/test/controller/triggers) — Analog L2/R2 pressure curve analysis
+- [Vibration Tester](https://controllertesting.com/test/controller/vibration) — Dual haptic motor pulse testing
+- [Circularity Test](https://controllertesting.com/test/controller/circularity) — 360° stick range-of-motion and error
+- [Deadzone Visualizer](https://controllertesting.com/test/controller/deadzone) — Inner and outer deadzone threshold tuning
+- [Polling Rate Checker](https://controllertesting.com/test/controller/polling-rate) — Real-time Hz input report frequency
+- [Latency Estimator](https://controllertesting.com/test/controller/latency) — Input delay and reaction speed timer
+- [Gyroscope Tester](https://controllertesting.com/test/controller/gyroscope) — 3-axis motion sensor calibration
+- [Touchpad Tester](https://controllertesting.com/test/controller/touchpad) — PS5 DualSense multi-touch trackpad
+- [PS5 DualSense Tester](https://controllertesting.com/test/controller/ps5) — PS5-specific diagnostics
+- [Xbox Controller Tester](https://controllertesting.com/test/controller/xbox) — Xbox-specific diagnostics
+- [Nintendo Switch Tester](https://controllertesting.com/test/controller/nintendo-switch) — Switch-specific diagnostics
+- [Multi-Controller Tester](https://controllertesting.com/test/controller/multi) — Up to 4 gamepads simultaneously
+- [Competitive Readiness](https://controllertesting.com/test/controller/competitive-readiness) — Esports tournament benchmark
+- [PS WebHID Calibration](https://controllertesting.com/test/controller/ps-calibration) — Low-level firmware zero-point calibration
+
+### Mouse Diagnostics
+- [CPS Test](https://controllertesting.com/test/mouse/cps) — Clicks per second speed tester
+- [Mouse Polling Rate](https://controllertesting.com/test/mouse/polling-rate) — Up to 8000Hz report rate checker
+- [DPI Analyzer](https://controllertesting.com/test/mouse/dpi) — True hardware DPI calculator
+- [Double-Click Fault Test](https://controllertesting.com/test/mouse/double-click) — Switch bounce and chatter detector
+
+## Reliability Data
+
+All reliability figures are explicitly labeled as **modeled reference baselines** derived from engineering estimates, not from measured datasets. Community telemetry collection is opt-in and starts at 0 samples.
+
+- [Reliability Dashboard](https://controllertesting.com/reliability/dashboard) — Aggregate baselines across 5 controller models
+- [Testing Methodology](https://controllertesting.com/test/methodology) — What browser tests can and cannot measure
+
+### Reference Baselines (modeled, snapshot 2026-08-02)
+- PS5 DualSense: 4.8% avg drift after 12 months
+- Xbox Series X/S: 5.2% avg drift after 12 months
+- Nintendo Switch Pro: 3.1% avg drift after 12 months
+- Hall Effect Controllers: 0.1% avg drift after 12 months (36-month lifespan)
+
+## Content Guides
+
+- [Repair Guides](https://controllertesting.com/fix) — 12 step-by-step stick drift repair guides
+- [Learn Center](https://controllertesting.com/learn) — 7 data-driven hardware explainers
+- [Game Settings Guides](https://controllertesting.com/settings) — Per-game deadzone/sensitivity for PS5, Xbox, Switch
+- [Fix or Replace Calculator](https://controllertesting.com/fix-or-replace) — Repair cost vs replacement price decision tool
+- [Controller Comparisons](https://controllertesting.com/compare) — Head-to-head hardware comparisons
+- [Compatibility Matrix](https://controllertesting.com/compatibility) — OS/browser API support table
+
+## Key Facts
+- 39 free browser-based diagnostic tools
+- 0 downloads or accounts required
+- 100% client-side: no controller input data leaves your device
+- Supports: PS5 DualSense, PS4 DualShock, Xbox Series, Switch Pro, Joy-Con, Fight Stick, Flight HOTAS, MIDI keyboards, PC mice
+- 10 locales: en, es, de, fr, ja, pt, ko, ru, zh-tw, it
+
+## Contact
+- Support: support@controllertesting.com
+- Press: press@controllertesting.com
+- Site: https://controllertesting.com

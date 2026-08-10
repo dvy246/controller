@@ -1,4 +1,6 @@
 # robots.txt — ControllerTesting.com
+# Last updated: 2026-08-10
+
 User-agent: *
 Allow: /
 
@@ -7,21 +9,35 @@ Disallow: /api/
 Disallow: /admin/
 Disallow: /embed/
 
-# Block AI Training Bots (Protect proprietary telemetry)
+# Block AI Training Data Scrapers (protect proprietary telemetry & content)
 User-agent: GPTBot
 Disallow: /
 User-agent: CCBot
 Disallow: /
 User-agent: anthropic-ai
 Disallow: /
+User-agent: ClaudeBot
+Disallow: /
 User-agent: Omgilibot
 Disallow: /
+User-agent: Bytespider
+Disallow: /
+User-agent: PetalBot
+Disallow: /
 
-# Allow AI Search Retrieval Bots (Perplexity, ChatGPT Search)
+# Allow AI Answer/Search Retrieval Bots (for GEO/AEO citation coverage)
 User-agent: PerplexityBot
 Allow: /
 User-agent: ChatGPT-User
 Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: Googlebot
+Allow: /
 
-# Sitemap directive
+# Machine-readable site index for AI systems
+LLMs: https://controllertesting.com/llms.txt
+
+# Sitemap
 Sitemap: https://controllertesting.com/sitemap-index.xml
+

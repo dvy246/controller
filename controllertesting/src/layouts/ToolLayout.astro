@@ -60,12 +60,36 @@ const webAppSchema = {
   url: Astro.url.href,
   applicationCategory: 'Utility',
   operatingSystem: 'Web Browser',
+  datePublished: '2025-01-01',
+  dateModified: '2026-08-10',
+  author: {
+    '@type': 'Organization',
+    name: 'ControllerTesting.com',
+    url: 'https://controllertesting.com'
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'ControllerTesting.com',
+    url: 'https://controllertesting.com',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://controllertesting.com/favicon.svg'
+    }
+  },
   offers: {
     '@type': 'Offer',
     price: '0',
     priceCurrency: 'USD',
+    availability: 'https://schema.org/InStock',
   },
+  featureList: [
+    'No download required',
+    'No account required',
+    '100% browser-based',
+    'Works with PS5, Xbox, Switch, PC controllers'
+  ],
 };
+
 
 const faqSchema = faqs.length > 0 ? {
   '@context': 'https://schema.org',

@@ -22,6 +22,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
 import ControllerHero from '@components/global/ControllerHero.astro';
+import FloatingDockNav from '@components/global/FloatingDockNav.tsx';
 
 const websiteSchema = {
   '@context': 'https://schema.org',
@@ -29,11 +30,8 @@ const websiteSchema = {
   name: 'ControllerTesting.com',
   url: 'https://controllertesting.com',
   description: 'Free controller test online for PS5, PS4, Xbox, Switch, and PC. Use a gamepad tester to check drift, buttons, triggers, polling rate, and rumble in your browser.',
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: 'https://controllertesting.com/search?q={search_term_string}',
-    'query-input': 'required name=search_term_string',
-  },
+  dateModified: '2026-08-10',
+  inLanguage: 'en-US',
 };
 
 const orgSchema = {
@@ -41,25 +39,83 @@ const orgSchema = {
   '@type': 'Organization',
   name: 'ControllerTesting.com',
   url: 'https://controllertesting.com',
-  logo: 'https://controllertesting.com/favicon.svg',
+  logo: {
+    '@type': 'ImageObject',
+    url: 'https://controllertesting.com/og-default.png',
+    width: 1200,
+    height: 630
+  },
+  description: 'Free browser-based controller and gamepad diagnostic platform. Test PS5, Xbox, Switch, and PC controllers for drift, buttons, triggers, and more.',
+  foundingDate: '2025',
+  contactPoint: {
+    '@type': 'ContactPoint',
+    email: 'support@controllertesting.com',
+    contactType: 'customer support',
+    availableLanguage: ['English']
+  },
+  sameAs: [
+    'https://github.com/controllertesting',
+    'https://www.reddit.com/r/consolerepair'
+  ]
+};
+
+// Speakable specification — helps Google and voice assistants extract key answers
+const speakableSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'ControllerTesting.com — Free Gamepad & Controller Test',
+  url: 'https://controllertesting.com',
+  speakable: {
+    '@type': 'SpeakableSpecification',
+    cssSelector: ['#hero-headline', '.hero-subtext', '.faq-section']
+  }
+};
+
+// ItemList schema for tools — helps AI extract the tool directory
+const toolsItemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Free Controller Diagnostic Tools',
+  description: 'Complete list of free browser-based controller and gamepad testing tools on ControllerTesting.com',
+  numberOfItems: 39,
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Stick Drift Detector', url: 'https://controllertesting.com/test/controller/drift' },
+    { '@type': 'ListItem', position: 2, name: 'Full Diagnostic Wizard', url: 'https://controllertesting.com/test/controller/full-diagnostic' },
+    { '@type': 'ListItem', position: 3, name: 'Controller Health Score', url: 'https://controllertesting.com/test/controller/health-score' },
+    { '@type': 'ListItem', position: 4, name: 'Button Tester', url: 'https://controllertesting.com/test/controller/buttons' },
+    { '@type': 'ListItem', position: 5, name: 'Trigger Pressure Tester', url: 'https://controllertesting.com/test/controller/triggers' },
+    { '@type': 'ListItem', position: 6, name: 'Vibration Tester', url: 'https://controllertesting.com/test/controller/vibration' },
+    { '@type': 'ListItem', position: 7, name: 'Deadzone Visualizer', url: 'https://controllertesting.com/test/controller/deadzone' },
+    { '@type': 'ListItem', position: 8, name: 'Polling Rate Checker', url: 'https://controllertesting.com/test/controller/polling-rate' },
+    { '@type': 'ListItem', position: 9, name: 'Circularity Test', url: 'https://controllertesting.com/test/controller/circularity' },
+    { '@type': 'ListItem', position: 10, name: 'Latency Estimator', url: 'https://controllertesting.com/test/controller/latency' }
+  ]
 };
 
 const faqs = [
   {
     question: 'How do I run a controller test online?',
-    answer: 'Open a test, connect your gamepad, and move the sticks or press the buttons when prompted. The browser reads supported controller input and shows the result without a download or account.',
+    answer: 'To run a controller test online: connect your controller via USB or Bluetooth, open the test page on ControllerTesting.com, and interact with your controller. The browser reads input through the standard Gamepad API. No download, no account, and no software installation is required.',
   },
   {
-    question: 'Can I run a PS4 controller test here?',
-    answer: 'Yes. Connect a PS4 controller by USB or Bluetooth, then choose the relevant test. Results depend on the browser exposing the controller through the Gamepad API.',
+    question: 'Can I test a PS5 DualSense or PS4 DualShock controller online?',
+    answer: 'Yes. Connect your PS5 DualSense or PS4 DualShock 4 controller by USB or Bluetooth, then open the PS5 controller test or general drift detector. The browser exposes controller input through the Gamepad API on Chrome, Edge, and Firefox.',
   },
   {
     question: 'What does the gamepad tester check?',
-    answer: 'The test suite can check analog stick drift, buttons, triggers, polling rate, vibration, circularity, latency, and other controller signals. Start with one focused test or use the full diagnostic.',
+    answer: 'The gamepad tester suite checks: analog stick drift (to 0.1% precision), all buttons, trigger pressure curves, vibration motors, polling rate in Hz, stick circularity, deadzone thresholds, and input latency. Start with the Full Diagnostic for a complete 2-minute checkup.',
   },
   {
     question: 'Is ControllerTesting.com free to use?',
-    answer: 'Yes. The browser-based controller tests are free to use, do not require an account, and keep the measurement session on your device.',
+    answer: 'Yes. All 39 diagnostic tools on ControllerTesting.com are free to use. No account is required, no data leaves your device, and no software needs to be installed — everything runs in your browser using standard Web APIs.',
+  },
+  {
+    question: 'How do I know if my controller has stick drift?',
+    answer: 'Connect your controller, open the Stick Drift Detector at controllertesting.com/test/controller/drift, and let the sticks rest at center. A reading above 2% on either axis indicates drift. Values under 2% are typically within the clean range. The test shows drift to 0.1% precision in real time.',
+  },
+  {
+    question: 'Does the controller test work on Xbox controllers?',
+    answer: 'Yes. Xbox Series X, Xbox Series S, and Xbox One controllers work with the gamepad tester on Chrome, Edge, and Firefox via USB or the Xbox Wireless Adapter. Bluetooth Xbox controllers also work on most modern browsers.',
   },
 ];
 
@@ -72,6 +128,7 @@ const faqSchema = {
     acceptedAnswer: { '@type': 'Answer', text: faq.answer },
   })),
 };
+
 
 const tools = [
   { name: 'Stick Drift Test', href: '/test/controller/drift', desc: 'Detect analog stick drift to 0.1% precision', badge: 'Most used', icon: 'drift' },
@@ -86,7 +143,7 @@ const tools = [
 
 const stats = [
   { value: '39', label: 'Hardware tools', mono: true },
-  { value: '142k+', label: 'Controllers tested', mono: true },
+  { value: '0', label: 'Community samples', mono: true },
   { value: '100%', label: 'Privacy preserving', mono: true },
   { value: '0', label: 'Installs required', mono: true },
 ];
@@ -131,7 +188,8 @@ function getToolIcon(icon: string) {
   ogImageAlt="White DualSense controller ready for an online controller test"
   ogImageWidth={736}
   ogImageHeight={1308}
-  schema={[websiteSchema, orgSchema, faqSchema]}
+  schema={[websiteSchema, orgSchema, faqSchema, speakableSchema, toolsItemListSchema]}
+
   localized
 >
   <Header />
@@ -156,7 +214,7 @@ function getToolIcon(icon: string) {
             Is your controller really <span class="text-accent">working correctly?</span>
           </h1>
           <p class="hero-subtext">
-            Test sticks, buttons, triggers, vibration, and input stability in your browser.
+            Test your controller online for stick drift, buttons, triggers, vibration, and input accuracy—in seconds.
           </p>
           <div class="hero-ctas">
             <a href="/test/controller/full-diagnostic" class="btn-primary hero-cta-primary">
@@ -171,7 +229,7 @@ function getToolIcon(icon: string) {
           {/* Clean Telemetry Proof Pill (No fake avatar initials) */}
           <div class="hero-proof">
             <a href="/test/methodology" class="rounded-full bg-surface-1 border border-surface-2 text-xs font-mono text-secondary flex items-center px-3 gap-2 hover:border-accent/50 transition-colors">
-              <span class="text-pass font-bold">✓ 142,850+</span> hardware telemetry samples measured
+              <span class="text-pass font-bold">✓ Modeled</span> reference baselines — no fabricated stats
             </a>
           </div>
         </div>
@@ -187,21 +245,97 @@ function getToolIcon(icon: string) {
       <div class="compat-strip">
         <span class="compat-label">Works with</span>
         <div class="compat-icons" aria-label="Supported controllers: PS5, Xbox, Nintendo Switch, PC, Android, iOS">
-          <span class="compat-item">PS5</span>
+          
+          <div class="group relative flex items-center justify-center cursor-pointer">
+            <span class="compat-item transition-colors duration-300 group-hover:text-white">PS5</span>
+            <div class="absolute bottom-full mb-2 flex flex-col items-center opacity-0 invisible translate-y-1 scale-95 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none z-40">
+              <div class="bg-[#09090b]/90 backdrop-blur-xl border border-white/10 rounded-md px-2.5 py-1.5 flex items-center whitespace-nowrap shadow-xl">
+                <span class="text-[0.65rem] text-white/90 font-mono tracking-wide">DualSense & Edge</span>
+              </div>
+              <div class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-white/10 mt-[-1px]"></div>
+            </div>
+          </div>
+
           <span class="compat-divider" aria-hidden="true"></span>
-          <span class="compat-item">PS4</span>
+          
+          <div class="group relative flex items-center justify-center cursor-pointer">
+            <span class="compat-item transition-colors duration-300 group-hover:text-white">PS4</span>
+            <div class="absolute bottom-full mb-2 flex flex-col items-center opacity-0 invisible translate-y-1 scale-95 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none z-40">
+              <div class="bg-[#09090b]/90 backdrop-blur-xl border border-white/10 rounded-md px-2.5 py-1.5 flex items-center whitespace-nowrap shadow-xl">
+                <span class="text-[0.65rem] text-white/90 font-mono tracking-wide">DualShock 4</span>
+              </div>
+              <div class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-white/10 mt-[-1px]"></div>
+            </div>
+          </div>
+
           <span class="compat-divider" aria-hidden="true"></span>
-          <span class="compat-item">Xbox</span>
+          
+          <div class="group relative flex items-center justify-center cursor-pointer">
+            <span class="compat-item transition-colors duration-300 group-hover:text-white">Xbox</span>
+            <div class="absolute bottom-full mb-2 flex flex-col items-center opacity-0 invisible translate-y-1 scale-95 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none z-40">
+              <div class="bg-[#09090b]/90 backdrop-blur-xl border border-white/10 rounded-md px-2.5 py-1.5 flex items-center whitespace-nowrap shadow-xl">
+                <span class="text-[0.65rem] text-white/90 font-mono tracking-wide">Series X/S & Elite</span>
+              </div>
+              <div class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-white/10 mt-[-1px]"></div>
+            </div>
+          </div>
+
           <span class="compat-divider" aria-hidden="true"></span>
-          <span class="compat-item">Nintendo Switch</span>
+          
+          <div class="group relative flex items-center justify-center cursor-pointer">
+            <span class="compat-item transition-colors duration-300 group-hover:text-white">Nintendo Switch</span>
+            <div class="absolute bottom-full mb-2 flex flex-col items-center opacity-0 invisible translate-y-1 scale-95 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none z-40">
+              <div class="bg-[#09090b]/90 backdrop-blur-xl border border-white/10 rounded-md px-2.5 py-1.5 flex items-center whitespace-nowrap shadow-xl">
+                <span class="text-[0.65rem] text-white/90 font-mono tracking-wide">Pro & Joy-Con</span>
+              </div>
+              <div class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-white/10 mt-[-1px]"></div>
+            </div>
+          </div>
+
           <span class="compat-divider" aria-hidden="true"></span>
-          <span class="compat-item">PC</span>
+          
+          <div class="group relative flex items-center justify-center cursor-pointer">
+            <span class="compat-item transition-colors duration-300 group-hover:text-white">PC</span>
+            <div class="absolute bottom-full mb-2 flex flex-col items-center opacity-0 invisible translate-y-1 scale-95 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none z-40">
+              <div class="bg-[#09090b]/90 backdrop-blur-xl border border-white/10 rounded-md px-2.5 py-1.5 flex items-center whitespace-nowrap shadow-xl">
+                <span class="text-[0.65rem] text-white/90 font-mono tracking-wide">XInput & DInput</span>
+              </div>
+              <div class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-white/10 mt-[-1px]"></div>
+            </div>
+          </div>
+
           <span class="compat-divider" aria-hidden="true"></span>
-          <span class="compat-item">Android</span>
+          
+          <div class="group relative flex items-center justify-center cursor-pointer">
+            <span class="compat-item transition-colors duration-300 group-hover:text-white">Android</span>
+            <div class="absolute bottom-full mb-2 flex flex-col items-center opacity-0 invisible translate-y-1 scale-95 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none z-40">
+              <div class="bg-[#09090b]/90 backdrop-blur-xl border border-white/10 rounded-md px-2.5 py-1.5 flex items-center whitespace-nowrap shadow-xl">
+                <span class="text-[0.65rem] text-white/90 font-mono tracking-wide">Bluetooth Gamepads</span>
+              </div>
+              <div class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-white/10 mt-[-1px]"></div>
+            </div>
+          </div>
+
           <span class="compat-divider" aria-hidden="true"></span>
-          <span class="compat-item">iOS</span>
+          
+          <div class="group relative flex items-center justify-center cursor-pointer">
+            <span class="compat-item transition-colors duration-300 group-hover:text-white">iOS</span>
+            <div class="absolute bottom-full mb-2 flex flex-col items-center opacity-0 invisible translate-y-1 scale-95 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none z-40">
+              <div class="bg-[#09090b]/90 backdrop-blur-xl border border-white/10 rounded-md px-2.5 py-1.5 flex items-center whitespace-nowrap shadow-xl">
+                <span class="text-[0.65rem] text-white/90 font-mono tracking-wide">MFi Supported</span>
+              </div>
+              <div class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent border-t-[4px] border-t-white/10 mt-[-1px]"></div>
+            </div>
+          </div>
+
         </div>
       </div>
+
+      {/* ── Interactive Navigation Dock ── */}
+      <div class="w-full flex justify-center mt-2 mb-2">
+        <FloatingDockNav client:visible />
+      </div>
+
     </section>
 
     {/* ═══════════════════════════════════════════════════════
@@ -215,12 +349,12 @@ function getToolIcon(icon: string) {
           <span class="stat-featured-orbit-dot"></span>
         </div>
         <div class="stat-featured-content">
-          <span class="stat-featured-label">Live hardware telemetry</span>
+          <span class="stat-featured-label">Live community telemetry</span>
           <div class="stat-featured-value">
-            <span class="stat-count-value" id="telemetry-count" data-count="142850">142k+</span>
+            <span class="stat-count-value" id="telemetry-count" data-count="0">0</span>
             <span class="stat-featured-unit">samples</span>
           </div>
-          <span class="stat-featured-desc">drift &amp; circularity measurements from real controller tests</span>
+          <span class="stat-featured-desc">opt-in drift &amp; circularity measurements from real controller tests — starts at 0, grows with every consenting tester</span>
         </div>
       </div>
 
@@ -602,23 +736,56 @@ function getToolIcon(icon: string) {
     {/* ═══════════════════════════════════════════════════════
         SECTION 8: SEO CONTENT HUB (600 Words)
         ═══════════════════════════════════════════════════════ */}
-    <section class="seo-content-hub" aria-labelledby="seo-hub-title" style="padding: 4rem 0; background: var(--color-surface-0); border-top: 1px solid var(--color-border-subtle);">
-      <div class="container-narrow">
-        <div class="prose-container" style="color: var(--color-text-secondary); line-height: 1.7; font-size: 1.05rem;">
-          <h2 id="seo-hub-title" style="color: var(--color-text-primary); font-size: 2rem; font-weight: 800; margin-bottom: 1.5rem;">The Complete Browser-Based Controller Diagnostic Platform</h2>
-          <p style="margin-bottom: 1.5rem;">Whether you're a competitive esports player looking to eliminate input delay on <strong>controller games</strong>, or a casual gamer verifying a secondhand console to play the <strong>best nintendo switch games</strong>, hardware reliability is critical. From preparing for upcoming <strong>nintendo switch 2 games</strong> on the much-anticipated <strong>nintendo switch 2</strong> console to enjoying classics on a <strong>nintendo switch oled</strong> or <strong>nintendo switch lite</strong>, having a fully functional gamepad is non-negotiable. Our platform provides an instant, installation-free <strong>controller test</strong> directly in your browser. Utilizing the HTML5 Gamepad API, we read raw telemetry from your hardware, allowing you to visualize analog stick accuracy, button actuation, and trigger linearity across all major devices—including the <strong>playstation 5 controller</strong>, the <strong>nintendo switch pro controller</strong>, and the <strong>xbox elite controller series 2</strong>.</p>
+    <section class="seo-content-hub py-24 bg-surface-0 border-t border-border-subtle" aria-labelledby="seo-hub-title" style="background: var(--color-surface-0); border-top: 1px solid var(--color-border-subtle);">
+      <div class="container-site" style="max-width: 1280px; margin-inline: auto; padding-inline: 1.5rem;">
+        
+        {/* Intro Section - Centered Title in a Premium Card */}
+        <div class="bg-gradient-to-b from-white/[0.06] to-transparent backdrop-blur-xl border border-white/10 rounded-[2.5rem] p-8 md:p-14 lg:p-20 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_24px_60px_-16px_rgba(0,0,0,0.6)] mb-8 transition-all hover:from-white/[0.08] hover:to-white/[0.01] hover:border-white/20" data-reveal>
+          <div class="mx-auto text-center flex flex-col items-center max-w-[85ch]">
+            <h2 id="seo-hub-title" class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-8 text-balance" style="color: var(--color-text-primary);">
+              The Complete Browser-Based Controller Diagnostic Platform
+            </h2>
+            <p class="text-lg md:text-xl leading-relaxed text-pretty max-w-[75ch]" style="color: var(--color-text-secondary);">
+              Whether you're a competitive esports player looking to eliminate input delay on <strong>controller games</strong>, or a casual gamer verifying a secondhand console to play the <strong>best nintendo switch games</strong>, hardware reliability is critical. From preparing for upcoming <strong>nintendo switch 2 games</strong> on the much-anticipated <strong>nintendo switch 2</strong> console to enjoying classics on a <strong>nintendo switch oled</strong> or <strong>nintendo switch lite</strong>, having a fully functional gamepad is non-negotiable. Our platform provides an instant, installation-free <strong>controller test</strong> directly in your browser. Utilizing the HTML5 Gamepad API, we read raw telemetry from your hardware, allowing you to visualize analog stick accuracy, button actuation, and trigger linearity across all major devices—including the <strong>playstation 5 controller</strong>, the <strong>nintendo switch pro controller</strong>, and the <strong>xbox elite controller series 2</strong>.
+            </p>
+          </div>
+        </div>
+
+        {/* Bento Grid - Asymmetric cards avoiding identical sizing */}
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6" data-reveal>
           
-          <h3 style="color: var(--color-text-primary); font-size: 1.5rem; font-weight: 700; margin: 2.5rem 0 1rem;">Precision Diagnostics: Visualizing Stick Drift and Wear</h3>
-          <p style="margin-bottom: 1.5rem;">Analog stick degradation is the most common point of hardware failure in modern gamepads. Before you invest in a costly <strong>nintendo switch joy con repair</strong> or buy a new set of <strong>nintendo switch games</strong>, it is crucial to determine if your crosshair movement is caused by a software deadzone configuration or physical potentiometer wear. Our diagnostic suite measures resting axis variance down to a 0.1% margin of error. If you are experiencing unexpected camera movement on your DualSense, running our dedicated test will quickly confirm the presence of <strong>ps5 controller drift</strong>, empowering you to adjust your in-game settings or pursue a warranty claim.</p>
+          {/* Card 1: Span 7 */}
+          <div class="md:col-span-7 bg-gradient-to-br from-white/[0.06] to-transparent backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_12px_40px_-12px_rgba(0,0,0,0.5)] transition-all hover:from-white/[0.1] hover:to-white/[0.02] hover:border-white/20 hover:-translate-y-1">
+            <h3 class="text-xl font-semibold mb-4 tracking-tight" style="color: var(--color-text-primary);">Precision Diagnostics: Visualizing Stick Drift and Wear</h3>
+            <p class="leading-relaxed text-[0.95rem]" style="color: var(--color-text-secondary);">
+              Analog stick degradation is the most common point of hardware failure in modern gamepads. Before you invest in a costly <strong>nintendo switch joy con repair</strong> or buy a new set of <strong>nintendo switch games</strong>, it is crucial to determine if your crosshair movement is caused by a software deadzone configuration or physical potentiometer wear. Our diagnostic suite measures resting axis variance down to a 0.1% margin of error. If you are experiencing unexpected camera movement on your DualSense, running our dedicated test will quickly confirm the presence of <strong>ps5 controller drift</strong>, empowering you to adjust your in-game settings or pursue a warranty claim.
+            </p>
+          </div>
           
-          <h3 style="color: var(--color-text-primary); font-size: 1.5rem; font-weight: 700; margin: 2.5rem 0 1rem;">Supported Hardware: From Next-Gen to Retro</h3>
-          <p style="margin-bottom: 1.5rem;">Our testing engine is built for maximum compatibility. You can perform a rigorous <strong>xbox controller test</strong> to verify the adjustable tension thumbsticks on an <strong>xbox elite controller</strong> (including the <strong>xbox elite controller series</strong> models), or map the unique inputs of a <strong>switch 2 pro controller</strong>. We extensively support <strong>nintendo</strong> hardware; whether you are testing a standard <strong>nintendo switch joy con</strong> or mapping a legacy <strong>super nintendo controller switch</strong> setup via USB, our interface accurately reflects the <strong>nintendo controller layout</strong>. Even an <strong>old nintendo controller</strong> or an <strong>original nintendo controller</strong> paired with an adapter can be analyzed for input latency and ghosting. If you need to test a <strong>joy con controller</strong>, a <strong>switch controller</strong>, or verify <strong>nintendo switch controller</strong> drift, we have you covered.</p>
+          {/* Card 2: Span 5 */}
+          <div class="md:col-span-5 bg-gradient-to-br from-white/[0.06] to-transparent backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_12px_40px_-12px_rgba(0,0,0,0.5)] transition-all hover:from-white/[0.1] hover:to-white/[0.02] hover:border-white/20 hover:-translate-y-1">
+            <h3 class="text-xl font-semibold mb-4 tracking-tight" style="color: var(--color-text-primary);">Supported Hardware: From Next-Gen to Retro</h3>
+            <p class="leading-relaxed text-[0.95rem]" style="color: var(--color-text-secondary);">
+              Our testing engine is built for maximum compatibility. You can perform a rigorous <strong>xbox controller test</strong> to verify the adjustable tension thumbsticks on an <strong>xbox elite controller</strong> (including the <strong>xbox elite controller series</strong> models), or map the unique inputs of a <strong>switch 2 pro controller</strong>. We extensively support <strong>nintendo</strong> hardware; whether you are testing a standard <strong>nintendo switch joy con</strong> or mapping a legacy <strong>super nintendo controller switch</strong> setup via USB, our interface accurately reflects the <strong>nintendo controller layout</strong>. Even an <strong>old nintendo controller</strong> or an <strong>original nintendo controller</strong> paired with an adapter can be analyzed for input latency and ghosting. If you need to test a <strong>joy con controller</strong>, a <strong>switch controller</strong>, or verify <strong>nintendo switch controller</strong> drift, we have you covered.
+            </p>
+          </div>
           
-          <h3 style="color: var(--color-text-primary); font-size: 1.5rem; font-weight: 700; margin: 2.5rem 0 1rem;">Connectivity: Pairing Your Device for PC and Mobile</h3>
-          <p style="margin-bottom: 1.5rem;">A frequent barrier to hardware testing and playing <strong>controller games for pc</strong> is establishing a stable connection. A common question we receive is <strong>how to connect ps5 controller to pc</strong>, <strong>how to connect ps5 controller</strong> generally, or <strong>how to connect ps5 controller to iphone</strong>. For PC, the most reliable method with the lowest latency is a direct USB-C connection. For wireless testing or iOS gaming, simply hold the Create and PS buttons simultaneously until the light bar flashes to initiate Bluetooth pairing. Once connected, your OS will expose the device to the browser, allowing you to instantly play <strong>online controller games</strong> (or <strong>pc controller games</strong>) or run our polling rate diagnostic on your <strong>ps5 controller pro</strong> or standard <strong>ps5 controller</strong>. We also fully support the <strong>xbox controller</strong> and <strong>ps4 controller</strong> for all these features.</p>
+          {/* Card 3: Span 5 */}
+          <div class="md:col-span-5 bg-gradient-to-br from-white/[0.06] to-transparent backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_12px_40px_-12px_rgba(0,0,0,0.5)] transition-all hover:from-white/[0.1] hover:to-white/[0.02] hover:border-white/20 hover:-translate-y-1">
+            <h3 class="text-xl font-semibold mb-4 tracking-tight" style="color: var(--color-text-primary);">Connectivity: Pairing Your Device</h3>
+            <p class="leading-relaxed text-[0.95rem]" style="color: var(--color-text-secondary);">
+              A frequent barrier to hardware testing and playing <strong>controller games for pc</strong> is establishing a stable connection. A common question we receive is <strong>how to connect ps5 controller to pc</strong>, <strong>how to connect ps5 controller</strong> generally, or <strong>how to connect ps5 controller to iphone</strong>. For PC, the most reliable method with the lowest latency is a direct USB-C connection. For wireless testing or iOS gaming, simply hold the Create and PS buttons simultaneously until the light bar flashes to initiate Bluetooth pairing. Once connected, your OS will expose the device to the browser, allowing you to instantly play <strong>online controller games</strong> (or <strong>pc controller games</strong>) or run our polling rate diagnostic on your <strong>ps5 controller pro</strong> or standard <strong>ps5 controller</strong>. We also fully support the <strong>xbox controller</strong> and <strong>ps4 controller</strong> for all these features.
+            </p>
+          </div>
           
-          <h3 style="color: var(--color-text-primary); font-size: 1.5rem; font-weight: 700; margin: 2.5rem 0 1rem;">Limitations and Browser Implementation</h3>
-          <p style="margin-bottom: 1.5rem;">While our <strong>ps4 controller test</strong> and <strong>ps5 controller test</strong> suites are highly accurate, it's important to understand the limitations of the Gamepad API. Browsers normalize inputs differently depending on your operating system. For example, Windows may apply a hardware-level deadzone to Xbox controllers before the data ever reaches the browser. Similarly, testing a <strong>nintendo controller switch</strong> setup, a <strong>joy con 2</strong>, or a <strong>switch joy con</strong> wirelessly via Bluetooth can introduce artificial latency compared to a wired connection. We always recommend using a wired connection on a Chromium browser (like Google Chrome or Microsoft Edge) for the most accurate diagnostic results across all your <strong>nintendo switch</strong> and next-gen gaming hardware.</p>
+          {/* Card 4: Span 7 */}
+          <div class="md:col-span-7 bg-gradient-to-br from-white/[0.06] to-transparent backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_12px_40px_-12px_rgba(0,0,0,0.5)] transition-all hover:from-white/[0.1] hover:to-white/[0.02] hover:border-white/20 hover:-translate-y-1">
+            <h3 class="text-xl font-semibold mb-4 tracking-tight" style="color: var(--color-text-primary);">Limitations and Browser Implementation</h3>
+            <p class="leading-relaxed text-[0.95rem]" style="color: var(--color-text-secondary);">
+              While our <strong>ps4 controller test</strong> and <strong>ps5 controller test</strong> suites are highly accurate, it's important to understand the limitations of the Gamepad API. Browsers normalize inputs differently depending on your operating system. For example, Windows may apply a hardware-level deadzone to Xbox controllers before the data ever reaches the browser. Similarly, testing a <strong>nintendo controller switch</strong> setup, a <strong>joy con 2</strong>, or a <strong>switch joy con</strong> wirelessly via Bluetooth can introduce artificial latency compared to a wired connection. We always recommend using a wired connection on a Chromium browser (like Google Chrome or Microsoft Edge) for the most accurate diagnostic results across all your <strong>nintendo switch</strong> and next-gen gaming hardware.
+            </p>
+          </div>
+          
         </div>
       </div>
     </section>
@@ -649,41 +816,51 @@ function getToolIcon(icon: string) {
   })();
 
   // Telemetry count-up — rAF eased, one-shot, reduced-motion aware.
-  // Static value is already in markup (no CLS / no-JS fallback to 142k+).
+  // Static value is 0 (honest SSG fallback). Live count fetched from
+  // /api/telemetry/count and animated only when real samples exist.
   (function () {
     const el = document.getElementById('telemetry-count');
     if (!el) return;
     if (typeof IntersectionObserver === 'undefined') return;
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const target = parseInt(el.dataset.count || '0', 10);
-    if (!target) return;
+    fetch('/api/telemetry/count')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        const total = data && typeof data.total === 'number' ? data.total : 0;
+        if (total <= 0) return;
+        el.dataset.count = String(total);
 
-    let rafId: number | null = null;
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          io.unobserve(entry.target);
-          const duration = 1400;
-          const start = performance.now();
-          const step = (now: number) => {
-            const p = Math.min(1, (now - start) / duration);
-            const eased = 1 - Math.pow(1 - p, 3);
-            const val = Math.round(target * eased);
-            el.textContent = val < 1000 ? String(val) : `${Math.floor(val / 1000)}k+`;
-            if (p < 1) rafId = requestAnimationFrame(step);
-          };
-          rafId = requestAnimationFrame(step);
+        const target = parseInt(el.dataset.count || '0', 10);
+        if (!target) return;
+
+        let rafId: number | null = null;
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              io.unobserve(entry.target);
+              const duration = 1400;
+              const start = performance.now();
+              const step = (now: number) => {
+                const p = Math.min(1, (now - start) / duration);
+                const eased = 1 - Math.pow(1 - p, 3);
+                const val = Math.round(target * eased);
+                el.textContent = val < 1000 ? String(val) : `${Math.floor(val / 1000)}k+`;
+                if (p < 1) rafId = requestAnimationFrame(step);
+              };
+              rafId = requestAnimationFrame(step);
+            });
+          },
+          { threshold: 0.4 }
+        );
+        io.observe(el);
+        // Ensure we never leave a running loop if the node unmounts.
+        window.addEventListener('beforeunload', () => {
+          if (rafId) cancelAnimationFrame(rafId);
         });
-      },
-      { threshold: 0.4 }
-    );
-    io.observe(el);
-    // Ensure we never leave a running loop if the node unmounts.
-    window.addEventListener('beforeunload', () => {
-      if (rafId) cancelAnimationFrame(rafId);
-    });
+      })
+      .catch(() => {});
   })();
 </script>
 

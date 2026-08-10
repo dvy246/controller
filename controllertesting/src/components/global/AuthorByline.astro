@@ -1,0 +1,174 @@
+---
+/**
+ * AuthorByline.astro — E-E-A-T author attribution component
+ * Displays on learn/, fix/, and methodology pages to boost
+ * Google's E-E-A-T (Experience, Expertise, Authoritativeness, Trustworthiness) signals.
+ *
+ * Also outputs Person + Organization schema for AI answer engines.
+ */
+
+export interface Props {
+  name?: string;
+  role?: string;
+  datePublished?: string;   // ISO 8601: "2026-08-02"
+  dateModified?: string;    // ISO 8601: "2026-08-10"
+  readingTime?: string;     // e.g. "5 min read"
+}
+
+const {
+  name = 'ControllerTesting.com Research Team',
+  role = 'Hardware Diagnostics & Controller Reliability Research',
+  datePublished,
+  dateModified,
+  readingTime,
+} = Astro.props;
+
+// Format date for display
+function formatDate(iso: string | undefined): string {
+  if (!iso) return '';
+  try {
+    return new Date(iso).toLocaleDateString('en-US', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    });
+  } catch {
+    return iso;
+  }
+}
+
+const displayPublished = formatDate(datePublished);
+const displayModified = formatDate(dateModified);
+
+// Person schema for E-E-A-T
+const authorSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name,
+  jobTitle: role,
+  worksFor: {
+    '@type': 'Organization',
+    name: 'ControllerTesting.com',
+    url: 'https://controllertesting.com'
+  },
+  url: 'https://controllertesting.com/about',
+  knowsAbout: [
+    'Gamepad API', 'Controller Hardware', 'Stick Drift', 'Hall Effect Sensors',
+    'Input Latency', 'Polling Rate', 'Hardware Diagnostics'
+  ]
+};
+---
+
+<div class="author-byline" itemscope itemtype="https://schema.org/Person">
+  <div class="author-avatar" aria-hidden="true">
+    <!-- CT Research Team icon -->
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <circle cx="16" cy="16" r="16" fill="rgba(37, 99, 235, 0.15)"/>
+      <circle cx="16" cy="16" r="16" stroke="rgba(37, 99, 235, 0.3)" stroke-width="1"/>
+      <path d="M10 22a6 6 0 0 1 12 0" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round"/>
+      <circle cx="16" cy="13" r="4" stroke="#2563EB" stroke-width="1.5"/>
+      <path d="M22 12l2 2-2 2" stroke="#60A5FA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="author-meta">
+    <span class="author-name" itemprop="name">{name}</span>
+    <span class="author-role" itemprop="jobTitle">{role}</span>
+    <div class="author-dates">
+      {datePublished && (
+        <time class="author-date" datetime={datePublished} itemprop="datePublished">
+          Published {displayPublished}
+        </time>
+      )}
+      {dateModified && dateModified !== datePublished && (
+        <time class="author-date-updated" datetime={dateModified} itemprop="dateModified">
+          · Updated {displayModified}
+        </time>
+      )}
+      {readingTime && (
+        <span class="author-read-time">· {readingTime}</span>
+      )}
+    </div>
+  </div>
+  <a href="/about" class="author-link" aria-label="About the ControllerTesting.com team">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M5 12h14M12 5l7 7-7 7"/>
+    </svg>
+  </a>
+</div>
+
+<script type="application/ld+json" set:html={JSON.stringify(authorSchema)} />
+
+<style>
+  .author-byline {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: var(--color-surface-1, #111118);
+    border: 1px solid var(--color-border-subtle, rgba(255,255,255,0.06));
+    border-radius: 12px;
+    margin: 1.5rem 0;
+  }
+
+  .author-avatar {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .author-meta {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .author-name {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-text-primary, #f1f5f9);
+    letter-spacing: -0.01em;
+  }
+
+  .author-role {
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary, #64748b);
+  }
+
+  .author-dates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: 0.125rem;
+  }
+
+  .author-date,
+  .author-date-updated,
+  .author-read-time {
+    font-size: 0.6875rem;
+    font-family: var(--font-mono, monospace);
+    color: var(--color-text-tertiary, #64748b);
+  }
+
+  .author-date { color: var(--color-text-secondary, #94a3b8); }
+
+  .author-link {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: var(--color-surface-2, #1a1a2e);
+    color: var(--color-text-tertiary, #64748b);
+    border: 1px solid var(--color-border-subtle, rgba(255,255,255,0.06));
+    transition: color 0.15s, background 0.15s;
+    text-decoration: none;
+  }
+
+  .author-link:hover {
+    color: var(--color-accent, #2563EB);
+    background: rgba(37, 99, 235, 0.08);
+  }
+</style>

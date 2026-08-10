@@ -17,8 +17,10 @@ const sections = [
   { id: 'zero-data', title: '1. Zero Server-Side Data Collection' },
   { id: 'client-processing', title: '2. Client-Side API Signal Processing' },
   { id: 'local-storage', title: '3. Browser Local Storage Usage' },
-  { id: 'third-party', title: '4. Third-Party Services & Cookies' },
-  { id: 'updates', title: '5. Updates & Policy Modifications' },
+  { id: 'advertising', title: '4. Advertising & Third-Party Cookies' },
+  { id: 'third-party', title: '5. Third-Party Services & Analytics' },
+  { id: 'your-choices', title: '6. Your Privacy Choices' },
+  { id: 'updates', title: '7. Updates & Policy Modifications' },
 ];
 ---
 
@@ -44,7 +46,7 @@ const sections = [
           <span class="px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-medium">
             100% Private & Client-Side
           </span>
-          <span class="text-xs text-text-tertiary font-mono">Last Updated: August 2026</span>
+          <span class="text-xs text-text-tertiary font-mono">Last Updated: August 10, 2026</span>
         </div>
         <h1 class="text-3xl sm:text-4xl font-extrabold text-text-primary tracking-tight mb-2">
           Privacy Policy
@@ -106,20 +108,59 @@ const sections = [
               </p>
             </section>
 
+            <section id="advertising" class="scroll-mt-32 border-t border-surface-2 pt-6">
+              <h2 class="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                4. Advertising & Third-Party Cookies
+              </h2>
+              <p>
+                ControllerTesting.com may display advertisements served by <strong class="text-text-primary">Google AdSense</strong>.
+                When advertisements are active, Google AdSense and its advertising partners may set cookies on your device
+                to serve relevant ads based on your prior visits to this and other websites.
+              </p>
+              <p class="mt-3">
+                Google's use of advertising cookies enables it and its partners to serve ads to you based on your visit
+                to our sites and/or other sites on the Internet. You may opt out of personalized advertising by visiting
+                <a href="https://www.google.com/settings/ads" class="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">Google Ads Settings</a>.
+                For more information, visit <a href="https://policies.google.com/technologies/ads" class="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">Google's advertising policies</a>.
+              </p>
+              <p class="mt-3">
+                We use a consent banner (visible on first visit) to obtain your permission before any advertising cookies
+                are set. You may withdraw consent at any time by clicking "Reject Non-Essential" in the cookie banner,
+                which you can re-open via your browser settings or by clearing site data.
+              </p>
+            </section>
+
             <section id="third-party" class="scroll-mt-32 border-t border-surface-2 pt-6">
               <h2 class="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                4. Third-Party Services & Cookies
+                5. Third-Party Services & Analytics
               </h2>
               <p>
                 We minimize external dependencies. We do not set non-essential tracking cookies. Standard server logs (such as HTTP request IP addresses) may be handled temporarily by CDN infrastructure strictly for DDoS mitigation and website security.
               </p>
             </section>
 
+            <section id="your-choices" class="scroll-mt-32 border-t border-surface-2 pt-6">
+              <h2 class="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+                6. Your Privacy Choices
+              </h2>
+              <p>
+                You have the following choices regarding your data and cookies on ControllerTesting.com:
+              </p>
+              <ul class="mt-3 space-y-2 text-sm">
+                <li><strong class="text-text-primary">Cookie consent:</strong> Accept or reject non-essential cookies via the consent banner on first visit.</li>
+                <li><strong class="text-text-primary">Ad personalization:</strong> Opt out via <a href="https://www.google.com/settings/ads" class="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">Google Ads Settings</a> or the <a href="https://optout.aboutads.info/" class="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">DAA opt-out tool</a>.</li>
+                <li><strong class="text-text-primary">Controller data:</strong> All gamepad input stays in your browser. Clear your browser cache to remove any locally stored diagnostic history.</li>
+                <li><strong class="text-text-primary">Telemetry:</strong> Community reliability telemetry is opt-in and controlled by the toggle in each diagnostic tool. You can disable it at any time.</li>
+              </ul>
+            </section>
+
             <section id="updates" class="scroll-mt-32 border-t border-surface-2 pt-6">
               <h2 class="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
-                5. Updates & Policy Modifications
+                7. Updates & Policy Modifications
               </h2>
               <p>
                 Any future enhancements to our diagnostic tools will strictly adhere to our core privacy commitment: zero hardware tracking, 100% client-side computation, and total user data sovereignty.

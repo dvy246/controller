@@ -1,0 +1,84 @@
+---
+/**
+ * AdSlot.astro — AdSense-safe, GDPR-compliant ad placement container.
+ *
+ * PLACEMENT RULES (per Google AdSense Ad placement policies):
+ * ✅ SAFE to use: Above tool hero card, Related Tools strip, Footer area,
+ *                 Static guide/learn/fix pages, Sidebar
+ * ❌ NEVER place: Inside or adjacent to live gamepad canvas, near "Connect
+ *                 controller" CTA, inside diagnostic wizard flows, near
+ *                 download buttons (deceptive placement policy violation).
+ *
+ * This component renders a placeholder sentinel div. When AdSense is
+ * activated, replace the placeholder with the actual <ins> ad code.
+ * The slot ONLY renders after user consent has been granted (GDPR compliant).
+ */
+
+export interface Props {
+  slot?: string;         // AdSense data-ad-slot id (set when live)
+  format?: 'auto' | 'fluid' | 'rectangle' | 'leaderboard';
+  label?: string;        // Accessible label for screen readers
+  className?: string;
+}
+
+const {
+  slot = 'PLACEHOLDER',
+  format = 'auto',
+  label = 'Advertisement',
+  className = '',
+} = Astro.props;
+---
+
+<div
+  class={`ad-slot-container ${className}`}
+  data-ad-slot={slot}
+  data-ad-format={format}
+  role="complementary"
+  aria-label={label}
+>
+  <!--
+    AdSense Slot: ${slot}
+    Replace this comment with:
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="${slot}"
+         data-ad-format="${format}"
+         data-full-width-responsive="true">
+    </ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  -->
+  <div class="ad-slot-placeholder" aria-hidden="true">
+    <span class="ad-slot-label">Advertisement</span>
+  </div>
+</div>
+
+<style>
+  .ad-slot-container {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    /* Min height prevents CLS when ad loads */
+    min-height: 90px;
+  }
+
+  .ad-slot-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px dashed rgba(255,255,255,0.06);
+    border-radius: 8px;
+    min-height: 90px;
+    /* Hidden in production when real ads replace it */
+    /* display: none; — uncomment when AdSense code replaces placeholder */
+  }
+
+  .ad-slot-label {
+    font-size: 0.6875rem;
+    font-family: var(--font-mono, monospace);
+    color: var(--color-text-tertiary, #64748b);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+</style>
