@@ -2,8 +2,9 @@
 /**
  * TelemetryConsent.astro — opt-in consent banner for the reliability dataset.
  * Rendered sitewide via ToolLayout. Reads/writes ct_telemetry_consent in
- * localStorage. Nothing is ever recorded without explicit consent, and all
- * readings stay on the user's device.
+ * localStorage. Nothing is ever recorded without explicit consent, and
+ * anonymous model + measurement values sync to public community baselines
+ * only when the toggle is enabled.
  */
 
 import { getTelemetryConsent, setTelemetryConsent } from '../../lib/telemetry';
@@ -19,7 +20,7 @@ import { getTelemetryConsent, setTelemetryConsent } from '../../lib/telemetry';
         <strong class="consent-title">Privacy-First Reliability Telemetry</strong>
       </div>
       <p class="consent-text">
-        Join 142,850+ tests helping us map real-world drift rates. By enabling this, your anonymous drift and circularity scores are synced to build public baselines. Your Controller Passport history remains 100% local on your device regardless of this setting.
+        Help us map real-world drift rates. By enabling this, your anonymous drift and circularity scores are synced to build public community baselines — which start at 0 and grow with every consenting tester. Your Controller Passport history remains 100% local on your device regardless of this setting.
       </p>
     </div>
     <div class="consent-actions">

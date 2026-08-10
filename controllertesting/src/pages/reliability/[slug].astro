@@ -26,8 +26,8 @@ const canonicalUrl = `https://controllertesting.com/reliability/${slug}`;
 const schemaData = {
   "@context": "https://schema.org",
   "@type": "Dataset",
-  "name": `${modelData.name} Hardware Stick Drift & Sensor Reliability Dataset`,
-  "description": `Baseline stick drift degradation, circularity error %, and sensor lifespan reference figures compiled from ${modelData.samples.toLocaleString()} documented test results aggregated on ControllerTesting.com. Baseline figures — not a guarantee for any individual unit.`,
+  "name": `${modelData.name} Hardware Stick Drift & Sensor Reliability Baseline`,
+  "description": `Modeled reference figures for stick drift degradation, circularity error %, and sensor lifespan for ${modelData.name} (snapshot ${reliabilityData.updatedAt}). Reference estimates — not a guarantee for any individual unit.`,
   "url": canonicalUrl,
   "license": "https://creativecommons.org/licenses/by/4.0/",
   "creator": {
@@ -39,7 +39,7 @@ const schemaData = {
 
 <BaseLayout
   title={`${modelData.name} Hardware Reliability & Stick Drift Report`}
-  description={`Baseline stick drift magnitude, circularity error %, and sensor wear reference figures for ${modelData.name}, compiled from ${modelData.samples.toLocaleString()} documented test results.`}
+  description={`Modeled reference figures for stick drift magnitude, circularity error %, and sensor wear for ${modelData.name} (snapshot ${reliabilityData.updatedAt}).`}
   canonical={canonicalUrl}
   breadcrumbs={breadcrumbs}
   schema={schemaData}
@@ -53,11 +53,12 @@ const schemaData = {
     <header class="report-hero card-base card-gradient text-center">
       <div class="badge-tag live-badge mb-4 items-center gap-2">
         <span class="live-dot"></span>
-        Baseline Reference Dataset • {modelData.samples.toLocaleString()} Documented Results • Snapshot {reliabilityData.updatedAt}
+        Modeled Reference Baseline • Snapshot {reliabilityData.updatedAt}
       </div>
       <h1 class="text-h1 mb-4">{modelData.name} Reliability Report</h1>
       <p class="text-lead text-secondary max-w-prose mx-auto">
-        Baseline stick drift degradation figures, circularity error metrics, and sensor wear references compiled from aggregated test results. Every unit is different — measure yours directly with our free diagnostics.
+        Modeled reference figures for stick drift degradation, circularity error, and sensor wear — engineering
+        estimates, not measured results. Every unit is different — measure yours directly with our free diagnostics.
       </p>
       <div class="mt-8">
         <a href="/test/controller/drift" class="btn-primary">Test Your Controller</a>
@@ -68,7 +69,7 @@ const schemaData = {
       <div class="metric-card card-base">
         <div class="metric-label text-tertiary">Avg 12-Month Drift</div>
         <div class="metric-value mono text-warning">{modelData.avgDriftAfter12MonthsPercent}%</div>
-        <p class="metric-desc text-secondary">Measured static offset at rest</p>
+        <p class="metric-desc text-secondary">Modeled static offset at rest</p>
       </div>
 
       <div class="metric-card card-base">
@@ -127,7 +128,7 @@ const schemaData = {
     </section>
 
     <section class="issues-section card-base mb-12 p-6 sm:p-10">
-      <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-6">Documented Wear Characteristics</h2>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-6">Known Wear Characteristics</h2>
       <ul class="issues-list">
         {modelData.commonIssues.map((issue: string) => (
           <li>{issue}</li>

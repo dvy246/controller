@@ -2,14 +2,15 @@
 /**
  * /press — Press kit for journalists & reviewers.
  * Data-backed angles only: no invented stats. Everything here is traceable
- * to reliabilityData.json, the methodology page, or the gamepad-lib repo.
+ * to reliabilityData.json (modeled reference baselines), the methodology
+ * page, or the gamepad-lib repo. Community sample counts are live and start
+ * at 0 until real, consenting testers contribute.
  */
 
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
 import Breadcrumbs from '@components/global/Breadcrumbs.astro';
-import reliabilityData from '@data/reliabilityData.json';
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
@@ -17,18 +18,18 @@ const breadcrumbs = [
 ];
 
 const facts = [
-  { k: 'Documented diagnostic results', v: `${reliabilityData.totalSamplesMeasured.toLocaleString()}+` },
+  { k: 'Modeled reference baselines', v: '5 models' },
   { k: 'Free browser diagnostics', v: '39' },
   { k: 'Repair guides', v: '12' },
   { k: 'Per-game settings guides', v: '30' },
   { k: 'Controller comparisons', v: '9' },
-  { k: 'Locales', v: '5 (en, es, de, fr, ja)' },
+  { k: 'Locales', v: '10 (en, es, de, fr, ja, pt, ko, ru, zh-tw, it)' },
 ];
 ---
 
 <BaseLayout
   title="Press Kit — ControllerTesting.com | Media & Review Resources"
-  description="Press kit for ControllerTesting.com: the data-backed controller testing platform with 142,850+ documented results, open-source measurement math, and zero-invented-figures policy."
+  description="Press kit for ControllerTesting.com: the controller testing platform with modeled reference baselines, open-source measurement math, and zero-invented-figures policy."
   breadcrumbs={breadcrumbs}
 
   localized={true}>
@@ -43,8 +44,9 @@ const facts = [
         <h1 class="text-h1 mb-3">Press Kit</h1>
         <p class="text-secondary text-lg max-w-3xl leading-relaxed">
           ControllerTesting.com is the free, browser-based controller testing platform that explains
-          <em>why</em> your controller behaves the way it does, beyond the raw axis numbers. Every figure we
-          publish traces back to a dated dataset or a published methodology. We do not invent figures.
+          <em>why</em> your controller behaves the way it does, beyond the raw axis numbers. Our reliability
+          figures are explicitly labeled <em>modeled reference baselines</em>, and community sample counts are
+          live figures that start at 0 and grow with consenting testers. We do not invent figures.
         </p>
       </header>
 
@@ -64,11 +66,11 @@ const facts = [
         <h2 class="section-title mb-4">Story angles</h2>
         <ul class="space-y-3 text-secondary leading-relaxed">
           <li>
-            <strong class="text-primary">The Hall-effect vs potentiometer gap, measured.</strong> Our baseline
-            dataset shows Hall-effect sticks average <strong class="text-primary">0.1%</strong> drift after 12
-            months vs <strong class="text-primary">3.1–5.2%</strong> for potentiometer sticks, and a
+            <strong class="text-primary">The Hall-effect vs potentiometer gap, modeled.</strong> Our reference
+            baseline model shows Hall-effect sticks averaging <strong class="text-primary">0.1%</strong> drift
+            after 12 months vs <strong class="text-primary">3.1–5.2%</strong> for potentiometer sticks, and a
             <strong class="text-primary">36-month</strong> average lifespan before drift onset vs
-            <strong class="text-primary">9–14 months</strong>. A 30–50× measured difference behind a hardware
+            <strong class="text-primary">9–14 months</strong>. A 30–50× modeled difference behind a hardware
             trend that's reshaping the controller market (see also Valve's 2026 TMR-stick Steam Controller).
           </li>
           <li>
@@ -93,8 +95,8 @@ const facts = [
       <section class="card-base p-6 mb-8">
         <h2 class="section-title mb-4">The one-line pitch</h2>
         <p class="text-primary text-lg leading-relaxed">
-          "The controller tester that shows its work: 142,850+ documented results, open-source measurement math,
-          published methodology — and repair guides for what you find."
+          "The controller tester that shows its work: modeled reference baselines, open-source measurement
+          math, published methodology — and repair guides for what you find."
         </p>
       </section>
 
@@ -102,11 +104,13 @@ const facts = [
         <h2 class="section-title mb-4">Why journalists trust us (and should)</h2>
         <ul class="space-y-3 text-secondary leading-relaxed">
           <li><strong class="text-primary">No ad network, no trackers, no sign-ups.</strong> The tools run
-            locally in your browser; telemetry is opt-in consent and stays on-device.</li>
+            locally in your browser; telemetry is opt-in consent, and only anonymized model + measurement
+            values sync to public community baselines.</li>
           <li><strong class="text-primary">No lab-certification claims.</strong> We state precisely what browser
             testing can and cannot measure.</li>
-          <li><strong class="text-primary">Figures are dated and cited.</strong> The reliability dataset page
-            displays its snapshot date; the monthly report archives changes.</li>
+          <li><strong class="text-primary">Figures are labeled and dated.</strong> Baselines are explicitly
+            modeled references; the reliability dataset page displays its snapshot date and the monthly report
+            archives changes.</li>
         </ul>
       </section>
 

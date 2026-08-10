@@ -516,13 +516,8 @@
       if (this.resTrig) this.resTrig.innerText = `${Math.round(this.triggerData.maxL)}% | ${Math.round(this.triggerData.maxR)}%`;
       
       this.finalScoreObj = { score, grade, maxDrift };
-      
-      // Optional: Telemetry integration (if recordTelemetry exists)
+
       try {
-        if (typeof window.recordTelemetry === 'function') {
-          window.recordTelemetry('health-score', { score, maxDrift });
-        }
-        
         const report = {
           id: generateUUID(),
           timestamp: Date.now(),

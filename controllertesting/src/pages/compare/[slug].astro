@@ -51,7 +51,7 @@ export function getStaticPaths() {
       title: 'Switch Pro Controller vs Xbox Wireless Controller',
       cA: { name: 'Nintendo Switch Pro Controller', rel: 'switch-pro', score: 87, latency: '~5 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
       cB: { name: 'Xbox Series Controller', rel: 'xbox-series-x', score: 84, latency: '~6.8 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Potentiometer', price: '~$59.99 MSRP' },
-      driftAnswer: 'Both use potentiometer sticks, but our baseline dataset shows the Switch Pro averaging slower drift onset than the Xbox controller (measured from documented test results — see the reliability reports). Neither offers swappable stick modules; the Pro Controller sticks are drop-in replacements, while Xbox sticks are soldered.',
+      driftAnswer: 'Both use potentiometer sticks, but our modeled reference shows the Switch Pro averaging slower drift onset than the Xbox controller (see the reliability reports). Neither offers swappable stick modules; the Pro Controller sticks are drop-in replacements, while Xbox sticks are soldered.',
       sourceNote: 'Figures are approximate. Latency and polling rate vary with connection mode, platform, and individual units; values compiled from manufacturer specifications and third-party community measurements, not from our own lab tests.',
     },
     {
@@ -59,7 +59,7 @@ export function getStaticPaths() {
       title: 'Joy-Con vs Switch Pro Controller',
       cA: { name: 'Nintendo Switch Joy-Con (pair)', rel: null, score: 62, latency: '~7 ms', polling: '~250 Hz BT', sensor: 'Potentiometer (ALPS)', price: '~$79.99 MSRP' },
       cB: { name: 'Nintendo Switch Pro Controller', rel: 'switch-pro', score: 87, latency: '~5 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
-      driftAnswer: 'Joy-Con sticks are the most drift-prone of the pair — tiny ALPS modules with a documented high failure rate. The Pro Controller uses larger, sturdier sticks. Both are potentiometer-based; the Pro Controller is the more durable of the two on our baseline data.',
+      driftAnswer: 'Joy-Con sticks are the most drift-prone of the pair — tiny ALPS modules with a documented high failure rate. The Pro Controller uses larger, sturdier sticks. Both are potentiometer-based; the Pro Controller is the more durable of the two in our reference model.',
       sourceNote: 'Figures are approximate. Latency and polling rate vary with connection mode, platform, and individual units; values compiled from manufacturer specifications and third-party community measurements, not from our own lab tests.',
     },
     {
@@ -67,7 +67,7 @@ export function getStaticPaths() {
       title: 'PS4 DualShock 4 vs PS5 DualSense',
       cA: { name: 'PS4 DualShock 4', rel: null, score: 78, latency: '~6 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Potentiometer (ALPS)', price: '~$59.99 MSRP' },
       cB: { name: 'PS5 DualSense', rel: 'ps5-dualsense', score: 88, latency: '~3.1 ms', polling: '~1000 Hz wired / ~250 Hz BT', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
-      driftAnswer: 'Both use ALPS potentiometer sticks with a documented drift history. The DualSense reports higher at-rest precision in our baseline dataset, and both are equally dependent on cleaning or module swaps for long-term drift control.',
+      driftAnswer: 'Both use ALPS potentiometer sticks with a documented drift history. The DualSense reports higher at-rest precision in our modeled reference, and both are equally dependent on cleaning or module swaps for long-term drift control.',
       sourceNote: 'Figures are approximate. Latency and polling rate vary with connection mode, platform, and individual units; values compiled from manufacturer specifications and third-party community measurements, not from our own lab tests.',
     },
     {
@@ -186,12 +186,12 @@ const faqs = [
 
     </div>
 
-    {/* Measured Reliability Baselines (from reliabilityData.json) */}
+    {/* Modeled Reference Baselines (from reliabilityData.json) */}
     {hasReliability && (
       <div class="rel-card card-base">
         <div class="rel-header">
-          <h2 class="section-title">Measured Reliability Baselines</h2>
-          <span class="rel-badge">{reliabilityData.totalSamplesMeasured.toLocaleString()} TEST RESULTS</span>
+          <h2 class="section-title">Modeled Reference Baselines</h2>
+          <span class="rel-badge">MODELED REFERENCE</span>
         </div>
         <div class="rel-grid">
           {relEntries.map((r) => (
@@ -203,7 +203,7 @@ const faqs = [
                     <div class="spec-row"><span>Avg Drift (12 mo):</span> <span class="mono">{r.model.avgDriftAfter12MonthsPercent}%</span></div>
                     <div class="spec-row"><span>Circularity Error:</span> <span class="mono">{r.model.avgCircularityErrorPercent}%</span></div>
                     <div class="spec-row"><span>Drift-Free Lifespan:</span> <span class="mono">{r.model.avgLifespanMonthsBeforeDrift} months</span></div>
-                    <div class="spec-row"><span>Samples:</span> <span class="mono">{r.model.samples.toLocaleString()}</span></div>
+                    <div class="spec-row"><span>Baseline:</span> <span class="mono">modeled reference</span></div>
                   </div>
                   <a href={`/reliability/${r.relKey}`} class="rel-link">Full reliability report →</a>
                 </>
@@ -214,7 +214,8 @@ const faqs = [
           ))}
         </div>
         <p class="source-note">
-          Baseline averages from {reliabilityData.totalSamplesMeasured.toLocaleString()} documented controller tests (snapshot {reliabilityData.updatedAt}). Baselines are population averages, not a guarantee for any individual unit.
+          Modeled reference figures, snapshot {reliabilityData.updatedAt} — engineering estimates, not measured
+          results. Baselines are not a guarantee for any individual unit.
         </p>
       </div>
     )}

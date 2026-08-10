@@ -1,16 +1,18 @@
 ---
 /**
  * /learn/[slug] — Data-driven explainer article.
- * Facts policy: dataset figures come from reliabilityData.json via the press kit
- * and /reliability/report (0.1% vs 3.1–5.2% at 12 months, 36 vs 9–14 months,
- * 142,850+ samples). General hardware facts (polling tiers, sensor mechanics)
- * are common-knowledge and kept qualitative where measurement could vary.
+ * Facts policy: reliability figures are explicitly labeled modeled reference
+ * baselines (0.1% vs 3.1–5.2% at 12 months, 36 vs 9–14 months) sourced from
+ * reliabilityData.json and /reliability/report. General hardware facts
+ * (polling tiers, sensor mechanics) are common-knowledge and kept qualitative
+ * where measurement could vary.
  */
 
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
 import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import AuthorByline from '@components/global/AuthorByline.astro';
 
 export function getStaticPaths() {
   const articles = [
@@ -194,7 +196,7 @@ export function getStaticPaths() {
     slug: 'hall-effect-vs-potentiometer-guide',
     title: 'Hall-Effect vs Potentiometer Sticks',
     subtitle:
-      'These are the two sensor families inside modern analog sticks. Our baseline dataset — 142,850+ documented measurements — shows a dramatic aging gap between them. Here is the mechanism and the numbers.',
+      'These are the two sensor families inside modern analog sticks. Our modeled reference baselines show a dramatic aging gap between them. Here is the mechanism and the numbers.',
     sections: [
       {
         h: 'The two mechanisms',
@@ -204,10 +206,10 @@ export function getStaticPaths() {
         ],
       },
       {
-        h: 'What our dataset shows',
+        h: 'What our reference model shows',
         body: [
-          'Across our documented measurements, Hall-effect sticks average 0.1% drift after 12 months versus 3.1–5.2% for potentiometer sticks — and a 36-month average lifespan before drift onset versus 9–14 months. That is a 30–50× measured difference on the same test, which is why Hall-effect sticks are the recommended fix path for worn controllers.',
-          'Methodology and caveats are published on the reliability report page: the dataset is browser-opt-in telemetry, so it skews toward users who already suspect a problem — but the sensor-type gap holds within the same population.',
+          'Across our modeled reference baselines, Hall-effect sticks average 0.1% drift after 12 months versus 3.1–5.2% for potentiometer sticks — and a 36-month average lifespan before drift onset versus 9–14 months. That is a 30–50× modeled difference on the same test, which is why Hall-effect sticks are the recommended fix path for worn controllers.',
+          'Methodology and caveats are published on the reliability report page: baselines are modeled references that community telemetry progressively replaces, and opt-in telemetry skews toward users who already suspect a problem — but the sensor-type gap holds within the same population.',
         ],
       },
       {
@@ -225,7 +227,7 @@ export function getStaticPaths() {
     faqs: [
       {
         q: 'Are Hall-effect controllers worth it?',
-        a: 'For drift resistance, yes: our baseline dataset shows Hall-effect sticks at 0.1% average drift after 12 months versus 3.1–5.2% for potentiometers. Check the reliability report for methodology and caveats.',
+        a: 'For drift resistance, yes: our modeled reference baselines show Hall-effect sticks at 0.1% average drift after 12 months versus 3.1–5.2% for potentiometers. Check the reliability report for methodology and caveats.',
       },
       {
         q: 'Can I replace potentiometer sticks with Hall-effect modules?',
@@ -256,7 +258,7 @@ export function getStaticPaths() {
       {
         h: 'Why controllers wear out',
         body: [
-          'Every moving part is a wear candidate: potentiometer wipers and tracks (drift), button membranes and microswitches (double-clicks, dead buttons), trigger springs, and stick-centering mechanisms. The two big failure classes map to our most-used tools: stick drift and button/trigger faults. See the reliability report for measured failure timelines per model.',
+          'Every moving part is a wear candidate: potentiometer wipers and tracks (drift), button membranes and microswitches (double-clicks, dead buttons), trigger springs, and stick-centering mechanisms. The two big failure classes map to our most-used tools: stick drift and button/trigger faults. See the reliability report for modeled failure timelines per model.',
         ],
       },
     ],
@@ -272,7 +274,7 @@ export function getStaticPaths() {
       },
       {
         q: 'What wears out first on a controller?',
-        a: 'On potentiometer sticks, the analog stick is the most common failure — our dataset shows drift onset averaging 9–14 months on typical models. Button switches and membranes are the second most common, and both are covered by dedicated testers here.',
+        a: 'On potentiometer sticks, the analog stick is the most common failure — our modeled reference baselines show drift onset averaging 9–14 months on typical models. Button switches and membranes are the second most common, and both are covered by dedicated testers here.',
       },
     ],
   },
@@ -285,7 +287,7 @@ export function getStaticPaths() {
       {
         h: '1. Sensor type is the durability question',
         body: [
-          'The single most important hardware question is potentiometer vs Hall-effect sticks. Our baseline dataset measures 0.1% average drift at 12 months for Hall-effect vs 3.1–5.2% for potentiometers — a 30–50× gap. If you are buying for longevity, Hall-effect sticks are the defining feature; our reliability report and controller comparisons show the per-model data.',
+          'The single most important hardware question is potentiometer vs Hall-effect sticks. Our modeled reference baselines measure 0.1% average drift at 12 months for Hall-effect vs 3.1–5.2% for potentiometers — a 30–50× gap. If you are buying for longevity, Hall-effect sticks are the defining feature; our reliability report and controller comparisons show the per-model data.',
         ],
       },
       {
@@ -350,11 +352,26 @@ const articleSchema = {
   '@type': 'Article',
   headline: article.title,
   description: article.subtitle,
+  datePublished: '2026-08-02T00:00:00Z',
+  dateModified: '2026-08-10T00:00:00Z',
+  author: {
+    '@type': 'Person',
+    name: 'ControllerTesting.com Research Team',
+    url: 'https://controllertesting.com/about'
+  },
   publisher: {
     '@type': 'Organization',
     name: 'ControllerTesting.com',
     url: 'https://controllertesting.com',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://controllertesting.com/favicon.svg'
+    }
   },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': `https://controllertesting.com/learn/${article.slug}`
+  }
 };
 ---
 
@@ -376,6 +393,12 @@ const articleSchema = {
         <h1 class="text-h1 mb-2">{article.title}</h1>
         <p class="learn-subtitle">{article.subtitle}</p>
       </header>
+
+      <AuthorByline
+        datePublished="2026-08-02"
+        dateModified="2026-08-10"
+        readingTime="5 min read"
+      />
 
       <div class="learn-body card-base">
         {article.sections.map((s) => (

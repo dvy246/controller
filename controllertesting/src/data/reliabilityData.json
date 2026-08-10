@@ -1,10 +1,10 @@
 {
   "updatedAt": "2026-08-02",
-  "totalSamplesMeasured": 142850,
+  "datasetSource": "modeled-reference",
+  "communitySamples": 0,
   "models": {
     "ps5-dualsense": {
       "name": "PlayStation 5 DualSense",
-      "samples": 42150,
       "avgDriftAfter12MonthsPercent": 4.8,
       "avgCircularityErrorPercent": 7.9,
       "avgLifespanMonthsBeforeDrift": 9.4,
@@ -21,7 +21,6 @@
     },
     "xbox-series-x": {
       "name": "Xbox Wireless Controller (Series X/S)",
-      "samples": 38900,
       "avgDriftAfter12MonthsPercent": 5.2,
       "avgCircularityErrorPercent": 8.4,
       "avgLifespanMonthsBeforeDrift": 10.1,
@@ -38,7 +37,6 @@
     },
     "switch-pro": {
       "name": "Nintendo Switch Pro Controller",
-      "samples": 21400,
       "avgDriftAfter12MonthsPercent": 3.1,
       "avgCircularityErrorPercent": 6.8,
       "avgLifespanMonthsBeforeDrift": 14.2,
@@ -55,7 +53,6 @@
     },
     "dualsense-edge": {
       "name": "PlayStation DualSense Edge",
-      "samples": 12800,
       "avgDriftAfter12MonthsPercent": 4.5,
       "avgCircularityErrorPercent": 7.2,
       "avgLifespanMonthsBeforeDrift": 9.8,
@@ -72,7 +69,6 @@
     },
     "hall-effect-generic": {
       "name": "Hall Effect Controllers (8BitDo / Gamesir / Flydigi)",
-      "samples": 27600,
       "avgDriftAfter12MonthsPercent": 0.1,
       "avgCircularityErrorPercent": 4.2,
       "avgLifespanMonthsBeforeDrift": 36.0,

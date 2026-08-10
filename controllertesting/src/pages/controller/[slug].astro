@@ -167,7 +167,7 @@ const schemaData = {
       </a>
     </div>
 
-    <!-- Measured Reliability Baselines (from reliabilityData.json) -->
+    <!-- Modeled Reference Baselines (from reliabilityData.json) -->
     {reliability && (
       <div class="card-base p-8 mb-12">
         <div class="flex items-center justify-between gap-4 mb-6 flex-wrap">
@@ -175,7 +175,7 @@ const schemaData = {
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-pass" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
-            Measured Reliability Baselines
+            Modeled Reference Baselines
           </h2>
           <a href={`/reliability/${controller.reliabilitySlug}`} class="text-pass text-sm font-medium hover:underline">
             Full reliability report →
@@ -195,12 +195,13 @@ const schemaData = {
             <div class="text-2xl font-bold text-pass font-mono tabular-nums">{reliability.avgLifespanMonthsBeforeDrift} mo</div>
           </div>
           <div class="bg-surface-1 border border-border-subtle rounded-xl p-4">
-            <div class="text-secondary text-xs font-medium mb-1">Dataset Samples</div>
-            <div class="text-2xl font-bold text-primary font-mono tabular-nums">{reliability.samples.toLocaleString()}</div>
+            <div class="text-secondary text-xs font-medium mb-1">Baseline Status</div>
+            <div class="text-2xl font-bold text-primary font-mono tabular-nums">Modeled</div>
           </div>
         </div>
         <p class="text-xs text-tertiary mt-4">
-          Baseline reference figures from {reliability.samples.toLocaleString()} documented test results (snapshot {reliabilityData.updatedAt}). Baselines, not a guarantee for any individual unit.
+          Modeled reference figures (snapshot {reliabilityData.updatedAt}) — engineering estimates, not measured
+          results. Baselines, not a guarantee for any individual unit.
         </p>
       </div>
     )}

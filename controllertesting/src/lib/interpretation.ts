@@ -41,7 +41,6 @@ export interface ComparisonResult {
   percentile: number;
   betterThan: string;
   sampleCount: number;
-  modelName: string;
   datasetDate: string;
 }
 
@@ -251,7 +250,7 @@ export function interpretDrift(
       minimal: "This reading is typical of a new or lightly-used unit.",
       early: `Early wear — typical after several months of regular use for ${model.name} controllers.`,
       moderate: `Moderate wear — consistent with ${model.name} potentiometer aging patterns.`,
-      advanced: `Advanced wear — beyond the average for ${model.name} controllers in our dataset.`,
+      advanced: `Advanced wear — beyond the average for ${model.name} controllers in our reference model.`,
     };
     explanation += ` ${stageDescriptions[wearStage]}`;
   }
@@ -265,8 +264,8 @@ export function interpretDrift(
     );
     comparison = {
       percentile,
-      betterThan: `${percentile}% of tested ${model.name} controllers`,
-      sampleCount: model.samples,
+      betterThan: `${percentile}% of the ${model.name} reference distribution`,
+      sampleCount: 0,
       modelName: model.name,
       datasetDate: reliabilityData.updatedAt,
     };
@@ -438,8 +437,8 @@ export function interpretCircularity(
 
     comparison = {
       percentile,
-      betterThan: `${percentile}% of tested ${model.name} controllers`,
-      sampleCount: model.samples,
+      betterThan: `${percentile}% of the ${model.name} reference distribution`,
+      sampleCount: 0,
       modelName: model.name,
       datasetDate: reliabilityData.updatedAt,
     };

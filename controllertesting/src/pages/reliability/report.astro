@@ -1,7 +1,7 @@
 ---
 /**
- * /reliability/report — Monthly reliability dataset report.
- * Data-backed, dated, cites the baseline snapshot. First edition: 2026-08.
+ * /reliability/report — Monthly reliability baselines report.
+ * Data-backed, dated, cites the modeled reference snapshot. First edition: 2026-08.
  */
 
 import BaseLayout from '@layouts/BaseLayout.astro';
@@ -12,7 +12,6 @@ import reliabilityData from '@data/reliabilityData.json';
 
 type Model = {
   name: string;
-  samples: number;
   avgDriftAfter12MonthsPercent: number;
   avgCircularityErrorPercent: number;
   avgLifespanMonthsBeforeDrift: number;
@@ -23,15 +22,15 @@ const models = Object.entries(reliabilityData.models as Record<string, Model>);
 const breadcrumbs = [
   { name: 'Home', url: '/' },
   { name: 'Reliability Data', url: '/reliability' },
-  { name: 'Dataset Report' },
+  { name: 'Baselines Report' },
 ];
 
-const reportTitle = `Reliability Dataset Report — ${new Date(reliabilityData.updatedAt + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
+const reportTitle = `Reliability Baselines Report — ${new Date(reliabilityData.updatedAt + 'T00:00:00Z').toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
 ---
 
 <BaseLayout
   title={`${reportTitle} | ControllerTesting.com`}
-  description={`Monthly controller reliability dataset report: stick drift after 12 months, circularity error, and average lifespan before drift across ${reliabilityData.totalSamplesMeasured.toLocaleString()} documented results.`}
+  description={`Monthly controller reliability baselines report: stick drift after 12 months, circularity error, and average lifespan before drift across modeled reference baselines (snapshot ${reliabilityData.updatedAt}).`}
   breadcrumbs={breadcrumbs}
 
   localized={true}>
@@ -42,25 +41,27 @@ const reportTitle = `Reliability Dataset Report — ${new Date(reliabilityData.u
       <Breadcrumbs items={breadcrumbs} />
 
       <header class="mb-12">
-        <span class="badge-tag mb-3">Monthly Dataset Report · Snapshot {reliabilityData.updatedAt}</span>
+        <span class="badge-tag mb-3">Monthly Baselines Report · Snapshot {reliabilityData.updatedAt}</span>
         <h1 class="text-h1 mb-3">{reportTitle}</h1>
         <p class="text-secondary text-lg max-w-3xl leading-relaxed">
           This report summarizes the current reliability baseline for game controllers: average stick drift
           magnitude after 12 months of use, circularity error, and average lifespan before drift onset.
-          All figures come from documented diagnostic results collected through our drift and circularity tools.
+          All figures are <strong>modeled reference baselines</strong> — dated engineering estimates, not a
+          measured dataset.
         </p>
         <p class="text-tertiary text-sm mt-3">
-          This is a static baseline snapshot — not live telemetry. Individual units vary; use these figures to
-          compare models, not to predict your specific controller.
+          Community telemetry starts at 0 and progressively replaces these estimates with real, consenting
+          measurements. Individual units vary; use these figures to compare models, not to predict your specific
+          controller.
         </p>
       </header>
 
       <section class="card-base p-6 mb-8">
-        <h2 class="section-title mb-4">Dataset at a glance</h2>
+        <h2 class="section-title mb-4">Baselines at a glance</h2>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
           <div class="p-4 rounded-xl bg-surface-1 border border-border-subtle">
-            <div class="text-3xl font-bold text-accent">{reliabilityData.totalSamplesMeasured.toLocaleString()}</div>
-            <div class="text-tertiary text-sm mt-1">Documented results</div>
+            <div class="text-3xl font-bold text-accent">{reliabilityData.communitySamples.toLocaleString()}</div>
+            <div class="text-tertiary text-sm mt-1">Community samples to date</div>
           </div>
           <div class="p-4 rounded-xl bg-surface-1 border border-border-subtle">
             <div class="text-3xl font-bold text-accent">{models.length}</div>
@@ -83,7 +84,6 @@ const reportTitle = `Reliability Dataset Report — ${new Date(reliabilityData.u
           <thead>
             <tr class="text-tertiary border-b border-border-subtle">
               <th scope="col" class="py-2 pr-4">Controller</th>
-              <th scope="col" class="py-2 pr-4">Samples</th>
               <th scope="col" class="py-2 pr-4">Avg drift after 12 mo</th>
               <th scope="col" class="py-2 pr-4">Avg circularity error</th>
               <th scope="col" class="py-2 pr-4">Avg lifespan before drift</th>
@@ -95,7 +95,6 @@ const reportTitle = `Reliability Dataset Report — ${new Date(reliabilityData.u
                 <td class="py-2.5 pr-4 text-primary">
                   <a href={`/reliability/${key}`} class="text-accent hover:underline">{m.name}</a>
                 </td>
-                <td class="py-2.5 pr-4 text-secondary mono tabular-nums">{m.samples.toLocaleString()}</td>
                 <td class="py-2.5 pr-4 text-secondary mono tabular-nums">{m.avgDriftAfter12MonthsPercent}%</td>
                 <td class="py-2.5 pr-4 text-secondary mono tabular-nums">{m.avgCircularityErrorPercent}%</td>
                 <td class="py-2.5 pr-4 text-secondary mono tabular-nums">{m.avgLifespanMonthsBeforeDrift} months</td>
@@ -121,11 +120,12 @@ const reportTitle = `Reliability Dataset Report — ${new Date(reliabilityData.u
       </section>
 
       <section class="card-base p-6">
-        <h2 class="section-title mb-4">About this dataset</h2>
+        <h2 class="section-title mb-4">About these baselines</h2>
         <p class="text-secondary leading-relaxed mb-3">
-          Figures are compiled from documented diagnostic runs of the Stick Drift Detector and Circularity Test.
-          Measurements follow our published <a href="/test/methodology" class="text-accent hover:underline">testing methodology</a>.
-          Results are stored locally and shared only with explicit consent.
+          Figures are modeled reference estimates published with our
+          <a href="/test/methodology" class="text-accent hover:underline">testing methodology</a>.
+          They become real measurements as consenting testers contribute anonymous samples through the Stick Drift
+          Detector and Circularity Test.
         </p>
         <p class="text-secondary leading-relaxed">
           This report is updated as new baseline data is compiled. Previous editions will be archived here for

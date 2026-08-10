@@ -454,11 +454,11 @@ import InterpretationCard from '../../features/InterpretationCard.astro';
             if (interpretation.comparison && interpComparison) {
               interpComparison.style.display = 'block';
               if (interpModelName) interpModelName.textContent = interpretation.comparison.modelName;
-              if (interpSampleCount) interpSampleCount.textContent = `N=${interpretation.comparison.sampleCount.toLocaleString()}`;
+              if (interpSampleCount) interpSampleCount.textContent = 'modeled reference';
               if (interpPercentileFill) interpPercentileFill.style.width = `${interpretation.comparison.percentile}%`;
               if (interpPercentileMarker) interpPercentileMarker.style.left = `${interpretation.comparison.percentile}%`;
               if (interpPercentileLabel) interpPercentileLabel.textContent = interpretation.comparison.betterThan;
-              if (interpDatasetDate) interpDatasetDate.textContent = `Dataset: ${interpretation.comparison.datasetDate}`;
+              if (interpDatasetDate) interpDatasetDate.textContent = `Reference snapshot: ${interpretation.comparison.datasetDate}`;
             } else if (interpComparison) {
               interpComparison.style.display = 'none';
             }

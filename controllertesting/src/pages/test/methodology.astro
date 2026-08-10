@@ -132,7 +132,7 @@ const schema = {
             </div>
             <div class="section-body mt-4 text-secondary">
               <p>
-                Our hardware reliability dataset (142,850+ records) strictly curates incoming data points. We reject anomalies (e.g., drift > 80% which indicates a completely broken or uncalibrated axis, not standard wear).
+                Our reliability baselines are a <strong>modeled reference</strong>, not a claimed dataset. Incoming community telemetry is strictly curated — we reject anomalies (e.g., drift > 80% which indicates a completely broken or uncalibrated axis, not standard wear) before they join the aggregate.
               </p>
               <p class="mt-4">
                 All data is hashed locally and stripped of any PII. The Controller Passport stores your specific device's UUID purely in your browser's <code>localStorage</code>; we cannot identify your individual hardware.

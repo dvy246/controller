@@ -1,7 +1,8 @@
 ---
 /**
- * /reliability/dashboard — Aggregate Reliability Dataset Dashboard
- * Every figure on this page traces directly to src/data/reliabilityData.json.
+ * /reliability/dashboard — Aggregate Reliability Baselines Dashboard
+ * Every figure on this page traces directly to src/data/reliabilityData.json
+ * and is explicitly a modeled reference baseline, not a measured dataset.
  * No derived numbers are invented: charts render raw JSON values.
  */
 
@@ -12,13 +13,12 @@ import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 import reliabilityData from '@data/reliabilityData.json';
 
 const models = Object.entries(reliabilityData.models as Record<string, any>);
-const totalSamples = reliabilityData.totalSamplesMeasured;
+const totalSamples = reliabilityData.communitySamples;
 
 // Largest value across all three metrics — used to normalize bar widths.
 const maxDrift = Math.max(...models.map(([, m]) => m.avgDriftAfter12MonthsPercent));
 const maxCircularity = Math.max(...models.map(([, m]) => m.avgCircularityErrorPercent));
 const maxLifespan = Math.max(...models.map(([, m]) => m.avgLifespanMonthsBeforeDrift));
-const maxSamples = Math.max(...models.map(([, m]) => m.samples));
 
 // Aggregate (unweighted) averages across the 5 tracked models.
 const avgDriftAll = models.reduce((acc, [, m]) => acc + m.avgDriftAfter12MonthsPercent, 0) / models.length;
@@ -44,8 +44,8 @@ function barWidth(value: number, max: number): number {
 ---
 
 <BaseLayout
-  title="Controller Reliability Dashboard — 142,850 Test Results Across 5 Models | ControllerTesting.com"
-  description={`Aggregate controller reliability dashboard: stick drift, circularity error, and drift-free lifespan baselines for 5 controller models, compiled from ${totalSamples.toLocaleString()} documented test results (snapshot ${reliabilityData.updatedAt}).`}
+  title="Controller Reliability Dashboard — Modeled Reference Baselines Across 5 Models | ControllerTesting.com"
+  description={`Aggregate controller reliability dashboard: stick drift, circularity error, and drift-free lifespan reference baselines for 5 controller models (modeled, snapshot ${reliabilityData.updatedAt}).`}
   breadcrumbs={breadcrumbs}
 
   localized={true}>
@@ -57,21 +57,21 @@ function barWidth(value: number, max: number): number {
 
       <!-- Hero -->
       <header class="dash-hero">
-        <span class="badge-tag mb-3">Aggregate Dataset Dashboard</span>
+        <span class="badge-tag mb-3">Aggregate Baselines Dashboard</span>
         <h1 class="text-h1 mb-2">Controller Reliability Dashboard</h1>
         <p class="dash-subtitle">
-          {totalSamples.toLocaleString()} documented test results across {models.length} tracked controller
+          Modeled reference baselines across {models.length} tracked controller
           models (snapshot {reliabilityData.updatedAt}). Every bar on this page is rendered directly from the
-          baseline dataset — no derived figures.
+          reference model — these are engineering estimates, not measured results. Community telemetry starts at 0.
         </p>
       </header>
 
       <!-- Headline stat strip -->
       <section class="stat-strip" aria-label="Dataset headline figures">
         <div class="stat-tile card-base">
-          <span class="stat-tile-label">Documented results</span>
+          <span class="stat-tile-label">Community telemetry samples</span>
           <span class="stat-tile-value">{totalSamples.toLocaleString()}</span>
-          <span class="stat-tile-note">aggregated, snapshot {reliabilityData.updatedAt}</span>
+          <span class="stat-tile-note">consenting testers to date — grows from 0</span>
         </div>
         <div class="stat-tile card-base">
           <span class="stat-tile-label">Tracked models</span>
@@ -176,30 +176,30 @@ function barWidth(value: number, max: number): number {
         </div>
       </section>
 
-      <!-- Sample distribution -->
-      <section class="chart-card card-base" aria-labelledby="samples-chart-title">
+      <!-- Community telemetry -->
+      <section class="note-card card-base" aria-labelledby="samples-chart-title">
         <div class="chart-head">
           <div>
-            <h2 id="samples-chart-title" class="chart-title">Dataset Composition</h2>
-            <p class="chart-desc">Share of documented results per model. More samples = sharper baseline.</p>
+            <h2 id="samples-chart-title" class="chart-title">Community Telemetry</h2>
+            <p class="chart-desc">
+              Anonymized drift and circularity samples contributed by consenting testers via the
+              <a href="/test/controller/drift" class="hub-link">Stick Drift Detector</a> and
+              <a href="/test/controller/circularity" class="hub-link">Circularity Test</a>.
+              The count starts at 0 and grows with every consenting tester — your test could be the first real data point.
+            </p>
           </div>
         </div>
-        <div class="samples-stack">
-          {models.map(([slug, m]) => {
-            const pct = Math.round((m.samples / totalSamples) * 100);
-            return (
-              <a href={`/reliability/${slug}`} class="samples-row">
-                <span class="chart-label">{m.name}</span>
-                <span class="chart-track">
-                  <span
-                    class={`chart-fill fill-sample ${m.name.toLowerCase().includes('hall') ? 'fill-hall' : ''}`}
-                    style={`width: ${barWidth(m.samples, maxSamples)}%`}
-                  />
-                </span>
-                <span class="chart-value">{m.samples.toLocaleString()} ({pct}%)</span>
-              </a>
-            );
-          })}
+        <div class="stat-strip">
+          <div class="stat-tile card-base">
+            <span class="stat-tile-label">Total community samples</span>
+            <span class="stat-tile-value">{totalSamples.toLocaleString()}</span>
+            <span class="stat-tile-note">live, opt-in, anonymous</span>
+          </div>
+          <div class="stat-tile card-base">
+            <span class="stat-tile-label">Baseline status</span>
+            <span class="stat-tile-value">Modeled</span>
+            <span class="stat-tile-note">reference estimates until real samples accumulate</span>
+          </div>
         </div>
       </section>
 
@@ -242,17 +242,19 @@ function barWidth(value: number, max: number): number {
       <section class="note-card card-base">
         <h2 class="chart-title">Where this data comes from — and its limits</h2>
         <p class="note-text">
-          This is a static baseline snapshot, not live telemetry. The dataset is aggregated from
-          {totalSamples.toLocaleString()} documented test results (snapshot {reliabilityData.updatedAt}).
+          The baselines on this page are a <strong>modeled reference</strong>, not a measured dataset: they are
+          engineering estimates of typical drift, circularity error, and lifespan by sensor family, published as a
+          dated snapshot ({reliabilityData.updatedAt}). We do not claim these figures come from a large test
+          population — no fabricated sample counts appear anywhere on this site.
         </p>
         <p class="note-text">
-          Your own telemetry stays in your browser: when you opt in to the consent prompt on a diagnostic tool,
-          your measurements are logged locally (<span class="mono">ct_telemetry_log</span>) so you can track your
-          own controller over time — nothing is uploaded. The live, first-party dataset grows as we are able to
-          publish new snapshots, and every snapshot is dated so the numbers can be checked.
+          Community telemetry makes the numbers real over time: when you opt in to the consent prompt on a
+          diagnostic tool, only your anonymized hardware model and measurement values sync to the public count.
+          Your Controller Passport history and local logs (<span class="mono">ct_telemetry_log</span>) stay in your
+          browser.
         </p>
         <div class="note-links">
-          <a href="/contribute" class="btn-primary">Join the Data Project</a>
+          <a href="/contribute" class="btn-primary">Contribute a sample</a>
           <a href="/test/methodology" class="btn-secondary">Read the testing methodology</a>
           <a href="/reliability/report" class="btn-ghost">Monthly report</a>
         </div>

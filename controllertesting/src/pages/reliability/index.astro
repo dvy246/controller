@@ -1,7 +1,8 @@
 ---
 /**
- * /reliability — Hardware Reliability Dataset Hub (flagship vertical)
- * All numbers trace directly to src/data/reliabilityData.json — nothing invented.
+ * /reliability — Hardware Reliability Baselines Hub (flagship vertical)
+ * All numbers trace directly to src/data/reliabilityData.json and are
+ * explicitly modeled reference baselines — nothing invented.
  * No competitor has this content type (verified).
  */
 
@@ -20,7 +21,7 @@ const schemaData = [
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: 'Controller Reliability Data — Stick Drift Baselines by Model',
-    description: `Baseline stick drift and sensor reliability figures for 5 controller models, compiled from ${reliabilityData.totalSamplesMeasured.toLocaleString()} documented test results (snapshot ${reliabilityData.updatedAt}).`,
+    description: `Modeled reference baselines for stick drift and sensor reliability across 5 controller models (snapshot ${reliabilityData.updatedAt}).`,
     url: 'https://controllertesting.com/reliability/'
   },
   {
@@ -38,7 +39,7 @@ const schemaData = [
 
 <BaseLayout
   title="Controller Reliability Data — Stick Drift Baselines by Model | ControllerTesting.com"
-  description={`Baseline stick drift and sensor reliability figures for 5 controller models, compiled from ${reliabilityData.totalSamplesMeasured.toLocaleString()} documented test results (snapshot ${reliabilityData.updatedAt}).`}
+  description={`Modeled reference baselines for stick drift and sensor reliability across 5 controller models (snapshot ${reliabilityData.updatedAt}).`}
   breadcrumbs={breadcrumbs}
   schema={schemaData}
 
@@ -50,11 +51,11 @@ const schemaData = [
       <Breadcrumbs items={breadcrumbs} />
 
       <header class="hub-hero">
-        <span class="badge-tag">Baseline Reference Dataset</span>
+        <span class="badge-tag">Modeled Reference Baselines</span>
         <h1 class="text-h1 mb-2">Controller Reliability Data</h1>
         <p class="hub-subtitle">
-          Baseline stick drift and sensor wear figures by model — compiled from {reliabilityData.totalSamplesMeasured.toLocaleString()}
-          documented test results, snapshot {reliabilityData.updatedAt}. Baselines, not promises about any individual unit.
+          Modeled reference baselines for stick drift and sensor wear by model — engineering estimates,
+          snapshot {reliabilityData.updatedAt}, not measured results. Baselines, not promises about any individual unit.
         </p>
       </header>
 
@@ -76,7 +77,7 @@ const schemaData = [
                 <span class="stat-value">{m.avgLifespanMonthsBeforeDrift} mo</span>
               </div>
             </div>
-            <span class="model-samples">{m.samples.toLocaleString()} documented results</span>
+            <span class="model-samples">modeled reference baseline</span>
           </a>
         ))}
       </div>
@@ -84,17 +85,17 @@ const schemaData = [
       <section class="hub-note card-base">
         <h2 class="section-title">How to read this data</h2>
         <p class="hub-text">
-          Higher 12-month drift % = more degradation in the baseline dataset. Lower circularity error % = better range
+          Higher 12-month drift % = more degradation in the reference model. Lower circularity error % = better range
           accuracy. Hall-effect controllers ({models.find(([, m]) => m.name.includes('Hall'))?.[1].avgDriftAfter12MonthsPercent}%
-          at 12 months) measurably outperform potentiometer sticks — that gap is the whole Hall-effect argument.
-          The dataset is a static snapshot: telemetry stays in your browser today, and every new test we can measure
-          makes the baselines sharper. See our <a href="/test/methodology" class="hub-link">methodology</a> for what this can
-          and cannot tell you.
+          at 12 months) show a large modeled gap over potentiometer sticks — that gap is the whole Hall-effect argument.
+          These are modeled estimates, not a measured dataset: community telemetry starts at 0 and every consenting test
+          makes the baselines sharper. See our <a href="/test/methodology" class="hub-link">methodology</a> for what browser
+          testing can and cannot tell you.
         </p>
         <p class="hub-text mt-3">
           <a href="/reliability/dashboard" class="hub-link">Open the aggregate reliability dashboard &rarr;</a>
           &nbsp;&middot;&nbsp;
-          <a href="/reliability/report" class="hub-link">Read the monthly dataset report &rarr;</a>
+          <a href="/reliability/report" class="hub-link">Read the monthly baselines report &rarr;</a>
         </p>
       </section>
     </div>

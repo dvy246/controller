@@ -58,7 +58,7 @@
       wearCard.hidden = true;
       return;
     }
-    wearNote.textContent = `Baseline reference for ${model.name}: average drift onset at ${model.avgLifespanMonthsBeforeDrift} months, ${model.avgDriftAfter12MonthsPercent}% average drift after 12 months (${model.samples.toLocaleString()} documented results). Track your own curve here — your unit may differ.`;
+    wearNote.textContent = `Modeled reference for ${model.name}: average drift onset at ${model.avgLifespanMonthsBeforeDrift} months, ${model.avgDriftAfter12MonthsPercent}% average drift after 12 months. Track your own curve here — your unit may differ.`;
     wearCard.hidden = false;
   }
 

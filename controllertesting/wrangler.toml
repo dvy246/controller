@@ -1,0 +1,31 @@
+# ControllerTesting.com — Cloudflare Pages configuration
+#
+# NOTE: `wrangler pages deploy` does NOT apply bindings from this file;
+# production bindings must be added in the Cloudflare dashboard:
+#
+#   Pages → controller-test → Settings → Functions → KV namespace bindings
+#   Variable name: TELEMETRY_KV  → namespace: <id from kv list>
+#   Variable name: PASSPORT_KV   → namespace: <id from kv list>
+#   Secret:         PASSPORT_SIGNING_SECRET (random hex string, e.g. `openssl rand -hex 32`)
+#
+# Create the namespaces in the dashboard (Workers & Pages → KV) or run:
+#   npx wrangler login   # requires the workers_kv scope
+#   npx wrangler kv namespace create TELEMETRY_KV
+#   npx wrangler kv namespace create PASSPORT_KV
+# …then paste the returned ids below for local `wrangler pages dev`.
+
+name = "controller-test"
+compatibility_date = "2025-08-01"
+pages_build_output_dir = "./dist"
+
+# Placeholder ids — replace with real namespace ids for local dev.
+[[kv_namespaces]]
+binding = "TELEMETRY_KV"
+id = "REPLACE_WITH_TELEMETRY_KV_NAMESPACE_ID"
+
+[[kv_namespaces]]
+binding = "PASSPORT_KV"
+id = "REPLACE_WITH_PASSPORT_KV_NAMESPACE_ID"
+
+[vars]
+# Runtime secrets are set as dashboard Secrets, not here.

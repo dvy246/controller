@@ -59,8 +59,26 @@ export function recordTelemetry(payload: TelemetryPayload): boolean {
     // Keep last 50 local logs
     if (existing.length > 50) existing.shift();
     localStorage.setItem(LOCAL_TELEMETRY_LOG, JSON.stringify(existing));
-    return true;
   } catch {
     return false;
   }
+
+  // Fire-and-forget POST to the consented intake endpoint. The server rate
+  // limits per IP and silently drops nothing: failures here never block the
+  // diagnostic itself. The local log above remains the offline fallback.
+  try {
+    fetch("/api/telemetry", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-ct-consent": "granted",
+      },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    }).catch(() => {});
+  } catch {
+    // fetch unavailable — local log only
+  }
+
+  return true;
 }
