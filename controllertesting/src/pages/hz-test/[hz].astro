@@ -15,6 +15,17 @@ export function getStaticPaths() {
 
 const { hz } = Astro.params;
 const numericHz = parseInt(hz.replace('hz', ''), 10) || 144;
+const frameMs = (1000 / numericHz).toFixed(2);
+
+// Public display-science framing; frame times are computed from Hz, not invented.
+const hzContext: Record<string, string> = {
+  '60hz': '60Hz is the universal baseline — one frame every 16.67ms. Motion looks continuous to most players, but fast camera pans in competitive shooters blur into a smear without a good pixel response time.',
+  '120hz': '120Hz doubles the baseline (8.33ms per frame). The jump from 60 to 120 is the single largest perceived-smoothness gain of any step, and it is the refresh you want for games where motion clarity matters.',
+  '144hz': '144Hz (6.94ms per frame) is the long-standing esports standard. It adds ~20% more frames per second than 120Hz and is where most competitive players stop chasing raw refresh.',
+  '240hz': '240Hz (4.17ms per frame) is where motion blur at 120Hz-class pixel response becomes hard to notice. The gains beyond here are real but small.',
+  '360hz': '360Hz (2.78ms per frame) targets esports professionals. It shortens perceived input-to-image lag and makes fast strafing targets visibly clearer during camera pans.',
+  '540hz': '540Hz (1.85ms per frame) is bleeding-edge panel territory. Frame time is now shorter than typical human reaction gap, so further Hz buys almost nothing for play — only for the most sensitive motion tracking.',
+};
 
 const title = `Monitor ${numericHz}Hz Refresh Rate & Motion Blur Test`;
 const description = `Test your monitor's ${numericHz}Hz refresh rate, ghosting persistence, frame pacing, and motion blur performance. WebGL-accelerated display benchmark.`;
@@ -42,7 +53,7 @@ const schema = {
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs}
-  localized={true}>
+  localized={false}>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
   <Header />
@@ -70,6 +81,13 @@ const schema = {
       <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-6">Display Hz & Pixel Persistence FAQ</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-[var(--color-text-secondary)]">
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)] md:col-span-2">
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">What does {numericHz}Hz actually mean for gameplay?</h3>
+          <p class="leading-relaxed">
+            At {numericHz}Hz the display draws one full frame every {frameMs}ms. {hzContext[hz] ?? ''}
+          </p>
+        </div>
+
         <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
           <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">Why is my monitor locked at 60Hz instead of {numericHz}Hz?</h3>
           <p class="leading-relaxed">

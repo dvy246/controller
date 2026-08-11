@@ -4,24 +4,79 @@ import DeadzoneSandbox from '@components/tools/controller/DeadzoneSandbox.astro'
 
 export function getStaticPaths() {
   const games = [
-    { slug: 'fortnite', name: 'Fortnite', shape: 'radial' as const },
-    { slug: 'apex-legends', name: 'Apex Legends', shape: 'axial' as const },
-    { slug: 'warzone', name: 'Warzone', shape: 'radial' as const },
-    { slug: 'rocket-league', name: 'Rocket League', shape: 'radial' as const },
-    { slug: 'valorant', name: 'Valorant', shape: 'radial' as const }
+    {
+      slug: 'fortnite', name: 'Fortnite', shape: 'radial' as const,
+      scale: '0–50 slider', range: '10% – 15%',
+      note: 'Fortnite defaults both stick deadzones to 15% (on its 0–50 scale). Most competitive players lower toward 10% or below on clean sticks; if your red indicator drifts, raise just enough to hide it.',
+      deep: 'Fortnite applies a radial deadzone to a 0–50 scale, which means each step is coarse relative to Apex or Valorant. Because building relies on tiny stick flicks, a deadzone set too high is felt as "sticky" stair-step movement between builds; a deadzone set too low registers phantom edits when your thumb settles. Fortnite\'s input also includes a separate legacy "exponential" vs "linear" response curve, which changes how the same deadzone feels across the stick\'s range — tune the curve first, then the deadzone.',
+      editorial: 'Fortnite\'s piece-by-piece building system is the real reason its deadzone discussion exists at all: pro builders and the "zero deadzone" movement grew out of Fortnite because building requires the stick to return to an exact neutral after every flick. Between build pieces your stick taps neutral hundreds of times a match, so any deadzone big enough to hide drift also rounds off those taps into slower, mushier builds. Test in Creative, not Battle Royale — a protected creative island gives you the same stick readings without a live storm timer pressuring the result.',
+    },
+    {
+      slug: 'apex-legends', name: 'Apex Legends', shape: 'axial' as const,
+      scale: '0–100 slider', range: '3% – 5%',
+      note: 'Apex has one of the tightest competitive deadzone scales in the industry — many pros run 0–4% on clean sticks. Long-range micro-aim makes even 2–3% drift visible in-game, so test before you tune.',
+      deep: 'Apex applies an axial deadzone on a 0–100 scale and layers it under its response-curve and per-ADS-sensitivity settings. The axial shape matters: it clips each axis independently, so a small center offset can rotate your aim during a tracking fight even when the stick is returned to rest. Apex also lets you set deadzone and "outer threshold" separately — keep the outer threshold near 100 so you do not trade corner reach for a cleaner center.',
+      editorial: 'Apex\'s axial deadzone is the direct result of the game\'s origins in the Titanfall movement lineage, where precise air-strafe control demanded independent axis handling. In practice that means testing the left and right sticks separately in Apex rather than expecting a single symmetric result — a fight stick that is fine on the right can still have a worn left axis from slide-jump spam. Use the firing range (not an arena match) to measure: the dummies give you a stationary crosshair reference for center drift that a live fight will never show.',
+    },
+    {
+      slug: 'warzone', name: 'Warzone', shape: 'radial' as const,
+      scale: '0–100 slider', range: '5% – 10%',
+      note: 'Warzone exposes separate minimum and maximum stick deadzones. The community standard starts around 5%, raised only to cover visible drift; keep the maximum low so outer-edge turning stays responsive.',
+      deep: 'Warzone exposes separate minimum and maximum stick deadzones — the minimum hides center drift while the maximum lets you tune the outer edge. Since Warzone uses a radial shape on a 0–100 scale, the minimum behaves like a true circle: any stick deflection inside it is ignored entirely. Because the game is heavy on aim-down-sights tracking, an aggressive minimum that is one or two units above your noise floor is the common competitive target, and the maximum is best left just under 100 to preserve corner speed.',
+      editorial: 'Warzone\'s loadout meta changed how the community thinks about deadzone because of the slide-cancel and drop-shot mechanics baked into its movement system — both require the left stick to hit and release full deflection repeatedly, which wears the center faster than pure aiming. The practical result is that Warzone players often end up with a slightly higher minimum than they would run in a pure aim trainer. Load into a private match with no AI, set the slider just above your measured noise, and verify with a full sprint-slide-cancel cycle before you trust the number in an actual lobby.',
+    },
+    {
+      slug: 'rocket-league', name: 'Rocket League', shape: 'radial' as const,
+      scale: '0–1 float', range: '0.05 – 0.10',
+      note: 'Rocket League uses 0–1 float deadzones plus a separate dodge deadzone (~0.50). The stick deadzone standard is 0.05–0.10, and the square-vs-circle shape toggle changes how diagonal input is read.',
+      deep: 'Rocket League is the only game in this set that tunes on a 0–1 float scale and pairs the stick deadzone with a separate dodge deadzone around 0.50. The "controller deadzone" here affects all analog input, while the dodge deadzone governs when a flick registers a flip — so a tight stick deadzone does not make dodging twitchier by itself. Rocket League also offers square and circle input shapes: square reads the full corner for maximum diagonal power (used for ceiling shots), while circle is more predictable for aerials. Match the shape to your play style before finalizing the deadzone value.',
+      editorial: 'Rocket League is the outlier in this set because the stick input is not about aiming at all — it is about commanding a car, and the game\'s famous "square vs circle" shape toggle only makes sense once you understand that: square reads the full corner so your car turns harder diagonally, while circle keeps diagonal magnitude consistent for air roll control. Because the deadzone is a 0–1 float, even a 0.03 difference changes your aerial response audibly. Warm up in free play and hit the same wall-to-air dribble a few times per setting; the deadzone that feels clean in the air is the one that wins.',
+    },
+    {
+      slug: 'valorant', name: 'Valorant', shape: 'radial' as const,
+      scale: '0–100 slider', range: '8% – 15%',
+      note: 'Valorant\'s controller support exposes a stick deadzone on a 0–100 scale; the community starting point is ~10%, raised only if your stick drifts. Tactical shooters punish a drifting stick hardest — a center offset moves your crosshair off a held angle.',
+      deep: 'Valorant\'s controller support is still evolving, and its radial deadzone on a 0–100 scale sits toward the higher end of the spectrum, with community values typically starting around 10%. Because a tactical shooter is about holding angles, even a small at-rest offset drags your crosshair off a pixel when you release the stick — the worst case in this set. Valorant also separates aim-assist strength and pre-aim assist from the deadzone, so a clean stick can run a lower deadzone without losing the game\'s assist behavior.',
+      editorial: 'Valorant\'s controller support arrived late and is still shaped by the mouse-and-keyboard DNA of the PC game, which is why the deadzone debate on it is louder than on any shooter in this set: controller players are fighting for every pixel the mouse never has to give up. Because the game rewards holding precise angles, a center drift that would be a nuisance in Apex becomes a whiffed operator shot in Valorant. Set your deadzone in the range with a bot, hold a long angle, and confirm the crosshair does not creep; the tightest number that passes that check is the competitive one.',
+    },
   ];
-  
+
+  const controllerEditorial: Record<string, string> = {
+  'ps5': "The DualSense's polling path over Bluetooth can add a small amount of jitter to the raw stick reading that a wired connection does not show, so if your measured noise floor looks higher than expected, plug the pad in with USB-C and re-sample before raising the in-game slider — the wireless band is the usual source of phantom margin, not the sensor. The pad also applies its own internal correction at power-on, which means the first reading after wake is your cleanest baseline. Because the DualSense is a current-generation pad, a sustained deadzone above a few percent usually means genuine module wear or a dropped stick, not a factory tolerance, so a high measurement is worth investigating rather than accepting.",
+  'xbox': "The Xbox Wireless Controller's behavior depends heavily on the input layer it is running through: on Windows it talks XInput directly so the game receives exactly what this tester reports, but through Steam Input or a third-party remapper another deadzone can be applied on top of yours. When you tune the slider, do it from the cleanest path — raw XInput without Steam Input enabled — then verify in the game, because a remap layer can silently add a second center zone that makes your tight setting feel dead. If the pad is old, test the sticks against each other: a left stick that needs a much higher deadzone than the right is the classic one-sided wear signature.",
+  'switch': "The Switch Pro Controller is the pad where the input stack matters most, because on Switch it reads directly while on PC it passes through Steam Input, which adds its own per-game deadzone and response curve on top of anything you set. That double-filtering is why the same slider value feels different between the two platforms — record both Steam Input's deadzone and the game's deadzone separately so you can tell which layer is hiding your drift. The Pro Controller's snug stick gate also produces a bit of housing friction near the rim, so keep the deadzone test to the center region where the sensor reads cleanly, and clean the stick collar before assuming a high noise floor is hardware failure.",  };
+  const controllerNotes: Record<string, { sticks: string; tip: string; tuning: string; deep: string }> = {
+    'ps5': {
+      sticks: 'The PS5 DualSense uses potentiometer sticks with no system-level deadzone — every setting lives in the game\'s menu.',
+      tip: 'On PC the DualSense reports as a generic gamepad unless Steam Input or DualSense drivers are active; the analog values are identical either way.',
+      tuning: 'On the DualSense, set the game\'s slider to the exact minimum that hides at-rest jitter, then raise by a single unit only if mid-game drift appears. The adaptive triggers and touchpad never influence this number.',
+      deep: 'The DualSense is the only pad in this set with a touchpad and adaptive triggers that do not affect the stick signal, so the reading here is pure analog input with no haptic feedback loop feeding back into the stick value. If your DualSense shows a higher noise floor than a cable-connected test on another pad, blame the Bluetooth link: the DualSense wireless path can add small fluctuations that a direct USB-C connection removes entirely, so always compare your deadzone baseline against the wired reading before raising the game slider.',
+    },
+    'xbox': {
+      sticks: 'The Xbox Wireless Controller runs native XInput on Windows with no system deadzone slider — tune exclusively in-game.',
+      tip: 'The Xbox Accessories app remaps buttons only; it exposes no deadzone control, so this page\'s slider is your single tuning point.',
+      tuning: 'For the Xbox Wireless Controller the game menu is the only lever, so start just above your measured noise floor and confirm with a second session — XInput passes the stick value through untouched, so what you set is what the game reads.',
+      deep: 'The Xbox Wireless Controller benefits from the cleanest OS path of the three: on Windows it talks XInput directly, which means the value the game receives is exactly the value this tester reports, with no intermediate mapping layer. The practical consequence is that the number you set in the game menu is genuinely final — there is no Steam Input or driver layer to quietly add a second deadzone. That makes the Xbox pad the easiest to verify: if the red dot stays inside the zone here, it will stay inside the zone in the game.',
+    },
+    'switch': {
+      sticks: 'The Switch Pro Controller uses potentiometer sticks and has no system deadzone setting on Switch.',
+      tip: 'On PC it reports as generic HID with Nintendo-layout buttons; map via Steam Input but expect identical analog values.',
+      tuning: 'On Switch, the Pro Controller follows each game\'s slider with no OS layer. On PC, Steam Input can add its own per-game deadzone on top — set Steam Input\'s deadzone to zero first, then tune only the game slider, to avoid double-filtering your stick.',
+      deep: 'The Switch Pro Controller is the trickiest of the three to tune because it has two separate input stacks depending on where you play. On Switch itself the pad\'s analog path is direct, but on PC the controller first passes through Steam Input, which can apply its own per-game deadzone and response curve on top of anything you set in the game. That double-filtering is the classic reason a Pro Controller feels less responsive on PC than on Switch with the same slider value. When you use this tester on PC, record both Steam Input\'s deadzone and the game\'s deadzone so you can tell which layer is actually hiding your drift.',
+    },
+  };
+
   const controllers = ['ps5', 'xbox', 'switch'];
 
-  return games.flatMap(game => 
+  return games.flatMap(game =>
     controllers.map(controller => ({
       params: { game: game.slug, controller },
-      props: { game, controller }
+      props: { game, controller, note: controllerNotes[controller], controllerEditorial: controllerEditorial[controller] }
     }))
   );
 }
 
-const { game, controller } = Astro.props;
+const { game, controller, note, controllerEditorial } = Astro.props;
 
 const controllerNames: Record<string, string> = {
   'ps5': 'PS5 DualSense',
@@ -30,8 +85,8 @@ const controllerNames: Record<string, string> = {
 };
 const controllerName = controllerNames[controller] || controller.toUpperCase();
 
-const title = `${game.name} Deadzone Settings for ${controllerName} | Competitive Calculator`;
-const description = `Optimize your ${game.name} controller settings. Find the perfect deadzone to eliminate stick drift and improve your aim with our live Deadzone Sandbox.`;
+const title = `${game.name} Deadzone for ${controllerName} | CT`;
+const description = `Optimize your ${controllerName} deadzone for ${game.name}. Visualize radial vs axial geometry and stop stick drift in the live sandbox.`;
 const toolName = `${game.name} Deadzone Sandbox (${controllerName})`;
 
 const breadcrumbs = [
@@ -43,11 +98,15 @@ const breadcrumbs = [
 const faqs = [
   {
     question: `What is the best deadzone shape for ${game.name}?`,
-    answer: `${game.name} uses a ${game.shape} deadzone by default. Our interactive sandbox helps you visualize exactly how your analog stick behaves within this zone.`
+    answer: `${game.name} uses a ${game.shape} deadzone by default. Our interactive sandbox helps you visualize exactly how your analog stick behaves within this zone. ${game.note}`
   },
   {
     question: "Why should I lower my deadzone?",
     answer: "Lowering your deadzone increases responsiveness and makes micro-adjustments easier, crucial for competitive tracking and flick shots."
+  },
+  {
+    question: `How do I tune the ${controllerName} for ${game.name}?`,
+    answer: `${note.sticks} ${note.tuning} Set the ${game.name} deadzone to the lowest value where the red indicator stays inside the safe zone at rest.`
   }
 ];
 ---
@@ -72,6 +131,16 @@ const faqs = [
   <Fragment slot="content">
     <h2>Optimizing {game.name} Settings</h2>
     <p>Many competitive players struggle with stick drift and inconsistent aim because they don't understand how their controller's physical sensors interact with the game's deadzone logic. This calculator bridges that gap by letting you see the hidden math.</p>
+    <p>{game.note}</p>
+    <p>{game.deep}</p>
+    <p>{game.editorial}</p>
+    <h2>Deadzone geometry on {game.name} ({game.shape})</h2>
+    <p>{game.name} reads sticks with a <strong>{game.shape}</strong> deadzone on its {game.scale} control, and the practical range is {game.range}. Understanding the shape is the difference between a clean center and a felt one: with a radial zone the game ignores everything inside a circle, while an axial zone clips each axis independently and can let diagonal drift through. Test your actual stick against this geometry before settling on a number.</p>
+    <h2>{controllerName} deadzone context</h2>
+    <p>{note.sticks} {note.tuning}</p>
+    <p>{note.tip}</p>
+    <p>{note.deep}</p>
+    <p>{controllerEditorial}</p>
     <p>Adjust your in-game deadzone down to the lowest possible value before the red dot drifts outside the safety zone.</p>
   </Fragment>
 </ToolLayout>

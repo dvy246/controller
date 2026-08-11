@@ -19,8 +19,7 @@ export function getStaticPaths() {
   {
     slug: 'what-is-stick-drift',
     title: 'What Is Stick Drift?',
-    subtitle:
-      'Stick drift is when a controller analog stick reports a position other than center while at rest — your character aims, moves, or rotates on their own. Here is what the number means and what to do about it.',
+    subtitle: 'Stick drift is when an analog stick reports off-center while at rest. Here is what your drift percentage means and how to fix it.',
     sections: [
       {
         h: 'How stick drift is measured',
@@ -68,8 +67,7 @@ export function getStaticPaths() {
   {
     slug: 'controller-deadzone-guide',
     title: 'Controller Deadzone Explained',
-    subtitle:
-      'A deadzone is a region of stick travel the game simply ignores. Set correctly, it hides sensor noise without slowing your aim; set too high, it makes every movement feel mushy.',
+    subtitle: 'A deadzone is the region of stick travel a game ignores. Set correctly it hides sensor noise without slowing aim; set too high, everything feels mushy.',
     sections: [
       {
         h: 'Inner vs outer deadzone',
@@ -111,8 +109,7 @@ export function getStaticPaths() {
   {
     slug: 'gamepad-polling-rate-guide',
     title: 'Gamepad Polling Rate (Hz)',
-    subtitle:
-      'Polling rate is how often a controller reports its state to the device — typically 125Hz, 250Hz, 500Hz or 1000Hz on modern hardware. It affects how fresh your inputs are, but it is not the whole latency story.',
+    subtitle: 'Polling rate is how often a controller reports its state — 125Hz to 1000Hz on modern pads. It affects input freshness, but it is not the whole latency story.',
     sections: [
       {
         h: 'What the number means',
@@ -153,8 +150,7 @@ export function getStaticPaths() {
   {
     slug: 'controller-input-lag-guide',
     title: 'Controller Input Latency',
-    subtitle:
-      'Input latency is the total time from pressing a button to seeing the result on screen. Your controller is only one link in that chain — here is where the delay actually lives.',
+    subtitle: 'Input latency is the total time from pressing a button to seeing it on screen. Your controller is one link in that chain — here is where delay lives.',
     sections: [
       {
         h: 'The latency chain',
@@ -195,8 +191,7 @@ export function getStaticPaths() {
   {
     slug: 'hall-effect-vs-potentiometer-guide',
     title: 'Hall-Effect vs Potentiometer Sticks',
-    subtitle:
-      'These are the two sensor families inside modern analog sticks. Our modeled reference baselines show a dramatic aging gap between them. Here is the mechanism and the numbers.',
+    subtitle: 'Potentiometer and Hall-effect are the two sensor families inside analog sticks. Our modeled baselines show a dramatic aging gap between them.',
     sections: [
       {
         h: 'The two mechanisms',
@@ -238,8 +233,7 @@ export function getStaticPaths() {
   {
     slug: 'how-controllers-work',
     title: 'How Video Game Controllers Work',
-    subtitle:
-      'A controller is a small computer that turns your physical inputs into numbers your device reads dozens or hundreds of times per second. Here is the mental model in ten minutes.',
+    subtitle: 'A controller is a small computer turning your physical inputs into numbers your device reads hundreds of times per second. The mental model in ten minutes.',
     sections: [
       {
         h: 'Buttons, sticks, triggers',
@@ -281,8 +275,7 @@ export function getStaticPaths() {
   {
     slug: 'controller-buying-guide',
     title: 'Controller Buying Guide (2026)',
-    subtitle:
-      'A decision framework organized by what actually wears out and what actually matters in play — sensor type first, then polling, buttons, and features. No affiliate bias: this is a checklist, not a review.',
+    subtitle: 'A decision framework organized by what actually wears out: sensor type first, then polling, buttons, and features. A checklist, not a review.',
     sections: [
       {
         h: '1. Sensor type is the durability question',
@@ -419,6 +412,18 @@ const articleSchema = {
             <p class="learn-text">{f.a}</p>
           </div>
         ))}
+      </div>
+
+      <div class="learn-sources card-base">
+        <h2 class="section-title">Official sources &amp; specifications</h2>
+        <ul class="learn-source-list">
+          <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API" rel="noopener" target="_blank">MDN Web Docs — Gamepad API ↗</a></li>
+          <li><a href="https://www.w3.org/TR/gamepad/" rel="noopener" target="_blank">W3C Gamepad API specification ↗</a></li>
+          <li><a href="https://www.playstation.com/accessories/" rel="noopener" target="_blank">PlayStation official accessories ↗</a></li>
+          <li><a href="https://www.xbox.com/en-US/accessories/controllers" rel="noopener" target="_blank">Xbox official controllers ↗</a></li>
+          <li><a href="https://support.nintendo.com" rel="noopener" target="_blank">Nintendo Support ↗</a></li>
+          <li><a href="https://store.steampowered.com/steamdeck/" rel="noopener" target="_blank">Valve — Steam Deck ↗</a></li>
+        </ul>
       </div>
 
       <div class="learn-related card-base">

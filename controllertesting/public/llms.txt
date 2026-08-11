@@ -59,7 +59,7 @@ All reliability figures are explicitly labeled as **modeled reference baselines*
 - 0 downloads or accounts required
 - 100% client-side: no controller input data leaves your device
 - Supports: PS5 DualSense, PS4 DualShock, Xbox Series, Switch Pro, Joy-Con, Fight Stick, Flight HOTAS, MIDI keyboards, PC mice
-- 10 locales: en, es, de, fr, ja, pt, ko, ru, zh-tw, it
+- 1 locale at launch: English (en). Additional language support planned for future releases.
 
 ## Contact
 - Support: support@controllertesting.com

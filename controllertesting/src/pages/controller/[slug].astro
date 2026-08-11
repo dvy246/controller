@@ -130,12 +130,12 @@ const schemaData = {
 ---
 
 <BaseLayout
-  title={`${controller.name} Hardware Test & Diagnostic Tool`}
+  title={`${controller.name.replace(/ Controller$/, '')} Controller Profile | CT`}
   description={controller.description}
   canonical={canonicalUrl}
   breadcrumbs={breadcrumbs}
 
-  localized={true}>
+  localized={false}>
   <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
 
   <Header />

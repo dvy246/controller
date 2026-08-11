@@ -5,19 +5,57 @@ import HapticComposer from '@components/tools/controller/HapticComposer.astro';
 export function getStaticPaths() {
   const engines = ['unity', 'unreal'];
   const effects = ['explosion', 'heartbeat', 'recoil'];
-  
+
+  // Per-effect waveform character (game-feel design language, no invented numbers)
+  // and per-engine integration notes (public engine-API knowledge).
+  const effectNotes: Record<string, { character: string; feel: string; use: string; deep: string }> = {
+    'explosion': {
+      character: 'an impact: a sharp, strong-motor attack spike that decays quickly, with a low-frequency tail that carries the pressure wave.',
+      feel: 'the first 50–100ms sell the hit; the decaying tail keeps the effect readable without overpowering the game audio.',
+      use: 'pair it with the actual audio explosion cue — the tactile peak should land on the audio transient, not slightly before or after.',
+      deep: 'Explosions are the hardest effect to tune because they fight the game audio for attention. The classic failure is an over-long tail that muddies the next cue; the fix is to cut the decay before the rumble becomes a drone. On real controllers, the strong motor carries most of the pressure wave while the weak motor should stay quiet or pulse once at the moment of detonation — giving both motors a full-strength tail is the most common reason an explosion feels like a vibration rather than a hit.',
+    },
+    'heartbeat': {
+      character: 'a slow, periodic low-frequency pulse — a two-beat thump with a natural pause, built for tension rather than impact.',
+      feel: 'the gap between beats is what creates the anxiety; keep the envelope smooth so it feels biological, not mechanical.',
+      use: 'it works for low-health states, countdowns, or story beats where a steady rumble would be too aggressive.',
+      deep: 'A heartbeat is one of the few effects that should feel slightly organic, so designers deliberately avoid a perfectly regular interval — a few milliseconds of jitter between beats reads as living, while a metronome-perfect pulse reads as synthetic. The weak motor can carry the "lub" and the strong motor the "dub", which separates the two beats spatially. Keep the amplitude low: a heartbeat that rivals an explosion in intensity stops being tense and starts being annoying within seconds.',
+    },
+    'recoil': {
+      character: 'a short repeating kick — each shot triggers a brief strong-motor pulse, with the spacing following the weapon fire rate.',
+      feel: 'consistency matters: identical pulses per trigger pull make the weapon feel mechanical; add slight amplitude falloff on sustained fire.',
+      use: 'best on semi-auto or burst weapons, where every trigger press maps to exactly one visible kick.',
+      deep: 'Recoil is the effect where feel is decided by the cadence between pulses more than by the pulse shape itself. A full-auto weapon should modulate its kick amplitude slightly with each shot — a perfectly identical pulse train feels like a washing machine, not a weapon. The weak motor adds nothing on most guns and is better saved for a directional kick if the game supports it. Fire-rate changes during gameplay (like a rate-of-fire buff) should retime the pulses from the weapon state, not from a fixed interval you tuned in isolation.',
+    },
+  };
+  const engineNotes: Record<string, { api: string; curve: string; perf: string; deep: string }> = {
+    'unity': {
+      api: 'Unity exposes both motors through Gamepad.SetMotorSpeeds every frame; drive them from a coroutine that samples the waveform at fixed intervals instead of hardcoding one-shot values.',
+      curve: 'for a {effect} curve, step the coroutine along the envelope so the attack/decay shape survives gameplay pacing changes.',
+      perf: 'Unity\'s gamepad writes are per-frame and CPU-cheap, but be careful about driving SetMotorSpeeds from Update() when the game is paused — pausing freezes the envelope unless you sample against Time.unscaledTime, so clock the coroutine on unscaled time for effects that must survive a pause menu.',
+      deep: 'Unity\'s strength is cross-platform reach: the same SetMotorSpeeds call works on Windows, macOS, Android and consoles through the native gamepad backend, so your {effect} effect ships everywhere with one coroutine. The trade-off is that platform quirks live in the Input System layer — on Windows the legacy Input Manager and the new Input System package expose the same motor writes through different entry points, so pick one and keep the whole envelope in that system. Because the loop runs at frame rate, an explosion sampled at 30fps needs the same keyframes as one at 120fps; sample by unscaled time, never by frame count, or the feel drifts between quality presets.',
+    },
+    'unreal': {
+      api: 'Unreal plays pre-authored haptic assets via PlayHapticEffect; for procedural curves, update the motor speed each tick from your own curve sample rather than a fixed pattern.',
+      curve: 'author the {effect} envelope as a float curve asset so designers can tune the shape without touching code.',
+      perf: 'Unreal\'s PlayHapticEffect is asset-driven and efficient at runtime, but the asset pipeline is where designers actually tune feel — so expose the {effect} amplitude and duration as curve keys and let the gameplay team iterate on them in-editor rather than recompiling code each time the feel changes.',
+      deep: 'Unreal bakes feel into content assets rather than code: a {effect} envelope authored as a CurveFloat is a gameplay asset that designers own, which means amplitude, duration and attack can be tweaked in the editor and hot-reloaded while the game runs on a controller. PlayHapticEffect plays those assets on the active device automatically, and you layer them with the feedback system\'s triggers if you want the effect gated by gameplay events. The cost of the asset pipeline is iteration speed — a code-driven curve gives you a live loop, while an asset forces a re-import — so for a first draft of an explosion, prototype the envelope in Blueprint, then bake the winner into a curve asset for shipping.',
+    },
+  };
+
   const paths = [];
   for (const engine of engines) {
     for (const effect of effects) {
-      paths.push({ params: { gameEngine: engine, effect } });
+      paths.push({ params: { gameEngine: engine, effect }, props: { en: engineNotes[engine], ef: effectNotes[effect] } });
     }
   }
   return paths;
 }
 
 const { gameEngine, effect } = Astro.params;
+const { en, ef } = Astro.props;
 
-const title = `${effect.charAt(0).toUpperCase() + effect.slice(1)} Haptic Rumble Pattern for ${gameEngine.charAt(0).toUpperCase() + gameEngine.slice(1)} - ControllerTesting.com`;
+const title = `${(gameEngine.charAt(0).toUpperCase() + gameEngine.slice(1)).slice(0, 6)} ${(effect.charAt(0).toUpperCase() + effect.slice(1))} Haptic Composer | CT`;
 const description = `Design and test an interactive ${effect} haptic feedback rumble pattern. Export production-ready C# code for ${gameEngine.charAt(0).toUpperCase() + gameEngine.slice(1)} game developers directly to your clipboard.`;
 const toolName = `Haptic Composer: ${effect.charAt(0).toUpperCase() + effect.slice(1)} (${gameEngine.charAt(0).toUpperCase() + gameEngine.slice(1)})`;
 const breadcrumbs = [
@@ -64,15 +102,22 @@ const faqs = [
   </div>
 
   <div slot="content">
-    <h2>Designing Haptics for Immersion</h2>
+    <h2>Designing {effect} Haptics in {gameEngine.charAt(0).toUpperCase() + gameEngine.slice(1)}</h2>
     <p>
-      Haptic feedback bridges the gap between digital interaction and physical sensation. 
-      When creating an <strong>{effect}</strong> effect, it's critical to match the visual 
-      and auditory cues with tactile response. 
+      A well-designed <strong>{effect}</strong> rumble pattern reads as {ef.character} The reason this shape works is that {ef.feel}
     </p>
     <p>
-      In <strong>{gameEngine.charAt(0).toUpperCase() + gameEngine.slice(1)}</strong>, you can trigger these events based on physics collisions, 
-      animation states, or input actions. Use our composer to iterate rapidly without needing to rebuild your game.
+      When to use it: {ef.use}
+      Tuning notes: {ef.deep}
+    </p>
+    <h2>Engine integration</h2>
+    <p>
+      In {gameEngine.charAt(0).toUpperCase() + gameEngine.slice(1)}, {en.api} For the {effect} pattern specifically, {en.curve} {en.perf}
+    </p>
+    <p>{en.deep}</p>
+    <p>
+      Haptic feedback bridges the gap between digital interaction and physical sensation.
+      Matching the visual and auditory cues with the tactile response is what makes the effect feel intentional rather than decorative.
     </p>
   </div>
 </ToolLayout>

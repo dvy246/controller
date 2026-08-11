@@ -1,38 +1,21 @@
-import fs from 'fs';
-import path from 'path';
+// sync-locales.js — DISABLED for en-only launch (2026-08-10)
+//
+// Previously byte-copied every root page into 9 locale dirs (es, de, fr, ja,
+// pt, ko, ru, zh-tw, it). Those copies rendered English content under locale
+// URLs: 2,750 near-duplicate sitemap URLs that Google clusters as duplicates
+// (duplicate detection runs before hreflang evaluation) and a site-wide
+// helpful-content risk. Per Google's localized-content guidance, locale pages
+// must contain genuinely translated content — do not re-enable this until
+// real translations for each locale exist.
+//
+// Re-enable when: content templates use useTranslations() and every page
+// passed to a locale dir is fully translated (title, description, headings,
+// body, FAQ schema).
 
-const locales = ['es', 'de', 'fr', 'ja', 'pt', 'ko', 'ru', 'zh-tw', 'it'];
-const srcPagesDir = path.join(process.cwd(), 'src', 'pages');
-
-function copyDirectory(source, target) {
-  if (!fs.existsSync(target)) {
-    fs.mkdirSync(target, { recursive: true });
-  }
-
-  const files = fs.readdirSync(source);
-
-  for (const file of files) {
-    if (locales.includes(file)) {
-      continue; // Skip the locale directories themselves
-    }
-    
-    const sourcePath = path.join(source, file);
-    const targetPath = path.join(target, file);
-
-    if (fs.statSync(sourcePath).isDirectory()) {
-      copyDirectory(sourcePath, targetPath);
-    } else {
-      fs.copyFileSync(sourcePath, targetPath);
-    }
-  }
-}
-
-console.log('Syncing localized pages...');
+const locales = [];
 
 for (const locale of locales) {
-  const targetDir = path.join(srcPagesDir, locale);
-  copyDirectory(srcPagesDir, targetDir);
-  console.log(`Synced -> ${locale}`);
+  console.log(`[sync-locales] skipped ${locale} (locale generation disabled)`);
 }
 
-console.log('Localization sync complete.');
+console.log('[sync-locales] no-op: en-only launch; locale trees disabled.');

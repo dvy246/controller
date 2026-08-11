@@ -57,9 +57,11 @@ const webAppSchema = {
   '@context': 'https://schema.org',
   '@type': ['WebApplication', 'SoftwareApplication'],
   name: toolName,
+  description: description,
   url: Astro.url.href,
   applicationCategory: 'Utility',
   operatingSystem: 'Web Browser',
+  browserRequirements: 'Requires a browser with Gamepad API support (Chrome 53+, Firefox 48+, Edge 12+)',
   datePublished: '2025-01-01',
   dateModified: '2026-08-10',
   author: {
@@ -86,7 +88,8 @@ const webAppSchema = {
     'No download required',
     'No account required',
     '100% browser-based',
-    'Works with PS5, Xbox, Switch, PC controllers'
+    'Works with PS5, Xbox, Switch, PC controllers',
+    'Real-time hardware diagnostics via Gamepad API'
   ],
 };
 

@@ -71,7 +71,7 @@ const mouseTools = [
   { name: 'Mouse Button Matrix', url: '/test/mouse/buttons', desc: 'MB1, MB2, MB3, MB4, MB5 side buttons.' },
   { name: 'Scroll Wheel Tester', url: '/test/mouse/scroll', desc: 'Scroll direction & encoder jumping faults.' },
   { name: 'Double-Click Fault Test', url: '/test/mouse/double-click', desc: 'Switch bounce & chatter detector.' },
-  { name: 'Mouse Hub Index', url: '/test/mouse/', desc: 'Master dashboard for mouse diagnostics.' },
+  { name: 'Mouse Hub Index', url: '/test/mouse', desc: 'Master dashboard for mouse diagnostics.' },
 ];
 
 const specializedTools = [
@@ -119,11 +119,11 @@ function getToolIconSvg(url: string) {
 }
 ---
 <BaseLayout 
-  title="Testing Toolkit | 39 Diagnostic Tools for Controller & Mouse"
-  description="The world's most comprehensive hardware testing toolkit. Diagnose stick drift, polling rate, circularity, and latency. Free, private, and in-browser — no installs, no sign-ups."
+  title="Testing Toolkit | ControllerTesting"
+  description="The most comprehensive free hardware testing toolkit. Diagnose stick drift, polling rate, circularity, and latency in your browser — no installs."
   breadcrumbs={breadcrumbs}
 
-  localized={true}>
+  localized={false}>
   <script type="application/ld+json" set:html={JSON.stringify(toolsSchema)} />
 
   <Header />

@@ -134,13 +134,13 @@ const faqs = [
 ---
 
 <BaseLayout
-  title={`${comp.title} — Detailed Hardware Comparison (2026) | ControllerTesting.com`}
-  description={`Head-to-head hardware comparison between ${comp.cA.name} and ${comp.cB.name}. Latency, stick drift durability, polling rate, and health score analysis.`}
+  title={`${comp.title.replace(/\s\(.*?\)/, '')}${comp.title.length < 35 ? ' — Full Comparison' : ''} | CT`}
+  description={`Head-to-head ${comp.cA.name} vs ${comp.cB.name} comparison. Latency, stick drift durability, polling rate, and health scores.`}
   breadcrumbs={breadcrumbs}
   faqs={faqs}
   schema={productSchemas}
 
-  localized={true}>
+  localized={false}>
   <Header />
   <div class="compare-container">
     <div class="hero-card card-base">

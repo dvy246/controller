@@ -34,18 +34,21 @@ const refKey: HandKey = handKey === 'limited-grip-strength' ? 'medium' : handKey
 const content = {
   small: {
     title: 'Best Controllers for Small Hands',
-    intro: `Controllers that fit smaller hands well tend to be light, compact, and easy to wrap around. This guide is computed from the fit dataset at a reference span of ${HAND_REFERENCES.small.spanMm} mm (thumb to pinky, open hand). Models without measured body widths are excluded from the ranking until they are measured — we do not guess.`,
+    intro: `Controllers that fit smaller hands: light, compact, easy to wrap around. Ranked from our fit dataset at ${HAND_REFERENCES.small.spanMm} mm span — we never guess unmeasured models.`,
     focus: 'span',
+    editorial: `Smaller hands are about reach, not just width: the test that matters is whether your thumbs can reach both sticks without shifting your grip, and whether your index fingers comfortably reach the shoulder buttons without overextending. The models ranked here score best on body width at the ${HAND_REFERENCES.small.spanMm} mm reference span, which is why a compact pad usually beats a larger, feature-packed one for this group — features you cannot reach comfortably are features you will not use in a close match. Two practical checks before you buy: hold the pad and see if your thumb arcs to the far stick without your palm lifting, and make sure the grip shells do not force your fingers to claw rather than rest. A controller that feels "almost right" in a store shelf demo will feel wrong in hour three of a ranked session, because small-hand fatigue is a reach problem, not a weight problem.`,
   },
   large: {
     title: 'Best Controllers for Large Hands',
-    intro: `Large hands need controllers with deep grips and a body that doesn't demand an awkward palm stretch. This guide is computed from the fit dataset at a reference span of ${HAND_REFERENCES.large.spanMm} mm (thumb to pinky, open hand). Models without measured body widths are excluded from the ranking until they are measured — we do not guess.`,
+    intro: `Controllers for large hands: deep grips, no awkward palm stretch. Ranked from our fit dataset at ${HAND_REFERENCES.large.spanMm} mm span — we never guess unmeasured models.`,
     focus: 'span',
+    editorial: `Large hands are the classic "grip in the air" case: when a controller body is too narrow, your palms hover and your thumbs have to angle inward, which shows up as fatigue in long sessions rather than as an obvious sizing problem. The models ranked here give your palms a solid purchase and keep your thumbs over the sticks at the ${HAND_REFERENCES.large.spanMm} mm reference span, so the ranking favors deeper grips and fuller bodies over featherweight designs that read as cramped. Before you commit, check that your ring and pinky fingers have somewhere to wrap — a pad with short handle depth will leave those fingers dangling and drag your aim over time. And remember the palm test: with a comfortable pad, the base of your palm rests on the shell and your thumb sits over the stick arc without you thinking about it; with the wrong size, your brain is constantly micro-adjusting the grip while you play.`,
   },
   'limited-grip-strength': {
     title: 'Best Controllers for Limited Grip Strength',
-    intro: `When grip strength or hand stamina is limited, weight matters more than width. This guide ranks measured models by published weight, favoring lightweight options (≤ 250 g) for long sessions. Width verdicts still apply at a reference span of ${HAND_REFERENCES.medium.spanMm} mm — see the fit notes per model.`,
+    intro: `Weight matters more than width when grip strength is limited. Lightweight picks (≤ 250 g) ranked from our fit dataset — we never guess unmeasured models.`,
     focus: 'weight',
+    editorial: `With limited grip strength, holding a controller for a long session is its own workout, so weight is the primary filter here and width is a secondary check. A heavier pad puts constant static load on the same small hand muscles you need for inputs, which is why the ranking sorts strictly by published weight and only breaks ties by fit verdict. Keep your elbows supported where possible — the controller that feels light in a store feels twice as heavy after an hour of ranked play. Also look at how the weight sits: a pad that is heavy in the handles pulls your wrists down, while a pad that is heavy toward the face loads the fingers that do the fine work. If hand stamina is your constraint, favor a lightweight shell with the buttons clustered close together so your inputs happen in a small, relaxed zone rather than across long travel.`,
   },
 }[handKey];
 
@@ -68,7 +71,7 @@ const breadcrumbs = [
   { name: content.title },
 ];
 
-const canonicalUrl = `https://controllertesting.com/best-controller-for/${handKey}`;
+const canonicalUrl = `https://controllertesting.com/best-controller-for/${urlKey}`;
 
 const faqs = [
   {
@@ -100,13 +103,13 @@ const tierLabel: Record<string, string> = {
 ---
 
 <BaseLayout
-  title={`${content.title} (Computed from Measured Dimensions) | ControllerTesting.com`}
+  title={`Best Controller for ${content.title.replace(/^Best Controllers for /, '')} | CT`}
   description={content.intro}
   canonical={canonicalUrl}
   breadcrumbs={breadcrumbs}
   schema={faqSchema}
 
-  localized={true}>
+  localized={false}>
   <Header />
 
   <main id="main-content" class="bcf-page">
@@ -122,6 +125,10 @@ const tierLabel: Record<string, string> = {
           <span class="bcf-meta-chip mono">dataset snapshot {fitData.updatedAt}</span>
         </div>
       </header>
+
+      <section class="bcf-editorial" aria-label="Guide detail">
+        <p class="bcf-intro">{content.editorial}</p>
+      </section>
 
       <!-- Ranked list -->
       <section class="bcf-list" aria-label="Ranked controller picks">
@@ -199,6 +206,7 @@ const tierLabel: Record<string, string> = {
   }
   .bcf-hero { max-width: 80ch; }
   .bcf-intro { font-size: 1.0625rem; color: var(--color-text-secondary); line-height: 1.7; }
+  .bcf-editorial { margin-top: 0.75rem; }
   .bcf-meta { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1.25rem; }
   .bcf-meta-chip {
     font-size: 0.6875rem; color: var(--color-text-tertiary); background: var(--color-surface-2);

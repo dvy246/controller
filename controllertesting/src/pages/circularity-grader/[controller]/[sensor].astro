@@ -16,9 +16,39 @@ export function getStaticPaths() {
     { id: 'generic', name: 'Generic PC Controller' }
   ];
 
+  // Per-controller stick-module context; qualitative public knowledge, no invented figures.
+  const controllerNotes: Record<string, string> = {
+    'ps5': 'The DualSense ships with conventionally-sourced stick modules, but its firmware applies a fairly aggressive circular deadzone correction that hides minor rim error in normal gameplay. That means an A- or B+ grade from the raw data is often invisible in game — only significant asymmetry surfaces as diagonal slowdown. If your DualSense grades poorly, re-test the other stick before deciding: a one-sided result points to a single defective module rather than a systemic design problem.',
+    'xbox': 'Xbox Series controllers are the reference for the classic "squircle" pattern: the stick housing is nearly square and the thumbstick rubs its gate at the diagonals, which produces the well-known slight circularity pinch on every unit. Because the gate geometry causes it, the pattern is expected on both sticks and both axes — a low grade here is a replacement signal only when the pinch is strongly asymmetric or accompanied by visible stick wobble.',
+    'switch-pro': 'The Switch Pro Controller\'s stick sits in a snug, closed gate, so housing friction adds noise near the rim and can make a healthy stick look slightly less circular than it is. Before concluding the module itself is asymmetric, clean the gate with a cotton swab and isopropyl alcohol and re-run the test — debris under the stick collar is a frequent cause of rim wobble on Pro pads.',
+    'ps4': 'DualShock 4 sticks are among the most frequently reported for diagonal asymmetry in community teardowns — a low grade is common and generally means module wear, not your technique. Because the DualShock 4 is typically several years older than current-gen pads, the wear pattern is usually clearly one-sided: the axis you use for running (usually the left stick) grades noticeably worse than the aim stick.',
+    'generic': 'With an unknown module, this grade combines sensor and gate behavior and we cannot separate the two — treat it as a pass/fail signal for the whole stick assembly. If you see a low grade here, the two diagnostic questions are whether the pinch is symmetric (gate friction) or one-sided (worn sensor track), and whether the ring shrinks only at one angle (a single dead sector) or everywhere (general wear).',
+  };
+  const controllerEditorial: Record<string, string> = {
+  'ps5': "Beyond the module itself, the DualSense's haptic actuators and adaptive-trigger motors draw power from the same bus as the sticks, and a pad running its rumble during a measurement can shift the sampled position slightly — so measure with vibration disabled and both triggers untouched. The controller also re-centers its sticks at power-on, which means the first reading after a fresh wake is the most accurate baseline; if you grade immediately after heavy use, wait for the pad to settle. The DualSense is the newest pad in the set, so a genuinely asymmetric ring here is more likely to be a manufacturing defect in one module than years of accumulated wear, and testing both sticks before any decision will usually isolate the faulty side.",
+  'xbox': 'Xbox controllers are produced in large volume across several factory batches, and community teardowns note that stick module quality varies between production runs, so a low circularity grade is worth confirming with a second sample from a different unit before you treat it as a design issue. The squircle gate pinch is present on every unit, but a healthy one still grades within the A or B band — a grade that drops into the C range with an even, symmetric ring is more consistent with a firm gate than a failing sensor. Because the gate itself shapes the reading, the same Xbox pad can grade differently after the stick collar wears in, so re-run the test at the same stick angle each time you compare runs.',
+  'switch-pro': "The Pro Controller's compact stick module is shared with the Nintendo Switch Joy-Con platform lineage, and that family is known for early stick degradation reports, so a poor grade on a Pro pad deserves more weight than the same grade on a newer Hall-effect unit. The snug gate also means the stick collar friction shows up directly in the rim data, which can obscure a genuinely healthy sensor beneath housing noise. Clean the collar first, grade again, and only then compare the result against the model's typical behavior — a clean ring after a debris-free pass is a strong signal the module itself is fine.",
+  'ps4': "The DualShock 4's age is the dominant factor in its circularity, and because these pads have often passed through multiple owners, a low grade reflects cumulative play hours more than any single incident. The left stick is the usual casualty — it carries forward input in nearly every game — while the right stick often grades notably cleaner, which is exactly the asymmetric signature this grader is built to expose. If the DS4's left stick shows a one-sided flat, replacement modules are inexpensive and well documented, making the fix decision far simpler than on a newer pad.",
+  'generic': "Without a known manufacturer baseline, the generic pad's grade should be read against absolute geometry rather than a design expectation: a ring that stays a consistent circle at every speed is healthy regardless of brand, while a ring that wobbles between runs is more likely a loose collar than a sensor fault. Because generic pads vary wildly in module quality, repeat the test a few times at different stick speeds and average the outcome before drawing a conclusion. The most valuable diagnostic on an unknown pad is comparing the two sticks against each other — a large gap between them points to one worn module, while an even result points to the pad's general construction.",  };
+  const controllerDeep = {
+    'ps5': 'For the DualSense, also note that the touchpad and haptics draw no stick power and cannot influence the grade; if the grade changes dramatically between runs, check that the stick is returning fully to the gate and that the pad is not in a low-power state where adaptive-trigger motors are drawing the USB negotiation priority. The DualSense\'s aggressive internal circularity correction makes it the most likely of the five to show a flattering grade, so compare the raw data behind the letter — a B+ with a clean, symmetric ring is a genuinely healthy pad.',
+    'xbox': 'For the Xbox Series pad, the squircle pinch is baked into the gate geometry, so treat an even A/B+ as expected and reserve judgment for one-sided results. A common real-world pattern on well-played Xbox units is a wear notch at the 4 and 8 o\'clock positions from years of left-stick forward input — that shows up as a local ring dip rather than a uniform shrink, and it is a clear replacement signal. Also check stick wobble before grading: a loose collar creates a blurred, wide ring that reads as poor circularity even with healthy sensors.',
+    'switch-pro': 'On the Switch Pro, the snug gate means the reading is a mix of sensor and housing behavior, so a mediocre grade should trigger a cleaning pass before any conclusion. If the ring improves after cleaning, the module is fine and the friction was housing debris. If a Pro pad still grades poorly after cleaning, the usual cause is a worn stick collar that lets the stick tilt off-axis — that produces a consistent oval on one axis, which is mechanically distinct from the squircle pattern seen on Xbox pads.',
+    'ps4': 'For the DualShock 4, age is the dominant variable: these pads are the oldest in the set, and their potentiometer sticks have typically seen the most total play hours. A one-sided grade is the classic signature — the run stick reads worn while the aim stick stays round. Because DS4 modules are cheap and widely documented, a failing grade is one of the most cost-effective replacement decisions on the list; a replacement module usually restores a clean A-grade ring immediately.',
+    'generic': 'With a generic pad there is no manufacturer baseline to compare against, so the grade should be read as absolute hardware behavior rather than deviation from a known design. The most useful diagnostic is repeating the test at different stick angles and speeds: if the ring stays consistently oval at every speed, that is gate or sensor bias; if the ring only collapses during fast movement, that is a sampling or wobble artifact and not true circularity error.',
+  };
+
   const sensors = [
-    { id: 'hall-effect', name: 'Hall Effect', tech: 'magnetic sensors (K-Silver, Gulikit)', bias: 'extremely precise and symmetric' },
-    { id: 'potentiometer', name: 'Potentiometer', tech: 'ALPS carbon tracks', bias: 'prone to slight asymmetry and physical wear' }
+    {
+      id: 'hall-effect', name: 'Hall Effect', tech: 'magnetic sensors (K-Silver, Gulikit)', bias: 'extremely precise and symmetric',
+      body: 'Hall effect sticks measure stick position with a magnetic field instead of a physical wiper dragging across a carbon track. Because nothing rubs, the module keeps its geometric precision for far longer and shows almost no rim-to-rim variance when new. The practical result on a circularity graph is a tight, evenly distributed ring: your diagonals reach maximum extension together, with little wasted input near the corners. The trade-off is that calibration is digital, so a poor grade on a Hall effect module usually points to a firmware zero-point offset or a loose joystick gate rather than worn carbon.',
+      editorial: 'Hall effect modules stay round because the magnetic Hall cell reads position without contact, which means the failure modes are digital rather than mechanical. If a Hall stick grades poorly, look for a zero-point offset in the controller firmware or a magnet that has shifted in its holder — both produce a clean, uniform error rather than the patchy ring of worn carbon. Since there is no track to wear, a Hall module that grades badly on day one is almost always a calibration or assembly issue, and re-running the test after a firmware reset frequently recovers a full A-grade ring.',
+    },
+    {
+      id: 'potentiometer', name: 'Potentiometer', tech: 'ALPS carbon tracks', bias: 'prone to slight asymmetry and physical wear',
+      body: 'Potentiometer (pot) sticks read position from a wiper sliding over a carbon track, and that friction is exactly where circularity degrades over time. A fresh pot module can trace a near-perfect circle, but as the track wears, the wiper loses contact at certain angles and the ring starts to pinch into a squircle — usually first visible near the 45-degree diagonals. Wear is rarely symmetric between the X and Y axes, so a lopsided grade on a pot module is the classic signal that the stick has been played past its best range and is a stronger candidate for replacement than for recalibration.',
+      editorial: 'Pot modules degrade along a predictable path: the carbon track wears where the stick spends the most time, so the ring pinches first at your dominant input angles, and the wiper\'s lost contact produces small flats on the circle before full drift appears. Because the wear is physical, no software setting can restore the geometry — recalibration only recenters the zero point, it cannot grow the worn track back. A lopsided grade between the X and Y axes on a pot module is therefore the most reliable hardware-wear signal this tester can show, and the replacement decision is generally clear once the ring shows a visible flat.',
+    },
   ];
 
   const paths = [];
@@ -31,7 +61,12 @@ export function getStaticPaths() {
           controllerName: c.name,
           sensorName: s.name,
           sensorTech: s.tech,
-          sensorBias: s.bias
+          sensorBias: s.bias,
+          sensorBody: s.body,
+          sensorEditorial: s.editorial,
+          controllerNote: controllerNotes[c.id],
+          controllerDeep: controllerDeep[c.id as keyof typeof controllerDeep],
+          controllerEditorial: controllerEditorial[c.id as keyof typeof controllerEditorial]
         }
       });
     }
@@ -41,10 +76,10 @@ export function getStaticPaths() {
 }
 
 const { controller, sensor } = Astro.params;
-const { controllerName, sensorName, sensorTech, sensorBias } = Astro.props;
+const { controllerName, sensorName, sensorTech, sensorBias, sensorBody, sensorEditorial, controllerNote, controllerDeep, controllerEditorial } = Astro.props;
 
-const title = `${controllerName} ${sensorName} Circularity Grader | ControllerTesting.com`;
-const description = `Grade the stick circularity and symmetry of your ${controllerName} with ${sensorName} sensors. Detect physical wear, manufacturing defects, and outer rim precision.`;
+const title = `${controllerName} ${sensorName} Circularity Grader | CT`;
+const description = `Grade the stick circularity and symmetry of your ${controllerName} (${sensorName}). Detect physical wear, defects, and outer rim precision.`;
 const toolName = `${controllerName} Circularity Grader (${sensorName})`;
 const category = 'God-Mode Diagnostics';
 
@@ -109,6 +144,21 @@ const schema = {
       </p>
       <p class="text-secondary mt-2">
         Since you're using a <strong>{controllerName}</strong> with a <strong>{sensorName}</strong> module, you can expect the underlying tech to be {sensorBias}.
+      </p>
+      <p class="text-secondary mt-2">
+        {controllerNote}
+      </p>
+      <p class="text-secondary mt-2">
+        {sensorBody}
+      </p>
+      <p class="text-secondary mt-2">
+        {sensorEditorial}
+      </p>
+      <p class="text-secondary mt-2">
+        {controllerDeep}
+      </p>
+      <p class="text-secondary mt-2">
+        {controllerEditorial}
       </p>
     </div>
   </Fragment>

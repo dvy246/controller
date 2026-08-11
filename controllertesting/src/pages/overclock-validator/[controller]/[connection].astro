@@ -4,34 +4,62 @@ import OverclockValidator from '@components/tools/controller/OverclockValidator.
 
 export function getStaticPaths() {
   const controllers = [
-    { slug: 'ps5', name: 'DualSense' },
-    { slug: 'ps4', name: 'DualShock 4' }
+    {
+      slug: 'ps5', name: 'DualSense',
+      note: 'The DualSense reports on a 1000 Hz-capable interface over USB in ideal conditions, but your browser\'s gamepad polling and OS scheduling decide what you actually see. A clean wired graph near 1000 Hz with low jitter is the healthy signature.',
+      deep: 'The DualSense runs the community hidusbf patching path well, and its native report rate is genuinely higher than older pads — so a 1000 Hz reading over USB is realistic, not a fantasy. The nuance is that PlayStation\'s own firmware updates have changed HID behavior several times: a pad updated to a recent firmware can present slightly different polling characteristics than the same pad on an older one. If your graph caps well below 1000 Hz after patching, re-check the USB descriptor with the pad freshly rebooted and on a direct port — hubs and extension cables are the usual culprits that quietly reset the negotiated interval.',
+      toolchain: 'Patching a DualSense is newer territory than the DS4 because the pad ships with a modern report rate already; the value of the community tooling is mostly in stabilizing the negotiated interval rather than unlocking a hidden ceiling. The DualSense also needs the adaptive-trigger and touchpad features left idle during measurement — if the haptics motor is mid-rumble when you sample, the reported frame timing can shift because the pad shares its USB bandwidth between the motors and the input reports. Measure with haptics disabled, keep the pad on a direct USB-C port, and reboot the pad between the patch and the verification run so the descriptor reloads cleanly.',
+    },
+    {
+      slug: 'ps4', name: 'DualShock 4',
+      note: 'The DualShock 4 is the classic overclock target because its stock wired report rate sits well below the pad\'s own capability. A flat, consistent interval in this validator is a stronger signal than the headline Hz number alone.',
+      deep: 'The DualShock 4 is the most documented overclock target in the space because its stock 1000 Hz-capable hardware ships configured well below that ceiling, and the hidusbf descriptor patch has been stable on it for years. Over USB you should see a flat interval very close to 1000 Hz after patching; Bluetooth is a different story — the DS4\'s wireless report rate is far lower and no descriptor hack changes that, because the connection interval is negotiated by the host stack. Expect the classic result: near-flawless wired pacing, and a clearly separate, noisier wireless band.',
+      toolchain: 'The DualShock 4 is the reference target for the hidusbf ecosystem because the descriptor patch has been battle-tested across Windows versions for years, and the pad accepts it without firmware conflicts. One catch specific to the DS4: the touchpad keeps sending its own reports, and some drivers interleave those into the same pipe, which can inject periodic jitter spikes into an otherwise clean wired graph. If you see a repeating spike pattern that tracks roughly once per second, that is the touchpad\'s report stream, not a failed patch — either ignore those frames when judging the interval or disconnect the pad and reconnect it with the touchpad left untouched during the sample.',
+    }
   ];
   
   const connections = [
     { slug: 'usb-c', name: 'Wired (USB-C)' },
     { slug: 'bluetooth', name: 'Bluetooth' }
   ];
-  
-  return controllers.flatMap(controller => 
+
+  // Per-connection transport characteristics; public protocol knowledge, no fabricated numbers.
+  const connectionNotes = {
+    'usb-c': {
+      ceiling: 'Wired USB is the only transport that can reach a controller\'s native report rate — the HID interrupt pipe polls on a schedule the firmware controls, with no wireless cap imposed on top.',
+      jitter: 'Wired jitter comes from the OS input stack and polling cadence; if the graph shows a clean, flat report interval, the pipeline is healthy end to end.',
+      deep: 'A clean wired reading is the baseline every other measurement should be compared against. If the wired graph is noisy, the problem is almost never the pad — check for a hub, an extension cable, or a USB port sharing bandwidth with other high-throughput devices. The browser\'s gamepad loop also runs on its own cadence, so a 1ms physical report can arrive visibly quantized; treat the browser reading as the conservative floor. A flat interval with an occasional single-frame spike is normal scheduling, while a wandering band suggests OS-level input processing interference.',
+    },
+    'bluetooth': {
+      ceiling: 'Bluetooth transport is subject to the HID-over-GATT connection interval, so the browser will observe a far lower report ceiling than wired no matter the firmware — this validator still detects overclocking claims that exceed what Bluetooth can physically deliver.',
+      jitter: 'Wireless report timing varies with radio interference and connection interval; expect a wider, noisier band on the graph than the same pad over USB.',
+      deep: 'On Bluetooth, the connection interval is negotiated between the pad and the host adapter, and it is the single biggest factor in the Hz you will measure. A controller connected through a built-in laptop radio at a crowded connection interval can report half the rate of the same pad on a dedicated adapter with a shorter interval. So a low Bluetooth number is not proof an overclock failed — it may simply be the radio negotiation. Match the adapter, move the dongle closer, and clear other Bluetooth devices from the connection before judging the result.',
+    },
+  };
+
+  return controllers.flatMap(controller =>
     connections.map(connection => ({
-      params: { 
+      params: {
         controller: controller.slug,
         connection: connection.slug
       },
-      props: { 
+      props: {
         controllerName: controller.name,
-        connectionName: connection.name
+        controllerNote: controller.note,
+        controllerDeep: controller.deep,
+        controllerToolchain: controller.toolchain,
+        connectionName: connection.name,
+        connectionNote: connectionNotes[connection.slug as keyof typeof connectionNotes]
       }
     }))
   );
 }
 
 const { controller, connection } = Astro.params;
-const { controllerName, connectionName } = Astro.props;
+const { controllerName, controllerNote, controllerDeep, controllerToolchain, connectionName, connectionNote } = Astro.props;
 
-const title = `${controllerName} ${connectionName} Overclock Validator | ControllerTesting.com`;
-const description = `Test and validate the browser-observed update timing (Hz) and input jitter of your ${controllerName} via ${connectionName}. Verify your hidusbf overclock settings in real-time.`;
+const title = `${controllerName} ${connectionName} Hz Validator | CT`;
+const description = `Validate browser-observed Hz and input jitter of your ${controllerName} via ${connectionName}. Real-time overclock verification.`;
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
@@ -108,6 +136,24 @@ const faqSchema = {
     </div>
 
     <div class="space-y-8">
+      <div>
+        <h3 class="text-lg font-bold text-[var(--color-text-primary)] mt-6 mb-2">What to expect over {connectionName}</h3>
+        <p class="text-[var(--color-text-secondary)] leading-relaxed">
+          {connectionNote.ceiling} {connectionNote.jitter}
+        </p>
+        <p class="text-[var(--color-text-secondary)] leading-relaxed mt-3">
+          {controllerNote}
+        </p>
+        <p class="text-[var(--color-text-secondary)] leading-relaxed mt-3">
+          {controllerDeep}
+        </p>
+        <p class="text-[var(--color-text-secondary)] leading-relaxed mt-3">
+          {controllerToolchain}
+        </p>
+        <p class="text-[var(--color-text-secondary)] leading-relaxed mt-3">
+          {connectionNote.deep}
+        </p>
+      </div>
       <div>
         <h3 class="text-lg font-bold text-[var(--color-text-primary)] mt-6 mb-2">Is 1000Hz (1ms) always better?</h3>
         <p class="text-[var(--color-text-secondary)] leading-relaxed">

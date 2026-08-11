@@ -369,11 +369,33 @@
     initThreeJS();
   };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('astro:page-load', startHero3D);
-  } else {
-    startHero3D();
-  }
+  // Lazy init: defer the 3D engine + GLB fetch until the hero is visible AND the
+  // browser is idle, so the 6.8MB model never competes with LCP. Idempotent via
+  // the `threeInitialized` data flag on `#hero-container`.
+  const heroReady = () => {
+    if (document.getElementById('hero-container')?.dataset.threeInitialized === 'true') return;
+    const start = () => startHero3D();
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(start, { timeout: 2500 });
+    } else {
+      setTimeout(start, 0);
+    }
+  };
 
-  document.addEventListener('astro:page-load', startHero3D);
+  if ('IntersectionObserver' in window) {
+    const heroEl = document.getElementById('hero-container');
+    if (heroEl) {
+      const io = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          io.disconnect();
+          heroReady();
+        }
+      }, { rootMargin: '300px 0px 300px 0px' });
+      io.observe(heroEl);
+    } else {
+      heroReady();
+    }
+  } else {
+    heroReady();
+  }
 </script>

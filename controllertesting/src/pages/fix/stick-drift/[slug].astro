@@ -9,12 +9,14 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
 import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import AuthorByline from '@components/global/AuthorByline.astro';
 
 export function getStaticPaths() {
   const guides = [
     {
       slug: 'ps5-dualsense',
       name: 'PS5 DualSense',
+      source: { name: 'PlayStation Official', url: 'https://www.playstation.com/accessories/' },
       platform: 'PlayStation 5 / PC',
       sensor: 'Potentiometer (ALPS modules)',
       intro: '90% of DualSense stick drift is carbon dust inside the green ALPS potentiometer housings. Cleaning fixes most cases; Hall-effect module swaps fix the rest permanently.',
@@ -32,6 +34,7 @@ export function getStaticPaths() {
     {
       slug: 'xbox-wireless',
       name: 'Xbox Wireless Controller (Series X/S)',
+      source: { name: 'Xbox Official', url: 'https://www.xbox.com/en-US/accessories/controllers' },
       platform: 'Xbox Series X/S / Xbox One / PC',
       sensor: 'Potentiometer',
       intro: 'Xbox Series controllers drift when the potentiometer wiper track accumulates carbon dust or the spring tension wears. Cleaning and tension checks resolve most cases.',
@@ -49,6 +52,7 @@ export function getStaticPaths() {
     {
       slug: 'switch-pro',
       name: 'Nintendo Switch Pro Controller',
+      source: { name: 'Nintendo Support', url: 'https://support.nintendo.com' },
       platform: 'Nintendo Switch / PC',
       sensor: 'Potentiometer',
       intro: 'The Switch Pro Controller is one of the most drift-resistant first-party controllers, but its sticks still use potentiometers and can drift after heavy use or debris ingress.',
@@ -66,6 +70,7 @@ export function getStaticPaths() {
     {
       slug: 'joy-con',
       name: 'Nintendo Switch Joy-Con (L / R)',
+      source: { name: 'Nintendo Support', url: 'https://support.nintendo.com' },
       platform: 'Nintendo Switch',
       sensor: 'Potentiometer (ALPS)',
       intro: 'Joy-Con drift is the most documented controller failure of the generation. The tiny ALPS modules wear fast; replacement modules are cheap and drop-in.',
@@ -83,6 +88,7 @@ export function getStaticPaths() {
     {
       slug: 'ps4-dualshock-4',
       name: 'PS4 DualShock 4',
+      source: { name: 'PlayStation Official', url: 'https://www.playstation.com/accessories/' },
       platform: 'PlayStation 4 / PC',
       sensor: 'Potentiometer (ALPS)',
       intro: 'DualShock 4 drift follows the same pattern as DualSense: carbon dust in the ALPS potentiometer wipers. Cleaning and module swaps both work.',
@@ -100,6 +106,7 @@ export function getStaticPaths() {
     {
       slug: 'dualsense-edge',
       name: 'PS5 DualSense Edge',
+      source: { name: 'PlayStation Official', url: 'https://www.playstation.com/accessories/' },
       platform: 'PlayStation 5 / PC',
       sensor: 'Replaceable potentiometer stick modules',
       intro: 'The Edge is the easiest controller to repair: Sony designed it with user-swappable stick modules. Drift = swap the module, no tools, no soldering.',
@@ -116,6 +123,7 @@ export function getStaticPaths() {
     {
       slug: 'xbox-elite-2',
       name: 'Xbox Elite Series 2',
+      source: { name: 'Xbox Official', url: 'https://www.xbox.com/en-US/accessories/controllers' },
       platform: 'Xbox Series X/S / Xbox One / PC',
       sensor: 'Potentiometer (adjustable tension)',
       intro: 'Elite 2 sticks are still potentiometers; tension adjustment masks early drift but wear is the same as standard Xbox sticks. Module replacement needs soldering or a service kit.',
@@ -133,6 +141,7 @@ export function getStaticPaths() {
     {
       slug: '8bitdo-ultimate',
       name: '8BitDo Ultimate (Hall Effect)',
+      source: { name: '8BitDo Support', url: 'https://support.8bitdo.com' },
       platform: 'PC / Switch / mobile',
       sensor: 'Hall effect (contactless magnetic)',
       intro: 'Hall-effect sticks do not wear like potentiometers — drift here is usually a factory centering offset or magnetic center bounce, both fixable in software without opening anything.',
@@ -150,6 +159,7 @@ export function getStaticPaths() {
     {
       slug: 'scuf-instinct-pro',
       name: 'SCUF Instinct Pro',
+      source: { name: 'SCUF Official', url: 'https://scuf.co' },
       platform: 'Xbox Series X/S / PC',
       sensor: 'Potentiometer',
       intro: 'The Instinct Pro uses the same potentiometer stick tech as standard Xbox controllers inside a pro shell. Cleaning works; stick replacement needs soldering or SCUF repair service.',
@@ -167,6 +177,7 @@ export function getStaticPaths() {
     {
       slug: 'steam-deck',
       name: 'Steam Deck (LCD / OLED)',
+      source: { name: 'Valve / Steam Deck', url: 'https://store.steampowered.com/steamdeck/' },
       platform: 'SteamOS / PC',
       sensor: 'LCD: potentiometer · OLED: Hall effect',
       intro: 'Steam Deck LCD models use potentiometer sticks prone to the same carbon-dust drift; OLED models use Hall-effect sticks that do not wear. Identify your model before repairing.',
@@ -184,6 +195,7 @@ export function getStaticPaths() {
     {
       slug: 'gamecube',
       name: 'Nintendo GameCube Controller',
+      source: { name: 'Nintendo Support', url: 'https://support.nintendo.com' },
       platform: 'GameCube / Switch (via adapter) / PC',
       sensor: 'Potentiometer',
       intro: 'GameCube sticks are famously durable, but 20-year-old controllers can develop center wobble or drift from a worn wiper track. Cleaning and drop-in modules are the fixes.',
@@ -200,6 +212,7 @@ export function getStaticPaths() {
     {
       slug: 'logitech-f310',
       name: 'Logitech F310 / F710',
+      source: { name: 'Logitech G', url: 'https://www.logitechg.com' },
       platform: 'PC',
       sensor: 'Potentiometer',
       intro: 'Budget Logitech pads drift like any potentiometer stick. Given the F310 costs about as much as a module kit, replacement often beats repair.',
@@ -249,12 +262,12 @@ const reliabilitySnippet = guide.reliabilitySlug
 ---
 
 <BaseLayout
-  title={`How to Fix ${guide.name} Stick Drift — Step-by-Step Repair Guide | ControllerTesting.com`}
-  description={`Step-by-step guide to fix ${guide.name} controller stick drift: ${guide.sensor} diagnosis, cleaning, deadzone tuning, and replacement options.`}
+  title={`Fix ${guide.name.replace(/ \(Series X\/S\)/, '').replace(' Controller', '')} Stick Drift | CT`}
+  description={`Step-by-step guide to fix ${guide.name} stick drift: ${guide.sensor.replace(/ \(.*?\)/g, '').split(' · ')[0]} diagnosis, cleaning, deadzone tuning, replacement.`}
   schema={howToSchema}
   breadcrumbs={breadcrumbs}
 
-  localized={true}>
+  localized={false}>
   <Header />
 
   <main id="main-content" class="guide-page">
@@ -267,6 +280,11 @@ const reliabilitySnippet = guide.reliabilitySlug
         <p class="guide-subtitle">
           {guide.intro}
         </p>
+        <AuthorByline
+          datePublished="2026-08-02"
+          dateModified="2026-08-10"
+          readingTime="8 min read"
+        />
       </header>
 
       <div class="guide-body card-base">
@@ -283,6 +301,14 @@ const reliabilitySnippet = guide.reliabilitySlug
           <p class="guide-text"><strong>{guide.moduleReplacement}</strong></p>
           <p class="guide-text"><strong>Safety &amp; warranty:</strong> {guide.warrantyNote}</p>
           <p class="guide-text">{reliabilitySnippet}</p>
+        </div>
+
+        <div class="guide-step">
+          <h2 class="section-title">Official Sources</h2>
+          <p class="guide-text">
+            For warranty claims, parts, and manufacturer procedures, always consult the official channel:
+            <a href={guide.source.url} rel="noopener" target="_blank" class="guide-source-link">{guide.source.name} ↗</a>
+          </p>
         </div>
       </div>
 
@@ -324,6 +350,7 @@ const reliabilitySnippet = guide.reliabilitySlug
   .guide-body { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 1.5rem; }
   .guide-step { display: flex; flex-direction: column; gap: 0.5rem; }
   .guide-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .guide-source-link { color: var(--color-accent); font-weight: 600; text-decoration: underline; }
   .guide-cta { padding: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
   .guide-cta-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; }
   @media (max-width: 640px) { .guide-cta { flex-direction: column; align-items: flex-start; } }

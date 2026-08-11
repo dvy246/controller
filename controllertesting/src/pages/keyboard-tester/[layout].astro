@@ -7,17 +7,39 @@ import MechKeyboard from '@components/features/MechKeyboard.astro';
 import PremiumFaqAccordion from '@components/seo/PremiumFaqAccordion.astro';
 
 export function getStaticPaths() {
-  const layouts = ['60-percent', 'tkl', 'full'];
+  // Per-layout physical matrix facts (ANSI key counts are standard public data).
+  const layoutInfo: Record<string, { keys: string; missing: string; note: string; deep: string }> = {
+    '60-percent': {
+      keys: '61 keys (ANSI)',
+      missing: 'no function row, no dedicated navigation cluster, no numpad',
+      note: 'Everything you lose lives on layers (Fn+number), which means the keys that remain are heavily used — chatter on a 60% is more likely to break a muscle-memory combo than on a full board.',
+      deep: 'The 60% layout compresses the entire keyboard onto layers, which changes what a diagnostic should look for. Because arrow keys, F-keys and the nav cluster are all reached through the Fn layer, a failing Fn key is far more disruptive than on a full board — it hides half the layout behind a single switch. The right side of a 60% is also where the least-used keys (Fn, menu) live, so worn-out boards often show chatter on the left-hand home row rather than the rarely-touched mods. When testing a 60%, press the layer keys themselves (Fn and the layer-shift keys) repeatedly, not just the alpha block, since layer shifts are what make or break this layout in daily use.',
+    },
+    'tkl': {
+      keys: '87 keys (ANSI)',
+      missing: 'no numpad, but the full function row and navigation cluster are present',
+      note: 'TKL keeps every key a competitive FPS player presses in reach of the left hand; because the board is smaller, keyboard-level scanning quirks are easier to isolate from room for a mouse.',
+      deep: 'The TKL layout is the competitive FPS standard because the missing numpad pulls the mouse closer and shortens the left-to-right arm travel, but that same density puts the stress on the WASD block and space bar. Those keys take the brunt of thousands of presses per session, so they are the first to show switch chatter on a well-used TKL. The tenkeyless form also keeps the F-row and nav cluster intact, which means the diagnostic should specifically exercise the F-keys (used for weapon binds and push-to-talk) and the cluster (used for spectator camera) as those are the keys a full-size user on the same board would never hammer.',
+    },
+    'full': {
+      keys: '104 keys (ANSI, 105 ISO)',
+      missing: 'nothing — full function row, navigation cluster, and numpad',
+      note: 'Full-size boards are the easiest to map for a clean NKRO test, and numpad matrix issues show up here first since the numpad shares scan lines with the main block on cheaper boards.',
+      deep: 'The full-size layout is the least likely to hide a failing switch because every key has a physical, direct position — but that is exactly why it is the best board to isolate matrix faults. On budget full-size boards the numpad often shares scan columns with the main block, so holding a numpad key while typing can expose ghosting that a 60% or TKL never shows. The numpad itself is a concentrated cluster of identical switches in one small matrix region, which makes it a reliable early-warning zone: if the numpad starts dropping inputs, the same wear will usually hit the main block soon after. When testing a full board, sweep the numpad deliberately and test combos like "7 + 8 + left-click" to surface shared-line conflicts.',
+    },
+  };
 
-  return layouts.map(layout => ({
-    params: { layout }
+  return Object.entries(layoutInfo).map(([layout, info]) => ({
+    params: { layout },
+    props: { info }
   }));
 }
 
 const { layout } = Astro.params;
+const { info } = Astro.props;
 const formattedLayout = layout.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
-const title = `Mechanical Keyboard ${formattedLayout} Layout & Anti-Ghosting Tester`;
+const title = `${formattedLayout} Keyboard Tester: NKRO Check | CT`;
 const description = `Test your mechanical keyboard's N-Key Rollover (NKRO), ghosting matrix, switch audio profile, and key actuation performance across ${formattedLayout} layout.`;
 const canonical = `https://controllertesting.com/keyboard-tester/${layout}`;
 
@@ -46,6 +68,10 @@ const keyboardFaqs = [
   {
     question: 'Does this test support Mac and Windows modifier keys?',
     answer: 'Yes! This online keyboard tester detects hardware scancodes natively via standard browser Web APIs. Command (⌘), Option (⌥), Windows (⊞), Alt, Control, and Fn modifier keys are mapped in real time.'
+  },
+  {
+    question: `How many keys does the ${formattedLayout} layout have?`,
+    answer: `The ${formattedLayout} layout has ${info.keys}: ${info.missing}. ${info.note}`
   }
 ];
 
@@ -80,7 +106,7 @@ const schema = [
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs}
-  localized={true}>
+  localized={false}>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
   <Header />
@@ -113,6 +139,15 @@ const schema = [
       <div>
         <MechKeyboard layoutKey={layout} />
       </div>
+
+      <!-- Layout Deep Editorial -->
+      <section aria-label={`${formattedLayout} layout testing notes`}>
+        <div class="bg-surface-1 border border-border-default rounded-3xl p-8 sm:p-10">
+          <span class="badge-tag mb-3 inline-block">Layout Notes</span>
+          <h2 class="section-title">What Testing a {formattedLayout} Keyboard Requires</h2>
+          <p class="text-secondary text-base sm:text-lg leading-relaxed max-w-3xl mt-4">{info.deep}</p>
+        </div>
+      </section>
 
       <!-- Recommended Diagnostic Actions (Asymmetric Banner) -->
       <section aria-label="Recommended keyboard diagnostic actions">

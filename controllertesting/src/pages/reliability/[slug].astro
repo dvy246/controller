@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import AuthorByline from '@components/global/AuthorByline.astro';
 import Footer from '@components/global/Footer.astro';
 import Header from '@components/global/Header.astro';
 import reliabilityData from '@data/reliabilityData.json';
@@ -23,6 +24,14 @@ const breadcrumbs = [
 ];
 
 const canonicalUrl = `https://controllertesting.com/reliability/${slug}`;
+
+const modelEditorial: Record<string, string> = {
+  'ps5-dualsense': "The DualSense is a potentiometer-based controller wrapped in modern firmware, which matters for how its drift actually presents: the carbon-film wear lives almost entirely on the left stick Y-axis because that is the axis your character walks on, and the controller's aggressive circular deadzone correction tends to hide early degradation from the raw readings. Community teardown reports consistently point at the left stick module as the first failure point, typically appearing as a springy re-centering stick rather than hard drift. The good news is that the module is a standard size and replacement sticks for the DualSense are widely available, so a diagnosed drift does not end the controller's life — plan for a module swap rather than a full replacement.",
+  'xbox-series-x': "The Xbox Series controller's known failure points are unusual in that stick drift is not always the first complaint — bumpers (LB/RB) are the most frequently reported failing switch, showing up as intermittent clicks or double-registration before the sticks ever degrade. When the sticks do drift, it typically surfaces under high tension input, meaning sustained forward or diagonal pressure rather than at rest, which is the opposite presentation from a Sony pad. Because the Series controller uses standard ALPS modules, stick replacement is straightforward, but the bumper switch is a surface-mount component that requires soldering — check the bumpers first with the button matrix test before you assume the problem is the stick.",
+  'switch-pro': "The Switch Pro Controller is best known in the community for two specific quirks rather than general stick wear: D-pad diagonal misinputs, where a single direction press occasionally registers two diagonals at once, and a powdery residue that builds up inside the stick housing from the pad's materials rubbing together. Neither is true sensor failure — the D-pad issue is a membrane contact geometry problem, and the powder is cosmetic wear that a cleaning pass usually fixes. Actual stick drift on the Pro Controller is comparatively rare, but when it does happen it is typically the left stick after heavy use in games that hold forward on a virtual thumbstick. Because the Pro Controller's sticks are soldered to the board, repair is more involved than on a module-swap pad, so treat early cleaning as preventive maintenance.",
+  'dualsense-edge': 'The DualSense Edge is designed around repairability: its stick modules are swappable without any soldering, which fundamentally changes the drift math — a diagnosed module can be replaced in minutes at the cost of a new stick assembly rather than a new controller. The known wear characteristics on the Edge are therefore more about the removable parts: the swappable stick module itself wears exactly like a standard potentiometer module, and the back paddles are the other frequent report, showing microswitch looseness as a rattle or an occasional missed press. Because the Edge carries a premium price, the practical advice is to test the swappable modules against each other when you see drift — swapping the left and right sticks tells you instantly whether the fault follows the module (replace it) or stays on the board (a deeper issue).',
+  'hall-effect-generic': 'A Hall effect controller replaces the carbon wiper with a magnetic field sensor, so its drift profile is fundamentally different: instead of track wear there is electronic centering, and the failure mode is a software-tunable center offset rather than a physically worn path. The two known quirks are a magnetic center bounce — a small wobble around neutral that firmware deadzone tuning absorbs — and an occasional factory centering offset that the first calibration pass removes. Because there is no physical contact in the sensing element, a Hall stick that drifts heavily is almost always a firmware, magnet-mount, or controller firmware issue rather than mechanical wear, so recalibrate before you consider replacing the module, and expect these sensors to outlast a standard carbon potentiometer by a wide margin in pure wear terms.',
+};
 const schemaData = {
   "@context": "https://schema.org",
   "@type": "Dataset",
@@ -38,13 +47,13 @@ const schemaData = {
 ---
 
 <BaseLayout
-  title={`${modelData.name} Hardware Reliability & Stick Drift Report`}
+  title={`${modelData.name.replace('Nintendo Switch Pro Controller','Switch Pro')} Reliability | CT`}
   description={`Modeled reference figures for stick drift magnitude, circularity error %, and sensor wear for ${modelData.name} (snapshot ${reliabilityData.updatedAt}).`}
   canonical={canonicalUrl}
   breadcrumbs={breadcrumbs}
   schema={schemaData}
 
-  localized={true}>
+  localized={false}>
   <Header />
 
   <main class="reliability-report-page container-site page-layout">
@@ -60,6 +69,13 @@ const schemaData = {
         Modeled reference figures for stick drift degradation, circularity error, and sensor wear — engineering
         estimates, not measured results. Every unit is different — measure yours directly with our free diagnostics.
       </p>
+      <div class="mt-8">
+        <AuthorByline
+          datePublished="2026-08-02"
+          dateModified="2026-08-10"
+          readingTime="4 min read"
+        />
+      </div>
       <div class="mt-8">
         <a href="/test/controller/drift" class="btn-primary">Test Your Controller</a>
       </div>
@@ -134,6 +150,12 @@ const schemaData = {
           <li>{issue}</li>
         ))}
       </ul>
+      {modelEditorial[slug] && (
+        <div class="card-base mb-12 p-6 sm:p-10">
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-4">Model Analysis & Repair Notes</h2>
+          <p class="text-secondary leading-relaxed">{modelEditorial[slug]}</p>
+        </div>
+      )}
       <div class="data-notice mt-8 pt-6 border-t border-border-subtle text-small text-tertiary">
         <p>
           <strong>About this data:</strong> this is a static baseline snapshot (compiled {reliabilityData.updatedAt}), not live telemetry.

@@ -7,24 +7,69 @@ import AimTrainerCanvas from '@components/features/AimTrainerCanvas.astro';
 
 export function getStaticPaths() {
   const devices = ['controller', 'mouse'];
+
+  // Per-game aim context. Public competitive knowledge; no invented figures.
+  const gameContext: Record<string, { playstyle: string; focus: string; practice: string }> = {
+    'apex-legends': {
+      playstyle: 'tracking and mid-range recoil control — targets move constantly and fights are sustained.',
+      focus: 'smooth, continuous target tracking rather than single flicks.',
+      practice: 'train long slow-tracking passes with a second mouse/stick, then add strafe-jitter on the target.',
+    },
+    'valorant': {
+      playstyle: 'crosshair placement and short, precise flicks — one well-placed shot wins an angle.',
+      focus: 'first-shot accuracy and micro-adjustments onto heads at medium range.',
+      practice: 'practice small-offset re-flicks onto a static dot, then add strafing to force corrections.',
+    },
+    'fortnite': {
+      playstyle: 'building pressure splits attention between builds and gunfights, so aim must survive high APM.',
+      focus: 'fast acquisition after a build edit, then controlled shots while the opponent edits back.',
+      practice: 'alternate between editing drills and short target-acquisition bursts to simulate build-to-gun transitions.',
+    },
+    'warzone': {
+      playstyle: 'long-range recoil control on automatic weapons plus close-quarters tracking in tight spaces.',
+      focus: 'sustained beam tracking at distance while the target strafes.',
+      practice: 'practice long-range tracking with controlled horizontal pulls, then drill quick close-range turn-and-aim.',
+    },
+    'counter-strike-2': {
+      playstyle: 'spray control and pre-aiming common angles — precision beats speed.',
+      focus: 'controlled bursts and keeping the crosshair on a single point through spray.',
+      practice: 'repeat short-burst drills on a fixed head-height dot, then re-aim drills after each kill window.',
+    },
+  };
+
+  // Per-device context. No invented measurement claims.
+  const deviceContext: Record<string, { input: string; tuning: string; practice: string }> = {
+    'controller': {
+      input: 'an analog stick: aim speed is set by stick deflection and your right-stick micro-adjustments.',
+      tuning: 'deadzone and response curve govern how a small deflection translates to screen movement — a drift offset makes micro-aim near-impossible.',
+      practice: 'on a stick, prioritize small, deliberate correction flicks and ignore any aim assist you rely on in the real game.',
+    },
+    'mouse': {
+      input: 'a mouse: aim speed is set by your DPI and in-game sensitivity, driven by wrist or arm movement.',
+      tuning: 'your cm/360° distance is what muscle memory stores — changing DPI or sens mid-training invalidates your benchmark.',
+      practice: 'on mouse, keep your grip relaxed and practice large arm sweeps plus fine fingertip flicks separately.',
+    },
+  };
+
   const games = ['apex-legends', 'valorant', 'fortnite', 'warzone', 'counter-strike-2'];
 
   const paths = [];
   for (const device of devices) {
     for (const game of games) {
-      paths.push({ params: { device, game } });
+      paths.push({ params: { device, game }, props: { gc: gameContext[game], dc: deviceContext[device] } });
     }
   }
   return paths;
 }
 
 const { device, game } = Astro.params;
+const { gc, dc } = Astro.props;
 
 const formattedGame = game.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 const formattedDevice = device.charAt(0).toUpperCase() + device.slice(1);
 
-const title = `Pro Aim Trainer & Input Precision - ${formattedDevice} (${formattedGame})`;
-const description = `Test and improve your ${formattedDevice} aim precision, target tracking speed, and stick drift impact specifically tuned for ${formattedGame}. Free client-side benchmark tool.`;
+const title = `${formattedDevice} Aim Trainer (${formattedGame}) | CT`;
+const description = `Test and improve your ${formattedDevice} aim precision, target tracking, and stick-drift handling tuned for ${formattedGame}. Free in-browser benchmark, no install.`;
 const canonical = `https://controllertesting.com/aim-trainer/${device}/${game}`;
 
 const breadcrumbs = [
@@ -49,7 +94,7 @@ const schema = {
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs}
-  localized={true}>
+  localized={false}>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
   <Header />
@@ -80,7 +125,14 @@ const schema = {
         <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
           <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">How does controller stick drift impact aim accuracy?</h3>
           <p class="leading-relaxed">
-            Stick drift causes subtle, unwanted motion inputs when your analog stick is at rest. In fast-paced shooters like {formattedGame}, stick drift pulls your crosshair away from targets during micro-adjustments, reducing your effective hit rate by up to 15%.
+            Stick drift causes subtle, unwanted motion inputs when your analog stick is at rest. In fast-paced shooters like {formattedGame}, drift pulls your crosshair off target during micro-adjustments and inflates your score variance on this benchmark — clean the stick or raise the deadzone before you measure.
+          </p>
+        </div>
+
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">What makes {formattedGame} aim different on {formattedDevice}?</h3>
+          <p class="leading-relaxed">
+            {formattedGame} is {gc.playstyle} With {dc.input} the training priority is {gc.focus} On this benchmark, {dc.tuning}
           </p>
         </div>
 
@@ -92,16 +144,16 @@ const schema = {
         </div>
 
         <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
-          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">Is this aim trainer completely free and web-based?</h3>
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">What should I practice for {formattedGame}?</h3>
           <p class="leading-relaxed">
-            Yes! It runs entirely client-side using browser HTML5 Canvas and the Gamepad API. No software downloads, accounts, or database tracking required.
+            {gc.practice} {dc.practice} Track three consecutive runs and look at trend, not a single lucky score.
           </p>
         </div>
 
         <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
-          <h3 class="font-semibold mb-2">What is a good accuracy score for {formattedDevice}?</h3>
-          <p>
-            A competitive score for {formattedDevice} users on {formattedGame} settings is <strong>85%+ accuracy</strong> with over 25 targets hit in 30 seconds.
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">Is this aim trainer completely free and web-based?</h3>
+          <p class="leading-relaxed">
+            Yes! It runs entirely client-side using browser HTML5 Canvas and the Gamepad API. No software downloads, accounts, or database tracking required.
           </p>
         </div>
       </div>

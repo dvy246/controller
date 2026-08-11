@@ -68,7 +68,7 @@
       ]
     },
     "hall-effect-generic": {
-      "name": "Hall Effect Controllers (8BitDo / Gamesir / Flydigi)",
+      "name": "Hall Effect Controllers",
       "avgDriftAfter12MonthsPercent": 0.1,
       "avgCircularityErrorPercent": 4.2,
       "avgLifespanMonthsBeforeDrift": 36.0,

@@ -29,11 +29,11 @@ const reportTitle = `Reliability Baselines Report — ${new Date(reliabilityData
 ---
 
 <BaseLayout
-  title={`${reportTitle} | ControllerTesting.com`}
-  description={`Monthly controller reliability baselines report: stick drift after 12 months, circularity error, and average lifespan before drift across modeled reference baselines (snapshot ${reliabilityData.updatedAt}).`}
+  title={`Reliability Report | ControllerTesting`}
+  description={`Monthly controller reliability report: stick drift after 12 months, circularity error, and drift-free lifespan baselines across 5 controller models.`}
   breadcrumbs={breadcrumbs}
 
-  localized={true}>
+  localized={false}>
   <Header />
 
   <main id="main-content">

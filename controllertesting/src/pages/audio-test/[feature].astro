@@ -16,7 +16,26 @@ export function getStaticPaths() {
 const { feature } = Astro.params;
 const formattedFeature = feature.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
-const title = `Gaming Headset ${formattedFeature} & Spatial 3D Audio Test`;
+// Per-feature context. Frame-type facts are public knowledge; no invented lab figures.
+const featureContext: Record<string, { what: string; why: string; practice: string }> = {
+  'surround-sound': {
+    what: 'Surround accuracy depends on HRTF processing, not the number of physical drivers — two good stereo drivers can localize footsteps above a headset with many weak ones.',
+    why: 'In shooters, vertical and behind-you cues are the hardest for poor HRTF to render; if a footstep jumps between "in front" and "behind" with no in-between, the headset is smearing the image.',
+    practice: 'Close your eyes and point at each ping as it plays; score yourself on cardinal directions first, then diagonals and height changes.',
+  },
+  'bluetooth-latency': {
+    what: 'Standard Bluetooth (SBC/AAC) adds roughly 150–300ms of codec delay, which is far past the ~30ms where audio-video sync becomes noticeable in gameplay.',
+    why: 'Latency matters most for rhythm-critical games and for reading audio cues while moving the camera — late footsteps break the connection between sound and screen.',
+    practice: 'Run the flash-and-tone drill three times and take the median; if delay is consistently above your wired headset by more than ~50ms, the wireless codec is the bottleneck.',
+  },
+  'bass-frequency': {
+    what: 'Bass response is about how low the drivers stay loud and clean, not how loud the bass sounds — muddy low end masks footsteps and reverb detail.',
+    why: 'Explosions and vehicle engines occupy the low end; a driver that distorts there also smears mid-range clarity where gunfire and footsteps live.',
+    practice: 'Sweep through the tones and listen for a point where output thins out or buzzes; keep your listening volume moderate so the driver, not the room, is being tested.',
+  },
+};
+
+const title = `Gaming Headset ${formattedFeature} Audio Test | CT`;
 const description = `Test your gaming headset for ${formattedFeature}, 3D spatial HRTF directional accuracy, and wireless Bluetooth latency. Free uncompressed web audio benchmark.`;
 const canonical = `https://controllertesting.com/audio-test/${feature}`;
 
@@ -42,7 +61,7 @@ const schema = {
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs}
-  localized={true}>
+  localized={false}>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
   <Header />
@@ -70,6 +89,13 @@ const schema = {
       <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-6">Gaming Audio & Latency FAQ</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-[var(--color-text-secondary)]">
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)] md:col-span-2">
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">Testing {formattedFeature}: what to listen for</h3>
+          <p class="leading-relaxed">
+            {featureContext[feature]?.what} {featureContext[feature]?.why} <strong>How to test:</strong> {featureContext[feature]?.practice}
+          </p>
+        </div>
+
         <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
           <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">Why is Bluetooth audio latency bad for gaming?</h3>
           <p class="leading-relaxed">

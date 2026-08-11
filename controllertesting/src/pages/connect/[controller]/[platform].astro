@@ -10,36 +10,49 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
 import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import AuthorByline from '@components/global/AuthorByline.astro';
 
 export function getStaticPaths() {
   const controllers = [
     {
       slug: 'ps5-dualsense',
       name: 'PS5 DualSense',
+      source: { name: 'PlayStation Official', url: 'https://www.playstation.com/accessories/dualsense-wireless-controller/' },
       sensor: 'Potentiometer sticks',
       protocol: 'Bluetooth (legacy gamepad) or USB',
+      pairButton: 'hold both the PS button and the Share button together until the lightbar blinks',
       note: 'DualSense uses Bluetooth with a proprietary "Wireless Controller" profile. Use the same pairing method every time; Windows sometimes lists two discovered devices — pair the one without "LE" in the name.',
+      deep: 'The DualSense is the pickiest of the five to pair on PC because Windows can show it as both a Bluetooth device and a separate Low Energy (LE) endpoint — pairing the LE entry gives you a connection that works for battery reporting but may never expose gamepad input. When that happens, forget both entries, re-pair the non-LE device, and then check that the controller\'s lightbar settles to a steady color rather than pulsing, which indicates the legacy-gamepad profile is active. On Steam, the DualSense also triggers Steam Input by default, which can mask raw gamepad input from other apps; if your tester shows no input but Steam is open, close Steam or disable the PlayStation configuration support for that device.',
     },
     {
       slug: 'ps4-dualshock-4',
       name: 'PS4 DualShock 4',
+      source: { name: 'PlayStation Official', url: 'https://www.playstation.com/accessories/dualshock-4-wireless-controller/' },
       sensor: 'Potentiometer sticks',
       protocol: 'Bluetooth (HID) or USB',
+      pairButton: 'hold the Share button and the PS button together until the lightbar blinks',
       note: 'DualShock 4 speaks a fairly generic HID profile, so it pairs well on PC, macOS and Steam Deck with the built-in PlayStation button layout.',
+      deep: 'The DualShock 4\'s generic HID profile is why it works almost everywhere without extra software, but the trade-off is inconsistent button ordering: Windows, macOS and Steam can each interpret the DS4\'s HID report differently, so the face buttons you press may be swapped between platforms until a mapping layer normalizes them. The DS4 also famously refuses to hold a Bluetooth pairing to more than one device at a time, so if you regularly switch between PC and console, re-pairing each time is normal rather than a fault. Because the controller is older, check the lightbar during pairing: a dim or absent lightbar after the blink sequence usually means the battery is critically low and the pad will drop the link mid-session.',
     },
     {
       slug: 'xbox-wireless',
       name: 'Xbox Wireless Controller',
+      source: { name: 'Xbox Official', url: 'https://www.xbox.com/en-US/accessories/controllers' },
       sensor: 'Potentiometer sticks',
       protocol: 'Xbox Wireless, Bluetooth or USB',
+      pairButton: 'press the small Pair button on the top edge until the Xbox logo blinks',
       note: 'On Windows the Xbox Wireless Controller runs as XInput with native button mapping; on Steam Deck it relies on Steam Input; on macOS it can be used wired or via Bluetooth with some button remapping.',
+      deep: 'The Xbox Wireless Controller is the only pad in the set with a first-party wireless standard of its own (Xbox Wireless), which on Windows gives you the cleanest possible input path when paired through the Xbox Wireless Adapter rather than plain Bluetooth — the adapter reports as XInput with full rumble and no third-party layer. Over Bluetooth it still maps natively on Windows, but you lose the higher-bandwidth features. On macOS there is no XInput, so the pad exposes a generic HID profile and the button layout can feel off until a game or launcher applies an Xbox mapping. When pairing, the Xbox logo blinks fast during discovery and settles to solid once connected; if it keeps blinking after selection, remove the stale entry in Bluetooth settings and retry.',
     },
     {
       slug: 'switch-pro',
       name: 'Nintendo Switch Pro Controller',
+      source: { name: 'Nintendo Support', url: 'https://support.nintendo.com' },
       sensor: 'Potentiometer sticks',
       protocol: 'Bluetooth (HID) or USB',
+      pairButton: 'press and hold the Sync button on the top edge of the pad',
       note: 'The Pro Controller reports as a generic Bluetooth HID. Button labels are Nintendo-style (A/B and X/Y swapped) on PC and macOS, so a mapping layer such as Steam Input is recommended for native labels.',
+      deep: 'The Switch Pro Controller\'s strongest quirk is its gyro: the pad reports a six-axis IMU over HID, and on PC that motion data either shows up as a secondary device or requires Steam Input to remap — without a layer, most games never see the gyro at all, so expect motion aiming to be absent until you configure it. The Pro Controller also has a long-standing battery-reporting bug on PC where the OS shows the wrong charge percentage; treat the pad\'s own battery LED as the source of truth. Because button labels are Nintendo-oriented, A/B and X/Y are physically swapped relative to Xbox muscle memory, so verify the layout in a tester before a ranked session rather than trusting the on-screen prompts.',
     },
   ];
 
@@ -118,12 +131,12 @@ const howToSchema = {
 ---
 
 <BaseLayout
-  title={`Connect ${controller.name} to ${platform.name} | ControllerTesting.com`}
+  title={`Connect ${controller.name} to ${platform.name} | CT`}
   description={`How to connect and pair the ${controller.name} with ${platform.name}: Bluetooth pairing, USB setup, first-run mapping, and verification with our free tester.`}
   breadcrumbs={breadcrumbs}
   schema={howToSchema}
 
-  localized={true}>
+  localized={false}>
   <Header />
 
   <main id="main-content" class="connect-page">
@@ -134,12 +147,20 @@ const howToSchema = {
         <span class="badge-tag mb-3">Connect &amp; Pair · {controller.protocol}</span>
         <h1 class="text-h1 mb-2">Connect {controller.name} to {platform.name}</h1>
         <p class="connect-subtitle">
-          {controller.protocol} pairing in a few steps {controller.note}
+          To start pairing, {controller.pairButton}. {controller.protocol} pairing in a few steps.
         </p>
+        <AuthorByline
+          datePublished="2026-08-02"
+          dateModified="2026-08-10"
+          readingTime="4 min read"
+        />
       </header>
 
       <div class="connect-body card-base">
         <h2 class="section-title">Step-by-step</h2>
+        <p class="connect-text">Put the {controller.name} into pairing mode by {controller.pairButton}, then follow the platform steps below.</p>
+        <p class="connect-text">{controller.note}</p>
+        <p class="connect-text">{controller.deep}</p>
         {platform.steps.map((step, i) => (
           <div class="connect-step">
             <span class="connect-num">{i + 1}</span>
@@ -158,6 +179,12 @@ const howToSchema = {
           <a href="/test/controller/drift" class="btn-primary">Test after pairing</a>
           <a href="/test/controller/polling-rate" class="btn-secondary">Check polling rate</a>
         </div>
+
+        {controller.source && (
+          <p class="connect-text">
+            Official reference: <a href={controller.source.url} rel="noopener" target="_blank" class="connect-source-link">{controller.source.name} ↗</a>
+          </p>
+        )}
       </div>
 
       <div class="connect-faq">
@@ -183,6 +210,7 @@ const howToSchema = {
   .connect-step { display: flex; gap: 1rem; align-items: flex-start; }
   .connect-num { flex: 0 0 auto; width: 28px; height: 28px; border-radius: 999px; background: color-mix(in srgb, var(--color-accent) 12%, transparent); color: var(--color-accent); font-family: var(--font-mono); font-weight: 700; font-size: 0.875rem; display: inline-flex; align-items: center; justify-content: center; }
   .connect-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.7; margin: 0; }
+  .connect-source-link { color: var(--color-accent); font-weight: 600; text-decoration: underline; }
   .connect-tip { background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1rem 1.25rem; display: flex; flex-direction: column; gap: 0.375rem; }
   .connect-tip-label { color: var(--color-text-primary); }
   .connect-cta { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }

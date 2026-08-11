@@ -12,12 +12,45 @@ export function getStaticPaths() {
     { slug: 'potentiometer', name: 'Potentiometer' }
   ];
 
+  // Per-sensor physics and per-controller context; qualitative, no invented figures.
+  const sensorNotes = {
+    'hall-effect': {
+      physics: 'senses the stick position through a magnetic field with no physical contact, so it does not wear out by rubbing — drift on a Hall-effect stick usually comes from a shifted magnet or a remanence offset, and it reads as a clean constant offset rather than jitter.',
+      calibration: 'a zero-point write fixes the offset; a persistently drifting Hall stick may need a repositioned magnet, not more calibration.',
+      deep: 'Because Hall-effect sticks have no wiper, the offset they develop is usually static — a magnet that has shifted or a remanence value that drifted at the factory. That makes them the ideal candidate for a one-time zero-point write: if the offset is truly constant, calibration removes it completely and it stays gone. The failure mode to watch for is a magnet that has physically shifted; that shows up as an offset that changes when you tilt the pad, and no calibration write will fix it — the module needs opening.',
+      editorial: 'Hall-effect sensing uses a magnet mounted on the stick shaft moving past stationary Hall cells on the board, so the zero point is defined magnetically rather than by a wiper resting on a track. That gives the sensor two properties worth knowing: temperature sensitivity, because magnet strength shifts slightly with heat and can move the neutral reading over a long session, and mechanical resilience, because there is nothing to abrade no matter how many hours you play. A Hall stick that returns a stable, repeatable center across repeated reboots is behaving exactly as designed; a Hall stick whose center wanders between boot cycles usually points to a loose magnet, a cracked magnet holder, or a board-level solder joint rather than sensor chemistry. When calibrating, sample the rest position a few times across a minute so the firmware captures the settled value, not the first-read transient right after the stick returns home.',
+    },
+    'potentiometer': {
+      physics: 'reads position through a carbon-trace wiper that physically rubs with every movement; as the trace wears, readings become noisy and jumpy before they become a steady offset.',
+      calibration: 'a zero-point write masks the offset but cannot restore a worn carbon trace — if drift returns within weeks, the module needs replacement, not re-calibration.',
+      deep: 'Potentiometer drift is a mechanical symptom, not a digital one: the wiper has physically worn a groove into the carbon track, so the resistance at the rest position no longer reads as true center. A zero-point write can move the software center to match the worn spot, which works for a while — but because the wiper keeps sliding over the same damaged zone, the offset tends to drift again within days or weeks. The telling sign is noise: if your resting stick value flickers between numbers instead of holding one steady value, the carbon track is worn and calibration is a temporary patch, not a fix.',
+      editorial: 'Potentiometer modules convert stick angle into resistance through a curved carbon film that the wiper arm drags across, and that contact is where all the age-related behavior comes from. Every rotation deposits microscopic carbon debris into the wiper path, and the debris itself becomes part of the conductive path — which is why an old pot stick can read jumpy at the same angles where the debris collects. Cleaning the track with isopropyl alcohol can restore contact on lightly worn units, but once the carbon film itself is grooved, no cleaning recovers the flat surface. When you calibrate a potentiometer pad, write the new center and then re-measure over a few days; if the resting value stays put, the module still has life, but if the offset walks back toward its old position, plan on swapping the module — the patch bought you time, not a cure.',
+    },
+  };
+  const controllerNotes = {
+    'dualsense': {
+      note: 'the DualSense speaks a newer HID descriptor; WebHID support depends on browser and firmware versions, so verify the pad is detected before attempting a write.',
+      deep: 'The DualSense exposed calibration registers through the community-reverse-engineered HID protocol only after years of firmware updates, so not every firmware build responds identically. If the write reports success but drift returns immediately, check your firmware version and try a different USB port — the DualSense can fall back to a compatibility HID mode that ignores calibration writes. The DualSense also runs its own in-OS deadzone correction on PS5, so calibrating it while connected to a PC gives you the raw register values without console smoothing on top.',
+      hardware: 'The DualSense combines its two analog sticks on a shared logic board with the haptics drivers, adaptive-trigger motors, touchpad, and microphone array, so the pad draws a substantial USB link and the sticks sit on the same interrupt pipe as the haptic telemetry. That shared bandwidth is why you should disconnect any connected headset and disable rumble before sampling the zero point — active haptics can shift the sampled stick value by a measurable fraction. The stick modules themselves are the same compact potentiometer type used across the current generation, held by a spring-centered collar, and the touchpad surface gesture tracking runs independent of the analog path, so a finger resting on the pad never contaminates the stick reading. On the PC side, the DualSense reports as a vendor-specific device until Steam Input or a feature driver claims it; run the calibration from a clean browser session with Steam closed so the WebHID enumeration sees the raw device.',
+    },
+    'ds4': {
+      note: 'the DualShock 4 is an older, widely documented HID device, so browser support is mature — but the touchpad keeps the controller awake, which can mask a drifted stick if you rest a finger on it.',
+      deep: 'The DualShock 4\'s calibration registers have been publicly documented for years, which makes it the most reliable pad to recalibrate from the browser. Keep the touchpad untouched during sampling, and be aware that worn-out third-party DS4 modules may expose only partial registers — if the calibration payload is rejected, the module itself is often at fault rather than the browser. Because the DS4\'s USB report descriptor is fixed and stable, a write that succeeds once will typically survive reboots, making it the best candidate for testing this workflow end-to-end before you try it on a newer pad.',
+      hardware: 'The DualShock 4\'s construction is the most open of the two PlayStation pads: its faceplates and stick modules are widely documented in repair guides, and the internal board layout is a community-standard reference, which makes diagnosing a failed write far easier than on the sealed DualSense. The DS4\'s touchpad is its other analog-era quirk — it is a capacitive surface wired to the same USB report stream, and on some units a lightly pressed finger on the touchpad surface shifts the controller\'s reported state in ways that look like stick noise. The lightbar also draws a constant current that can drain the battery while idling, so for a long calibration session, connect the pad over USB-C (or micro-USB on older units) and leave the lightbar active rather than letting the battery sag mid-write, because a low-voltage write is the classic cause of a failed flash that brick reads as a soft failure.',
+    },
+  };
+
   const paths: any[] = [];
   controllers.forEach(controller => {
     sensors.forEach(sensor => {
       paths.push({
         params: { controller: controller.slug, sensor: sensor.slug },
-        props: { controllerName: controller.name, sensorName: sensor.name }
+        props: {
+          controllerName: controller.name,
+          sensorName: sensor.name,
+          sensorNote: sensorNotes[sensor.slug as keyof typeof sensorNotes],
+          controllerNote: controllerNotes[controller.slug as keyof typeof controllerNotes]
+        }
       });
     });
   });
@@ -25,10 +58,10 @@ export function getStaticPaths() {
 }
 
 const { controller, sensor } = Astro.params;
-const { controllerName, sensorName } = Astro.props;
+const { controllerName, sensorName, sensorNote, controllerNote } = Astro.props;
 
-const title = `${controllerName} ${sensorName} Firmware Calibration | ControllerTesting.com`;
-const description = `Directly communicate with your ${controllerName}'s firmware via WebHID to reset ${sensorName} drift offsets.`;
+const title = `${controllerName} ${sensorName} Calibration | CT`;
+const description = `Calibrate your ${controllerName} stick center via WebHID: sample and save ${sensorName} zero-point offsets to firmware. Free and private.`;
 const toolName = `${controllerName} Zero-Point Calibrator`;
 const category = "Calibration";
 const categoryUrl = "/calibrate";
@@ -71,6 +104,13 @@ const faqs = [
   <Fragment slot="content">
     <h2>Why Calibrate Your {controllerName}?</h2>
     <p>Over time, both <strong>{sensorName}</strong> sensors can shift off their factory center. Software deadzones only mask this issue, leading to sluggish response. A true firmware-level zero-point calibration recalculates the physical neutral position and saves it to the controller's onboard memory.</p>
+    
+    <h3>How {sensorName} drift behaves</h3>
+    <p>A {sensorName} module {sensorNote.physics} For calibration: {sensorNote.calibration}</p>
+    <p>{sensorNote.deep}</p>
+    <p>{sensorNote.editorial}</p>
+    <p>Controller note: {controllerNote.note} {controllerNote.deep}</p>
+    <p>{controllerNote.hardware}</p>
     
     <h3>Prerequisites</h3>
     <ul>

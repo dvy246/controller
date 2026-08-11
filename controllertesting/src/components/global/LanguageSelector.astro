@@ -8,7 +8,10 @@ import { languages, defaultLang } from '../../i18n/translations';
 import { getLangFromUrl, getLocalizedUrl } from '../../i18n/utils';
 
 const currentLang = getLangFromUrl(Astro.url);
-const availableLangs = Object.keys(languages);
+// En-only launch (2026-08-10): locale trees are disabled until genuine
+// translations exist, so a selector listing /es /de ... would link to 404s.
+// Re-enable when sync-locales.js ships real translated content.
+const availableLangs = Object.keys(languages).filter((l) => l === defaultLang);
 ---
 
 <div class="lang-selector-wrapper">

@@ -13,17 +13,17 @@ const schemaData = {
   "@context": "https://schema.org",
   "@type": "WebPage",
   "name": "Contribute to the Open Hardware Database | ControllerTesting",
-  "description": "Join 142,000+ gamers building the internet's largest open-source controller reliability database.",
+  "description": "Help build the internet's open-source controller reliability database. Submit opt-in drift and circularity test data to grow the community dataset.",
 };
 ---
 
 <BaseLayout
   title="Contribute to the Open Hardware Database | ControllerTesting"
-  description="Join 142,000+ gamers building the internet's largest open-source controller reliability database. Help us expose stick drift hardware flaws."
+  description="Help build the open-source controller reliability database. Submit opt-in drift and circularity measurements to grow the community dataset and expose hardware flaws."
   canonical="https://controllertesting.com/contribute"
   breadcrumbs={breadcrumbs}
 
-  localized={true}>
+  localized={false}>
   <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
   <Header />
 
@@ -32,6 +32,7 @@ const schemaData = {
       <Breadcrumbs items={breadcrumbs} />
     </div>
 
+    <h1 class="sr-only">Contribute to the Open Hardware Database</h1>
     <PremiumGuideCard
       badge="Data Project"
       title="The Open Hardware Database"

@@ -24,41 +24,6 @@ import Footer from '@components/global/Footer.astro';
 import ControllerHero from '@components/global/ControllerHero.astro';
 import FloatingDockNav from '@components/global/FloatingDockNav.tsx';
 
-const websiteSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'ControllerTesting.com',
-  url: 'https://controllertesting.com',
-  description: 'Free controller test online for PS5, PS4, Xbox, Switch, and PC. Use a gamepad tester to check drift, buttons, triggers, polling rate, and rumble in your browser.',
-  dateModified: '2026-08-10',
-  inLanguage: 'en-US',
-};
-
-const orgSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'ControllerTesting.com',
-  url: 'https://controllertesting.com',
-  logo: {
-    '@type': 'ImageObject',
-    url: 'https://controllertesting.com/og-default.png',
-    width: 1200,
-    height: 630
-  },
-  description: 'Free browser-based controller and gamepad diagnostic platform. Test PS5, Xbox, Switch, and PC controllers for drift, buttons, triggers, and more.',
-  foundingDate: '2025',
-  contactPoint: {
-    '@type': 'ContactPoint',
-    email: 'support@controllertesting.com',
-    contactType: 'customer support',
-    availableLanguage: ['English']
-  },
-  sameAs: [
-    'https://github.com/controllertesting',
-    'https://www.reddit.com/r/consolerepair'
-  ]
-};
-
 // Speakable specification — helps Google and voice assistants extract key answers
 const speakableSchema = {
   '@context': 'https://schema.org',
@@ -181,14 +146,14 @@ function getToolIcon(icon: string) {
 ---
 
 <BaseLayout
-  title="Gamepad Tester & Controller Test Online - Check Joystick, Stick Drift, Buttons Free"
-  description="Free online gamepad tester and controller test for PS5, Xbox, Switch & PC. Check stick drift, buttons, triggers, deadzone, vibration, and polling rate. No download required."
+  title="Controller Test: PS5, Xbox, Switch & PC Gamepad Tester"
+  description="Free online controller test for PS5, Xbox, Switch & PC. Check stick drift, buttons, triggers, deadzone, vibration, and polling rate in your browser."
   keywords="controller games, ps5 controller, ps5 controller drift, playstation 5 controller, nintendo switch pro controller, switch controller, switch 2 pro controller, xbox elite controller series 2, nintendo controller, nintendo switch joy con, switch joy con, joy con controller, nintendo switch joy con repair, joy con 2, nintendo switch joy con controller, nintendo switch, nintendo switch oled, nintendo switch 2 games, nintendo switch controller, best nintendo switch games, nintendo switch 2 pro controller, how to connect ps5 controller to pc, controller test, xbox controller test, ps4 controller test"
-  ogImage="https://controllertesting.com/images/controller-hero.jpg"
-  ogImageAlt="White DualSense controller ready for an online controller test"
-  ogImageWidth={736}
-  ogImageHeight={1308}
-  schema={[websiteSchema, orgSchema, faqSchema, speakableSchema, toolsItemListSchema]}
+  ogImage="https://controllertesting.com/og-default.png"
+  ogImageAlt="ControllerTesting.com — Free Online Controller Test for PS5, Xbox, Switch & PC"
+  ogImageWidth={1200}
+  ogImageHeight={630}
+  schema={[faqSchema, speakableSchema, toolsItemListSchema]}
 
   localized
 >

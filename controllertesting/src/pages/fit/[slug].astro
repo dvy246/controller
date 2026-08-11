@@ -61,12 +61,12 @@ const schemaData = {
 ---
 
 <BaseLayout
-  title={`${model.name} Hand Fit Analysis — Body Dimensions & Fit Verdicts | ControllerTesting.com`}
-  description={`Does the ${model.name} fit your hands? Body width ${model.widthMm ?? 'unmeasured'}, weight ${model.weightG ?? 'unmeasured'} g, ${model.stickLayout} layout, and reference fit verdicts for small, medium and large hands.`}
+  title={`${model.name.replace('Nintendo Switch Pro Controller', 'Switch Pro').replace('Xbox Wireless Controller (Series X/S)', 'Xbox Series X/S')} Controller Fit Guide | CT`}
+  description={`Does the ${model.name} fit your hands? Width ${model.widthMm ?? 'unmeasured'} mm, ${model.weightG ?? 'unmeasured'} g, ${model.stickLayout} sticks — verdicts for small, medium, large hands.`}
   canonical={canonicalUrl}
   breadcrumbs={breadcrumbs}
 
-  localized={true}>
+  localized={false}>
   <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
 
   <Header />

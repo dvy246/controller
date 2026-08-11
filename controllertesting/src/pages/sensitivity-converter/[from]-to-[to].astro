@@ -7,28 +7,58 @@ import SensConverterUI from '@components/features/SensConverterUI.astro';
 import gamesData from '@data/gameEngineConstants.json';
 
 export function getStaticPaths() {
-  const keys = Object.keys(gamesData);
+  // One canonical direction per game pair (4 pages, not 8).
+  // Rationale: reverse-direction pages (A→B and B→A) of the same pair carry
+  // mirrored body copy and are semantically duplicate — the original 56-page
+  // matrix was the worst offender at 1.000 similarity. A single canonical
+  // page per pair keeps every URL unique and useful.
+  const supportedPairs = [
+    ['fortnite', 'apex-legends'],
+    ['fortnite', 'valorant'],
+    ['counter-strike-2', 'valorant'],
+    ['counter-strike-2', 'apex-legends'],
+  ];
+
   const paths = [];
 
-  for (let i = 0; i < keys.length; i++) {
-    for (let j = 0; j < keys.length; j++) {
-      if (i !== j) {
-        paths.push({
-          params: { from: keys[i], to: keys[j] }
-        });
-      }
-    }
+  for (const [from, to] of supportedPairs) {
+    paths.push({ params: { from, to } });
   }
   return paths;
 }
 
 const { from, to } = Astro.params;
-const games = gamesData as Record<string, { name: string }>;
+const games = gamesData as Record<string, { name: string; yaw: number; defaultFov: number }>;
 
 const fromName = games[from]?.name || from;
 const toName = games[to]?.name || to;
 
-const title = `Convert ${fromName} to ${toName} Sensitivity (1:1 360° Match)`;
+const gameNotes: Record<string, string> = {
+  'fortnite': 'Fortnite applies mouse sensitivity through a single slider backed by an engine yaw of 0.005555 (at FOV 80) — and its aim-assist and bloom mean the raw sens number matters less than your cm/360° for tracking, so convert by distance, not by slider value.',
+  'apex-legends': 'Apex Legends runs on Source with a yaw of 0.022 and a wide FOV range, and its per-ADS sensitivity multiplier is decoupled from hipfire — converting hipfire only (as this tool does) preserves turn distance, then tune ADS separately for the 1x sight.',
+  'valorant': 'Valorant uses a 0.07 yaw at 103 FOV and a fixed 0.9 ADS multiplier on all scoped optics, which makes it one of the least forgiving games for raw number transfer — a small cm/360° mismatch is immediately visible on long-range duels.',
+  'counter-strike-2': 'Counter-Strike 2 carries Source\'s 0.022 yaw, but its arm-length default FOV of 90 and the distance-tagged scopes (AWP, scout) mean a converted sens should always be verified with a 360° flick test before a ranked match.',
+};
+const fromNote = gameNotes[from] || '';
+const toNote = gameNotes[to] || '';
+
+const pairNotes: Record<string, string> = {
+  'fortnite-apex-legends': 'The Fortnite-to-Apex transfer is the friendliest of the four because both games accept your converted number with minimal re-tuning: Fortnite\'s high bloom keeps hipfire forgiving while Apex rewards the same turn distance for movement tech like tap-strafing. Start from your Fortnite cm/360°, divide by the ratio, and expect to adjust less than a quarter of the sensitivity you would move in a CS2-style transfer. The main friction point is FOV — Fortnite\'s build-mode camera runs tighter than Apex\'s slider max, so re-check your zoom-in feel after converting.',
+  'fortnite-valorant': 'Going from Fortnite to Valorant is the sharpest mechanical culture shock in the set: Fortnite tolerates a wide, bloom-driven hipfire while Valorant demands surgical pre-aim on static angles, so the same cm/360° that felt fluid in builds will feel sluggish holding a corner. Convert strictly by distance, then drop your Valorant sens by a touch for long-range duels only if the converted value still feels heavy on the operator. Valorant\'s fixed 0.9 ADS multiplier also means your scoped shots inherit the hipfire conversion automatically — there is no per-sight tuning to do, unlike in CS2.',
+  'counter-strike-2-valorant': 'The CS2-to-Valorant conversion is the most common and the most debated of the four because both are tactical shooters with different arm-feel standards: CS2 players convert their raw 400 DPI 2.0-style number and frequently report Valorant feels slightly fast for the same distance, a gap caused by Valorant\'s 103 FOV magnifying the same turn distance. Convert by distance and spend a session on the range before ranked; the close-quarters spray in CS2 does not translate to Valorant\'s first-shot headshot discipline, so verify your micro-flicks, not your recoil control.',
+  'counter-strike-2-apex-legends': 'The CS2-to-Apex transfer spans two very different genres, which is why distance-based conversion matters most here: Apex\'s movement tech (slide-jumping, wall-bounces) depends on fast full flicks that a CS2-tuned arm-flick sens actually supports, while its recoil is a patterned curve rather than CS2\'s spray spread. Convert by distance, then widen your FOV toward Apex\'s max to match its faster tracking, and expect your crosshair placement habits to need the most work since Apex fights happen at multiple ranges the way CS2 duels rarely do.',
+};
+const pairNote = pairNotes[`${from}-${to}`] || '';
+
+const fromYaw = games[from]?.yaw ?? 1;
+const toYaw = games[to]?.yaw ?? 1;
+const ratio = fromYaw / toYaw;
+const ratioLabel = ratio >= 1 ? `${ratio.toFixed(1)}x` : `${(1 / ratio).toFixed(1)}x`;
+const sameScale = Math.abs(ratio - 1) < 0.0001;
+const fromFov = games[from]?.defaultFov ?? 90;
+const toFov = games[to]?.defaultFov ?? 90;
+
+const title = `${fromName} → ${toName} Sens Converter | CT`;
 const description = `Accurately convert your in-game sensitivity from ${fromName} to ${toName}. Includes 360-degree turn distance (cm/in) calculator and hardware DPI scaling.`;
 const canonical = `https://controllertesting.com/sensitivity-converter/${from}-to-${to}`;
 
@@ -54,7 +84,7 @@ const schema = {
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs}
-  localized={true}>
+  localized={false}>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
   <Header />
@@ -82,18 +112,68 @@ const schema = {
       <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-6">Sensitivity Conversion & Motor Memory Guide</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-[var(--color-text-secondary)]">
-        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
-          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">Why does sensitivity differ between {fromName} and {toName}?</h3>
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)] md:col-span-2">
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">{fromName} and {toName} mechanics, before you convert</h3>
           <p class="leading-relaxed">
-            Different game engines use different <strong>Yaw multipliers</strong> (the angular degree change per mouse counts or analog stick tick). For instance, Valorant uses a yaw of 0.07 while CS2 uses 0.022. Direct numerical sensitivity numbers are non-transferable without conversion.
+            {fromNote}
+          </p>
+          <p class="leading-relaxed mt-3">
+            {toNote}
+          </p>
+          <p class="leading-relaxed mt-3">
+            {pairNote}
+          </p>
+        </div>
+
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">The {fromName} → {toName} yaw ratio</h3>
+          <p class="leading-relaxed">
+            {fromName} uses a yaw value of {fromYaw.toFixed(4)} (default FOV {games[from]?.defaultFov}) while {toName} uses {toYaw.toFixed(4)} (default FOV {games[to]?.defaultFov}). That is a {ratioLabel} engine-level difference — direct numerical sensitivity numbers are non-transferable. The converter below divides your {fromName} value by this ratio (then adjusts for FOV) so your 360-degree turn distance stays identical.
           </p>
         </div>
 
         <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
           <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">What is cm/360° distance?</h3>
           <p class="leading-relaxed">
-            It is the physical distance (in centimeters or inches) your hand must move across the mousepad to rotate your in-game camera 360 degrees. Matching cm/360° distance ensures 1:1 muscle memory transfer.
+            It is the physical distance (in centimeters or inches) your hand must move across the mousepad to rotate your in-game camera 360 degrees. Matching cm/360° distance ensures 1:1 muscle memory transfer — this is what the {ratioLabel} multiplier above is designed to preserve.
           </p>
+        </div>
+
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">{fromName} vs {toName}: which game needs more fine aim?</h3>
+          <p class="leading-relaxed">
+            {fromName}'s default FOV of {games[from]?.defaultFov} degrees and {toName}'s {games[to]?.defaultFov} degrees change how the same cm/360° feels: lower FOV magnifies targets, higher FOV widens tracking arcs. After converting, spend 10 minutes in {toName}'s aim range verifying micro-flicks, because muscle memory transfers by distance, not by pixels on screen.
+          </p>
+        </div>
+
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)]">
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">Why does sensitivity differ between {fromName} and {toName}?</h3>
+          <p class="leading-relaxed">
+            Different game engines use different <strong>Yaw multipliers</strong> (the angular degree change per mouse counts or analog stick tick). {fromName} at {fromYaw.toFixed(4)} and {toName} at {toYaw.toFixed(4)} do not share a scale, which is why the {ratioLabel} conversion factor exists.
+          </p>
+        </div>
+
+        <div class="bg-[var(--color-surface-2)] p-5 sm:p-6 rounded-xl border border-[var(--color-border-subtle)] md:col-span-2">
+          <h3 class="text-base font-bold text-[var(--color-text-primary)] mb-2">Your {fromName} → {toName} migration checklist</h3>
+          <ol class="list-decimal pl-5 space-y-2 leading-relaxed">
+            <li>Enter your current {fromName} sensitivity and hardware DPI in the converter above.</li>
+            <li>Copy the {toName} value the engine returns — it applies the {ratioLabel} yaw ratio to preserve your cm/360° distance.</li>
+            <li>Paste it into {toName}'s settings and keep your FOV near its default of {toFov}° so the conversion assumption holds.</li>
+            <li>Warm up in {toName} for 10–15 minutes and verify a full 360° flick lands where it did in {fromName} before you queue competitively.</li>
+          </ol>
+          {sameScale && (
+            <p class="mt-3">
+              <strong>True 1:1 transfer:</strong> {fromName} and {toName} share the same {fromYaw.toFixed(4)} yaw multiplier
+              and a {fromFov}° default FOV, so the converter returns the same value you started with. Spend your tuning time on
+              {toName}-specific aim practice and recoil control instead — your sensitivity does not need to change.
+            </p>
+          )}
+          {!sameScale && (
+            <p class="mt-3">
+              If a 360° flick overshoots or undershoots after switching, your effective FOV differs from the default used here
+              — raise or lower your {toName} sens in small steps until the visualizer shows your old turn distance.
+            </p>
+          )}
         </div>
       </div>
     </section>

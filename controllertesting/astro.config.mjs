@@ -12,7 +12,7 @@ export default defineConfig({
   compressHTML: true,
   integrations: [react(), sitemap({
     filter: (page) => {
-      const excludePaths = ['/404', '/500', '/api/', '/admin/', '/embed/', '/report/'];
+      const excludePaths = ['/404', '/500', '/api/', '/admin/', '/embed/', '/report/', '/verify', '/course-cards-demo', '/feature-cards-demo'];
       return !excludePaths.some(p => page.includes(p));
     },
     serialize: (item) => {

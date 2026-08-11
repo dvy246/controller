@@ -40,7 +40,7 @@ export interface InterpretationResult {
 export interface ComparisonResult {
   percentile: number;
   betterThan: string;
-  sampleCount: number;
+  modelName: string;
   datasetDate: string;
 }
 
@@ -265,7 +265,6 @@ export function interpretDrift(
     comparison = {
       percentile,
       betterThan: `${percentile}% of the ${model.name} reference distribution`,
-      sampleCount: 0,
       modelName: model.name,
       datasetDate: reliabilityData.updatedAt,
     };
@@ -438,7 +437,6 @@ export function interpretCircularity(
     comparison = {
       percentile,
       betterThan: `${percentile}% of the ${model.name} reference distribution`,
-      sampleCount: 0,
       modelName: model.name,
       datasetDate: reliabilityData.updatedAt,
     };

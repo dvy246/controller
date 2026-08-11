@@ -1,0 +1,65 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+
+const pairs = [
+  { from: 'fortnite', to: 'apex-legends', fromName: 'Fortnite', toName: 'Apex Legends' },
+  { from: 'fortnite', to: 'valorant', fromName: 'Fortnite', toName: 'Valorant' },
+  { from: 'counter-strike-2', to: 'valorant', fromName: 'Counter-Strike 2', toName: 'Valorant' },
+  { from: 'counter-strike-2', to: 'apex-legends', fromName: 'Counter-Strike 2', toName: 'Apex Legends' },
+];
+
+const title = 'Sensitivity Converter — 1:1 360° Motor Memory Math Engine';
+const description = 'Convert sensitivity between Fortnite, Apex Legends, Valorant, and CS2. Match exact 360° turn distance (cm/360°) for perfect muscle memory transfer.';
+const canonical = 'https://controllertesting.com/sensitivity-converter';
+
+const breadcrumbs = [{ name: 'Tools', url: '/tools' }, { name: 'Sensitivity Converter' }];
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  name: title,
+  url: canonical,
+  description,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'All',
+  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+};
+---
+
+<BaseLayout title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs} localized={false}>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+  <Header />
+  <main class="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="mb-6"><Breadcrumbs items={breadcrumbs} /></div>
+
+    <header class="mb-10">
+      <h1 class="text-h1 mb-4">Sensitivity Converter</h1>
+      <p class="text-secondary max-w-3xl">
+        Match your exact 360-degree turn distance when switching games. Each converter uses the
+        engine's real yaw multiplier and default FOV so your muscle memory carries over 1:1.
+      </p>
+    </header>
+
+    <section class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      {pairs.map(({ from, to, fromName, toName }) => (
+        <a
+          href={`/sensitivity-converter/${from}-to-${to}`}
+          class="card-base card-hover p-6 rounded-2xl"
+        >
+          <h2 class="text-xl font-bold text-[var(--color-text-primary)] mb-2">
+            {fromName} → {toName}
+          </h2>
+          <p class="text-sm text-[var(--color-text-secondary)]">
+            Convert {fromName} sensitivity to {toName} with cm/360° distance matching and hardware
+            DPI scaling.
+          </p>
+        </a>
+      ))}
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
