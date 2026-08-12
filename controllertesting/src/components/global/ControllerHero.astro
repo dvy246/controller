@@ -152,39 +152,48 @@
 </style>
 
 <script>
-  // Tiny loader: the full Three.js engine (~555KB) lives in controllerHero3D.ts
+  // Tiny loader: the full Three.js engine (~631KB) lives in controllerHero3D.ts
   // and is fetched ONLY when the hero enters the viewport AND the browser is
   // idle — so the homepage never ships the 3D bundle on its critical path.
   const heroReady = () => {
     const heroEl = document.getElementById('hero-container');
     if (!heroEl || heroEl.dataset.threeInitialized === 'true') return;
+
+    // Phase 1 (zero main-thread cost): warm the asset cache the moment the
+    // hero is visible. Preloads are pure fetches — no JS execution — so they
+    // can race ahead of the engine import without touching rendering budget.
+    const preload = (href: string, as: string, type?: string) => {
+      if (document.querySelector(`link[href="${href}"]`)) return;
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.href = href;
+      link.as = as;
+      if (type) link.type = type;
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+    };
+    preload('/models/controller.glb', 'fetch', 'model/gltf-binary');
+    preload('/libs/basis/basis_transcoder.js', 'fetch');
+    preload('/libs/basis/basis_transcoder.wasm', 'fetch', 'application/wasm');
+
+    // Phase 2: start the engine import at the first idle slot, but never wait
+    // on idle past window load + 150ms — the old timeout:2500 gate alone could
+    // hold the spinner for 2.5s before any byte downloaded. Whichever fires
+    // first wins; the `started` flag makes the race idempotent.
+    let started = false;
     const start = () => {
-      // Fan-out the hero asset fetches: preload the compressed GLB and the
-      // Basis transcoder while the engine chunk downloads, so the 3-step
-      // serial waterfall (engine -> GLB -> transcoder) becomes one parallel
-      // round. Safe no-op if the engine import fails (cache only).
-      const preload = (href: string, as: string, type?: string) => {
-        if (document.querySelector(`link[href="${href}"]`)) return;
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.href = href;
-        link.as = as;
-        if (type) link.type = type;
-        link.crossOrigin = 'anonymous';
-        document.head.appendChild(link);
-      };
-      preload('/models/controller.glb', 'fetch', 'model/gltf-binary');
-      preload('/libs/basis/basis_transcoder.js', 'fetch');
-      preload('/libs/basis/basis_transcoder.wasm', 'fetch', 'application/wasm');
+      if (started) return;
+      started = true;
       import('./controllerHero3D.ts').then((m) => m.startHero3D()).catch((err) => {
         console.warn('3D hero failed to load:', err);
       });
     };
     if ('requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(start, { timeout: 2500 });
+      (window as any).requestIdleCallback(start, { timeout: 1500 });
     } else {
-      setTimeout(start, 0);
+      start();
     }
+    window.addEventListener('load', () => setTimeout(start, 150), { once: true });
   };
 
   if ('IntersectionObserver' in window) {

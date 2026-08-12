@@ -21,17 +21,8 @@ This document serves as the absolute source of truth for all AI agents, software
 
 ## 2. 🌐 Internationalization (i18n) Engine
 
-*   **Locales Supported**:
-    *   `en` — English (Default, root `/`)
-    *   `es` — Español (`/es/`)
-    *   `de` — Deutsch (`/de/`)
-    *   `fr` — Français (`/fr/`)
-    *   `ja` — 日本語 (`/ja/`)
-*   **Architecture**:
-    *   `src/i18n/translations.ts`: Complete translation dictionary for all UI text, headings, buttons, footer, and navigation.
-    *   `src/i18n/utils.ts`: Helper utilities (`getLangFromUrl`, `useTranslations`, `getLocalizedUrl`).
-    *   `src/components/global/LanguageSelector.astro`: Dropdown component in Header and Footer.
-    *   `src/layouts/BaseLayout.astro`: Automatic sitewide injection of `<link rel="alternate" hreflang="...">` tags for all 5 locales.
+*   **Status: EN-ONLY LAUNCH (decision 2026-08-10).** Locale trees (`/es /de /fr /ja` + `/pt /ko /ru /zh-tw /it`) are disabled until genuine translations exist; `BaseLayout.astro` keeps `languageSet` empty, so **zero hreflang alternates are emitted sitewide** and no locale pages build. Do NOT re-enable English-content locale copies (`sync-locales.js`/`add_localized.py`) — they previously flagged "Duplicate, Google chose different canonical".
+*   **Architecture (dormant)**: `src/i18n/translations.ts` dictionary, `src/i18n/utils.ts` helpers, `LanguageSelector.astro` component, `BaseLayout.astro` hreflang injection — all auto-activate if locales are ever re-enabled with genuine translations.
 
 ---
 
@@ -144,7 +135,7 @@ This document serves as the absolute source of truth for all AI agents, software
 *   **Reliability Reports**: `/reliability/[slug]` (5 models) + hub + dashboard + `/reliability/report`.
 *   **Connect & Pair Guides**: `/connect/[controller]/[platform]` — 12 pages (PS5 DualSense, PS4 DualShock 4, Xbox Wireless, Switch Pro × PC/macOS/Steam Deck), HowTo schema + "Test after pairing" CTA; linked from Footer.
 *   **Learn Guides**: `/learn/[slug]` — 7 data-driven explainer articles (stick drift, polling rate, deadzone, input lag, Hall effect vs pot, etc.), HowTo/FAQ schema; linked from Footer "Controller Guides".
-*   **Press Kit**: `/press` — data-led media page (142,850+ results, Hall-effect vs potentiometer gap, OSS math, honesty policy); linked from Footer.
+*   **Press Kit**: `/press` — data-led media page (Hall-effect vs potentiometer gap, OSS math, honesty policy, community telemetry at 0 until real samples exist); linked from Footer.
 
 ---
 
@@ -157,8 +148,8 @@ This document serves as the absolute source of truth for all AI agents, software
 *   **hreflang Integrity**: alternates emitted ONLY for real localized pages (homepage `/es /de /fr /ja`).
 *   **Known Baseline & QA Audit Status**: `astro check` = 0 errors across all 59 core pages, components, and layouts. Pre-existing 78 errors are strictly isolated inside `src/pages/games/*` canvas `ctx null` checks.
 *   **Color Contrast Compliance**: Verified >7.8:1 contrast in Dark Mode and >8.2:1 in Light Mode across all text layers and status cards (exceeds WCAG AA minimums).
-*   **Header (Liquid Purple)**: `Header.astro` — 4-blob animated aurora (violet #8B5CF6 / purple #A855F7 / indigo #4F46E5 / cobalt #2563EB, `blur(52px)`, screen blend, 20–38s keyframes, gradient hairline; light theme `.16` opacity; `prefers-reduced-motion` respected). Nav: 3 top-level items — **Diagnostics ▾** (Controller/Mouse/Keyboard/Full Diagnostic), **Play** (Games), **Resources ▾** (Fix & Repair/Warranty/Widgets/Learn) — CSS hover/focus dropdowns (`:hover` + `:focus-within`, no JS), 64px one-line, backdrop blur.
-*   **Interactive 3D Hero Section**: `ControllerHero.astro` — Floating photorealistic PS5 controller loaded via Three.js (GLTF/DRACO). Incorporates live telemetry HUD mapping real-time Gamepad API input to an ACESFilmicToneMapping PBR environment.
+*   **Header (Liquid Purple)**: `Header.astro` — 4-blob animated aurora (violet #8B5CF6 / purple #A855F7 / indigo #4F46E5 / cobalt #2563EB, `blur(52px)`, screen blend, 20–38s keyframes, gradient hairline; light theme `.16` opacity; `prefers-reduced-motion` respected). Nav: 3 top-level items — **Diagnostics ▾** (Controller/Mouse/Keyboard/Full Diagnostic), **Play ▾** (all 13 arcade games, 2-column dropdown with XP badges, generated from `arcadeInterlinks.ts` `GAMES` registry; mobile drawer lists all 13 games too), **Resources ▾** (Fix & Repair/Warranty/Widgets/Learn) — CSS hover/focus dropdowns (`:hover` + `:focus-within`, no JS), 64px one-line, backdrop blur.
+*   **Interactive 3D Hero Section**: `ControllerHero.astro` — Floating photorealistic PS5 controller loaded via Three.js (GLTFLoader + self-hosted `MeshoptDecoder` + `KTX2Loader`/Basis transcoder; GLB is gltfpack-optimized: meshopt mesh compression + UASTC color / ETC1S normal-attrib KTX2 textures, 6.5MB → 1.2MB). Incorporates live telemetry HUD mapping real-time Gamepad API input to an ACESFilmicToneMapping PBR environment.
 
 ---
 

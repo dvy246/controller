@@ -60,3 +60,12 @@ Append-only log from the Ralph Loop debugging pass (tools + games). Purpose: nev
 - **Problem:** after idle fired, hero assets downloaded SERIALLY: engine chunk (631 KB) → GLB (1.2 MB) → Basis transcoder (.js 311 KB + .wasm 488 KB loaded only at first KTX2 texture decode). Wall time = sum of three sequential round trips.
 - **Fix (`ControllerHero.astro` loader, inside idle callback, before the dynamic import):** inject `<link rel="preload">` for `/models/controller.glb` (as=fetch, type=model/gltf-binary), `/libs/basis/basis_transcoder.js` + `.wasm` (as=fetch). All three fetches now start in the same tick as the engine chunk import → wall time ≈ max(631KB, 1.2MB, 0.8MB) instead of the sum. Dedupe guard (`link[href]` check) + `crossOrigin=anonymous` (matches three's FileLoader credentials mode so the preload is actually consumed, not wasted).
 - **Safety:** preloads happen only after idle fires; engine still lazy (0 references in built HTML); if the import fails, preloads are just warm cache. Build 271 pages clean, hints verified present in the hero loader chunk.
+
+## 3D hero timing gate rework (2026-08-12) — target: model ≤2s
+
+- **Problem:** idle gate `timeout: 2500` meant NO byte of the hero might download until up to 2.5s after load — alone blowing the 2s budget before any fetch even started.
+- **Fix (`ControllerHero.astro`):** split into two phases —
+  1. Preloads (`/models/controller.glb`, `basis_transcoder.js/.wasm`) fire the moment the hero enters the viewport (pure fetches, zero main-thread cost, don't touch rendering budget).
+  2. Engine import races `requestIdleCallback(timeout: 1500)` vs `window.load + 150ms` (idempotent `started` flag) — worst-case engine start ≈ load+150ms instead of 2.5s.
+- **Expected timeline (typical desktop, ≥10Mbps):** hero visible ~0.1s → GLB/transcoder prefetched by ~1s → engine starts at first idle (~0.2-0.5s typical) or load+150ms (worst) → KTX2 decodes (worker thread) → model painted ≈ **1-2s** vs the old 5s. Slow networks (2Mbps) still bound by the 1.2MB GLB (~5-6s) — bytes are already at the floor without visual regression; the honest next step there is a lower-poly LOD swap (out of scope, visual risk).
+- **CWV safety:** preloads are fetch-priority-low (don't compete with font/LCP), engine stays lazy (0 refs in built HTML), spinner shows until first paint so no layout shift. Build 271 pages clean.

@@ -1,0 +1,87 @@
+---
+/**
+ * /haptics/index.astro — Haptics Composer Hub
+ * SEO Title: Haptics Composer: Game Rumble Waveform Generator
+ * Hub index for the Haptic Feedback Composer routes.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Tools', url: '/tools' },
+  { name: 'Haptics Composer Hub' },
+];
+
+const engines = [
+  { slug: 'unity', name: 'Unity', href: '/haptics/unity', effects: ['Explosion', 'Heartbeat', 'Recoil'], desc: 'C# gamepad haptic effects for Unity developers' },
+  { slug: 'unreal', name: 'Unreal Engine', href: '/haptics/unreal', effects: ['Explosion', 'Heartbeat', 'Recoil'], desc: 'Blueprint & C++ haptic effects for Unreal developers' },
+];
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Haptic Feedback Composers',
+  numberOfItems: engines.length,
+  itemListElement: engines.map((t, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: `${t.name} Haptic Composer`,
+    url: `https://controllertesting.com${t.href}`,
+  })),
+};
+---
+
+<BaseLayout
+  title="Haptics Composer: Game Rumble Waveform Generator | CT"
+  description="Design gamepad rumble haptics in your browser. Compose explosion, heartbeat, and recoil waveforms and export production-ready Unity or Unreal Engine code."
+  schema={itemListSchema}
+  breadcrumbs={breadcrumbs}
+  localized={false}>
+  <Header />
+
+  <main id="main-content" class="hub-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="hub-header">
+        <span class="badge-tag">Haptic Feedback Suite</span>
+        <h1 class="hub-title text-h1">Haptics Composer Hub</h1>
+        <p class="hub-subtitle">
+          Design dual-motor rumble waveforms visually, preview them on your controller in real time, and export production-ready code for your game engine.
+        </p>
+      </header>
+
+      <div class="grid-tools">
+        {engines.map((e) => (
+          <a href={e.href} class="tool-hub-card card-base card-hover">
+            <div class="card-top-bar">
+              <span class="card-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-7 4 14 3-9 2 2h6"/></svg>
+              </span>
+            </div>
+            <h2 class="card-tool-name">{e.name} Haptic Composer</h2>
+            <p class="card-tool-desc">{e.desc}</p>
+            <span class="card-action-link">
+              Open composer
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .hub-page { padding-top: 96px; padding-bottom: var(--spacing-section); }
+  .hub-header { margin-bottom: 2.5rem; }
+  .hub-header .badge-tag { margin-bottom: 0.75rem; }
+  .hub-title { font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
+  .grid-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1.25rem; width: 100%; }
+</style>

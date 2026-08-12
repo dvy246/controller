@@ -17,63 +17,182 @@ const guides = [
     title: 'What Is Stick Drift?',
     blurb: 'A controller stick moves or aims on its own, even when untouched. Learn what the drift percentage means and when it is worth fixing vs tuning around.',
     icon: 'drift',
+    category: 'Fundamentals',
   },
   {
     slug: 'controller-deadzone-guide',
     title: 'Controller Deadzone Explained',
     blurb: 'A deadzone is the region of stick travel a game ignores. Here is how inner vs outer deadzones work and how to set them without guesswork.',
     icon: 'deadzone',
+    category: 'Fundamentals',
   },
   {
     slug: 'gamepad-polling-rate-guide',
     title: 'Gamepad Polling Rate (Hz)',
     blurb: 'How often your controller reports its state to your device. 125Hz vs 250Hz vs 1000Hz — what changes in feel, and what does not.',
     icon: 'hz',
+    category: 'Performance',
   },
   {
     slug: 'controller-input-lag-guide',
     title: 'Controller Input Latency',
-    blurb: 'Where the delay in input → pixels actually lives, and the part a controller can and cannot control.',
+    blurb: 'Where the delay in input → pixels actually lives, and the exact parts a controller can and cannot control.',
     icon: 'clock',
+    category: 'Performance',
   },
   {
     slug: 'hall-effect-vs-potentiometer-guide',
     title: 'Hall-Effect vs Potentiometer Sticks',
-    blurb: 'The two dominant stick sensors, and what our 140,000+ measurement dataset shows about how they age.',
+    blurb: 'The two dominant stick sensor types, how magnetic Hall-effect prevents drift, and what baseline lifespan data reveals.',
     icon: 'magnet',
+    category: 'Hardware',
   },
   {
     slug: 'how-controllers-work',
     title: 'How Video Game Controllers Work',
-    blurb: 'Sticks, triggers, buttons and the digital report your device actually receives — the 10-minute mental model.',
+    blurb: 'Sticks, triggers, buttons and the digital HID report your device actually receives — the 10-minute mental model.',
     icon: 'chip',
+    category: 'Fundamentals',
   },
   {
     slug: 'controller-buying-guide',
     title: 'Controller Buying Guide (2026)',
-    blurb: 'A decision framework tuned to what actually wears out — sensor type, polling, buttons, and sticks first.',
+    blurb: 'A decision framework tuned to what actually wears out — sensor type, polling rate, microswitches, and stick modules first.',
     icon: 'cart',
+    category: 'Buying Advice',
+  },
+  {
+    slug: 'how-to-connect-controller-to-pc',
+    title: 'How to Connect Any Controller to PC',
+    blurb: 'Step-by-step connection, driver, and pairing guide for PS5 DualSense, Xbox Wireless, Switch Pro, and generic gamepads.',
+    icon: 'bluetooth',
+    category: 'Setup & Connectivity',
+  },
+  {
+    slug: 'ps5-dualsense-vs-xbox-controller',
+    title: 'PS5 DualSense vs Xbox Wireless Controller',
+    blurb: 'An objective hardware comparison covering ergonomics, polling rates, adaptive triggers, stick durability, and PC drivers.',
+    icon: 'vs',
+    category: 'Comparisons',
+  },
+  {
+    slug: 'gyro-aiming-controller-guide',
+    title: 'Gyro Aiming Guide: Precision Motion Controls',
+    blurb: 'How gyroscopic motion controls provide near-mouse precision on controller, how to calibrate 3-axis gyro sensors, and game setups.',
+    icon: 'gyro',
+    category: 'Competitive & Aim',
+  },
+  {
+    slug: 'symmetrical-vs-asymmetrical-controllers',
+    title: 'Symmetrical vs Asymmetrical Stick Layouts',
+    blurb: 'The biomechanics, grip fatigue, and precision tradeoffs between PlayStation-style symmetrical and Xbox/Switch layouts.',
+    icon: 'layout',
+    category: 'Ergonomics',
+  },
+  {
+    slug: 'how-to-fix-sticky-controller-buttons',
+    title: 'How to Fix Sticky Controller Buttons',
+    blurb: 'Proven methods to safely clean and unstick ABXY, face buttons, shoulder bumpers, and D-Pads without damaging electronics.',
+    icon: 'wrench',
+    category: 'Repair & Maintenance',
+  },
+  {
+    slug: 'mechanical-vs-membrane-controller-buttons',
+    title: 'Mechanical Switches vs Membrane Buttons',
+    blurb: 'Actuation distance, tactile feedback, switch lifespan, and input speed compared between microswitches and rubber membranes.',
+    icon: 'switch',
+    category: 'Hardware',
+  },
+  {
+    slug: 'wired-vs-wireless-controller-latency',
+    title: 'Wired vs Wireless Controllers: Latency & Polling',
+    blurb: 'Testing input lag differences between direct USB cables and Bluetooth/2.4GHz dongles across PC, PlayStation, Xbox, and Switch.',
+    icon: 'wire',
+    category: 'Performance',
+  },
+  {
+    slug: 'controller-overclocking-guide',
+    title: 'Controller Overclocking: Polling Rate Truth',
+    blurb: 'The truth about increasing controller polling rates to 1000Hz+ on PC, input lag benchmarks, USB host controllers, and safety.',
+    icon: 'overclock',
+    category: 'Tuning & Mods',
+  },
+  {
+    slug: 'nintendo-switch-joycon-drift-guide',
+    title: 'Nintendo Switch Joy-Con Drift: Permanent Fixes',
+    blurb: 'Why Joy-Con analog sticks drift so frequently, temporary fixes (contact cleaner, foam shim), and Hall-effect upgrades.',
+    icon: 'joycon',
+    category: 'Repair & Maintenance',
+  },
+  {
+    slug: 'socd-cleaning-fight-sticks',
+    title: 'What is SOCD Cleaning on Hitbox & Fight Sticks?',
+    blurb: 'Simultaneous Opposite Cardinal Directions explained: Neutral, Absolute Priority, and Capcom Pro Tour tournament rules.',
+    icon: 'fight',
+    category: 'Competitive & Esports',
+  },
+  {
+    slug: 'analog-vs-digital-triggers-guide',
+    title: 'Analog vs Digital Hair Triggers',
+    blurb: 'Pressure curves, linear throttle control in racing simulators, trigger stops for competitive FPS, and Hall-effect sensors.',
+    icon: 'trigger',
+    category: 'Hardware',
+  },
+  {
+    slug: 'third-party-vs-official-controllers',
+    title: 'Third-Party vs Official Controllers',
+    blurb: 'A hardware breakdown comparing first-party controllers against pro-tier and budget third-party options like Scuf, 8BitDo & Flydigi.',
+    icon: 'brand',
+    category: 'Buying Advice',
+  },
+  {
+    slug: 'steam-controller-mapping-guide',
+    title: 'How to Map & Calibrate Gamepads in Steam Input',
+    blurb: 'Complete guide to configuring controller deadzones, gyro aiming, back paddles, response curves, and button remapping in Steam.',
+    icon: 'steam',
+    category: 'Setup & Configuration',
   },
 ];
 
 function getLearnIcon(icon: string) {
   switch (icon) {
     case 'drift':
-      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>';
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>';
     case 'deadzone':
-      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>';
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>';
     case 'hz':
-      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3-4 3 3 4-6"/></svg>';
+    case 'overclock':
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l3-4 3 3 4-6"/></svg>';
     case 'clock':
-      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>';
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>';
     case 'magnet':
-      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a6 6 0 0 0 12 0V3"/><path d="M6 3h4v6a2 2 0 0 0 4 0V3h4"/><path d="M8 15v4M16 15v4"/></svg>';
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6a6 6 0 0 0 12 0V3"/><path d="M6 3h4v6a2 2 0 0 0 4 0V3h4"/><path d="M8 15v4M16 15v4"/></svg>';
     case 'chip':
-      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>';
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg>';
     case 'cart':
-      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/><path d="M2 3h3l2.5 12.5a2 2 0 0 0 2 1.5h7.7a2 2 0 0 0 2-1.6L21 7H6"/></svg>';
+    case 'brand':
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.5"/><circle cx="18" cy="21" r="1.5"/><path d="M2 3h3l2.5 12.5a2 2 0 0 0 2 1.5h7.7a2 2 0 0 0 2-1.6L21 7H6"/></svg>';
+    case 'bluetooth':
+    case 'wire':
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg>';
+    case 'vs':
+    case 'layout':
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="3"/><line x1="12" x2="12" y1="5" y2="19"/><circle cx="6" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></svg>';
+    case 'gyro':
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>';
+    case 'wrench':
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>';
+    case 'switch':
+    case 'trigger':
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>';
+    case 'joycon':
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="6"/><circle cx="12" cy="8" r="2"/><circle cx="12" cy="15" r="1"/><circle cx="12" cy="17" r="1"/></svg>';
+    case 'fight':
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="7" cy="12" r="2"/><circle cx="14" cy="10" r="1"/><circle cx="17" cy="10" r="1"/><circle cx="14" cy="14" r="1"/><circle cx="17" cy="14" r="1"/></svg>';
+    case 'steam':
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="8" cy="14" r="2"/><circle cx="16" cy="10" r="2"/><line x1="9.5" y1="13" x2="14.5" y2="11"/></svg>';
     default:
-      return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg>';
+      return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/></svg>';
   }
 }
 
@@ -109,16 +228,23 @@ const faqSchema = {
         text: 'Most drift is fixable: cleaning the sensor housings helps, in-game deadzones mask it, and module replacement fixes it permanently. Check our step-by-step repair guides with your measured drift percentage in hand.',
       },
     },
+    {
+      '@type': 'Question',
+      name: 'Can I test any controller directly in my browser?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. Modern web browsers support the HTML5 Gamepad and WebHID APIs, allowing you to test PS5, Xbox, Nintendo Switch, fight sticks, and generic gamepads instantly with zero downloads.',
+      },
+    },
   ],
 };
 ---
 
 <BaseLayout
-  title="Controller Diagnostics & Repair Guides | ControllerTesting"
-  description="Plain-English guides on stick drift, deadzones, polling rate, and input latency — every figure traceable to our published dataset."
+  title="Controller Diagnostics Guides — How to Test, Fix & Understand Gamepads | ControllerTesting.com"
+  description="Plain-English guides on stick drift, controller deadzones, polling rate, input latency, Hall-effect vs potentiometer sensors, and how controllers work — every figure traceable to our published dataset."
   breadcrumbs={breadcrumbs}
-  schema={itemListSchema}
-
+  schema={[itemListSchema, faqSchema]}
   localized={false}>
   <Header />
 
@@ -127,37 +253,40 @@ const faqSchema = {
       <Breadcrumbs items={breadcrumbs} />
 
       <header class="learn-hero">
-        <span class="badge-tag">Learn · No invented figures</span>
-        <h1 class="text-h1 mb-2">Learn how controllers really work</h1>
+        <span class="badge-tag">Knowledge Hub · 20 Complete Guides</span>
+        <h1 class="text-h1 mb-3">Controller Engineering & Diagnostic Guides</h1>
         <p class="learn-subtitle">
-          Short, honest explainers that go straight from a question to a test you can run in your browser.
-          Where numbers appear they come from our published measurement dataset — not from a marketing page.
+          Data-driven, plain-English explainers that connect directly to our browser-based testing tools.
+          Every technical statement is traceable to hardware specifications, W3C standards, and our reference reliability models.
         </p>
       </header>
 
       <div class="learn-grid">
         {guides.map((g) => (
-          <a href={`/learn/${g.slug}`} class="learn-card card-base card-hover">
-            <div class="learn-card-top">
+          <a href={`/learn/${g.slug}`} class="learn-card card-base card-hover group">
+            <div class="learn-card-meta">
+              <span class="learn-category-badge">{g.category}</span>
               <span class="learn-icon" aria-hidden="true" set:html={getLearnIcon(g.icon)} />
-              <h2 class="learn-card-title">{g.title}</h2>
             </div>
+            <h2 class="learn-card-title group-hover:text-[var(--color-accent-blue)] transition-colors duration-200">{g.title}</h2>
             <p class="learn-card-desc">{g.blurb}</p>
-            <span class="learn-card-link">Read guide →</span>
+            <div class="learn-card-bottom">
+              <span class="learn-card-link">Read full guide →</span>
+            </div>
           </a>
         ))}
       </div>
 
       <div class="learn-cta card-base">
-        <div>
-          <h2 class="section-title">Skip theory, start measuring</h2>
-          <p class="learn-text">
-            None of this matters if your stick already drifts. Run the Stick Drift Detector now — it takes two minutes and gives you a 0.1%-precision number to tune against.
+        <div class="learn-cta-text">
+          <h2 class="section-title !mb-2">Measure before you assume</h2>
+          <p class="learn-text !mb-0">
+            Theory is only useful once you have hard data. Run the Stick Drift Detector or Full Diagnostic Wizard now to get a 0.1%-precision breakdown of your controller's current health.
           </p>
         </div>
         <div class="learn-cta-buttons">
           <a href="/test/controller/drift" class="btn-primary">Test Stick Drift</a>
-          <a href="/test/controller/deadzone" class="btn-secondary">Deadzone Visualizer</a>
+          <a href="/test/controller/full-diagnostic" class="btn-secondary">Full Diagnostic</a>
         </div>
       </div>
     </div>
@@ -168,21 +297,136 @@ const faqSchema = {
 
 <style>
   .learn-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
-  .learn-hero { margin-bottom: 2.5rem; max-width: 720px; }
-  .learn-hero .badge-tag { margin-bottom: 0.75rem; }
-  .learn-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
-  .learn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2.5rem; }
-  .learn-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; cursor: pointer; }
-  .learn-card:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
-  .learn-card-top { display: flex; align-items: center; gap: 0.75rem; }
-  .learn-icon { font-size: 1.25rem; color: var(--color-accent); display: flex; }
-  .learn-icon svg { flex-shrink: 0; }
-  .learn-card-title { font-size: 1.125rem; font-weight: 700; color: var(--color-text-primary); }
-  .learn-card-desc { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; flex: 1; }
-  .learn-card-link { font-family: var(--font-mono); font-size: 0.6875rem; color: var(--color-accent); letter-spacing: 0.04em; }
-  .learn-cta { padding: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
-  .learn-cta-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-  .section-title { margin-bottom: 0.5rem; }
-  @media (max-width: 900px) { .learn-grid { grid-template-columns: 1fr; } }
-  @media (max-width: 640px) { .learn-cta { flex-direction: column; align-items: flex-start; } }
+  .learn-hero { margin-bottom: 3rem; max-width: 820px; }
+  .learn-hero .badge-tag { margin-bottom: 1rem; }
+  .learn-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.65; }
+  
+  .learn-grid { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 1.5rem; 
+    margin-bottom: 3rem; 
+  }
+  
+  .learn-card { 
+    padding: 1.75rem; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 1rem; 
+    border-radius: 20px;
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    text-decoration: none;
+  }
+  
+  .learn-card:hover {
+    background: var(--color-surface-2);
+    border-color: rgba(37, 99, 235, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.5);
+  }
+  
+  .learn-card:focus-visible { 
+    outline: 2px solid var(--color-accent); 
+    outline-offset: 3px; 
+  }
+  
+  .learn-card-meta { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    gap: 0.75rem; 
+  }
+  
+  .learn-category-badge {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--color-accent-blue);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+  }
+  
+  .learn-icon { 
+    color: var(--color-text-secondary); 
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--color-surface-2);
+    transition: all 0.2s ease;
+  }
+  
+  .learn-card:hover .learn-icon {
+    color: var(--color-accent-blue);
+    background: rgba(37, 99, 235, 0.15);
+  }
+  
+  .learn-card-title { 
+    font-size: 1.1875rem; 
+    font-weight: 700; 
+    color: var(--color-text-primary); 
+    line-height: 1.4;
+    margin: 0;
+  }
+  
+  .learn-card-desc { 
+    font-size: 0.875rem; 
+    color: var(--color-text-secondary); 
+    line-height: 1.6; 
+    flex: 1; 
+    margin: 0;
+  }
+  
+  .learn-card-bottom {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+  
+  .learn-card-link { 
+    font-family: var(--font-mono); 
+    font-size: 0.75rem; 
+    font-weight: 600;
+    color: var(--color-accent-blue); 
+    letter-spacing: 0.02em; 
+  }
+  
+  .learn-cta { 
+    padding: 2.5rem; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    gap: 2rem; 
+    border-radius: 24px;
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+  }
+  
+  .learn-cta-text {
+    max-width: 600px;
+  }
+  
+  .learn-cta-buttons { 
+    display: flex; 
+    gap: 1rem; 
+    flex-wrap: wrap; 
+    flex-shrink: 0;
+  }
+  
+  @media (max-width: 1024px) { 
+    .learn-grid { grid-template-columns: repeat(2, 1fr); } 
+  }
+  
+  @media (max-width: 680px) { 
+    .learn-grid { grid-template-columns: 1fr; }
+    .learn-cta { flex-direction: column; align-items: flex-start; padding: 1.75rem; }
+    .learn-cta-buttons { width: 100%; }
+    .learn-cta-buttons a { width: 100%; text-align: center; }
+  }
 </style>

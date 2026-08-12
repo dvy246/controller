@@ -1,0 +1,104 @@
+---
+/**
+ * /deadzone-calculator/index.astro — Deadzone Calculator Hub
+ * SEO Title: Deadzone Calculator: Game-by-Game Stick Tuning
+ * Hub index for the Competitive Deadzone Geometry Sandbox routes.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Tools', url: '/tools' },
+  { name: 'Deadzone Calculator Hub' },
+];
+
+const games = [
+  { slug: 'fortnite', name: 'Fortnite', shape: 'Radial' },
+  { slug: 'apex-legends', name: 'Apex Legends', shape: 'Axial' },
+  { slug: 'warzone', name: 'Warzone', shape: 'Radial' },
+  { slug: 'rocket-league', name: 'Rocket League', shape: 'Radial' },
+  { slug: 'valorant', name: 'Valorant', shape: 'Radial' },
+];
+
+const controllers = [
+  { slug: 'ps5', name: 'PS5 DualSense' },
+  { slug: 'xbox', name: 'Xbox Wireless' },
+  { slug: 'switch', name: 'Switch Pro' },
+];
+
+const allLinks = games.flatMap((g) =>
+  controllers.map((c) => ({
+    name: `${g.name} Deadzone — ${c.name}`,
+    href: `/deadzone-calculator/${g.slug}/${c.slug}`,
+    desc: `${g.shape} deadzone geometry sandbox for ${c.name} in ${g.name}`,
+  }))
+);
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Game Deadzone Calculators',
+  numberOfItems: allLinks.length,
+  itemListElement: allLinks.map((t, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: t.name,
+    url: `https://controllertesting.com${t.href}`,
+  })),
+};
+---
+
+<BaseLayout
+  title="Deadzone Calculator: Game-by-Game Stick Tuning | CT"
+  description="Find the optimal controller deadzone for Fortnite, Apex, Warzone, Rocket League, and Valorant. Visualize radial vs axial geometry with a live drift sandbox."
+  schema={itemListSchema}
+  breadcrumbs={breadcrumbs}
+  localized={false}>
+  <Header />
+
+  <main id="main-content" class="hub-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="hub-header">
+        <span class="badge-tag">Competitive Deadzone Suite</span>
+        <h1 class="hub-title text-h1">Deadzone Calculator Hub</h1>
+        <p class="hub-subtitle">
+          Dial in the smallest deadzone that still cancels your stick drift for the specific game and controller you play. Every page renders the geometry live over your real stick input.
+        </p>
+      </header>
+
+      <div class="grid-tools">
+        {allLinks.map((tool) => (
+          <a href={tool.href} class="tool-hub-card card-base card-hover">
+            <div class="card-top-bar">
+              <span class="card-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg>
+              </span>
+            </div>
+            <h2 class="card-tool-name">{tool.name}</h2>
+            <p class="card-tool-desc">{tool.desc}</p>
+            <span class="card-action-link">
+              Open sandbox
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .hub-page { padding-top: 96px; padding-bottom: var(--spacing-section); }
+  .hub-header { margin-bottom: 2.5rem; }
+  .hub-header .badge-tag { margin-bottom: 0.75rem; }
+  .hub-title { font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
+  .grid-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1.25rem; width: 100%; }
+</style>

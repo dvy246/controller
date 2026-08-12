@@ -1,0 +1,115 @@
+---
+/**
+ * /aim-trainer/index.astro — Aim Trainer Hub
+ * SEO Title: Aim Trainer: Controller & Mouse Precision Sandbox
+ * Hub index for the Pro-Aim Sandbox programmatic routes.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Tools', url: '/tools' },
+  { name: 'Aim Trainer Hub' },
+];
+
+const devices = [
+  {
+    name: 'Controller Aim Trainer',
+    href: '/aim-trainer/controller',
+    desc: 'Stick drift tracking & micro-aim benchmark for gamepad players',
+    games: ['Apex Legends', 'Valorant', 'Fortnite', 'Warzone', 'Counter-Strike 2'],
+  },
+  {
+    name: 'Mouse Aim Trainer',
+    href: '/aim-trainer/mouse',
+    desc: 'cm/360 muscle-memory tracking benchmark for mouse players',
+    games: ['Apex Legends', 'Valorant', 'Fortnite', 'Warzone', 'Counter-Strike 2'],
+  },
+];
+
+const games = ['apex-legends', 'valorant', 'fortnite', 'warzone', 'counter-strike-2'];
+
+const gameNames: Record<string, string> = {
+  'apex-legends': 'Apex Legends',
+  'valorant': 'Valorant',
+  'fortnite': 'Fortnite',
+  'warzone': 'Warzone',
+  'counter-strike-2': 'Counter-Strike 2',
+};
+
+const allLinks = devices.flatMap((d) =>
+  games.map((g) => ({
+    name: `${d.name} (${gameNames[g]})`,
+    href: `${d.href}/${g}`,
+    desc: `${d.desc} tuned for ${gameNames[g]}`,
+  }))
+);
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Aim Trainer Benchmarks',
+  numberOfItems: allLinks.length,
+  itemListElement: allLinks.map((t, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: t.name,
+    url: `https://controllertesting.com${t.href}`,
+  })),
+};
+---
+
+<BaseLayout
+  title="Aim Trainer: Controller & Mouse Precision Sandbox | CT"
+  description="Free in-browser aim trainer for controller and mouse players. Track stick drift impact and muscle memory across Apex, Valorant, Fortnite, Warzone, and CS2."
+  schema={itemListSchema}
+  breadcrumbs={breadcrumbs}
+  localized={false}>
+  <Header />
+
+  <main id="main-content" class="hub-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="hub-header">
+        <span class="badge-tag">Pro-Aim Sandbox</span>
+        <h1 class="hub-title text-h1">Aim Trainer Hub</h1>
+        <p class="hub-subtitle">
+          Benchmark your aim precision, target tracking, and drift handling before you queue ranked. Choose your input device and the game you practice.
+        </p>
+      </header>
+
+      <div class="grid-tools">
+        {allLinks.map((tool) => (
+          <a href={tool.href} class="tool-hub-card card-base card-hover">
+            <div class="card-top-bar">
+              <span class="card-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg>
+              </span>
+            </div>
+            <h2 class="card-tool-name">{tool.name}</h2>
+            <p class="card-tool-desc">{tool.desc}</p>
+            <span class="card-action-link">
+              Run benchmark
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .hub-page { padding-top: 96px; padding-bottom: var(--spacing-section); }
+  .hub-header { margin-bottom: 2.5rem; }
+  .hub-header .badge-tag { margin-bottom: 0.75rem; }
+  .hub-title { font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
+  .grid-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1.25rem; width: 100%; }
+</style>

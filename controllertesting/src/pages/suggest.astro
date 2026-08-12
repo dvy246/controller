@@ -1,0 +1,223 @@
+---
+/**
+ * /suggest — Suggest a Test or Game
+ * Route: proposal intake via prefilled mailto intent (zero backend).
+ * Indexable + FAQPage schema (AEO/GEO).
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [{ name: 'Suggest a Test or Game' }];
+
+const faqs = [
+  {
+    q: 'How do I suggest a new controller test or game?',
+    a: 'Pick a category (Test Idea, Game Idea, or Other), add your name and a short description, then hit Submit — your email app opens with everything pre-filled and you send it to our roadmap team. There is no account and no data is stored on the site.',
+  },
+  {
+    q: 'What kinds of test ideas are you looking for?',
+    a: 'Any diagnostic you wish existed: button ghosting edge cases, wireless latency under load, trigger actuation curves, gyro drift over time, Hall-effect vs potentiometer wear — if it measures a controller, mouse, or keyboard behavior in a browser, we want to hear it.',
+  },
+  {
+    q: 'Can I suggest a browser arcade game idea?',
+    a: 'Yes. Games in the arcade double as controller training (aim tracking, stick precision, trigger control, reaction speed). Describe the core loop, which Gamepad API inputs it uses, and what skill it trains.',
+  },
+  {
+    q: 'How long until a suggestion gets built?',
+    a: 'The roadmap is reviewed weekly. Popular and technically feasible ideas ship in order of demand — if you share a link to where people ask for it, that moves it up. Every shipped idea is credited on the tool page.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const SUGGEST_EMAIL = 'suggest@controllertesting.com';
+---;
+
+<BaseLayout
+  title="Suggest a Test or Game | ControllerTesting"
+  description="Propose a new controller diagnostic tool or browser arcade game. Popular ideas get built, tested, and credited to you — no account required."
+  breadcrumbs={breadcrumbs}
+  schema={faqSchema}
+  localized={false}
+>
+  <Header />
+
+  <main id="main-content" class="pt-24 pb-20 bg-surface-0 min-h-screen">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+
+      <div class="mb-6">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
+
+      <header class="mb-10">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono mb-4 uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+          Roadmap Intake
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-text-primary tracking-tight mb-3">
+          Suggest a Test or Game
+        </h1>
+        <p class="text-base sm:text-lg text-text-secondary max-w-2xl leading-relaxed">
+          Missing a diagnostic, or want a new arcade game that trains a specific skill?
+          Send us the idea — popular and feasible proposals get built, and every shipped
+          idea is credited on the tool page.
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <div class="lg:col-span-7">
+          <div class="rounded-2xl bg-surface-1 border border-surface-2 p-6 sm:p-8">
+            <h2 class="text-xl font-bold text-text-primary mb-2">Submit an Idea</h2>
+            <p class="text-xs text-text-secondary mb-6">
+              Submitting opens your email app with everything pre-filled — nothing is sent until you hit send.
+            </p>
+
+            <form
+              id="suggest-form"
+              class="space-y-5"
+              action={`mailto:${SUGGEST_EMAIL}`}
+              method="post"
+              enctype="text/plain"
+            >
+              <div>
+                <label for="suggest-type" class="block text-xs font-mono text-text-secondary uppercase mb-2">Idea Type</label>
+                <select
+                  id="suggest-type"
+                  name="type"
+                  class="w-full bg-surface-2 border border-surface-3 rounded-lg px-4 py-2.5 text-sm text-text-primary focus:outline-none focus:border-blue-500 transition-colors"
+                >
+                  <option value="Test Idea">Test Idea</option>
+                  <option value="Game Idea">Game Idea</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="suggest-name" class="block text-xs font-mono text-text-secondary uppercase mb-2">Your Name <span class="text-text-tertiary normal-case">(optional — for credit)</span></label>
+                <input
+                  type="text"
+                  id="suggest-name"
+                  name="name"
+                  placeholder="e.g. Alex Mercer"
+                  class="w-full bg-surface-2 border border-surface-3 rounded-lg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-blue-500 transition-colors"
+                />
+              </div>
+
+              <div>
+                <label for="suggest-message" class="block text-xs font-mono text-text-secondary uppercase mb-2">Describe the Idea</label>
+                <textarea
+                  id="suggest-message"
+                  name="message"
+                  rows="6"
+                  required
+                  placeholder="What should it test or play like? Which controller inputs or Gamepad API axes does it use? What skill or fault does it catch?"
+                  class="w-full bg-surface-2 border border-surface-3 rounded-lg px-4 py-2.5 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-blue-500 transition-colors resize-y"
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                class="w-full sm:w-auto btn-primary px-6 py-3 rounded-lg text-sm font-medium inline-flex items-center justify-center gap-2 cursor-pointer"
+              >
+                Submit Idea
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5 space-y-4">
+          <div class="rounded-xl bg-surface-1 border border-surface-2 p-6">
+            <h2 class="text-base font-bold text-text-primary mb-3">What happens next?</h2>
+            <ul class="space-y-3 text-xs text-text-secondary leading-relaxed">
+              <li class="flex gap-2"><span class="font-mono text-blue-400">1.</span> Your email lands in the roadmap inbox — reviewed weekly.</li>
+              <li class="flex gap-2"><span class="font-mono text-blue-400">2.</span> Feasible ideas are prototyped against the Gamepad, WebHID, Web MIDI, and Web Audio APIs.</li>
+              <li class="flex gap-2"><span class="font-mono text-blue-400">3.</span> Shipped ideas are credited on the tool or game page, plus a roadmap status note in the changelog.</li>
+            </ul>
+          </div>
+
+          <div class="rounded-xl bg-surface-1 border border-surface-2 p-6">
+            <h2 class="text-base font-bold text-text-primary mb-3">Related</h2>
+            <ul class="space-y-2.5 text-sm">
+              <li><a href="/games" class="text-blue-400 hover:underline">Browse the arcade →</a></li>
+              <li><a href="/test/controller" class="text-blue-400 hover:underline">Browse all diagnostic tools →</a></li>
+              <li><a href="/contact" class="text-blue-400 hover:underline">Report a bug or get support →</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <section class="mt-14 max-w-3xl">
+        <h2 class="text-xl font-bold text-text-primary mb-5">Suggestions FAQ</h2>
+        <div class="faq-list">
+          {faqs.map((f) => (
+            <div class="faq-item">
+              <h3 class="faq-q">{f.q}</h3>
+              <p class="faq-a">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .faq-list { display: flex; flex-direction: column; gap: 1rem; }
+  .faq-item {
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-default);
+    border-radius: 1rem;
+    padding: 1.5rem 1.5rem 1.5rem 1.5rem;
+    transition: border-color 200ms var(--ease-smooth), box-shadow 200ms var(--ease-smooth);
+  }
+  .faq-item:last-child { padding-bottom: 1.5rem; }
+  .faq-item:hover {
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-card);
+  }
+  .faq-q {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
+    padding-right: 2.5rem;
+  }
+  .faq-a {
+    font-size: var(--text-small);
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    padding-right: 1rem;
+  }
+</style>
+
+<script>
+  const form = document.getElementById('suggest-form');
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const type = document.getElementById('suggest-type').value || 'Test Idea';
+      const name = document.getElementById('suggest-name').value.trim();
+      const message = document.getElementById('suggest-message').value.trim();
+      if (!message) return;
+      const subject = `[Suggestion] ${type}`;
+      const body = `Type: ${type}\nName: ${name || 'Anonymous'}\n\nIdea:\n${message}`;
+      window.location.href = `mailto:${form.getAttribute('action')}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    });
+  }
+</script>

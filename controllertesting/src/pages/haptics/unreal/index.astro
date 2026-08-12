@@ -1,0 +1,89 @@
+---
+/**
+ * /haptics/unreal/index.astro — Unreal Haptics Hub
+ * SEO Title: Unreal Haptic Composer: Gamepad Rumble Blueprint
+ * Hub index for Unreal Engine haptic effects.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Tools', url: '/tools' },
+  { name: 'Haptics', url: '/haptics' },
+  { name: 'Unreal Engine' },
+];
+
+const effects = [
+  { name: 'Explosion Rumble', href: '/haptics/unreal/explosion', desc: 'Sharp high-motor spike with decay envelope for impacts' },
+  { name: 'Heartbeat Pulse', href: '/haptics/unreal/heartbeat', desc: 'Two-beat low-amplitude pattern with jitter for tension' },
+  { name: 'Recoil Kick', href: '/haptics/unreal/recoil', desc: 'Instant snap with quick release for weapon firing' },
+];
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Unreal Engine Haptic Feedback Effects',
+  numberOfItems: effects.length,
+  itemListElement: effects.map((t, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: t.name,
+    url: `https://controllertesting.com${t.href}`,
+  })),
+};
+---
+
+<BaseLayout
+  title="Unreal Haptic Composer: Gamepad Rumble Blueprint | CT"
+  description="Compose and preview gamepad haptic effects for Unreal Engine: explosion, heartbeat, and recoil waveforms with exportable Blueprint-ready C++/SetPlaybackVolume patterns."
+  schema={itemListSchema}
+  breadcrumbs={breadcrumbs}
+  localized={false}>
+  <Header />
+
+  <main id="main-content" class="hub-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="hub-header">
+        <span class="badge-tag">Unreal Haptic Suite</span>
+        <h1 class="hub-title text-h1">Unreal Engine Haptic Composer</h1>
+        <p class="hub-subtitle">
+          Design rumble waveforms for Unreal Engine, preview them on your connected controller, and export code that drives the platform gamepad haptic API.
+        </p>
+      </header>
+
+      <div class="grid-tools">
+        {effects.map((tool) => (
+          <a href={tool.href} class="tool-hub-card card-base card-hover">
+            <div class="card-top-bar">
+              <span class="card-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h3l2-7 4 14 3-9 2 2h6"/></svg>
+              </span>
+            </div>
+            <h2 class="card-tool-name">{tool.name}</h2>
+            <p class="card-tool-desc">{tool.desc}</p>
+            <span class="card-action-link">
+              Open composer
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .hub-page { padding-top: 96px; padding-bottom: var(--spacing-section); }
+  .hub-header { margin-bottom: 2.5rem; }
+  .hub-header .badge-tag { margin-bottom: 0.75rem; }
+  .hub-title { font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
+  .grid-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1.25rem; width: 100%; }
+</style>

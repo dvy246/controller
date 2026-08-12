@@ -1,0 +1,89 @@
+---
+/**
+ * /calibrate/index.astro — WebHID Calibrator Hub
+ * SEO Title: WebHID Stick Calibration: Zero-Point Center Fix
+ * Hub index for the "Zero-Point" WebHID Calibrator routes.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Tools', url: '/tools' },
+  { name: 'WebHID Calibrator Hub' },
+];
+
+const combos = [
+  { controller: 'PS5 DualSense', sensor: 'Hall Effect', href: '/calibrate/dualsense/hall-effect', desc: 'Write zero-point offsets to Hall-effect-equipped DualSense firmware' },
+  { controller: 'PS5 DualSense', sensor: 'Potentiometer', href: '/calibrate/dualsense/potentiometer', desc: 'Recentre worn ALPS potentiometer sticks via firmware-level trim' },
+  { controller: 'PS4 DualShock', sensor: 'Hall Effect', href: '/calibrate/ds4/hall-effect', desc: 'Hall-effect upgrade zero-point calibration for DualShock 4' },
+  { controller: 'PS4 DualShock', sensor: 'Potentiometer', href: '/calibrate/ds4/potentiometer', desc: 'Compensate DualShock 4 stick wear with saved center offsets' },
+];
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'WebHID Stick Calibration Tools',
+  numberOfItems: combos.length,
+  itemListElement: combos.map((t, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: `${t.controller} ${t.sensor} Calibration`,
+    url: `https://controllertesting.com${t.href}`,
+  })),
+};
+---
+
+<BaseLayout
+  title="WebHID Stick Calibration: Zero-Point Center Fix | CT"
+  description="Calibrate PS5 DualSense and PS4 DualShock stick centers via WebHID. Sample zero-point offsets for Hall-effect or potentiometer sensors and save to firmware — free and private."
+  schema={itemListSchema}
+  breadcrumbs={breadcrumbs}
+  localized={false}>
+  <Header />
+
+  <main id="main-content" class="hub-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="hub-header">
+        <span class="badge-tag">God-Mode Calibration Suite</span>
+        <h1 class="hub-title text-h1">WebHID Stick Calibration Hub</h1>
+        <p class="hub-subtitle">
+          Fix drifted stick centers at the firmware level using your browser's WebHID access — no proprietary software, no device data leaving your machine.
+        </p>
+      </header>
+
+      <div class="grid-tools">
+        {combos.map((tool) => (
+          <a href={tool.href} class="tool-hub-card card-base card-hover">
+            <div class="card-top-bar">
+              <span class="card-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/></svg>
+              </span>
+            </div>
+            <h2 class="card-tool-name">{tool.controller} — {tool.sensor}</h2>
+            <p class="card-tool-desc">{tool.desc}</p>
+            <span class="card-action-link">
+              Calibrate
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .hub-page { padding-top: 96px; padding-bottom: var(--spacing-section); }
+  .hub-header { margin-bottom: 2.5rem; }
+  .hub-header .badge-tag { margin-bottom: 0.75rem; }
+  .hub-title { font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
+  .grid-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1.25rem; width: 100%; }
+</style>

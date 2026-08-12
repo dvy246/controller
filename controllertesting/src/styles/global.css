@@ -197,9 +197,9 @@
 }
 
 [data-theme="light"] .diagnostic-tool-shell {
-  background: #0e0e10 !important;
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(59, 130, 246, 0.3);
+  background: var(--color-surface-1) !important;
+  border-color: var(--color-border-default);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(37, 99, 235, 0.25);
 }
 
 [data-theme="light"] .doppelrand-core {
@@ -1636,6 +1636,37 @@ svg {
   color: var(--color-fail) !important;
 }
 
+/* -300 accent shades (used on tinted chips & hover states) need the same
+   darkening as -400 so they stay readable on light surfaces. */
+[data-theme="light"] .text-blue-300 { color: #1d4ed8 !important; }
+[data-theme="light"] .text-emerald-300,
+[data-theme="light"] .text-green-300 { color: var(--color-pass) !important; }
+[data-theme="light"] .text-amber-300,
+[data-theme="light"] .text-yellow-300 { color: var(--color-warning) !important; }
+[data-theme="light"] .text-red-300,
+[data-theme="light"] .text-rose-300 { color: var(--color-fail) !important; }
+[data-theme="light"] .text-purple-300,
+[data-theme="light"] .text-violet-300 { color: #7c3aed !important; }
+[data-theme="light"] .text-fuchsia-300,
+[data-theme="light"] .text-pink-300 { color: #c026d3 !important; }
+[data-theme="light"] .text-cyan-300,
+[data-theme="light"] .text-sky-300 { color: #0e7490 !important; }
+
+/* Hover variants of the -300 shades on group/bento cards */
+[data-theme="light"] .group:hover .group-hover\:text-blue-300 { color: #1d4ed8 !important; }
+[data-theme="light"] .group:hover .group-hover\:text-emerald-300,
+[data-theme="light"] .group:hover .group-hover\:text-green-300 { color: var(--color-pass) !important; }
+[data-theme="light"] .group:hover .group-hover\:text-amber-300,
+[data-theme="light"] .group:hover .group-hover\:text-yellow-300 { color: var(--color-warning) !important; }
+[data-theme="light"] .group:hover .group-hover\:text-purple-300,
+[data-theme="light"] .group:hover .group-hover\:text-violet-300 { color: #7c3aed !important; }
+[data-theme="light"] .group:hover .group-hover\:text-fuchsia-300,
+[data-theme="light"] .group:hover .group-hover\:text-pink-300 { color: #c026d3 !important; }
+[data-theme="light"] .group:hover .group-hover\:text-cyan-300,
+[data-theme="light"] .group:hover .group-hover\:text-sky-300 { color: #0e7490 !important; }
+[data-theme="light"] .group:hover .group-hover\:text-red-300,
+[data-theme="light"] .group:hover .group-hover\:text-rose-300 { color: var(--color-fail) !important; }
+
 [data-theme="light"] .bg-stone-950,
 [data-theme="light"] .bg-stone-900,
 [data-theme="light"] .bg-slate-950,
@@ -1681,95 +1712,101 @@ svg {
   color: #ffffff !important;
 }
 
-/* Dark instrument workspaces (diagnostic-tool-shell) are intentionally
-   dark in BOTH themes. The remaps above would turn their light text dark,
-   so restore the dark palette inside these hard-coded dark shells. */
-[data-theme="light"] .diagnostic-workspace,
-[data-theme="light"] .diagnostic-tool-shell {
-  color: #e4e4e7 !important;
+/* ─── Diagnostic workspaces are now theme-aware: light-mode text + chips ───
+   Previously these shells were intentionally dark in both themes and the
+   blocks below re-forced dark text inside them. Now the shell follows the
+   theme: the generic remaps above already handle text-stone-* / text-white /
+   bg-stone-9xx inside the workspace, so we only need to flip the remaining
+   hard-coded utility surface overrides (dark hexes, white/black chips, and
+   -400 accent text shades with no generic remap). Dark mode is untouched
+   because every rule here is scoped to [data-theme="light"]. */
+
+/* Hard-coded dark shell/strip surfaces → theme surfaces */
+[data-theme="light"] .diagnostic-workspace .bg-\[\#0E0E10\],
+[data-theme="light"] .diagnostic-workspace .bg-\[\#090A0F\],
+[data-theme="light"] .diagnostic-workspace .bg-\[\#0D0D0E\],
+[data-theme="light"] #mech-keyboard-app {
+
+  background-color: var(--color-surface-1) !important;
 }
 
-[data-theme="light"] .diagnostic-workspace .text-white,
-[data-theme="light"] .diagnostic-tool-shell .text-white,
-[data-theme="light"] #mech-keyboard-app .text-white {
-  color: #ffffff !important;
+[data-theme="light"] .diagnostic-workspace .bg-\[\#141417\],
+[data-theme="light"] .diagnostic-workspace .bg-\[\#141416\],
+[data-theme="light"] .diagnostic-workspace .bg-\[\#161618\],
+[data-theme="light"] .diagnostic-workspace .bg-\[\#121214\],
+[data-theme="light"] .diagnostic-workspace .bg-\[\#111114\],
+[data-theme="light"] .diagnostic-workspace .bg-\[\#1A1A1E\],
+[data-theme="light"] #mech-keyboard-app .bg-\[\#141417\],
+[data-theme="light"] #mech-keyboard-app .bg-\[\#121214\],
+[data-theme="light"] #mech-keyboard-app .bg-\[\#111114\] {
+  background-color: var(--color-surface-2) !important;
 }
 
-[data-theme="light"] .diagnostic-workspace .text-stone-200,
-[data-theme="light"] .diagnostic-workspace .text-zinc-200,
-[data-theme="light"] .diagnostic-tool-shell .text-stone-200,
-[data-theme="light"] #mech-keyboard-app .text-stone-200 {
-  color: #e4e4e7 !important;
+/* Structural borders inside the workspace */
+[data-theme="light"] .diagnostic-workspace .border-\[\#27272A\],
+[data-theme="light"] .diagnostic-workspace .border-\[\#2B2B32\],
+[data-theme="light"] #mech-keyboard-app .border-\[\#27272A\],
+[data-theme="light"] #mech-keyboard-app .border-\[\#2B2B32\],
+[data-theme="light"] .diagnostic-workspace .border-white\/10,
+[data-theme="light"] .diagnostic-workspace .border-white\/5,
+[data-theme="light"] #mech-keyboard-app .border-white\/10 {
+  border-color: var(--color-border-default) !important;
 }
 
-[data-theme="light"] .diagnostic-workspace .text-stone-300,
-[data-theme="light"] .diagnostic-workspace .text-zinc-300,
-[data-theme="light"] .diagnostic-tool-shell .text-stone-300,
-[data-theme="light"] #mech-keyboard-app .text-stone-300 {
-  color: #d4d4d8 !important;
+/* Chip surfaces: white-on-dark chips become gray-on-light */
+[data-theme="light"] .diagnostic-workspace .bg-white\/5,
+[data-theme="light"] .diagnostic-workspace .bg-black\/40,
+[data-theme="light"] .diagnostic-workspace .bg-black\/50,
+[data-theme="light"] .diagnostic-workspace .bg-\[\#0D0D0E\]\/90,
+[data-theme="light"] #mech-keyboard-app .bg-white\/5 {
+  background-color: var(--color-surface-3) !important;
 }
 
-[data-theme="light"] .diagnostic-workspace .text-stone-400,
-[data-theme="light"] .diagnostic-workspace .text-zinc-400,
-[data-theme="light"] .diagnostic-tool-shell .text-stone-400,
-[data-theme="light"] #mech-keyboard-app .text-stone-400 {
-  color: #a1a1aa !important;
+[data-theme="light"] .diagnostic-workspace .hover\:bg-white\/15:hover,
+[data-theme="light"] #mech-keyboard-app .hover\:bg-white\/15:hover {
+  background-color: var(--color-surface-4) !important;
 }
 
-[data-theme="light"] .diagnostic-workspace .text-stone-500,
-[data-theme="light"] .diagnostic-workspace .text-zinc-500,
-[data-theme="light"] .diagnostic-tool-shell .text-stone-500,
-[data-theme="light"] #mech-keyboard-app .text-stone-500 {
-  color: #71717a !important;
-}
-
-[data-theme="light"] .diagnostic-workspace .text-blue-400,
-[data-theme="light"] .diagnostic-tool-shell .text-blue-400,
-[data-theme="light"] #mech-keyboard-app .text-blue-400 {
-  color: #60a5fa !important;
-}
-
-[data-theme="light"] .diagnostic-workspace .text-emerald-400,
-[data-theme="light"] .diagnostic-workspace .text-green-400,
-[data-theme="light"] .diagnostic-tool-shell .text-emerald-400,
-[data-theme="light"] #mech-keyboard-app .text-emerald-400 {
-  color: #34d399 !important;
-}
-
-[data-theme="light"] .diagnostic-workspace .text-amber-400,
-[data-theme="light"] .diagnostic-workspace .text-yellow-400,
-[data-theme="light"] .diagnostic-tool-shell .text-amber-400,
-[data-theme="light"] #mech-keyboard-app .text-amber-400 {
-  color: #fbbf24 !important;
-}
-
+/* -400 accent text shades that have no generic light remap */
 [data-theme="light"] .diagnostic-workspace .text-purple-400,
 [data-theme="light"] .diagnostic-workspace .text-violet-400,
-[data-theme="light"] .diagnostic-tool-shell .text-purple-400,
-[data-theme="light"] #mech-keyboard-app .text-purple-400 {
-  color: #c084fc !important;
-}
-
 [data-theme="light"] .diagnostic-workspace .text-fuchsia-400,
 [data-theme="light"] .diagnostic-workspace .text-pink-400,
 [data-theme="light"] .diagnostic-workspace .text-cyan-400,
 [data-theme="light"] .diagnostic-workspace .text-sky-400,
-[data-theme="light"] .diagnostic-tool-shell .text-fuchsia-400,
-[data-theme="light"] .diagnostic-tool-shell .text-pink-400,
-[data-theme="light"] .diagnostic-tool-shell .text-cyan-400,
-[data-theme="light"] .diagnostic-tool-shell .text-sky-400,
+[data-theme="light"] #mech-keyboard-app .text-purple-400,
+[data-theme="light"] #mech-keyboard-app .text-violet-400,
 [data-theme="light"] #mech-keyboard-app .text-fuchsia-400,
 [data-theme="light"] #mech-keyboard-app .text-pink-400,
 [data-theme="light"] #mech-keyboard-app .text-cyan-400,
 [data-theme="light"] #mech-keyboard-app .text-sky-400 {
-  color: #22d3ee !important;
+  color: #9333ea !important;
+}
+
+/* stone-600/700 separators & hovers with no generic remap */
+[data-theme="light"] .diagnostic-workspace .text-stone-600,
+[data-theme="light"] #mech-keyboard-app .text-stone-600 {
+  color: var(--color-text-tertiary) !important;
+}
+
+[data-theme="light"] .diagnostic-workspace .text-stone-700,
+[data-theme="light"] .diagnostic-workspace .text-gray-400,
+[data-theme="light"] .diagnostic-workspace .text-gray-500,
+[data-theme="light"] #mech-keyboard-app .text-stone-700 {
+  color: var(--color-text-secondary) !important;
+}
+
+[data-theme="light"] .diagnostic-workspace .hover\:text-white:hover,
+[data-theme="light"] .diagnostic-workspace .hover\:text-stone-300:hover,
+[data-theme="light"] #mech-keyboard-app .hover\:text-white:hover {
+  color: var(--color-text-primary) !important;
 }
 
 /* Legacy doppelrand-shell diagnostic workspaces (pre-diagnostic-workspace
-   refactor) are also intentionally dark in both themes. Their roots carry a
-   -tester-root/-wizard id. Re-declare the dark palette on the roots so every
-   var()-based color in their child cards (text, surface, accent, border,
-   badges, buttons) resolves back to dark values in light mode. */
+   refactor) previously re-declared a dark palette + dark card surfaces in
+   light mode. They are now theme-aware: the roots inherit the light tokens
+   from [data-theme="light"], the generic .card-base/.glass-panel light
+   overrides (above) apply, and the shared utility remaps handle text. */
 [data-theme="light"] #drift-tester-root,
 [data-theme="light"] #btn-tester-root,
 [data-theme="light"] #dz-tester-root,
@@ -1780,96 +1817,24 @@ svg {
 [data-theme="light"] #grader-root,
 [data-theme="light"] #health-score-app,
 [data-theme="light"] #quick-health-app {
-  color-scheme: dark;
-
-  --color-surface-0: #09090b;
-  --color-surface-1: #121215;
-  --color-surface-2: #18181b;
-  --color-surface-3: #27272a;
-  --color-surface-4: #3f3f46;
-
-  --color-accent: #2563eb;
-  --color-accent-hover: #3b82f6;
-  --color-accent-glow: rgba(37, 99, 235, 0.25);
-
-  --color-emerald: #10b981;
-
-  --color-pass: #10b981;
-  --color-pass-bg: rgba(16, 185, 129, 0.12);
-  --color-warning: #f59e0b;
-  --color-warning-bg: rgba(245, 158, 11, 0.12);
-  --color-fail: #ef4444;
-  --color-fail-bg: rgba(239, 68, 68, 0.12);
-  --color-info: #3b82f6;
-  --color-info-bg: rgba(59, 130, 246, 0.12);
-  --color-neutral: #9ca3af;
-  --color-neutral-bg: rgba(255, 255, 255, 0.05);
-
-  --color-text-primary: #f4f4f5;
-  --color-text-secondary: #a1a1aa;
-  --color-text-tertiary: #71717a;
-  --color-text-inverse: #ffffff;
-
-  --color-border-subtle: rgba(255, 255, 255, 0.08);
-  --color-border-default: rgba(255, 255, 255, 0.12);
-  --color-border-strong: rgba(255, 255, 255, 0.25);
+  color-scheme: light;
 }
 
-/* The generic light-mode card overrides below apply !important white
-   backgrounds/text to .card-base/.card-gradient/.doppelrand-core; scope
-   dark equivalents onto the legacy roots so their instrument surfaces stay
-   dark in light mode. */
-[data-theme="light"] #drift-tester-root .card-base,
-[data-theme="light"] #drift-tester-root .card-gradient,
-[data-theme="light"] #drift-tester-root .doppelrand-core,
-[data-theme="light"] #drift-tester-root .stick-card,
-[data-theme="light"] #btn-tester-root .card-base,
-[data-theme="light"] #btn-tester-root .card-gradient,
-[data-theme="light"] #btn-tester-root .doppelrand-core,
-[data-theme="light"] #btn-tester-root .btn-group-card,
-[data-theme="light"] #dz-tester-root .card-base,
-[data-theme="light"] #dz-tester-root .card-gradient,
-[data-theme="light"] #dz-tester-root .doppelrand-core,
-[data-theme="light"] #circ-tester-root .card-base,
-[data-theme="light"] #circ-tester-root .card-gradient,
-[data-theme="light"] #circ-tester-root .doppelrand-core,
-[data-theme="light"] #vib-tester-root .card-base,
-[data-theme="light"] #vib-tester-root .card-gradient,
-[data-theme="light"] #vib-tester-root .doppelrand-core,
-[data-theme="light"] #diag-wizard .card-base,
-[data-theme="light"] #diag-wizard .card-gradient,
-[data-theme="light"] #diag-wizard .doppelrand-core,
-[data-theme="light"] #trig-tester-root .card-base,
-[data-theme="light"] #trig-tester-root .card-gradient,
-[data-theme="light"] #trig-tester-root .doppelrand-core,
-[data-theme="light"] #health-score-app .card-base,
-[data-theme="light"] #quick-health-app .card-base,
-[data-theme="light"] #health-score-app .card-gradient,
-[data-theme="light"] #quick-health-app .card-gradient,
-[data-theme="light"] #health-score-app .doppelrand-core,
-[data-theme="light"] #quick-health-app .doppelrand-core {
-  background: var(--color-surface-1) !important;
-  border-color: var(--color-border-subtle) !important;
-  color: var(--color-text-primary) !important;
-  box-shadow: none !important;
-}
-
-/* Glass panels & secondary buttons inside the legacy dark workspaces must
-   stay dark (the global light-mode .glass-panel override would turn them
-   light gray with near-white text). */
-[data-theme="light"] #drift-tester-root .glass-panel,
-[data-theme="light"] #btn-tester-root .glass-panel,
-[data-theme="light"] #dz-tester-root .glass-panel,
-[data-theme="light"] #circ-tester-root .glass-panel,
-[data-theme="light"] #vib-tester-root .glass-panel,
-[data-theme="light"] #diag-wizard .glass-panel,
-[data-theme="light"] #trig-tester-root .glass-panel,
-[data-theme="light"] #grader-root .glass-panel,
-[data-theme="light"] #health-score-app .glass-panel,
-[data-theme="light"] #quick-health-app .glass-panel {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border-color: var(--color-border-subtle) !important;
-  backdrop-filter: blur(8px);
+/* Glass panels & secondary chips inside the legacy workspaces: the global
+   light-mode .glass-panel override already flips them, but hard-coded
+   dark chips inside these roots need the same treatment as the workspace. */
+[data-theme="light"] #drift-tester-root .bg-\[\#0D0D0E\],
+[data-theme="light"] #drift-tester-root .bg-\[\#141417\],
+[data-theme="light"] #btn-tester-root .bg-\[\#141417\],
+[data-theme="light"] #dz-tester-root .bg-\[\#141417\],
+[data-theme="light"] #circ-tester-root .bg-\[\#141417\],
+[data-theme="light"] #vib-tester-root .bg-\[\#141417\],
+[data-theme="light"] #diag-wizard .bg-\[\#141417\],
+[data-theme="light"] #trig-tester-root .bg-\[\#141417\],
+[data-theme="light"] #grader-root .bg-\[\#141417\],
+[data-theme="light"] #health-score-app .bg-\[\#141417\],
+[data-theme="light"] #quick-health-app .bg-\[\#141417\] {
+  background-color: var(--color-surface-2) !important;
 }
 
 /* SVGs inherit semantic color instead of becoming monochrome decoration. */

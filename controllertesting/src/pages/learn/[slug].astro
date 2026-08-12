@@ -318,6 +318,651 @@ export function getStaticPaths() {
       },
     ],
   },
+  {
+    slug: 'how-to-connect-controller-to-pc',
+    title: 'How to Connect Any Controller to PC (Bluetooth & USB)',
+    subtitle: 'Step-by-step connection, driver, and pairing guide for PS5 DualSense, Xbox Wireless, Nintendo Switch Pro, and generic gamepads on Windows 10/11 and macOS.',
+    sections: [
+      {
+        h: 'Wired USB Connection (Plug-and-Play)',
+        body: [
+          'Connecting via a standard USB-C or Micro-USB cable is the most reliable method. Windows 10 and 11 automatically load Microsoft XInput and generic DirectInput HID drivers without requiring third-party software for Xbox and DualSense controllers.',
+          'Always ensure you are using a data-capable USB cable rather than a charge-only cord. Once plugged in, your system should chime and register the gamepad in Device Manager under Human Interface Devices.',
+        ],
+      },
+      {
+        h: 'Bluetooth Wireless Pairing Steps by Controller',
+        body: [
+          'Xbox Series / One: Press and hold the circular Xbox button to power on, then hold the small pairing button on the top edge for 3 seconds until the logo flashes rapidly. In Windows, go to Bluetooth & devices → Add device → Bluetooth and select "Xbox Wireless Controller".',
+          'PS5 DualSense / PS4 DualShock 4: Press and hold the Create/Share button and the central PS button simultaneously for 3 seconds until the lightbar begins double-pulsing rapidly. Select "Wireless Controller" in your computer Bluetooth menu.',
+          'Nintendo Switch Pro: Hold the small sync button beside the USB-C port until the bottom indicator lights begin cycling back and forth, then pair in Bluetooth settings.',
+        ],
+      },
+      {
+        h: 'Fixing Common Windows & Browser Detection Issues',
+        body: [
+          'If your controller connects to Windows but browser tests or games do not recognize it, press any face button or move the sticks to wake the Gamepad API. Modern browsers require user interaction before exposing gamepad input buffers to prevent fingerprinting.',
+          'Close background remap software (DS4Windows, JoyToKey, or multiple Steam instances) that might monopolize exclusive HID handles and hide the raw controller from standard WebHID and Gamepad APIs.',
+        ],
+      },
+      {
+        h: 'Verifying Signal and Latency',
+        body: [
+          'After pairing, run our live Gamepad Diagnostic to verify that all 16 standard buttons, analog triggers, and thumbsticks transmit inputs accurately with zero packet loss or ghosting.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Test Controller Connection', href: '/test/controller', primary: true },
+      { label: 'Gamepad Button Matrix', href: '/test/controller/buttons' },
+      { label: 'Estimate Input Latency', href: '/test/controller/latency' },
+    ],
+    faqs: [
+      {
+        q: 'Why is my controller connected via Bluetooth but not working in games?',
+        a: 'Many PC titles exclusively support Microsoft XInput. Non-Xbox controllers (like DualSense or Switch Pro) may require Steam Input or an XInput wrapper to translate DirectInput calls into modern game-compatible commands.',
+      },
+      {
+        q: 'Do I need drivers for PS5 or Switch Pro controllers on Windows?',
+        a: 'No special drivers are required for basic HID input. Windows detects them as standard gamepads out of the box, and browsers natively read them via the HTML5 Gamepad API.',
+      },
+      {
+        q: 'How can I test if my PC is registering gamepad button presses?',
+        a: 'Open our free online Gamepad Tester, plug in your controller, and press any button. The visualizer highlights every face button, bumper, trigger, and stick axis in real time.',
+      },
+    ],
+  },
+  {
+    slug: 'ps5-dualsense-vs-xbox-controller',
+    title: 'PS5 DualSense vs Xbox Wireless Controller: PC & Console Comparison',
+    subtitle: 'An objective hardware comparison covering ergonomics, polling rates, adaptive triggers, stick durability, battery life, and PC driver compatibility.',
+    sections: [
+      {
+        h: 'Ergonomics and Stick Layout',
+        body: [
+          'The Xbox Wireless Controller features an asymmetrical stick layout where the left thumbstick sits above the directional pad, matching the natural resting curve of the left thumb. The PS5 DualSense maintains Sony\'s classic symmetrical layout with both thumbsticks positioned side-by-side along the lower deck.',
+          'The DualSense is slightly wider and heavier (approx. 280g vs 287g with AA batteries), featuring more bulbous grip flares that suit medium-to-large hands, whereas the Xbox chassis offers tapered grips accessible for all hand sizes.',
+        ],
+      },
+      {
+        h: 'Haptic Feedback vs Impulse Triggers',
+        body: [
+          'The DualSense features advanced dual voice-coil actuators capable of nuanced textures alongside dynamic adaptive triggers that push back with variable resistance. However, full haptic feedback and adaptive triggers on PC require a wired USB connection and specific title support.',
+          'The Xbox controller relies on traditional ERM rumble motors in the handles paired with independent vibration motors in the trigger horns ("Impulse Triggers"), which work wirelessly across all Windows games natively.',
+        ],
+      },
+      {
+        h: 'Polling Rates, Latency, and PC Compatibility',
+        body: [
+          'On PC over Bluetooth, the DualSense defaults to a high-frequency polling rate (often 250Hz–1000Hz depending on host Bluetooth stack), while the Xbox Wireless Controller is hardware-capped by Microsoft at 125Hz (8ms update intervals) over standard Bluetooth and USB.',
+          'Xbox controllers achieve 1000Hz (1ms) only when paired with Microsoft\'s proprietary 2.4GHz Xbox Wireless Adapter for Windows.',
+        ],
+      },
+      {
+        h: 'Durability and Sensor Reliability',
+        body: [
+          'Both controllers rely on standard ALPS potentiometer analog modules rated for approximately 2 million cycles, meaning both carry equivalent statistical vulnerability to carbon-track stick drift over 9–14 months of heavy play.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Test PS5 Controller', href: '/test/controller/ps5', primary: true },
+      { label: 'Test Xbox Controller', href: '/test/controller/xbox' },
+      { label: 'Compare Hardware Specs', href: '/compare/dualsense-vs-xbox-series' },
+    ],
+    faqs: [
+      {
+        q: 'Which controller has lower input latency on PC?',
+        a: 'The PS5 DualSense offers faster base Bluetooth polling (up to 250Hz+), while the Xbox controller is locked to 125Hz on Bluetooth. When using the official Xbox 2.4GHz wireless dongle, latency becomes nearly identical (~4ms).',
+      },
+      {
+        q: 'Does the PS5 DualSense or Xbox Controller last longer?',
+        a: 'Both use potentiometer joysticks with similar physical lifespans. The Xbox controller has replaceable AA batteries, while the DualSense uses an internal rechargeable lithium-ion battery.',
+      },
+      {
+        q: 'Do adaptive triggers work natively on PC games?',
+        a: 'Only in select PC games that support the feature, and usually only when connected via a wired USB-C cable due to audio-haptic channel bandwidth requirements.',
+      },
+    ],
+  },
+  {
+    slug: 'gyro-aiming-controller-guide',
+    title: 'Gyro Aiming Guide: Why Motion Controls Beat Stick Aiming',
+    subtitle: 'How gyroscopic motion controls provide near-mouse precision on controller, how to calibrate 3-axis gyro sensors, and which games support it.',
+    sections: [
+      {
+        h: 'How Gyro Aiming Works (Flick Stick & Micro-Corrections)',
+        body: [
+          'Gyro aiming uses internal 3-axis gyroscopes and accelerometers to translate physical wrist rotation directly into in-game crosshair movement. Rather than replacing the right thumbstick, gyro complements it: players use the right stick for broad turns and gyro for sub-pixel micro-adjustments.',
+          'In "Flick Stick" configurations, moving the right stick snaps the camera instantly in any 360-degree direction, leaving all elevation and precision tracking entirely to wrist motion.',
+        ],
+      },
+      {
+        h: 'Why Gyro Outperforms Traditional Analog Sticks',
+        body: [
+          'Analog thumbsticks operate as velocity controllers: deflecting a stick dictates the speed of rotation, which requires artificial aim-assist friction and bullet magnetism to track fast targets. Gyro operates as a positional controller (1:1 spatial translation), matching the physical tracking mechanics of a high-DPI gaming mouse.',
+        ],
+      },
+      {
+        h: 'Supported Hardware and Configuration (PS5, Switch Pro, PC)',
+        body: [
+          'The PS5 DualSense, PS4 DualShock 4, Nintendo Switch Pro, and Steam Deck contain high-fidelity IMU motion sensors that report at 100Hz–250Hz+. Official standard Xbox controllers lack internal gyroscopes and cannot support motion aiming without third-party adapter accessories.',
+          'On PC, Steam Input can map any recognized gyro sensor into mouse delta inputs, enabling instant gyro support across virtually every PC title.',
+        ],
+      },
+      {
+        h: 'Calibrating and Testing Gyroscope Drift',
+        body: [
+          'Gyroscopes can occasionally suffer from sensor calibration offset, causing slow camera panning while resting on a desk. Placing the gamepad on a flat, motionless surface for 5 seconds recalibrates the zero-point biases.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Test Gyroscope Sensor', href: '/test/controller/gyroscope', primary: true },
+      { label: 'Pro-Aim Sandbox', href: '/aim-trainer/controller/fortnite' },
+      { label: 'Deadzone Visualizer', href: '/test/controller/deadzone' },
+    ],
+    faqs: [
+      {
+        q: 'Is gyro aiming the same as motion controls or aim assist?',
+        a: 'No. Traditional motion controls often relied on optical sensor bars (like the Nintendo Wii). Modern gyro aiming uses internal 3-axis IMU sensors that translate pure angular velocity into crosshair displacement with zero aim assist.',
+      },
+      {
+        q: 'Which controllers have built-in gyroscopes?',
+        a: 'The Sony PS5 DualSense, PS4 DualShock 4, Nintendo Switch Pro Controller, Joy-Cons, and Steam Deck all feature built-in 6-axis IMUs. Standard Microsoft Xbox controllers do not.',
+      },
+      {
+        q: 'How do I stop gyro drift when the controller is resting?',
+        a: 'Set the controller on a flat, completely stable surface for 5 to 10 seconds. The internal sensor firmware will recalibrate its baseline angular velocity offsets automatically.',
+      },
+    ],
+  },
+  {
+    slug: 'symmetrical-vs-asymmetrical-controllers',
+    title: 'Symmetrical vs Asymmetrical Thumbstick Layouts: Ergonomic Guide',
+    subtitle: 'The biomechanics, grip fatigue, and precision tradeoffs between PlayStation-style symmetrical and Xbox/Nintendo asymmetrical controller layouts.',
+    sections: [
+      {
+        h: 'The Biomechanics of Stick Placement',
+        body: [
+          'When grasping a gamepad, your thumbs naturally rest higher up near the face buttons and upper shoulder horns in a semi-extended position. In an asymmetrical layout (Xbox/Switch), your primary movement stick (Left) sits directly in this neutral rest zone, minimizing muscular tension in the thenar eminence of the thumb during prolonged locomotion.',
+          'In a symmetrical layout (PlayStation), both thumbsticks sit in the lower tier, requiring both thumbs to maintain a slight inward flexion angle.',
+        ],
+      },
+      {
+        h: 'Symmetrical (PlayStation) vs Asymmetrical (Xbox/Switch)',
+        body: [
+          'Symmetrical layouts offer balanced hand weight distribution and keep both thumbs equidistant from the center line. This is particularly advantageous for 2D fighting games, retro platformers, and titles that rely heavily on the D-Pad, which occupies the primary upper position.',
+          'Asymmetrical layouts prioritize modern 3D first-person and third-person titles where 90% of active playtime is spent manipulating the left stick for movement and right face buttons for jumping and interaction.',
+        ],
+      },
+      {
+        h: 'Hand Size, Grip Style, and Finger Strain',
+        body: [
+          'Players with smaller hand spans (<165mm) often report less thumb joint fatigue on asymmetrical gamepads because reaching the left stick requires zero reach extension. Conversely, claw-grip players frequently prefer symmetrical layouts because the lower stick position frees up index fingers to wrap across the top face buttons.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Controller Fit Blueprint', href: '/fit', primary: true },
+      { label: 'Stick Circularity Test', href: '/test/controller/circularity' },
+      { label: 'Compare Controller Ergonomics', href: '/compare/dualsense-vs-xbox-series' },
+    ],
+    faqs: [
+      {
+        q: 'Why does Xbox use asymmetrical sticks while PlayStation uses symmetrical?',
+        a: 'Microsoft designed the Xbox controller around 3D first-person ergonomics where the left thumb rests naturally higher up. Sony maintained the symmetrical layout established by the original 1997 Dual Analog controller for brand lineage and D-Pad prominence.',
+      },
+      {
+        q: 'Is symmetrical or asymmetrical better for competitive shooter games?',
+        a: 'Neither offers an inherent competitive aim advantage since the right aiming stick occupies the lower position on both styles. Choice comes down to hand size, grip style, and personal thumb joint comfort.',
+      },
+      {
+        q: 'Does stick layout affect thumb fatigue during long gaming sessions?',
+        a: 'Yes. Players with shorter thumbs or arthritis often experience less joint strain with asymmetrical layouts, while claw-grip players often prefer symmetrical spacing.',
+      },
+    ],
+  },
+  {
+    slug: 'how-to-fix-sticky-controller-buttons',
+    title: 'How to Fix Sticky Controller Buttons (Safe Cleaning Guide)',
+    subtitle: 'Proven methods to safely clean and unstick ABXY, face buttons, shoulder bumpers, and D-Pads without voiding warranties or damaging electronics.',
+    sections: [
+      {
+        h: 'Why Controller Buttons Get Sticky',
+        body: [
+          'Button stickiness is almost always caused by dried sugary liquids, sweat, dead skin cells, and atmospheric dust accumulating in the 0.5mm clearance gap between the plastic button cap and the outer shell housing. This residue creates mechanical friction that overpowers the return spring force of the conductive rubber membrane.',
+        ],
+      },
+      {
+        h: 'External Cleaning with 90%+ Isopropyl Alcohol',
+        body: [
+          'Never use water, household window cleaners, or oil-based lubricants like WD-40 on a controller. Use 90% or higher Isopropyl Alcohol (IPA), which dissolves sticky residue and evaporates rapidly without leaving conductive moisture behind.',
+          'Dip a cotton swab in IPA, dab off excess liquid so it is damp but not dripping, and scrub thoroughly around the perimeter of the stuck button while pressing it repeatedly in rapid succession. Allow 10 minutes to dry completely before powering on.',
+        ],
+      },
+      {
+        h: 'Deep Clean: Teardown, Conductive Rubber Pads & Shell',
+        body: [
+          'If external swabbing does not resolve the stickiness, the residue has seeped under the conductive silicone membrane. Disassemble the outer shell using the appropriate Torx Security or Phillips screwdriver, separate the silicone dome sheet, and wash the plastic buttons and shell frame in warm soapy water. Dry completely before reassembly.',
+        ],
+      },
+      {
+        h: 'Diagnosing Ghost Inputs and Button Chatter',
+        body: [
+          'Once cleaned, test the controller on our Button Tester. Verify that pressing a button registers a single crisp input and releases immediately without contact bouncing (double-firing) or lingering active states.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Test Controller Buttons', href: '/test/controller/buttons', primary: true },
+      { label: 'Check Double-Click Faults', href: '/test/mouse/double-click' },
+      { label: 'Step-by-Step Repair Guides', href: '/fix/stick-drift' },
+    ],
+    faqs: [
+      {
+        q: 'Can I use water or WD-40 to clean sticky controller buttons?',
+        a: 'No. Standard WD-40 contains petroleum distillates that degrade plastic and silicone membranes. Plain water conducts electricity and can short-circuit the PCB. Always use 90%+ Isopropyl Alcohol or dedicated quick-drying contact cleaner.',
+      },
+      {
+        q: 'Why do my buttons still stick after cleaning the outside?',
+        a: 'Spilled liquid often flows past the button shaft onto the silicone conductive dome below. When this happens, a full shell teardown is required to clean the silicone pad directly.',
+      },
+      {
+        q: 'How do I verify that every button registers correctly?',
+        a: 'Connect the controller to our online Gamepad Button Tester. Press each button to ensure instantaneous activation (1.00 state) and immediate zero-state release upon lifting.',
+      },
+    ],
+  },
+  {
+    slug: 'mechanical-vs-membrane-controller-buttons',
+    title: 'Mechanical Switches vs Membrane Controller Buttons Compared',
+    subtitle: 'Actuation distance, tactile feedback, switch lifespan, and input speed compared between mechanical microswitches and traditional rubber membranes.',
+    sections: [
+      {
+        h: 'How Membrane Rubber Domes Work',
+        body: [
+          'The vast majority of standard first-party controllers (DualSense, standard Xbox Wireless, Switch Pro) use silicone rubber membrane domes. When pressed, the flexible dome collapses, pushing a conductive carbon pill down onto exposed PCB gold contacts to complete the circuit.',
+          'Membrane buttons provide quiet, cushioned actuation with roughly 1.5mm–2.0mm of travel, but silicone fatigue gradually causes mushy feedback and slower return bounce over years of use.',
+        ],
+      },
+      {
+        h: 'Mechanical Microswitches in Pro Controllers',
+        body: [
+          'High-end esports gamepads (such as Razer Wolverine, Scuf Envision, and Flydigi Vader) utilize tactile mechanical microswitches similar to high-performance gaming mouse buttons. Actuation distance is drastically reduced (0.3mm–0.7mm), requiring minimal finger travel to register.',
+          'Mechanical switches deliver an unmistakable tactile click, consistent actuation force, and near-zero rebound delay, enabling significantly faster repetitive button tapping in competitive shooters and fighting games.',
+        ],
+      },
+      {
+        h: 'Durability, Bounce Time, and Tactile Response',
+        body: [
+          'Standard silicone membranes typically rate for 1–2 million actuations before tearing or losing rebound rigidity. Mechanical microswitches are rated for 5–10 million clicks with virtually zero change in tactile feedback over their operational lifecycle.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Gamepad Button Matrix', href: '/test/controller/buttons', primary: true },
+      { label: 'Estimate Input Latency', href: '/test/controller/latency' },
+      { label: 'Mechanical Keyboard Tester', href: '/test/keyboard' },
+    ],
+    faqs: [
+      {
+        q: 'Are mechanical controller buttons faster than rubber membrane buttons?',
+        a: 'Yes. Mechanical switches actuate in 0.3mm to 0.7mm of travel compared to 1.5mm to 2.0mm on membrane pads, saving valuable milliseconds of physical finger travel time per press.',
+      },
+      {
+        q: 'How long do mechanical switches last compared to membrane pads?',
+        a: 'Quality microswitches are rated for 5 to 10 million clicks, whereas silicone rubber membranes typically begin fatiguing or tearing after 1 to 2 million cycles.',
+      },
+      {
+        q: 'Can mechanical switches cause double-clicking faults?',
+        a: 'Just like gaming mice, mechanical switches can eventually suffer from contact oxidation and switch chatter over time. Testing buttons on an input visualizer helps identify chatter early.',
+      },
+    ],
+  },
+  {
+    slug: 'wired-vs-wireless-controller-latency',
+    title: 'Wired vs Wireless Controllers: Latency, Polling & Reliability',
+    subtitle: 'Testing input lag differences between direct USB cables and Bluetooth/2.4GHz dongles across PC, PlayStation, Xbox, and Nintendo Switch.',
+    sections: [
+      {
+        h: 'Transport Layers: USB Polling vs Bluetooth Packet Intervals',
+        body: [
+          'Wired USB connections send input report packets directly across the hardware bus at fixed polling frequencies (typically 125Hz, 250Hz, 500Hz, or 1000Hz). There is no radio packet queueing or RF interference.',
+          'Bluetooth operates across the crowded 2.4GHz ISM band. While capable of rapid polling, standard Bluetooth stacks bundle data packets into connection intervals that can introduce minor jitter (1ms–4ms variable delay) depending on background RF traffic.',
+        ],
+      },
+      {
+        h: 'The 2.4GHz Wireless Advantage (Proprietary Dongles)',
+        body: [
+          'Controllers that include a dedicated 2.4GHz USB wireless dongle bypass standard Windows Bluetooth stack limitations. Proprietary RF protocols communicate at fixed 1000Hz (1ms) report intervals with hardware frequency hopping, delivering latency indistinguishable from wired cables.',
+        ],
+      },
+      {
+        h: 'Wireless Interference and Packet Drop Symptoms',
+        body: [
+          'Wireless lag rarely presents as steady delay; it manifests as packet micro-stutters and dropped inputs caused by nearby Wi-Fi routers, metal computer cases, or Bluetooth headphones. If an analog stick feels unresponsive for a fraction of a second, RF interference is the primary suspect.',
+        ],
+      },
+      {
+        h: 'When Wired Actually Matters for Competitive Play',
+        body: [
+          'For tournament environments (such as fighting game majors or LAN esports events) where hundreds of wireless signals collide, wired connections are strictly required to eliminate signal collision and ensure 100% frame-consistent input delivery.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Polling Rate Checker', href: '/test/controller/polling-rate', primary: true },
+      { label: 'Input Latency Estimator', href: '/test/controller/latency' },
+      { label: 'Full Hardware Check', href: '/test/controller/full-diagnostic' },
+    ],
+    faqs: [
+      {
+        q: 'Is wired controller connection always faster than Bluetooth?',
+        a: 'Not always. Paradoxically, the PS4 DualShock 4 and PS5 DualSense poll at up to 1000Hz over Bluetooth on PC but default to 250Hz over standard USB unless specifically configured. In practice, modern 2.4GHz wireless and wired USB both deliver sub-4ms response.',
+      },
+      {
+        q: 'How can I reduce wireless interference with my controller dongle?',
+        a: 'Use a USB extension cable to position the 2.4GHz receiver within direct line-of-sight on your desk, away from USB 3.0 ports (which emit 2.4GHz RF noise) and Wi-Fi routers.',
+      },
+      {
+        q: 'Does low controller battery increase input latency?',
+        a: 'Yes. Many wireless gamepads reduce their internal RF transmission power or throttle report rates when battery levels drop below 15% to conserve power, resulting in dropped packets.',
+      },
+    ],
+  },
+  {
+    slug: 'controller-overclocking-guide',
+    title: 'Controller Overclocking: Does Polling Rate Tuning Actually Work?',
+    subtitle: 'The truth about increasing controller polling rates to 1000Hz+ on PC, input lag benchmarks, USB host controllers, and firmware safety.',
+    sections: [
+      {
+        h: 'What Controller Overclocking Actually Does',
+        body: [
+          'On Windows, USB polling rate overclocking (popularized by community drivers like LordOfMice / `hidusbf`) instructs the USB host controller to poll the gamepad endpoint at 1000Hz (every 1ms) or 8000Hz instead of the default 125Hz–250Hz (4ms–8ms).',
+          'This reduces the maximum theoretical transport delay from 8ms down to 1ms, resulting in smoother frame-pacing and more responsive thumbstick micro-adjustments in high-refresh rate gaming.',
+        ],
+      },
+      {
+        h: 'Supported Controllers: PS4 & PS5 vs Xbox Limitations',
+        body: [
+          'Sony controllers (PS4 DualShock 4 and PS5 DualSense) use DirectInput USB descriptors that happily accept 1000Hz (1ms) and 8000Hz overclock filters over wired USB connections.',
+          'Microsoft Xbox controllers (Xbox Series X/S and Xbox One) operate on proprietary XInput firmware that hard-caps the microcontroller report rate to 125Hz (8ms). Overclocking USB filters on standard Xbox pads has zero effect on input frequency.',
+        ],
+      },
+      {
+        h: 'Risks, CPU Overhead, and Real In-Game Impact',
+        body: [
+          'Overclocking a USB endpoint is completely safe and cannot physically brick your gamepad; it only affects how often Windows reads the USB driver buffer. CPU overhead on modern processors is negligible (<0.1%).',
+          'However, an overclocked polling rate cannot fix physical stick drift or make up for 60Hz monitor display latency. Always test before and after using our real-time Polling Rate Checker.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Real-Time Polling Rate Test', href: '/test/controller/polling-rate', primary: true },
+      { label: 'Measure Reaction Latency', href: '/test/controller/latency' },
+      { label: 'Full Diagnostic Suite', href: '/test/controller/full-diagnostic' },
+    ],
+    faqs: [
+      {
+        q: 'Is controller overclocking safe or can it brick my gamepad?',
+        a: 'It is completely safe. Overclocking modifies only the Windows USB polling filter driver on your PC; it does not flash or modify the controller internal hardware firmware.',
+      },
+      {
+        q: 'Can you overclock an Xbox Series X/S controller on PC?',
+        a: 'No. Official Xbox controllers have a hardcoded 125Hz polling rate limit in their internal microcontroller firmware that ignores Windows USB host poll rate increases.',
+      },
+      {
+        q: 'Does overclocking to 1000Hz actually make your aim better?',
+        a: 'It reduces input transport delay by up to 7ms and smooths out stick trajectory on 240Hz+ displays, which competitive players notice during rapid target tracking.',
+      },
+    ],
+  },
+  {
+    slug: 'nintendo-switch-joycon-drift-guide',
+    title: 'Nintendo Switch Joy-Con Drift: Causes & Permanent Fixes',
+    subtitle: 'Why Joy-Con analog sticks drift so frequently, temporary fixes (contact cleaner, foam pad trick), and permanent Hall-effect module upgrades.',
+    sections: [
+      {
+        h: 'The Design Flaw Inside OEM Joy-Con Potentiometers',
+        body: [
+          'Joy-Con drift is caused by the ultra-compact form factor of the OEM stick modules. Inside the module, thin metal wiper prongs glide across delicate carbon resistive tracks. Because the springs are small and the housing lacks rigid support, normal downward pressure during gameplay grinds the carbon into microscopic dust, causing erroneous voltage readings.',
+        ],
+      },
+      {
+        h: 'Calibrating and Cleaning Joy-Cons Before Opening Them',
+        body: [
+          'Before attempting physical repairs, navigate to System Settings → Controllers and Sensors → Calibrate Control Sticks on your Nintendo Switch. Follow the on-screen prompts to recenter the stick.',
+          'You can also gently lift the rubber dust skirt under the thumbstick cap using tweezers and apply 1–2 drops of quick-drying electrical contact cleaner. Rotate the stick 30 times and let it dry for 15 minutes.',
+        ],
+      },
+      {
+        h: 'The Cardboard / Foam Shim Method Explained',
+        body: [
+          'A widely popularized community repair involves placing a 1mm piece of cardboard or high-density foam behind the metal backing of the Joy-Con stick module inside the shell. This restores downward clamping pressure against the internal contacts, temporarily resolving drift without replacing parts.',
+        ],
+      },
+      {
+        h: 'Installing Drop-In Hall-Effect Joy-Con Modules',
+        body: [
+          'The definitive permanent fix is replacing the OEM modules with third-party Hall-effect replacement sticks (such as Gulikit). These modules use magnetic sensors with zero physical wiper contacts, permanently eliminating wear-induced drift.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Test Joy-Con Drift', href: '/test/controller/joycon', primary: true },
+      { label: 'Switch Pro Controller Test', href: '/test/controller/switch-pro' },
+      { label: 'Stick Drift Detector', href: '/test/controller/drift' },
+    ],
+    faqs: [
+      {
+        q: 'Why do Nintendo Switch Joy-Cons drift so easily?',
+        a: 'The compact stick modules use delicate metal wipers and soft carbon film. Friction from regular play quickly wears grooves into the carbon tracks, creating false directional signals.',
+      },
+      {
+        q: 'Does Nintendo still repair Joy-Con stick drift for free?',
+        a: 'Yes. In most major regions (including the US, UK, EEA, and Canada), Nintendo provides free out-of-warranty Joy-Con drift repairs through their official customer support portal.',
+      },
+      {
+        q: 'Are Hall-effect replacement sticks available for Joy-Cons?',
+        a: 'Yes. Drop-in Hall-effect joystick kits exist for Joy-Cons and can be installed in under 20 minutes using standard Tri-Wing and Phillips precision screwdrivers.',
+      },
+    ],
+  },
+  {
+    slug: 'socd-cleaning-fight-sticks',
+    title: 'What is SOCD Cleaning on Hitbox & Fight Sticks? (Rules & Modes)',
+    subtitle: 'Simultaneous Opposite Cardinal Directions explained: Neutral, Absolute Priority, and Capcom Pro Tour tournament compliance rules.',
+    sections: [
+      {
+        h: 'What Simultaneous Opposite Cardinal Directions (SOCD) Means',
+        body: [
+          'On traditional analog thumbsticks and arcade levers, it is physically impossible to press Left and Right simultaneously. On all-button arcade controllers (such as Hitbox, Snack Box Micro, and leverless pads), each direction is mapped to an independent button, allowing players to press opposing directions at the exact same instant.',
+          'SOCD Cleaning is the firmware logic that decides how the controller resolves simultaneous Left+Right or Up+Down input collisions.',
+        ],
+      },
+      {
+        h: 'The Three Major SOCD Cleaning Modes',
+        body: [
+          'Neutral: Opposing inputs cancel each other out completely (Left + Right = Neutral; Up + Down = Neutral). Neither direction registers.',
+          'Absolute Priority / Last Input Priority: The most recently pressed button overrides the previously held direction, allowing seamless instant direction changes.',
+          'Up Priority (Traditional Hitbox): Left + Right = Neutral, but Up + Down = Up (giving jump inputs absolute precedence over crouching).',
+        ],
+      },
+      {
+        h: 'Capcom Pro Tour (CPT) Tournament Rules',
+        body: [
+          'Official tournament rules for Street Fighter 6 and major fighting game events strictly mandate Neutral SOCD cleaning: Left + Right must equal Neutral, and Up + Down must equal Neutral. Controllers using Up Priority or Last Input Priority are illegal in premier sanctioned competition.',
+        ],
+      },
+      {
+        h: 'Testing SOCD Resolution in Your Browser',
+        body: [
+          'Connect your all-button fight stick to our Fight Stick & Hitbox Tester. Press opposing directional buttons simultaneously to visually verify how your firmware resolves SOCD states in real time.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Fight Stick & Hitbox Tester', href: '/test/controller/fight-stick', primary: true },
+      { label: '8-Way D-Pad Precision Tester', href: '/test/controller/dpad' },
+      { label: 'Button Matrix Diagnostic', href: '/test/controller/buttons' },
+    ],
+    faqs: [
+      {
+        q: 'What happens when you press Left + Right at the same time on a Hitbox?',
+        a: 'Under standard tournament-legal SOCD rules, pressing Left and Right simultaneously results in Neutral (zero movement), as if neither button was pressed.',
+      },
+      {
+        q: 'What SOCD cleaner mode is tournament-legal for Street Fighter 6?',
+        a: 'The Capcom Pro Tour requires both Left + Right = Neutral and Up + Down = Neutral. Up-Priority is no longer permitted in official competition.',
+      },
+      {
+        q: 'Can standard D-Pads or thumbsticks trigger SOCD faults?',
+        a: 'Generally no. Physical D-Pads use a central mechanical pivot that prevents opposite contacts from touching simultaneously, though worn membrane pads can rarely misfire.',
+      },
+    ],
+  },
+  {
+    slug: 'analog-vs-digital-triggers-guide',
+    title: 'Analog vs Digital Hair Triggers: Hall-Effect vs Physical Stops',
+    subtitle: 'Pressure curves, linear throttle control in racing simulators, trigger stops for competitive FPS, and magnetic rapid-trigger technology.',
+    sections: [
+      {
+        h: 'How Analog Potentiometer & Hall-Effect Triggers Work',
+        body: [
+          'Analog triggers (L2/R2 or LT/RT) measure continuous travel distance across an axis from 0.00 (unpressed) to 1.00 (fully bottomed out). In racing simulations and vehicle games, this provides precise progressive modulation for throttle, brake pedal pressure, and steering sensitivity.',
+          'Modern gamepads increasingly use Hall-effect magnetic sensors for triggers, eliminating potentiometer wear springs and delivering buttery smooth, noise-free pressure curves.',
+        ],
+      },
+      {
+        h: 'Digital Microswitch Triggers and Mouse-Click Stops',
+        body: [
+          'In competitive first-person shooters (Call of Duty, Apex Legends, Valorant), waiting for a 7mm analog trigger to travel to its actuation threshold costs valuable reaction time. Digital hair triggers replace analog travel with instant 0.5mm mouse-click microswitches.',
+          'Many pro controllers (Scuf, Xbox Elite Series 2, Razer Wolverine) feature mechanical sliding trigger stops that shorten physical throw on demand.',
+        ],
+      },
+      {
+        h: 'Linear Throttle Curves vs Instant Actuation',
+        body: [
+          'Using digital hair triggers in racing games is disastrous: throttle becomes an on/off switch, breaking vehicle traction. Conversely, full analog triggers in fast shooters delay your initial gunshot. Match your trigger configuration to your primary gaming genre.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Trigger Pressure Tester', href: '/test/controller/triggers', primary: true },
+      { label: 'Steering Wheel & Pedals', href: '/test/controller/steering-wheel' },
+      { label: 'PS5 DualSense Diagnostics', href: '/test/controller/ps5' },
+    ],
+    faqs: [
+      {
+        q: 'What is the difference between an analog trigger and a hair trigger?',
+        a: 'An analog trigger measures progressive pressure along a smooth 0% to 100% scale (ideal for racing). A hair trigger uses a short mechanical stop or microswitch for instant firing (ideal for FPS).',
+      },
+      {
+        q: 'Can I use digital trigger stops in racing or flight simulator games?',
+        a: 'No. Engaging trigger stops prevents the trigger from reaching 100% actuation in games that expect full analog travel, capping throttle or brake input.',
+      },
+      {
+        q: 'How do magnetic Hall-effect triggers prevent trigger failure?',
+        a: 'Hall-effect triggers use magnets and non-contact sensors to detect position, meaning there are no physical carbon contacts to wear down or develop dead zones.',
+      },
+    ],
+  },
+  {
+    slug: 'third-party-vs-official-controllers',
+    title: 'Third-Party vs Official Controllers: Scuf, 8BitDo, Gulikit & Flydigi',
+    subtitle: 'A hardware breakdown comparing first-party controllers (Sony, Microsoft, Nintendo) against pro-tier and budget third-party options.',
+    sections: [
+      {
+        h: 'The Rise of Third-Party Hall-Effect & High-Polling Pads',
+        body: [
+          'Historically, third-party gamepads were cheap, low-quality knockoffs. Today, the landscape has completely flipped: third-party manufacturers (such as 8BitDo, Gulikit, Flydigi, and Gamesir) frequently innovate faster than Sony or Microsoft, offering Hall-effect joysticks, mechanical face buttons, 1000Hz polling rates, and rear back paddles at half the price of first-party controllers.',
+        ],
+      },
+      {
+        h: 'First-Party (DualSense, Xbox Wireless, Switch Pro) Pros & Cons',
+        body: [
+          'First-party gamepads offer guaranteed native console compatibility, premium build finishes, and exclusive platform features (DualSense dynamic haptics and adaptive triggers; Xbox seamless wireless pairing; Nintendo HD rumble and amiibo NFC).',
+          'Their major drawback is conservative sensor choices: nearly all first-party standard controllers continue to use wear-prone potentiometer stick modules.',
+        ],
+      },
+      {
+        h: 'Custom Pro Controllers (Scuf, Battle Beaver, Elite Series 2)',
+        body: [
+          'High-end custom controllers take OEM controller shells and modify them with rear grip paddles, digital mouse-click triggers, and customized thumbstick tensions. While exceptional for competitive esports, they carry premium $150–$250+ price tags and still face stick drift if built on stock potentiometer bases.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Compare Controllers Head-to-Head', href: '/compare', primary: true },
+      { label: 'Controller Hardware Profiles', href: '/controller' },
+      { label: 'Controller Buying Guide', href: '/learn/controller-buying-guide' },
+    ],
+    faqs: [
+      {
+        q: 'Are third-party controllers better than official Sony or Xbox controllers?',
+        a: 'For PC and Switch gaming, many third-party controllers (like 8BitDo Ultimate or Flydigi Vader) offer better durability with Hall-effect sticks and 1000Hz polling at a lower price point than first-party pads.',
+      },
+      {
+        q: 'Why do third-party controllers include Hall-effect sticks before official pads?',
+        a: 'Third-party manufacturers can iterate faster to capture enthusiast demand, whereas console manufacturers operate massive supply chains tied to long-term OEM part contracts.',
+      },
+      {
+        q: 'Will third-party controllers work natively on PS5 and Xbox Series X consoles?',
+        a: 'Not all. Sony and Microsoft use security authentication chips that block unauthorized wireless controllers. Always verify native console certification before purchasing.',
+      },
+    ],
+  },
+  {
+    slug: 'steam-controller-mapping-guide',
+    title: 'How to Map & Calibrate Gamepads in Steam Input',
+    subtitle: 'Complete guide to configuring controller deadzones, gyro aiming, back paddles, response curves, and button remapping inside Steam.',
+    sections: [
+      {
+        h: 'Enabling Steam Input for PlayStation, Xbox, and Switch Gamepads',
+        body: [
+          'Steam Input is a powerful hardware abstraction layer built into the Steam client. It intercepts raw HID gamepad signals and translates them into custom game-compatible inputs. To enable it, open Steam → Settings → Controller and toggle on configuration support for your specific controller type.',
+        ],
+      },
+      {
+        h: 'Customizing Anti-Deadzone and Response Curves',
+        body: [
+          'Inside Steam controller configurator per game, you can adjust inner and outer deadzones with surgical precision. The "Anti-Deadzone" setting allows you to cancel out hardcoded, overly large deadzones in older games, restoring instant responsiveness to worn or tight sticks.',
+        ],
+      },
+      {
+        h: 'Setting Up Gyro-to-Mouse and Flick Stick Controls',
+        body: [
+          'Steam Input allows you to map internal gyroscopes on PS5, PS4, Switch Pro, and Steam Deck controllers into raw mouse delta movements. This grants PC players precision mouse-like aim across any shooter, even if the game was never designed for motion controls.',
+        ],
+      },
+      {
+        h: 'Calibrating and Testing Controller Zero-Points',
+        body: [
+          'Navigate to Steam Controller Settings and click "Calibration & Advanced Settings" to run automated stick center-point and gyro resting bias calibrations. Test the resulting output in our browser-based Gamepad Mapping tool.',
+        ],
+      },
+    ],
+    related: [
+      { label: 'Gamepad Mapping Tool', href: '/test/controller/gamepad-mapping', primary: true },
+      { label: 'Deadzone Visualizer', href: '/test/controller/deadzone' },
+      { label: 'Full Diagnostic Suite', href: '/test/controller/full-diagnostic' },
+    ],
+    faqs: [
+      {
+        q: 'Why does Steam recognize my controller as generic XInput?',
+        a: 'If PlayStation or Switch configuration support is disabled in Steam Settings, Steam treats the device as a standard fallback XInput pad without exposing motion sensors or touchpads.',
+      },
+      {
+        q: 'How do I adjust controller deadzones inside Steam settings?',
+        a: 'Go to Steam Settings → Controller → Calibration & Advanced Settings. You can visually adjust the inner deadzone slider to eliminate resting drift.',
+      },
+      {
+        q: 'Can Steam Input enable gyro aiming in games that do not support it natively?',
+        a: 'Yes. Steam Input translates controller gyro movement directly into high-precision mouse cursor movement, working seamlessly in any PC game with mouse support.',
+      },
+    ],
+  },
   ];
   return articles.map((a) => ({ params: { slug: a.slug }, props: { article: a } }));
 }
@@ -404,14 +1049,22 @@ const articleSchema = {
         ))}
       </div>
 
-      <div class="learn-faq">
-        <h2 class="section-title">Quick answers</h2>
-        {article.faqs.map((f) => (
-          <div class="faq-item">
-            <h3 class="faq-q">{f.q}</h3>
-            <p class="learn-text">{f.a}</p>
+      <div class="learn-faq card-base">
+        <div class="faq-header">
+          <div class="faq-icon-wrapper">
+            <svg class="faq-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           </div>
-        ))}
+          <h2 class="section-title !mb-0">Quick Answers</h2>
+        </div>
+        
+        <div class="faq-list">
+          {article.faqs.map((f) => (
+            <div class="faq-item group">
+              <h3 class="faq-q">{f.q}</h3>
+              <p class="faq-a">{f.a}</p>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div class="learn-sources card-base">
@@ -442,16 +1095,91 @@ const articleSchema = {
 
 <style>
   .learn-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
-  .learn-hero { margin-bottom: 2.5rem; max-width: 760px; }
-  .learn-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
-  .learn-body { padding: 2rem; display: flex; flex-direction: column; gap: 2rem; margin-bottom: 1.5rem; }
-  .learn-section { display: flex; flex-direction: column; gap: 0.75rem; }
-  .learn-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.7; margin: 0; }
-  .learn-faq { display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 1.5rem; }
-  .faq-item { display: flex; flex-direction: column; gap: 0.375rem; border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 1.25rem; }
-  .faq-item:last-child { border-bottom: none; padding-bottom: 0; }
-  .faq-q { font-size: 1rem; font-weight: 700; color: var(--color-text-primary); }
-  .learn-related { padding: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
-  .learn-related-links { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-  @media (max-width: 640px) { .learn-related { flex-direction: column; align-items: flex-start; } }
+  .learn-hero { margin-bottom: 2.5rem; max-width: 820px; }
+  .learn-hero .badge-tag { margin-bottom: 0.875rem; }
+  .learn-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.65; margin: 0; }
+  
+  .learn-body { 
+    padding: 2.5rem; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 2.5rem; 
+    margin-bottom: 2rem; 
+    border-radius: 24px;
+    background: var(--color-surface-1);
+  }
+  
+  .learn-section { display: flex; flex-direction: column; gap: 1rem; }
+  .learn-section .section-title { font-size: 1.375rem; font-weight: 700; color: var(--color-text-primary); margin: 0; }
+  .learn-text { font-size: 1.0625rem; color: var(--color-text-secondary); line-height: 1.75; margin: 0; }
+  
+  .learn-faq { 
+    padding: 2.5rem; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 2rem; 
+    margin-bottom: 2rem; 
+    border-radius: 24px; 
+    background: var(--color-surface-1); 
+  }
+  
+  .faq-header { display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 1.5rem; }
+  .faq-icon-wrapper { width: 40px; height: 40px; border-radius: 12px; background: rgba(37, 99, 235, 0.1); display: flex; align-items: center; justify-content: center; color: var(--color-accent-blue); }
+  .faq-icon { width: 20px; height: 20px; }
+  .faq-list { display: flex; flex-direction: column; gap: 1.25rem; }
+  .faq-item { display: flex; flex-direction: column; gap: 0.5rem; padding: 1.5rem; border-radius: 16px; background: var(--color-surface-2); border: 1px solid transparent; transition: all 0.2s ease; }
+  .faq-item:hover { border-color: rgba(37, 99, 235, 0.3); background: var(--color-surface-3); transform: translateY(-1px); }
+  .faq-q { font-size: 1.125rem; font-weight: 600; color: var(--color-text-primary); transition: color 0.2s ease; margin: 0; }
+  .faq-item:hover .faq-q { color: var(--color-accent-blue); }
+  .faq-a { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.7; margin: 0; }
+
+  .learn-sources {
+    padding: 2.25rem 2.5rem;
+    margin-bottom: 2rem;
+    border-radius: 24px;
+    background: var(--color-surface-1);
+  }
+  .learn-sources .section-title { font-size: 1.25rem; margin-bottom: 1.25rem; }
+  .learn-source-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem 1.5rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .learn-source-list li a {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    transition: color 0.2s ease;
+  }
+  .learn-source-list li a:hover {
+    color: var(--color-accent-blue);
+    text-decoration: underline;
+  }
+
+  .learn-related { 
+    padding: 2.25rem 2.5rem; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    gap: 2rem; 
+    flex-wrap: wrap; 
+    border-radius: 24px;
+    background: var(--color-surface-1);
+  }
+  .learn-related .section-title { font-size: 1.25rem; margin: 0; }
+  .learn-related-links { display: flex; gap: 0.875rem; flex-wrap: wrap; }
+  
+  @media (max-width: 768px) {
+    .learn-body, .learn-faq, .learn-sources, .learn-related { padding: 1.75rem; }
+    .learn-source-list { grid-template-columns: 1fr; }
+    .learn-related { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+    .learn-related-links { width: 100%; flex-direction: column; }
+    .learn-related-links a { width: 100%; text-align: center; }
+  }
 </style>

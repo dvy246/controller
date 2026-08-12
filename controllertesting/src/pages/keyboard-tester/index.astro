@@ -1,0 +1,89 @@
+---
+/**
+ * /keyboard-tester/index.astro — Keyboard Tester Hub
+ * SEO Title: Keyboard Tester: NKRO, Key Matrix & Switch Test
+ * Hub index for the Mech-Matrix Keyboard Sandbox routes.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Tools', url: '/tools' },
+  { name: 'Keyboard Tester Hub' },
+];
+
+const layouts = [
+  { name: '60% Compact Keyboard Tester', href: '/keyboard-tester/60-percent', desc: 'NKRO matrix check for 60% layer-based boards', badge: 'Popular' },
+  { name: 'TKL 80% Keyboard Tester', href: '/keyboard-tester/tkl', desc: 'NKRO & ghosting check for tenkeyless boards', badge: 'Competitive' },
+  { name: 'Full 100% ANSI Keyboard Tester', href: '/keyboard-tester/full', desc: 'Full matrix sweep including numpad clusters' },
+];
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Keyboard Layout Diagnostic Tests',
+  numberOfItems: layouts.length,
+  itemListElement: layouts.map((t, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: t.name,
+    url: `https://controllertesting.com${t.href}`,
+  })),
+};
+---
+
+<BaseLayout
+  title="Keyboard Tester: NKRO, Key Matrix & Switch Test | CT"
+  description="Test your mechanical keyboard online free: N-Key Rollover (NKRO), ghosting matrix, switch sound synthesis, and actuation checks for 60%, TKL, and full layouts."
+  schema={itemListSchema}
+  breadcrumbs={breadcrumbs}
+  localized={false}>
+  <Header />
+
+  <main id="main-content" class="hub-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="hub-header">
+        <span class="badge-tag">Mech-Matrix Keyboard Suite</span>
+        <h1 class="hub-title text-h1">Keyboard Tester Hub</h1>
+        <p class="hub-subtitle">
+          Diagnose NKRO rollover limits, matrix ghosting, and switch health on your mechanical keyboard. Pick the diagnostic that matches your physical layout.
+        </p>
+      </header>
+
+      <div class="grid-tools">
+        {layouts.map((tool) => (
+          <a href={tool.href} class="tool-hub-card card-base card-hover">
+            <div class="card-top-bar">
+              <span class="card-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h8"/></svg>
+              </span>
+              {tool.badge && <span class="badge-tag">{tool.badge}</span>}
+            </div>
+            <h2 class="card-tool-name">{tool.name}</h2>
+            <p class="card-tool-desc">{tool.desc}</p>
+            <span class="card-action-link">
+              Run test
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .hub-page { padding-top: 96px; padding-bottom: var(--spacing-section); }
+  .hub-header { margin-bottom: 2.5rem; }
+  .hub-header .badge-tag { margin-bottom: 0.75rem; }
+  .hub-title { font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
+  .grid-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1.25rem; width: 100%; }
+</style>

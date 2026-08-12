@@ -12,8 +12,12 @@ export default defineConfig({
   compressHTML: true,
   integrations: [react(), sitemap({
     filter: (page) => {
-      const excludePaths = ['/404', '/500', '/api/', '/admin/', '/embed/', '/report/', '/verify', '/course-cards-demo', '/feature-cards-demo'];
-      return !excludePaths.some(p => page.includes(p));
+      const path = new URL(page).pathname;
+      const prefixExcludes = ['/api/', '/admin/', '/embed/'];
+      const exactExcludes = ['/404', '/500', '/report', '/verify', '/course-cards-demo', '/feature-cards-demo'];
+      if (prefixExcludes.some(p => path.startsWith(p))) return false;
+      if (exactExcludes.includes(path)) return false;
+      return true;
     },
     serialize: (item) => {
       const path = new URL(item.url).pathname;

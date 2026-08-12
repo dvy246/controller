@@ -1,0 +1,100 @@
+---
+/**
+ * /hz-test/index.astro — Hz Test Hub
+ * SEO Title: Hz Test: Refresh Rate & Frame Pacing Benchmark
+ * Hub index for the Phantom Hz & Ghosting Engine routes.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+
+const breadcrumbs = [
+  { name: 'Tools', url: '/tools' },
+  { name: 'Hz Test Hub' },
+];
+
+const hzTests = [
+  { name: '60Hz Motion Blur Test', href: '/hz-test/60hz', desc: 'Frame pacing & ghosting check for 60Hz displays' },
+  { name: '120Hz Motion Blur Test', href: '/hz-test/120hz', desc: 'Frame pacing & ghosting check for 120Hz displays' },
+  { name: '144Hz Motion Blur Test', href: '/hz-test/144hz', desc: 'Frame pacing & ghosting check for 144Hz displays' },
+  { name: '240Hz Motion Blur Test', href: '/hz-test/240hz', desc: 'Frame pacing & ghosting check for 240Hz displays' },
+  { name: '360Hz Motion Blur Test', href: '/hz-test/360hz', desc: 'Frame pacing & ghosting check for 360Hz displays' },
+  { name: '540Hz Motion Blur Test', href: '/hz-test/540hz', desc: 'Frame pacing & ghosting check for 540Hz displays' },
+];
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Refresh Rate & Frame Pacing Tests',
+  numberOfItems: hzTests.length,
+  itemListElement: hzTests.map((t, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: t.name,
+    url: `https://controllertesting.com${t.href}`,
+  })),
+};
+
+const icons: Record<string, string> = {
+  '60hz': '<path d="M12 3v18M3 12h18"/>',
+  '120hz': '<path d="M12 3v18M3 12h18"/>',
+  '144hz': '<path d="M12 3v18M3 12h18"/>',
+  '240hz': '<path d="M12 3v18M3 12h18"/>',
+  '360hz': '<path d="M12 3v18M3 12h18"/>',
+  '540hz': '<path d="M12 3v18M3 12h18"/>',
+};
+---
+
+<BaseLayout
+  title="Hz Test: Refresh Rate & Frame Pacing Benchmark | CT"
+  description="Test monitor refresh rate, ghosting persistence, and frame pacing with 6 free Hz benchmarks — 60Hz through 540Hz, browser-based and no download."
+  schema={itemListSchema}
+  breadcrumbs={breadcrumbs}
+  localized={false}>
+  <Header />
+
+  <main id="main-content" class="hub-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="hub-header">
+        <span class="badge-tag">High-Frequency Display Suite</span>
+        <h1 class="hub-title text-h1">Hz &amp; Frame Pacing Test Hub</h1>
+        <p class="hub-subtitle">
+          Test your monitor's refresh rate, motion blur persistence, and frame pacing. Pick the benchmark that matches your display's rated Hz.
+        </p>
+      </header>
+
+      <div class="grid-tools">
+        {hzTests.map((test) => (
+          <a href={test.href} class="tool-hub-card card-base card-hover">
+            <div class="card-top-bar">
+              <span class="card-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" set:html={icons[test.href.split('/').pop() ?? '']} />
+              </span>
+            </div>
+            <h2 class="card-tool-name">{test.name}</h2>
+            <p class="card-tool-desc">{test.desc}</p>
+            <span class="card-action-link">
+              Run test
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .hub-page { padding-top: 96px; padding-bottom: var(--spacing-section); }
+  .hub-header { margin-bottom: 2.5rem; }
+  .hub-header .badge-tag { margin-bottom: 0.75rem; }
+  .hub-title { font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+  .hub-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; max-width: 65ch; }
+  .grid-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1.25rem; width: 100%; }
+</style>
