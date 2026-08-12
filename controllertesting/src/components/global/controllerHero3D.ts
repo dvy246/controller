@@ -77,11 +77,26 @@ export function startHero3D() {
     }
   }
 
-  function loadControllerModel() {
+  async function loadControllerModel() {
     const rendererSafe = renderer as THREE.WebGLRenderer | null;
     const ktx2Loader = rendererSafe
       ? new KTX2Loader().setTranscoderPath('/libs/basis/').detectSupport(rendererSafe)
       : null;
+
+    try {
+      await MeshoptDecoder.ready;
+    } catch (e) {
+      console.warn('MeshoptDecoder failed to initialize:', e);
+    }
+
+    let isLoaded = false;
+    const safetyTimeout = setTimeout(() => {
+      if (!isLoaded && !controllerModel) {
+        console.warn('3D model load took too long, engaging fallback render.');
+        buildProceduralGamepad();
+      }
+    }, 4500);
+
     const loader = new GLTFLoader();
     loader.setMeshoptDecoder(MeshoptDecoder);
     if (ktx2Loader) loader.setKTX2Loader(ktx2Loader);
@@ -90,6 +105,8 @@ export function startHero3D() {
     loader.load(
       modelPath,
       (gltf: any) => {
+        isLoaded = true;
+        clearTimeout(safetyTimeout);
         controllerModel = gltf.scene;
 
         controllerModel.traverse((child: any) => {
@@ -121,8 +138,9 @@ export function startHero3D() {
       },
       undefined,
       (error: any) => {
+        isLoaded = true;
+        clearTimeout(safetyTimeout);
         console.error('Error loading 3D model GLB:', error);
-        // Fallback: build a sleek procedural 3D gamepad mesh if GLB fails to fetch
         buildProceduralGamepad();
       }
     );

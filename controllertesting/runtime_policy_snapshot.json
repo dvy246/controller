@@ -2,15 +2,15 @@
   "changed_sources": [],
   "failed_sources": [],
   "previous_snapshot_error": null,
-  "retrieved_at_utc": "2026-08-07T11:50:58.363412+00:00",
+  "retrieved_at_utc": "2026-08-12T17:20:19.796645+00:00",
   "source_count": 15,
   "sources": {
     "G-ADS-CHANGELOG": {
-      "bytes": 1456465,
+      "bytes": 1456962,
       "final_url": "https://support.google.com/adsense/answer/9336650?hl=en",
       "host_ok": true,
       "ok": true,
-      "sha256": "dd443faf0c35ec2e49b46f0d6cb932dabb8e2f6250217ab05d04557ca1f4cfb5",
+      "sha256": "f398e1ab4c8798ff2f8ab7e8970b7fd4773a10725e53d9fca215a43f4c4f2f24",
       "status": 200,
       "title": "AdSense policy change log - Google AdSense Help",
       "update_signals": [
@@ -23,113 +23,113 @@
       "url": "https://support.google.com/adsense/answer/9336650?hl=en"
     },
     "G-ADS-CONSENT": {
-      "bytes": 1405651,
+      "bytes": 1406136,
       "final_url": "https://support.google.com/adsense/answer/10961068?hl=en",
       "host_ok": true,
       "ok": true,
-      "sha256": "2781cbc609107de259d1edacea07de814b3587e13a9f4446afe71d10b537a2dc",
+      "sha256": "57a6cd1f35819d23887db9c0479c1bc54d2511422fb0853aca0ee6c128519187",
       "status": 200,
       "title": "About European regulations messages - Google AdSense Help",
       "update_signals": [
         "updated to support the IAB TCF v2.3 specification . Google's Consent Mode allows other Google products you use (like Google Ads",
-        "updated\",\"Last updated: \"+(new Date(l.Bg.jq)).toDateString())}); if(l.Bg.Qi.length>0){var p=l.Bg.Qi.some(function(r){return r.i",
-        "updated successfully\"}),(f=a.Fa)==null||f.VQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
-        "updated\"});h.oa()})} n.vl=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
-        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function MQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt"
+        "updated\",\"Last updated: \"+(new Date(l.xg.Up)).toDateString())}); if(l.xg.Li.length>0){var p=l.xg.Li.some(function(r){return r.i",
+        "updated successfully\"}),(f=a.Fa)==null||f.hQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
+        "updated\"});h.oa()})} n.Vk=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
+        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function OQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt"
       ],
       "url": "https://support.google.com/adsense/answer/10961068?hl=en"
     },
     "G-ADS-IMPLEMENTATION": {
-      "bytes": 1407131,
-      "final_url": "https://support.google.com/adsense/answer/1346295?hl=en&visit_id=639217002817306515-3355188111&ref_topic=1271508&rd=1",
+      "bytes": 1407627,
+      "final_url": "https://support.google.com/adsense/answer/1346295?hl=en&visit_id=639221520378976691-7771613&ref_topic=1271508&rd=1",
       "host_ok": true,
       "ok": true,
-      "sha256": "a85ae40882c5158bc0d435c3424c688566e27c3677f212f19168918af02afbce",
+      "sha256": "0343425ccea6b731d6781df1b7e647c2c5163ace4abf8dfa8b76b48d69bbe15d",
       "status": 200,
       "title": "Ad placement policies - Google AdSense Help",
       "update_signals": [
-        "updated\",\"Last updated: \"+(new Date(l.Bg.jq)).toDateString())}); if(l.Bg.Qi.length>0){var p=l.Bg.Qi.some(function(r){return r.i",
-        "updated successfully\"}),(f=a.Fa)==null||f.VQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
-        "updated\"});h.oa()})} n.vl=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
-        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function MQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt",
+        "updated\",\"Last updated: \"+(new Date(l.xg.Up)).toDateString())}); if(l.xg.Li.length>0){var p=l.xg.Li.some(function(r){return r.i",
+        "updated successfully\"}),(f=a.Fa)==null||f.hQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
+        "updated\"});h.oa()})} n.Vk=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
+        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function OQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt",
         "Last updated\",\"Edit appointments\",\"\",\"Create appointment\",\"Ask Google Help\",\"Terms of Service\",\"Enable Light Mode\",\"This page may co"
       ],
       "url": "https://support.google.com/adsense/topic/1271508?hl=en"
     },
     "G-ADS-POLICY": {
-      "bytes": 1445821,
+      "bytes": 1446317,
       "final_url": "https://support.google.com/adsense/answer/10502938?hl=en",
       "host_ok": true,
       "ok": true,
-      "sha256": "3defa64003a52e93a4fe7573dc5f0e25d7c9e55aee7616d687c9d7a269a028b6",
+      "sha256": "260014c1b0f5c209fcc8d4a84c90e8e879d287eec33158cd236df4496d33b19e",
       "status": 200,
       "title": "Google Publisher Policies - Google AdSense Help",
       "update_signals": [
-        "updated\",\"Last updated: \"+(new Date(l.Bg.jq)).toDateString())}); if(l.Bg.Qi.length>0){var p=l.Bg.Qi.some(function(r){return r.i",
-        "updated successfully\"}),(f=a.Fa)==null||f.VQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
-        "updated\"});h.oa()})} n.vl=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
-        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function MQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt",
+        "updated\",\"Last updated: \"+(new Date(l.xg.Up)).toDateString())}); if(l.xg.Li.length>0){var p=l.xg.Li.some(function(r){return r.i",
+        "updated successfully\"}),(f=a.Fa)==null||f.hQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
+        "updated\"});h.oa()})} n.Vk=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
+        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function OQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt",
         "Last updated\",\"Edit appointments\",\"\",\"Create appointment\",\"Ask Google Help\",\"Terms of Service\",\"Enable Light Mode\",\"This page may co"
       ],
       "url": "https://support.google.com/adsense/answer/10502938?hl=en"
     },
     "G-ADS-PROGRAM": {
-      "bytes": 1416131,
+      "bytes": 1416628,
       "final_url": "https://support.google.com/adsense/answer/48182?hl=en",
       "host_ok": true,
       "ok": true,
-      "sha256": "0ba194f9498256e1ab68b83970486a410f41c4564b106e9653c5aedbe927ed00",
+      "sha256": "4da4f3509e12422d7699e3419e7a8922652453d5c7f1d328025c415dac47ab9e",
       "status": 200,
       "title": "AdSense Program policies - Google AdSense Help",
       "update_signals": [
         "Last updated: August 16, 2024 Next: Families Was this helpful? How can we improve it? Yes No Submit Need more help? Try these next s",
-        "updated\",\"Last updated: \"+(new Date(l.Bg.jq)).toDateString())}); if(l.Bg.Qi.length>0){var p=l.Bg.Qi.some(function(r){return r.i",
-        "updated successfully\"}),(f=a.Fa)==null||f.VQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
-        "updated\"});h.oa()})} n.vl=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
-        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function MQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt"
+        "updated\",\"Last updated: \"+(new Date(l.xg.Up)).toDateString())}); if(l.xg.Li.length>0){var p=l.xg.Li.some(function(r){return r.i",
+        "updated successfully\"}),(f=a.Fa)==null||f.hQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
+        "updated\"});h.oa()})} n.Vk=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
+        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function OQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt"
       ],
       "url": "https://support.google.com/adsense/answer/48182?hl=en"
     },
     "G-ADS-READY": {
-      "bytes": 1389571,
+      "bytes": 1390061,
       "final_url": "https://support.google.com/adsense/answer/7299563?hl=en",
       "host_ok": true,
       "ok": true,
-      "sha256": "8e83c601408e87711cfe7e45f8aff798a40398f2f8008cb180b50528a212b9d5",
+      "sha256": "cc6e3e72122af2ede3f169ebce3093be0315e34d515fca3f001e20cf4d7b97a6",
       "status": 200,
       "title": "Make sure your site's pages are ready for AdSense - Google AdSense Help",
       "update_signals": [
-        "updated\",\"Last updated: \"+(new Date(l.Bg.jq)).toDateString())}); if(l.Bg.Qi.length>0){var p=l.Bg.Qi.some(function(r){return r.i",
-        "updated successfully\"}),(f=a.Fa)==null||f.VQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
-        "updated\"});h.oa()})} n.vl=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
-        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function MQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt",
+        "updated\",\"Last updated: \"+(new Date(l.xg.Up)).toDateString())}); if(l.xg.Li.length>0){var p=l.xg.Li.some(function(r){return r.i",
+        "updated successfully\"}),(f=a.Fa)==null||f.hQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
+        "updated\"});h.oa()})} n.Vk=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
+        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function OQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt",
         "Last updated\",\"Edit appointments\",\"\",\"Create appointment\",\"Ask Google Help\",\"Terms of Service\",\"Enable Light Mode\",\"This page may co"
       ],
       "url": "https://support.google.com/adsense/answer/7299563?hl=en"
     },
     "G-ADS-RESTRICTIONS": {
-      "bytes": 1426160,
+      "bytes": 1427086,
       "final_url": "https://support.google.com/adsense/answer/10437795?hl=en",
       "host_ok": true,
       "ok": true,
-      "sha256": "4062b51f9bcdc87546f1a86dd523d17f24b987a89c3296be8f1101bedae4d3e2",
+      "sha256": "ac5f8e935325f2790a1245e798f10c63f6ae1f413d8e64793df88652c8a5356f",
       "status": 200,
       "title": "Google Publisher Restrictions - Google AdSense Help",
       "update_signals": [
-        "updated\",\"Last updated: \"+(new Date(l.Bg.jq)).toDateString())}); if(l.Bg.Qi.length>0){var p=l.Bg.Qi.some(function(r){return r.i",
-        "updated successfully\"}),(f=a.Fa)==null||f.VQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
-        "updated\"});h.oa()})} n.vl=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
-        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function MQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt",
+        "updated\",\"Last updated: \"+(new Date(l.xg.Up)).toDateString())}); if(l.xg.Li.length>0){var p=l.xg.Li.some(function(r){return r.i",
+        "updated successfully\"}),(f=a.Fa)==null||f.hQ(b.isChecked()?2:0),h.ya(0);h.ua();Uu().open({message:\"Error: Notification preferen",
+        "updated\"});h.oa()})} n.Vk=function(){var a=this.ma.get(2);a&&a.isChecked()!==this.o&&Tw(a.model,this.o)};function YE(a){this.Aa",
+        "Updated=function(){return Jf(this,73)}; n.Ca=Ei([0,y,-79]);function OQa(a,b){typeof a.className==\"string\"?a.className=b:a.setAt",
         "Last updated\",\"Edit appointments\",\"\",\"Create appointment\",\"Ask Google Help\",\"Terms of Service\",\"Enable Light Mode\",\"This page may co"
       ],
       "url": "https://support.google.com/adsense/answer/10437795?hl=en"
     },
     "G-SEARCH-CWV": {
-      "bytes": 171916,
+      "bytes": 171912,
       "final_url": "https://developers.google.com/search/docs/appearance/core-web-vitals",
       "host_ok": true,
       "ok": true,
-      "sha256": "cb3e848561ae8b8c1be793b0bcefb4cf516c48f7532d368bf0686cb0620f2de5",
+      "sha256": "aebcc552f6967c22a3cb88d0a24c4c62ee1f3d55e01db7a7efe4c3ca75fb7777",
       "status": 200,
       "title": "Understanding Core Web Vitals and Google search results | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
       "update_signals": [
@@ -139,11 +139,11 @@
       "url": "https://developers.google.com/search/docs/appearance/core-web-vitals"
     },
     "G-SEARCH-ESSENTIALS": {
-      "bytes": 172174,
+      "bytes": 172178,
       "final_url": "https://developers.google.com/search/docs/essentials",
       "host_ok": true,
       "ok": true,
-      "sha256": "7f3d3e69dc9bd270625b64a2e717d36f7e0a395a2470dcad2dcbf5f8f25967d6",
+      "sha256": "a727cd95ca7a0e853252ff75c76b4df9312a5031805aafa8a076b60a99b8e435",
       "status": 200,
       "title": "Google Search Essentials (formerly Webmaster Guidelines) | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
       "update_signals": [
@@ -153,11 +153,11 @@
       "url": "https://developers.google.com/search/docs/essentials"
     },
     "G-SEARCH-GENAI": {
-      "bytes": 171983,
+      "bytes": 171979,
       "final_url": "https://developers.google.com/search/docs/fundamentals/using-gen-ai-content",
       "host_ok": true,
       "ok": true,
-      "sha256": "d9e07ff4bdf242b131d6e4be42310becfb22d71c9c8b42f365a2935ba24f18d5",
+      "sha256": "45ac7b151a524e420b30ab3b8cc2bf34caae9d0422e9e04aec72afba5d6bff14",
       "status": 200,
       "title": "Google Search&apos;s Guidance on Generative AI Content on Your Website | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
       "update_signals": [
@@ -167,11 +167,11 @@
       "url": "https://developers.google.com/search/docs/fundamentals/using-gen-ai-content"
     },
     "G-SEARCH-HELPFUL": {
-      "bytes": 183636,
+      "bytes": 183632,
       "final_url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content",
       "host_ok": true,
       "ok": true,
-      "sha256": "5d63d5fc1bbf63c07f0ee0f07486da8572cf9c5ba2d7b0bb140aa406b829b14c",
+      "sha256": "1eb3ddaca0164db8ce633de51f755701bee94864158a04e1cf4e7e1743897459",
       "status": 200,
       "title": "Creating Helpful, Reliable, People-First Content | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
       "update_signals": [
@@ -181,11 +181,11 @@
       "url": "https://developers.google.com/search/docs/fundamentals/creating-helpful-content"
     },
     "G-SEARCH-PAGE": {
-      "bytes": 174462,
+      "bytes": 174466,
       "final_url": "https://developers.google.com/search/docs/appearance/page-experience",
       "host_ok": true,
       "ok": true,
-      "sha256": "61bdc0711d2a2f9267fe786b9741e73231c4be66a24c1b448c54606ed2f3d590",
+      "sha256": "a737cb82f1cb8871ad0bb74a200b1716a5111780bf2b776c814cc4cebe821a5d",
       "status": 200,
       "title": "Understanding Google Page Experience | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
       "update_signals": [
@@ -199,7 +199,7 @@
       "final_url": "https://developers.google.com/search/docs/crawling-indexing/robots/intro",
       "host_ok": true,
       "ok": true,
-      "sha256": "8b3c2664be6bc263fc9dd8e71e1dc644adfa8298c2b1091f8522d5f735503aa5",
+      "sha256": "6a752583db13d6a9a51fe24f5d85df6c62d415e1b7c01182eb6bdbabaf371814",
       "status": 200,
       "title": "Robots.txt Introduction and Guide | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
       "update_signals": [
@@ -213,7 +213,7 @@
       "final_url": "https://developers.google.com/search/docs/essentials/spam-policies",
       "host_ok": true,
       "ok": true,
-      "sha256": "e77a3d091e502497931238d1d655a7307cae44bcd413a44185f78c194e068583",
+      "sha256": "2435579ef7f1cbfa3853b3d26e134d028efd7ab9ae5a8c11d52740d7213c21bf",
       "status": 200,
       "title": "Spam Policies for Google Web Search | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
       "update_signals": [
@@ -227,7 +227,7 @@
       "final_url": "https://developers.google.com/search/docs/appearance/structured-data/sd-policies",
       "host_ok": true,
       "ok": true,
-      "sha256": "49b35aa26c3d2e8a90e66d3cb9f5dfbf2fbf2e85bbf399c0e15c86cf0c313aa9",
+      "sha256": "0d79030c85d639de5af4216af5db51299a89adf020b4a24c9b93aed5d6420113",
       "status": 200,
       "title": "General Structured Data Guidelines | Google Search Central &nbsp;|&nbsp; Documentation &nbsp;|&nbsp; Google for Developers",
       "update_signals": [

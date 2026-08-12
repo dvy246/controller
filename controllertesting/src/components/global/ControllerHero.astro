@@ -176,10 +176,7 @@
     preload('/libs/basis/basis_transcoder.js', 'fetch');
     preload('/libs/basis/basis_transcoder.wasm', 'fetch', 'application/wasm');
 
-    // Phase 2: start the engine import at the first idle slot, but never wait
-    // on idle past window load + 150ms — the old timeout:2500 gate alone could
-    // hold the spinner for 2.5s before any byte downloaded. Whichever fires
-    // first wins; the `started` flag makes the race idempotent.
+    // Phase 2: start the engine import immediately
     let started = false;
     const start = () => {
       if (started) return;
@@ -188,12 +185,18 @@
         console.warn('3D hero failed to load:', err);
       });
     };
-    if ('requestIdleCallback' in window) {
-      (window as any).requestIdleCallback(start, { timeout: 1500 });
+    
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      setTimeout(start, 50);
     } else {
-      start();
+      window.addEventListener('DOMContentLoaded', () => setTimeout(start, 50), { once: true });
+      window.addEventListener('load', () => setTimeout(start, 50), { once: true });
     }
-    window.addEventListener('load', () => setTimeout(start, 150), { once: true });
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(start, { timeout: 1000 });
+    } else {
+      setTimeout(start, 100);
+    }
   };
 
   if ('IntersectionObserver' in window) {
