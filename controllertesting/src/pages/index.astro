@@ -23,6 +23,7 @@ import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
 import ControllerHero from '@components/global/ControllerHero.astro';
 import FloatingDockNav from '@components/global/FloatingDockNav.tsx';
+import DiagnosticBot from '@components/global/DiagnosticBot.astro';
 
 // Speakable specification — helps Google and voice assistants extract key answers
 const speakableSchema = {
@@ -758,6 +759,8 @@ function getToolIcon(icon: string) {
   </main>
 
   <Footer />
+  
+  <DiagnosticBot />
 </BaseLayout>
 
 {/* ── Helper to get icon SVG per tool type ── */}

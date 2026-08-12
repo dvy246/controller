@@ -1,7 +1,8 @@
 ---
 /**
  * /test/controller/polling-rate — Controller Polling Rate Checker
- * SEO Title: Controller Polling Rate Test — Test Gamepad Hz & Response Online
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: controller polling rate test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,69 +16,83 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'What is controller polling rate (Hz)?',
-    answer: 'Polling rate (measured in Hertz) is the frequency at which your controller reports input updates to your PC or console every second. A 250Hz polling rate updates every 4ms; a 1000Hz polling rate updates every 1ms.',
+    question: 'What is controller polling rate (measured in Hz)?',
+    answer: 'Polling rate is the frequency at which your controller reports updated button and thumbstick data to your operating system each second. A 250Hz rate updates every 4.0 milliseconds, 500Hz updates every 2.0ms, and 1000Hz updates every 1.0ms.',
   },
   {
-    question: 'What is a good polling rate for competitive gaming?',
-    answer: '500Hz to 1000Hz is recommended for competitive esports (Rocket League, Apex Legends, Call of Duty). Overclocking PS5 DualSense controllers over USB allows 1000Hz polling rates.',
+    question: 'How do I test my controller polling rate online?',
+    answer: 'Connect your controller via USB or Bluetooth, press any button to awaken the browser Gamepad API, and wiggle the analog sticks continuously. The counter samples the microsecond delta between consecutive input packets to compute real-time and peak Hz.',
   },
   {
-    question: 'Why does Bluetooth polling rate vary?',
-    answer: 'Bluetooth wireless connections use dynamic polling intervals to conserve battery power. Connecting via USB cable or using an overclocked wireless dongle stabilizes input report frequency.',
+    question: 'Why is my Xbox controller locked to 125Hz or 250Hz over USB?',
+    answer: 'Standard Microsoft Xbox controllers use standard Windows XInput drivers locked to an 8ms (125Hz) or 4ms (250Hz) USB bInterval descriptor. In contrast, Sony DualSense and DualShock 4 controllers use DirectInput USB descriptors that can be overclocked to 1000Hz (1ms).',
   },
+  {
+    question: 'Does higher polling rate reduce input latency in competitive games?',
+    answer: 'Yes. Upgrading from 125Hz (8ms frame delay) to 1000Hz (1ms frame delay) reduces input latency by 7ms, significantly improving shot timing, flick aiming responsiveness, and physics synchronization in Rocket League and competitive FPS games.',
+  },
+  {
+    question: 'Why does Bluetooth polling rate fluctuate during gameplay?',
+    answer: 'Bluetooth gamepads dynamically throttle packet reporting intervals to conserve battery power when inputs remain static. Rapidly moving both thumbsticks forces the wireless stack to transmit at its maximum hardware reporting capacity.',
+  }
 ];
 ---
 
 <ToolLayout
   title="Controller Polling Rate Test (Hz) — Free Online Input Frequency Checker | ControllerTesting.com"
-  description="Measure your controller's real polling rate in Hz online for free. Compare wired vs Bluetooth input frequency on PS5, Xbox, Switch, and PC. No download required."
+  description="Measure your controller's real polling rate in Hz online for free. Check input latency, packet jitter, and USB overclocking stability on PS5, Xbox, Switch, and PC."
+  keywords="controller polling rate test, gamepad hz test, controller input latency, ps5 controller overclock test, xbox polling rate hz, test controller hz online"
   toolName="Controller Polling Rate Test"
   category="Controller Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <PollingRateTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Polling Rate Ratings</h2>
+      <h2 class="section-title">Polling Rate Frequency Benchmarks</h2>
       <div class="results-legend-grid">
         <div class="legend-card legend-pass">
-          <strong class="legend-title">800 – 1000 Hz (1.0ms delay)</strong>
-          <p class="legend-text">Overclocked USB connection. Maximum precision for competitive esports play.</p>
+          <strong class="legend-title">800 – 1000 Hz (~1.0ms delay)</strong>
+          <p class="legend-text">Overclocked USB connection (DualSense / DualShock 4). Maximum frame synchronization for esports competition.</p>
         </div>
         <div class="legend-card legend-warning">
-          <strong class="legend-title">250 – 500 Hz (2.0-4.0ms delay)</strong>
-          <p class="legend-text">Standard wired or high-speed wireless connection. Excellent overall performance.</p>
+          <strong class="legend-title">250 – 500 Hz (2.0ms – 4.0ms delay)</strong>
+          <p class="legend-text">Standard high-speed wired or 2.4GHz proprietary wireless dongles. Excellent responsiveness for all games.</p>
         </div>
         <div class="legend-card legend-fail">
           <strong class="legend-title">&lt; 250 Hz (&gt; 4.0ms delay)</strong>
-          <p class="legend-text">Standard Bluetooth connection. Noticeable input delay in fast-paced games.</p>
+          <p class="legend-text">Standard Bluetooth or default XInput polling. Noticeable input delay in high-refresh-rate 240Hz/360Hz monitors.</p>
         </div>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Generate full controller health score</h3>
-        <p class="export-desc">Combine polling rate results with stick drift and button diagnostics.</p>
+        <h3 class="export-title">Need full hardware latency analysis?</h3>
+        <p class="export-desc">Combine polling frequency telemetry with stick drift, button matrix, and reaction delay benchmarks.</p>
       </div>
       <div class="export-buttons">
         <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+        <a href="/test/controller/latency" class="btn-secondary">Latency Estimator</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
     <a href="/test/controller/drift" class="tool-card card-base card-hover">
       <h3 class="tool-name">Stick Drift Tester</h3>
-      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+      <p class="tool-desc">Isolated 0.1% stick drift detector.</p>
     </a>
     <a href="/test/controller/latency" class="tool-card card-base card-hover">
       <h3 class="tool-name">Latency Estimator</h3>
@@ -87,14 +102,39 @@ const faqs = [
       <h3 class="tool-name">Deadzone Visualizer</h3>
       <p class="tool-desc">Find optimal stick deadzones.</p>
     </a>
+    <a href="/test/controller/health-score" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Controller Health Score</h3>
+      <p class="tool-desc">0–100 condition report card.</p>
+    </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Why Controller Polling Rate Matters in Esports</h2>
+    <h2>Why Controller Polling Rate (Hz) Matters in Esports</h2>
     <p>
-      Input polling rate dictates how rapidly your physical inputs are recognized by game engines. Higher polling rates reduce input latency,
-      allowing faster shot registration and smoother camera panning in first-person shooters.
+      Polling rate—expressed in Hertz (Hz)—measures the number of input reports transmitted by your gamepad to the operating system every second.
     </p>
+    <p>
+      While standard display refresh rates (144Hz, 240Hz, 360Hz) dictate how frequently you see new frames, controller polling rate dictates how fresh the controller coordinate state is when that frame is rendered.
+    </p>
+
+    <h3>USB Endpoint Polling vs. Bluetooth Transport Intervals</h3>
+    <ul>
+      <li>
+        <strong>Wired USB Interrupt Endpoints:</strong> USB HID controllers define a hardware polling interval (<code>bInterval</code>). On Windows and Linux, standard USB polling defaults to <code>4ms</code> (250Hz) or <code>8ms</code> (125Hz). By utilizing custom filter drivers (such as HIDUSBF / LordOfMice), PlayStation DualSense and DualShock 4 controllers can be safely overclocked to an endpoint interval of <code>1ms</code> (1000Hz).
+      </li>
+      <li>
+        <strong>Bluetooth L2CAP Wireless Packets:</strong> Standard Bluetooth connections use dynamic sniff mode and connection intervals that fluctuate between <code>100Hz</code> and <code>250Hz</code> depending on RF interference and battery state.
+      </li>
+    </ul>
+
+    <h2>How to Verify a Controller Overclock</h2>
+    <ol>
+      <li>Connect your gamepad via a direct USB 3.0/3.1 port on your motherboard (avoid unpowered USB hubs).</li>
+      <li>Apply your overclock utility settings (e.g., Filter on Device, Rate = 1000).</li>
+      <li>Run the Polling Rate Checker above while rapidly spinning both analog sticks in continuous circles.</li>
+      <li>If the live Hz counter stabilizes between <strong>950Hz and 1000Hz</strong> with average intervals around <strong>1.0ms</strong>, your overclock is active and stable.</li>
+    </ol>
   </Fragment>
 </ToolLayout>
 

@@ -1,7 +1,8 @@
 ---
 /**
  * /test/mouse/double-click — Double-Click Tester
- * SEO Title: Mouse Double-Click Test — Detect Faulty Mouse Switches Online
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: mouse double click test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,54 +16,82 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I test if my mouse has a double-clicking fault?',
-    answer: 'Single-click the test target box 50 to 100 times slowly. If the counter registers a double-click fault (interval < 80ms), your mouse switch has mechanical contact bounce failure.',
+    question: 'How do I test if my mouse is double-clicking on single clicks?',
+    answer: 'Slowly click the green test box above 50 to 100 times, releasing your finger completely between each tap. If a single physical press triggers two increment counts or registers an inter-click interval under 80 milliseconds, your microswitch has mechanical contact bounce failure.',
   },
   {
-    question: 'What causes mouse double-clicking issues?',
-    answer: 'Traditional mechanical microswitches (Omron 20M/50M) use metallic leaf springs that oxidize or lose tension over time, causing electrical contact bouncing that registers as two rapid clicks.',
+    question: 'What causes mechanical mouse switches (like Omron 50M) to double click?',
+    answer: 'Double-clicking is caused by contact bounce and oxidation. Modern wireless mice operate at ultra-low 3.3V logic levels without enough "wetting current" to burn off microscopic surface oxidation on the gold/silver plated copper leaf springs, creating voltage chatter that slips through debounce filters.',
   },
   {
-    question: 'Do optical mouse switches prevent double-clicking?',
-    answer: 'Yes! Optical mouse switches (Razer Optical, Light Strike) use light beam actuation instead of physical metallic contacts, permanently eliminating double-click faults.',
+    question: 'How do optical mouse switches prevent double-clicking permanently?',
+    answer: 'Optical switches (Razer Optical, Logitech LIGHTFORCE) actuate using an infrared light beam rather than touching metal contacts. Because there are no physical metal leaves closing an electrical circuit, contact bounce and oxidation cannot occur.',
   },
+  {
+    question: 'Can I fix a double-clicking mouse with software without soldering?',
+    answer: 'Yes, as a temporary fix. In your mouse software (or utilities like MouseFix / X-Mouse Button Control), increase the "Debounce Time" from 4ms to 10ms–14ms. This forces the microcontroller to ignore rapid chatter bounces.',
+  },
+  {
+    question: 'What are the most reliable replacement microswitches for mice?',
+    answer: 'Top-tier replacement mechanical switches resistant to double-clicking include Huano Blue Shell Pink Dot (transparent blue), Kailh GM 8.0 Black Mamba, TTC Gold Dustproof 80M, and Zippy microswitches.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Double-Click Tester | ControllerTesting"
-  description="Test your gaming mouse for double-click switch faults. Detect Omron mechanical switch chatter and debounce issues free online."
+  title="Mouse Double-Click Test — Free Online Switch Chatter & Bounce Checker | ControllerTesting.com"
+  description="Test your gaming mouse for double-click switch faults and contact bounce online for free. Detect Omron microswitch chatter, debounce failure, and click intervals."
+  keywords="mouse double click test, mouse chatter test, test mouse double clicking, mouse switch bounce tester, omron double click test, fix mouse double click"
   toolName="Double-Click Test"
   category="Mouse Diagnostic"
   categoryUrl="/test/mouse"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <DoubleClickTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Double-Click Health Guidelines</h2>
+      <h2 class="section-title">Microswitch Chatter Health Benchmarks</h2>
       <p class="results-text">
-        0 double-click faults over 50 clicks indicates a healthy switch. Any single-click registering under 80ms confirms switch bounce failure.
+        Perform 50 deliberate single clicks on Left and Right buttons:
       </p>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">0 Faults / 50 Clicks (Clean)</strong>
+          <p class="legend-text">Zero switch chatter detected. Leaf spring tension and contact plating are operating with factory integrity.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">1–3 Faults / 50 Clicks (Early Wear)</strong>
+          <p class="legend-text">Intermittent chatter (&lt; 80ms interval). Increase mouse driver debounce time by +4ms to filter early bouncing.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">&gt; 4 Faults (Hardware Failure)</strong>
+          <p class="legend-text">Severe contact oxidation or leaf spring deformity. Requires microswitch desoldering/replacement or RMA.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Test mouse click speed (CPS)</h3>
-        <p class="export-desc">Measure how fast you can click in 5s, 10s, or 30s modes.</p>
+        <h3 class="export-title">Need to test click speed (CPS)?</h3>
+        <p class="export-desc">Measure your max clicks per second across 1s, 5s, 10s, and 30s timer modes.</p>
       </div>
       <div class="export-buttons">
         <a href="/test/mouse/cps" class="btn-primary">CPS Speed Test</a>
+        <a href="/test/mouse/buttons" class="btn-secondary">Button Matrix Test</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
     <a href="/test/mouse/cps" class="tool-card card-base card-hover">
       <h3 class="tool-name">CPS Test</h3>
@@ -70,14 +99,37 @@ const faqs = [
     </a>
     <a href="/test/mouse/click-latency" class="tool-card card-base card-hover">
       <h3 class="tool-name">Click Latency</h3>
-      <p class="tool-desc">Measure click response delay.</p>
+      <p class="tool-desc">Measure switch response time in ms.</p>
+    </a>
+    <a href="/test/mouse/buttons" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Mouse Button Tester</h3>
+      <p class="tool-desc">Test MB1–MB5 buttons and side keys.</p>
     </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Why Mechanical Mouse Switches Suffer from Double-Click Faults</h2>
+    <h2>The Electrochemistry of Mouse Switch Double-Click Failure</h2>
     <p>
-      Mechanical microswitches rely on copper alloy leaf springs. Low-voltage signals in modern wireless mice accelerate contact oxidation.
+      The infamous mouse double-clicking flaw (frequently seen in legendary mice like the Logitech G Pro Wireless with Omron D2FC-F-K 50M switches) is rooted in electrical contact physics.
+    </p>
+
+    <h3>Why 3.3V Low-Power Logic Accelerates Switch Chatter</h3>
+    <ul>
+      <li>
+        <strong>Wetting Current Starvation:</strong> Industrial microswitches were originally engineered for 5V circuits drawing 10mA–100mA of current, which generates a micro-spark that naturally burns off atmospheric oxidation. Modern energy-efficient wireless mice run at 3.3V (or 1.8V) drawing micro-amps, allowing silver oxide layers to insulate the contacts.
+      </li>
+      <li>
+        <strong>Contact Bounce Harmonic Vibration:</strong> When the curved copper leaf snaps downward, it physically rebounds against the stationary terminal 3 to 7 times in under 15ms.
+      </li>
+      <li>
+        <strong>Debounce Algorithm Bypass:</strong> When the oxidized resistance fluctuates above and below the logic voltage gate, the firmware interprets the contact bounce as a separate intentional second click.
+      </li>
+    </ul>
+
+    <h2>Fixing Double Clicks: Debounce Tuning vs. Microswitch Swaps</h2>
+    <p>
+      While increasing debounce in companion software can extend switch life by a few months, permanent resolution requires desoldering the failing switches and installing gold-alloy contact switches (such as Huano Blue Shell Pink Dots or TTC Gold 80M) or upgrading to an optical switch mouse.
     </p>
   </Fragment>
 </ToolLayout>

@@ -1,7 +1,8 @@
 ---
 /**
  * /test/mouse/dpi — DPI Analyzer & Calculator
- * SEO Title: Mouse DPI Analyzer — Calculate True Mouse DPI Online
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: mouse dpi analyzer
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,54 +16,82 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I calculate my true mouse DPI?',
-    answer: 'Select your ruler distance (e.g. 2 inches) above, place your mouse at the 0-mark on a physical ruler, and drag horizontally across the ruler distance while holding left click.',
+    question: 'How do I calculate my true mouse DPI online?',
+    answer: 'Select your physical measurement distance above (e.g. 2 inches / 5 cm), place your mouse at the zero-mark on a physical ruler, and drag your mouse horizontally across that exact distance. The analyzer divides the raw hardware movement counts (deltaX) by physical inches to calculate true DPI.',
   },
   {
-    question: 'What is mouse DPI (Dots Per Inch)?',
-    answer: 'DPI measures how many pixels your cursor moves on screen per physical inch of mouse movement. 800 DPI moves 800 pixels per inch; 1600 DPI moves 1600 pixels per inch.',
+    question: 'What is the difference between DPI and CPI in gaming mice?',
+    answer: 'While commonly called DPI (Dots Per Inch), the technically accurate term for optical mouse sensors is CPI (Counts Per Inch). It measures how many coordinate displacement samples the sensor CMOS camera registers for every 1 inch of physical movement across your mousepad.',
   },
   {
-    question: 'What is eDPI in tactical shooters like Valorant and CS:GO?',
-    answer: 'eDPI (Effective DPI) is calculated by multiplying your mouse DPI by your in-game sensitivity (eDPI = Mouse DPI × In-Game Sensitivity).',
+    question: 'What causes mouse DPI deviation (e.g., 800 DPI measuring as 840 DPI)?',
+    answer: 'DPI deviation is caused by slight manufacturing variations in sensor lens height, mouse skate/feet thickness (thick PTFE or glass skates lift the sensor slightly further from the surface), and pad weave texture.',
   },
+  {
+    question: 'What is eDPI and how is it calculated in Valorant and Counter-Strike 2?',
+    answer: 'eDPI (Effective DPI) standardizes true aim sensitivity across players: eDPI = True Mouse DPI &times; In-Game Sensitivity. For example, 800 DPI &times; 0.35 in Valorant equals 280 eDPI.',
+  },
+  {
+    question: 'Is 1600 DPI better than 400 DPI or 800 DPI?',
+    answer: 'Yes! Higher sensor DPI (like 1600 or 3200 DPI combined with lowered in-game sensitivity) reduces input latency by up to 2ms to 3ms because the optical sensor detects the start of physical hand movement faster.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Mouse DPI Analyzer | ControllerTesting"
-  description="Calculate true mouse DPI and sensitivity accuracy online. Measure physical mouse movement against pixel travel free."
+  title="Mouse DPI Analyzer — Free Online True Mouse DPI & CPI Calculator | ControllerTesting.com"
+  description="Calculate your true gaming mouse DPI (CPI) and sensor deviation online for free. Measure physical mousepad movement against raw pixel counts accurately."
+  keywords="mouse dpi analyzer, calculate mouse dpi, mouse cpi tester, true dpi calculator, mouse sensitivity test, edpi calculator valorant cs2"
   toolName="DPI Analyzer & Calculator"
   category="Mouse Diagnostic"
   categoryUrl="/test/mouse"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <DPIAnalyzer />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">DPI Presets & Benchmarks</h2>
+      <h2 class="section-title">DPI Deviation & Standard Presets</h2>
       <p class="results-text">
-        Most competitive esports players use 400, 800, or 1600 DPI combined with low in-game sensitivity for optimal pixel precision.
+        Compare your measured true DPI against standard factory steps (400, 800, 1600, 3200 DPI):
       </p>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">&lt; 2.5% Deviation (High Accuracy)</strong>
+          <p class="legend-text">Sensor lens height and skate calibration are spot on. Muscle memory translates 1:1 to in-game crosshair movement.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">2.6% – 6.0% Deviation (Moderate)</strong>
+          <p class="legend-text">Common with aftermarket thick skates. Easily compensated by fine-tuning in-game sensitivity decimal points.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">&gt; 6.0% Deviation (High Skew)</strong>
+          <p class="legend-text">Significant sensor height mismatch or firmware scaling bug. Re-calibrate Lift-Off Distance (LOD) in driver.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Test mouse polling rate</h3>
-        <p class="export-desc">Measure USB report frequency in Hz up to 8000Hz.</p>
+        <h3 class="export-title">Need to check mouse report rate?</h3>
+        <p class="export-desc">Measure your optical sensor's USB polling rate up to 8000Hz (8KHz).</p>
       </div>
       <div class="export-buttons">
         <a href="/test/mouse/polling-rate" class="btn-primary">Polling Rate Test</a>
+        <a href="/test/mouse/cps" class="btn-secondary">CPS Speed Test</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
     <a href="/test/mouse/polling-rate" class="tool-card card-base card-hover">
       <h3 class="tool-name">Polling Rate Checker</h3>
@@ -72,12 +101,27 @@ const faqs = [
       <h3 class="tool-name">Click Latency</h3>
       <p class="tool-desc">Measure click response delay.</p>
     </a>
+    <a href="/test/mouse/cps" class="tool-card card-base card-hover">
+      <h3 class="tool-name">CPS Test</h3>
+      <p class="tool-desc">Test clicks per second speed.</p>
+    </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Understanding Mouse DPI vs eDPI</h2>
+    <h2>The Science of Counts Per Inch (CPI) & Sensor Deviation</h2>
     <p>
-      DPI (Dots Per Inch) is a hardware specification of optical mouse sensors (PixArt, Hero, Focus+).
+      Modern optical gaming mouse sensors (such as the PixArt PAW3950, PAW3395, and Logitech HERO 2) capture microscopic surface images at up to 20,000 frames per second. By comparing microscopic surface texture shifts between successive CMOS frames, the sensor calculates physical displacement in discrete <strong>Counts</strong>.
+    </p>
+
+    <h3>Why Higher DPI Lowers Initial Motion Latency</h3>
+    <p>
+      At <code>400 DPI</code>, your mouse must physically move <code>1/400th of an inch (0.0635 mm)</code> before the sensor registers a single count packet. At <code>1600 DPI</code>, movement is registered after just <code>1/1600th of an inch (0.0158 mm)</code>—cutting initial motion detection latency by up to 2ms to 4ms in fast reaction flicks.
+    </p>
+
+    <h2>Measuring True DPI vs. Nominal Manufacturer Settings</h2>
+    <p>
+      A mouse configured to 800 DPI in software often operates at 780 DPI or 830 DPI in reality. By measuring raw counts across a physically measured 2-inch or 5cm ruler travel, this tool provides the exact scaling factor to match your true sensitivity across all competitive games.
     </p>
   </Fragment>
 </ToolLayout>

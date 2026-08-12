@@ -99,9 +99,13 @@ const schema = {
         if (ctrl === 'joycon') {
           if (titleEl) titleEl.textContent = 'Free Nintendo Repair ($0)';
           if (descEl) descEl.textContent = 'Nintendo offers 100% free Joy-Con drift repairs in the US and EU without requiring purchase proof.';
+          const btn = document.getElementById('verdict-guide-btn');
+          if (btn) { btn.href = '/hall-effect-upgrade?from=joycon'; btn.textContent = 'Or permanently upgrade to Hall Effect →'; }
         } else {
-          if (titleEl) titleEl.textContent = 'DIY Hall-Effect Upgrade ($12 - $15)';
-          if (descEl) descEl.textContent = 'Upgrading to Hall-effect magnetic sticks costs ~$15 and permanently eliminates stick drift.';
+          if (titleEl) titleEl.textContent = 'DIY Hall-Effect Upgrade ($15 - $60)';
+          if (descEl) descEl.textContent = 'Upgrading to Hall-effect magnetic sticks or replacing the controller entirely permanently eliminates stick drift.';
+          const btn = document.getElementById('verdict-guide-btn');
+          if (btn) { btn.href = `/hall-effect-upgrade?from=${ctrl}`; btn.textContent = 'View Hall Effect Upgrade Guide →'; }
         }
       } else if (issue === 'button') {
         if (titleEl) titleEl.textContent = 'Clean Conductive Rubber ($4)';

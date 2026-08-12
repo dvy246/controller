@@ -1,14 +1,14 @@
 ---
 /**
  * /test/controller/joycon — Joy-Con Tester: Check Switch Controllers for Drift
- * Target keyword: joycon controller tester
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: joycon drift test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
 import Interactive2DVisualizer from '@components/tools/controller/Interactive2DVisualizer.astro';
 import DiagnosticResultsBento from '@components/seo/DiagnosticResultsBento.astro';
 import PremiumGuideCard from '@components/seo/PremiumGuideCard.astro';
-import PremiumFaqAccordion from '@components/seo/PremiumFaqAccordion.astro';
 
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
@@ -18,24 +18,38 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    "question": "Will Nintendo fix my drifting Joy-Cons for free?",
-    "answer": "Yes, in many regions including North America and Europe, Nintendo offers free repair programs for Joy-Con drift regardless of warranty status."
+    question: 'How do I test my Nintendo Switch Joy-Con for stick drift online?',
+    answer: 'Press and hold the small circular pairing button on the Joy-Con inner rail until the green LEDs cycle. Pair the Joy-Con via Bluetooth in your PC/Mac settings, open this tool, and press any button. The visualizer measures the resting coordinate offset with 0.1% accuracy.',
+  },
+  {
+    question: 'What is the root cause of Nintendo Joy-Con drift?',
+    answer: 'Joy-Cons use ultra-thin carbon graphite tracks inside an ultra-compact stamped metal box. The metal contact wipers scrape away microscopic graphite dust over time, causing resistance fluctuations that register as phantom stick movement.',
+  },
+  {
+    question: 'Will Nintendo repair my drifting Joy-Cons for free?',
+    answer: 'Yes. In North America, the European Union, the United Kingdom, and several other regions, Nintendo offers an official no-cost Joy-Con repair and replacement service regardless of warranty status or original proof of purchase.',
+  },
+  {
+    question: 'Why do my Joy-Con SL and SR rail buttons stop working?',
+    answer: 'The SL and SR buttons, along with the green sync LEDs, connect to the motherboard via a thin flexible ribbon cable that folds 180 degrees inside the rail. Repeated sliding and battery heat fatigue this bend, causing micro-fractures in the copper traces.',
+  },
+  {
+    question: 'How do I replace Joy-Con thumbsticks with Hall-effect sensors?',
+    answer: 'Joy-Cons use modular, non-soldered stick modules connected via a ZIF ribbon connector. You can open the outer shell with a Y00 Tri-Point screwdriver, remove the battery bracket, and install electromagnetic Hall-effect drop-in modules that never develop drift.',
   }
 ];
-
 ---
 
 <ToolLayout
-  title="Joy-Con Drift Test: Switch Joy-Cons | ControllerTesting"
-  description="Test your Nintendo Switch Joy-Cons for drift instantly online free. Verify input accuracy and diagnose Joy-Con drift in your browser."
+  title="Joy-Con Drift Test — Free Online Nintendo Switch Joy-Con Tester | ControllerTesting.com"
+  description="Test your Nintendo Switch Joy-Cons for stick drift online for free. Check Left and Right Joy-Con analog sticks, SL/SR rail buttons, and gyro sensors."
+  keywords="joycon drift test, joy con tester online, test switch joycons, joy con stick drift check, joycon button test, how to test joycon drift"
   toolName="Joy-Con Drift Test"
   category="Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
-
-
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <Interactive2DVisualizer mode="joycon" isRigid={true} />
@@ -48,50 +62,62 @@ const faqs = [
 
   {/* ── Semantic SEO Content Slot ── */}
   <Fragment slot="content">
-    <section class="max-w-4xl mx-auto mt-16 px-6">
-      <h2 class="text-h2 mb-6">Joy-Con Drift & Hardware Diagnostics</h2>
-      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-        "Joy-Con Drift" is the most documented controller failure in gaming. Nintendo's compact stick modules use ultra-thin graphite pads instead of full-size ALPS potentiometers, and those pads wear faster. Pair a Joy-Con to a PC, Mac, or Android device, and this tool measures the drift severity in minutes — the number you want before you file a free Nintendo RMA.
-      </p>
-      
-      <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Testing the SL/SR Rail Buttons</h3>
-      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-        The second common failure is the SL and SR rail buttons. Sliding a Joy-Con on and off the console repeatedly can crimp or sever the ribbon cable behind those buttons, taking out the pairing LEDs with them. Test the rail buttons in the button matrix to confirm whether the ribbon is compromised.
-      </p>
-      
-      <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Motion Controls and HD Rumble</h3>
-      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed">
-        Small as they are, Joy-Cons pack a linear resonant actuator (LRA) for HD Rumble, a 6-axis gyroscope, and an IR motion camera in the right unit. Use the motion tools to confirm the IMU calibration holds for swing and tilt games like Switch Sports or Mario Kart 8 Deluxe.
-      </p>
-    </section>
+    <h2>Precision Joy-Con Drift & Hardware Diagnostics</h2>
+    <p>
+      Nintendo Switch Joy-Cons are marvels of ultra-compact industrial engineering, packing HD Rumble LRAs, 6-axis gyro IMUs, and an NFC reader into a handheld form factor. However, their miniature thumbstick mechanisms represent the most common failure point in modern gaming.
+    </p>
+    <p>
+      This browser-based diagnostic tool pairs directly with individual Left (L) and Right (R) Joy-Cons over Bluetooth to quantify resting drift offset, rail button continuity, and button actuation.
+    </p>
+
+    <h3>The Mechanical Physics of Joy-Con Drift</h3>
+    <ul>
+      <li><strong>Ultra-Thin Graphite Substrate:</strong> Unlike full-size Alps potentiometers that use robust ceramic bases, Joy-Con modules use ultra-thin polymer films printed with resistive carbon graphite ink.</li>
+      <li><strong>Wiper Gouging:</strong> Metal wiper fingers exert continuous spring tension against the graphite. As the stick rotates, the wipers grind microscopic grooves into the film, shedding conductive carbon particles across the circuit board.</li>
+      <li><strong>Dust Ingress:</strong> The flexible rubber dust skirt beneath the thumbstick cap easily lifts during gameplay, allowing ambient dust and lint to contaminate the resistive surface.</li>
+    </ul>
+
+    <h2>Diagnosing SL/SR Rail Ribbon Cable Fractures</h2>
+    <p>
+      If your Joy-Con fails to illuminate its rail LEDs or stops registering SL and SR button presses, the internal flex cable has likely severed. Test individual rail button actuation in our <a href="/test/controller/buttons" class="font-semibold text-accent">Button Matrix Tester</a>.
+    </p>
+
+    <h2>Upgrading to Hall-Effect Joysticks</h2>
+    <p>
+      Because Joy-Con sticks are modular components connected via ZIF ribbon cables rather than soldered pins, installing third-party Hall-effect modules (such as GuliKit KingKong Joy-Con sticks) requires only basic screwdrivers and 15 minutes of DIY installation.
+    </p>
   </Fragment>
 
   {/* ── SEO Repair Guide Section ── */}
   <Fragment slot="export">
-    <PremiumGuideCard title="How do you accurately test a Joy-Con for drift?">
-      <p class="text-lg">To accurately test a Joy-Con for drift, pair it via Bluetooth to a computer and launch an online gamepad diagnostic tool. Leave the thumbstick untouched. If the crosshair moves or shows an input value greater than two percent, your Joy-Con has a physical drift issue.</p>
+    <PremiumGuideCard title="How do you accurately test a Joy-Con for stick drift?">
+      <p class="text-lg leading-relaxed">
+        Pair your Joy-Con via Bluetooth to a computer, open this diagnostic tool, and release the thumbstick. If the live coordinate dot strays outside the center circle or reports a magnitude greater than <strong>2.0%</strong>, your Joy-Con suffers from physical hardware drift.
+      </p>
       
-      <h3 class="text-h3 text-accent mt-8 mb-4">Recommended Actions</h3>
-      <p class="text-lg">      Start with the <a href="/test/controller/drift">Stick Drift Test</a> to get a numeric reading. If a stick rests above 2%, skip the cleaning cycle and file a free Nintendo repair — Joy-Con graphite pads rarely recover, and Nintendo fixes them at no cost in the US and EU.</p>
+      <h3 class="text-h3 text-accent mt-8 mb-4">Recommended Joy-Con Repair Steps</h3>
+      <p class="text-lg leading-relaxed">
+        If drift is detected, initiate a no-cost repair order through the official Nintendo Support portal or purchase a pair of Hall-effect replacement modules for a permanent hardware fix.
+      </p>
     </PremiumGuideCard>
   </Fragment>
 
   {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
-    <a href="/test/controller/gyroscope" class="tool-hub-card card-hover card-base">
-      <div class="card-icon">🧭</div>
-      <h3 class="card-tool-name">Joy-Con Gyro Tester</h3>
-      <p class="card-tool-desc">Test the 6-axis motion controls and tilt calibration.</p>
+    <a href="/test/controller/nintendo-switch" class="tool-hub-card card-hover card-base focus-visible:ring-2 focus-visible:ring-accent outline-none">
+      <div class="card-icon" aria-hidden="true">🎮</div>
+      <h3 class="card-tool-name text-h3">Switch Master Tester</h3>
+      <p class="card-tool-desc">Test both Joy-Cons and Pro Controllers together.</p>
     </a>
-    <a href="/test/controller/vibration" class="tool-hub-card card-hover card-base">
-      <div class="card-icon">📳</div>
-      <h3 class="card-tool-name">HD Rumble Check</h3>
-      <p class="card-tool-desc">Verify the linear resonant actuators (LRA) in each Joy-Con.</p>
+    <a href="/test/controller/switch-pro" class="tool-hub-card card-hover card-base focus-visible:ring-2 focus-visible:ring-accent outline-none">
+      <div class="card-icon" aria-hidden="true">🕹️</div>
+      <h3 class="card-tool-name text-h3">Switch Pro Controller</h3>
+      <p class="card-tool-desc">Deep diagnostic suite for the official Pro Controller.</p>
     </a>
-    <a href="/test/controller/buttons" class="tool-hub-card card-hover card-base">
-      <div class="card-icon">🔘</div>
-      <h3 class="card-tool-name">Rail Button Tester</h3>
-      <p class="card-tool-desc">Check the hidden SL/SR rail buttons for ribbon cable damage.</p>
+    <a href="/test/controller/gyroscope" class="tool-hub-card card-hover card-base focus-visible:ring-2 focus-visible:ring-accent outline-none">
+      <div class="card-icon" aria-hidden="true">🧭</div>
+      <h3 class="card-tool-name text-h3">Joy-Con Gyroscope</h3>
+      <p class="card-tool-desc">Test 6-axis IMU motion controls and tilt calibration.</p>
     </a>
   </Fragment>
 </ToolLayout>

@@ -1,7 +1,8 @@
 ---
 /**
  * /test/mouse/click-latency — Mouse Click Latency Tester
- * SEO Title: Mouse Click Latency Test — Test Click Response Delay Online
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: mouse click latency test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,69 +16,120 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I test my mouse click latency?',
-    answer: 'Click "Start Reaction Test" above, wait for the box to turn green, and click as fast as possible. The tool measures your total reaction time in milliseconds.',
+    question: 'How do I test mouse click latency and reaction speed online?',
+    answer: 'Click "Start Click Reaction Test" above, focus on the test pad, and click your mouse button the instant the pad flashes emerald green. The high-resolution timer (using performance.now) measures your composite visual-to-click reaction latency in milliseconds.',
   },
   {
-    question: 'Do optical mouse switches have lower latency than mechanical switches?',
-    answer: 'Yes! Optical mouse switches use infrared light beams to trigger clicks, eliminating mechanical debounce delay and cutting click latency to sub-0.2ms.',
+    question: 'Do optical mouse switches have lower click latency than mechanical switches?',
+    answer: 'Yes! Optical mouse switches (Razer Optical Gen-3, Logitech LIGHTFORCE) use infrared light shutter beams, actuating in 0.2ms with zero debounce delay. Mechanical switches require a 2ms to 8ms debounce filter to prevent contact bounce chatter.',
   },
   {
-    question: 'What is mouse debounce delay?',
-    answer: 'Debounce delay is a software filter built into mechanical mouse firmware to prevent accidental double-clicks. Optical switches do not require debounce delay.',
+    question: 'What is mouse switch debounce time and how does it affect latency?',
+    answer: 'Debounce time is a firmware delay that forces the mouse microcontroller to wait before registering a click to ensure physical metal contacts have stopped vibrating. Lowering debounce from 10ms to 2ms cuts click delay by 8ms but increases double-click risk on aging switches.',
   },
+  {
+    question: 'What is a good total reaction latency benchmark in tactical shooters?',
+    answer: 'Human visual reaction time averages 190ms to 230ms. Combined with sub-1ms optical mouse switches and a 240Hz+ gaming monitor, competitive players regularly achieve composite scores below 160ms.',
+  },
+  {
+    question: 'How do I reduce click latency on PC?',
+    answer: 'Use optical mouse switches, connect directly to motherboard USB ports at 1000Hz+ polling rate, enable Nvidia Reflex / AMD Anti-Lag in game settings, and configure 2ms debounce in your mouse companion software.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Mouse Click Latency Test | ControllerTesting"
-  description="Test mouse click latency and reaction speed in milliseconds. Compare optical vs mechanical mouse switch click response times online."
+  title="Mouse Click Latency Test — Free Online Click Delay & Reaction Timer | ControllerTesting.com"
+  description="Test mouse click latency and reaction speed in milliseconds for free. Compare optical vs mechanical mouse switch click response times online."
+  keywords="mouse click latency test, mouse reaction time test, mouse click delay test, optical vs mechanical mouse click latency, test mouse click speed ms, mouse response time test"
   toolName="Mouse Click Latency"
   category="Mouse Diagnostic"
   categoryUrl="/test/mouse"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <ClickLatencyTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Click Latency Benchmarks</h2>
-      <p class="results-text">
-        Top esports mice with optical switches yield total system reaction times under 170ms.
-      </p>
+      <h2 class="section-title">Composite Click Reaction Benchmarks</h2>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">&lt; 175 ms (Esports Godlike)</strong>
+          <p class="legend-text">Top 5% reflex speed combined with ultra-low-latency optical switch hardware. Instant one-tap headshot advantage.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">175 – 230 ms (Competitive Gamer)</strong>
+          <p class="legend-text">Standard human visual reaction window. Excellent responsiveness for ranked tactical shooters.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">&gt; 235 ms (High Delay)</strong>
+          <p class="legend-text">Noticeable system or display delay. Consider lowering switch debounce or switching to a 1000Hz+ wired connection.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Test mouse double-clicking faults</h3>
-        <p class="export-desc">Detect unintentional double-click switch bounce faults.</p>
+        <h3 class="export-title">Is your mouse double clicking accidentally?</h3>
+        <p class="export-desc">Run our switch chatter tester to verify that your mechanical contacts are not failing.</p>
       </div>
       <div class="export-buttons">
         <a href="/test/mouse/double-click" class="btn-primary">Double-Click Test</a>
+        <a href="/test/mouse/polling-rate" class="btn-secondary">Polling Rate Test</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
+    <a href="/test/mouse/double-click" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Double-Click Test</h3>
+      <p class="tool-desc">Detect switch bounce chatter faults.</p>
+    </a>
+    <a href="/test/mouse/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Measure mouse Hz up to 8000Hz.</p>
+    </a>
     <a href="/test/mouse/cps" class="tool-card card-base card-hover">
       <h3 class="tool-name">CPS Test</h3>
       <p class="tool-desc">Test clicks per second speed.</p>
     </a>
-    <a href="/test/mouse/double-click" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Double-Click Test</h3>
-      <p class="tool-desc">Detect switch double-click faults.</p>
-    </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Why Mouse Click Latency Matters for Tactical Shooters</h2>
+    <h2>The Anatomy of Mouse Click Latency in Tactical FPS</h2>
     <p>
-      In games like <em>Valorant</em> and <em>CS:GO</em>, winning a one-tap duel depends on click latency.
+      In tactical shooters (such as <em>Valorant</em> and <em>Counter-Strike 2</em>), winning an angle-holding duel often comes down to a 10-millisecond window.
+    </p>
+
+    <h3>The 4-Stage Click Response Pipeline</h3>
+    <ol>
+      <li>
+        <strong>Monitor Frame Scanout (1–8ms):</strong> The time required for your monitor to present the enemy pixel on screen (e.g. 4.16ms on 240Hz, 1.85ms on 540Hz).
+      </li>
+      <li>
+        <strong>Human Cognitive Reaction (170–210ms):</strong> Visual stimulus processing and motor neuron firing in the finger muscles.
+      </li>
+      <li>
+        <strong>Physical Switch Actuation & Debounce (0.2–8ms):</strong> Physical travel to the actuation point plus mechanical switch debounce firmware delay.
+      </li>
+      <li>
+        <strong>USB Packet Transport (0.125–1ms):</strong> Polling rate report transmission over USB interrupt endpoints (1000Hz = 1ms, 8000Hz = 0.125ms).
+      </li>
+    </ol>
+
+    <h2>Why Optical Switches Dominate Competitive Esports</h2>
+    <p>
+      Traditional mechanical microswitches use bending copper alloy leaves. When pressed, the contacts physically vibrate (bounce) for 2ms to 6ms. To prevent false double clicks, firmware introduces a debounce delay. Optical switches replace metal contacts with an infrared phototransistor beam: breaking the beam triggers instantaneous actuation with zero electrical bounce.
     </p>
   </Fragment>
 </ToolLayout>

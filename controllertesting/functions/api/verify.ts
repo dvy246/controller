@@ -78,6 +78,10 @@ export const onRequestPost = async ({ request, env }: Ctx): Promise<Response> =>
   const sig = await hmacSha256Hex(secret, payloadStr);
   const token = payload.id;
   try {
+    const existing = await kv.get(`report:${token}`);
+    if (existing) {
+      return json({ ok: false, reason: "id_conflict" }, 409);
+    }
     await kv.put(
       `report:${token}`,
       JSON.stringify({ p: payloadStr, s: sig, t: Date.now() }),

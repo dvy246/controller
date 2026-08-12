@@ -1,0 +1,207 @@
+---
+/**
+ * /mods/[controller]/[bdm]/[modType] — Programmatic Long-Tail Mod Guide & Compatibility Page
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import WebHIDBDMDetector from '@components/tools/controller/WebHIDBDMDetector.astro';
+import ModBuilderWorkspace from '@components/tools/controller/ModBuilderWorkspace.astro';
+import modsData from '@data/modsData.json';
+
+export interface Props {
+  controller: {
+    id: string;
+    name: string;
+    slug: string;
+    description: string;
+    imageUrl: string;
+    motherboards: Array<{
+      id: string;
+      name: string;
+      identifiers: string[];
+      fccId?: string;
+      identificationGuide: string;
+      characteristics?: string[];
+    }>;
+  };
+  bdm: {
+    id: string;
+    name: string;
+    identifiers: string[];
+    fccId?: string;
+    identificationGuide: string;
+    characteristics?: string[];
+  };
+  category: {
+    id: string;
+    name: string;
+    description: string;
+    icon?: string;
+  };
+  matchingMods: Array<any>;
+}
+
+export function getStaticPaths() {
+  const paths: any[] = [];
+
+  modsData.controllers.forEach((controller) => {
+    controller.motherboards.forEach((bdm) => {
+      modsData.modCategories.forEach((category) => {
+        // Only generate page if there are matching mods for this exact combination
+        const matchingMods = modsData.mods.filter((m) => 
+          m.controllerId === controller.id && 
+          m.categoryId === category.id && 
+          m.compatibleMotherboards.includes(bdm.id)
+        );
+
+        if (matchingMods.length > 0) {
+          paths.push({
+            params: { 
+              controller: controller.id, 
+              bdm: bdm.id, 
+              modType: category.id 
+            },
+            props: { 
+              controller, 
+              bdm, 
+              category, 
+              matchingMods 
+            },
+          });
+        }
+      });
+    });
+  });
+
+  return paths;
+}
+
+const { controller, bdm, category, matchingMods } = Astro.props;
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Mod & Repair Builder', url: '/mods' },
+  { name: controller.name, url: `/mods/${controller.id}` },
+  { name: `${bdm.name} ${category.name}` }
+];
+
+const title = `Best ${category.name} for ${controller.name} (${bdm.name}) | Compatibility Guide`;
+const description = `Guaranteed compatible ${category.name.toLowerCase()} for ${controller.name} motherboard revision ${bdm.name}. Compare prices, difficulty, and soldering requirements.`;
+
+const faqs = [
+  {
+    question: `Are these ${category.name.toLowerCase()} guaranteed to fit my ${bdm.name} controller?`,
+    answer: `Yes. Every part featured on this page has been verified to match the specific circuit traces, ribbon cable pitch, and internal housing brackets of the ${bdm.name} revision.`
+  },
+  {
+    question: `How do I confirm my controller is definitely a ${bdm.name}?`,
+    answer: `${bdm.identificationGuide} You can also connect your controller via USB to run the WebHID auto-detector above.`
+  },
+  {
+    question: `What tools do I need to install ${category.name.toLowerCase()} on a ${bdm.name}?`,
+    answer: `Most kits require a PH00 Phillips screwdriver, plastic prying pry tools, and tweezers. If installing Hall Effect joysticks, a soldering iron, desoldering pump/wick, and solder flux are also required.`
+  }
+];
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemPage",
+    "name": title,
+    "description": description,
+    "url": `https://controllertesting.com/mods/${controller.id}/${bdm.id}/${category.id}`
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(f => ({
+      "@type": "Question",
+      "name": f.question,
+      "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+    }))
+  }
+];
+---
+
+<BaseLayout title={title} description={description} breadcrumbs={breadcrumbs} schema={schema} localized={false}>
+  <Header />
+
+  <main id="main-content" class="page-shell container-site">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <!-- SEO Header Block -->
+    <header class="page-header mb-8">
+      <div class="badge-tag mb-3">{bdm.name} Compatibility Guide</div>
+      <h1 class="page-title text-gradient">{category.name} for {controller.name} ({bdm.name})</h1>
+      <p class="page-subtitle">
+        Verified hardware compatibility guide and parts catalog. Upgrading your {controller.name} with {category.name.toLowerCase()} on the {bdm.name} motherboard architecture.
+      </p>
+    </header>
+
+    <!-- Technical Analysis Bento Card -->
+    <article class="p-6 sm:p-8 rounded-[24px] bg-[var(--color-surface-1)] border border-[var(--color-border-default)] mb-10">
+      <div class="max-w-3xl">
+        <h2 class="text-xl font-bold text-white mb-3">Motherboard Revision Specifications: {bdm.name}</h2>
+        <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-4">
+          {bdm.identificationGuide}
+        </p>
+        
+        {bdm.characteristics && (
+          <div class="p-4 rounded-xl bg-[var(--color-surface-0)] border border-[var(--color-border-subtle)] mb-4">
+            <h3 class="text-xs font-mono font-bold uppercase tracking-wider text-[var(--color-accent)] mb-2">Key Hardware Characteristics:</h3>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[var(--color-text-secondary)]">
+              {bdm.characteristics.map((char: string) => (
+                <li class="flex items-center gap-2">
+                  <svg class="w-3.5 h-3.5 text-[var(--color-emerald)] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>{char}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div class="p-3.5 rounded-xl bg-[var(--color-accent)]/10 border border-[var(--color-accent)]/20 text-xs text-[var(--color-text-primary)] flex items-start gap-2.5">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-[var(--color-accent)] shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>
+            <strong>Compatibility Guarantee:</strong> All {matchingMods.length} components listed below have been verified for direct mechanical and electrical compatibility with {bdm.name} motherboards.
+          </span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Quick Revision Switcher -->
+    <WebHIDBDMDetector controller={controller} activeBdm={bdm.id} />
+
+    <!-- Mod Builder Workspace Filtered to this BDM -->
+    <section class="mb-16">
+      <ModBuilderWorkspace controllerId={controller.id} initialBdm={bdm.id} categoryFilter={category.id} />
+    </section>
+
+    <!-- FAQ Accordion -->
+    <section class="mb-16">
+      <h2 class="text-xl sm:text-2xl font-bold text-white mb-6 flex items-center gap-2.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-[var(--color-accent)]"></span>
+        Frequently Asked Questions
+      </h2>
+
+      <div class="space-y-4">
+        {faqs.map((faq) => (
+          <details class="group p-5 rounded-2xl bg-[var(--color-surface-1)] border border-[var(--color-border-default)] open:border-[var(--color-accent)]/50 transition-colors">
+            <summary class="flex items-center justify-between font-bold text-white cursor-pointer list-none text-base">
+              <span>{faq.question}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-open:rotate-180 text-[var(--color-text-tertiary)]"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <p class="mt-4 text-sm text-[var(--color-text-secondary)] leading-relaxed border-t border-[var(--color-border-subtle)] pt-4">
+              {faq.answer}
+            </p>
+          </details>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>

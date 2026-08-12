@@ -16,7 +16,7 @@ interface Env {
   TELEMETRY_KV?: {
     get(key: string): Promise<string | null>;
     put(key: string, value: string, opts?: { expirationTtl?: number }): Promise<void>;
-    list(opts?: { prefix?: string; limit?: number }): Promise<{ keys: { name: string }[]; list_complete: boolean }>;
+    list(opts?: { prefix?: string; limit?: number; cursor?: string }): Promise<{ keys: { name: string }[]; list_complete: boolean; cursor?: string }>;
   };
 }
 
@@ -35,7 +35,7 @@ async function computeCounts(kv: NonNullable<Env["TELEMETRY_KV"]>): Promise<{ to
   let total = 0;
   let cursor = "";
   do {
-    const page = await kv.list({ prefix: "telemetry:", limit: 1000 });
+    const page = await kv.list({ prefix: "telemetry:", limit: 1000, cursor: cursor || undefined });
     for (const key of page.keys) {
       if (key.name === COUNT_CACHE_KEY) continue;
       const model = key.name.split(":")[1];

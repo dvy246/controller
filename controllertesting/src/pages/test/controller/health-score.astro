@@ -1,7 +1,8 @@
 ---
 /**
- * /test/controller/health-score — Controller Health Score™ Generator
- * SEO Title: Controller Health Score — Free Gamepad Longevity & Quality Grade
+ * /test/controller/health-score — Controller Health Score™ & Verification Report
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: controller health score
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -16,22 +17,31 @@ const breadcrumbs = [
 const faqs = [
   {
     question: 'How is the Controller Health Score™ calculated?',
-    answer: 'The score is calculated using a weighted formula: Stick Drift (30%), Circularity Error (20%), Button Matrix Response (15%), Trigger Linearity (15%), Polling Rate (10%), and Haptic Vibration (10%).',
+    answer: 'The score is computed using a weighted 6-factor hardware formula: Analog Stick Drift (30%), Outer Perimeter Circularity Error (20%), Button Matrix Actuation & Ghosting (15%), Analog Trigger Linearity (15%), Polling Rate Frequency (10%), and Haptic Rumble Motor Response (10%).',
   },
   {
-    question: 'Can I print or save my controller health certificate?',
-    answer: 'Yes! Click "Print / Export PDF Certificate" to generate an official verified test report card for warranty claims or proof when selling your controller.',
+    question: 'Can I use this report as proof of condition when selling a controller?',
+    answer: 'Yes. The Controller Health Score generates a tamper-evident Controller Condition Report with an immutable test UUID, client OS and browser environment metadata, component-by-component sub-grades, and exact timestamps suitable for eBay, Mercari, Swappa, or Reddit listings.',
   },
   {
-    question: 'What is a passing Controller Health Score?',
-    answer: 'A score of 85+ (Grade A) indicates excellent competition-grade performance. Scores below 70 (Grade C) indicate noticeable drift or switch wear requiring repair or replacement.',
+    question: 'What is considered a passing Controller Health Score?',
+    answer: 'A score of 85–100 (Grade A/A+) represents tournament-grade mechanical integrity with negligible drift (<2%) and full axis circularity. Scores from 70–84 (Grade B) indicate standard playable condition with minor wear, while scores below 70 (Grade C/F) warrant hardware repair or deadzone compensation.',
   },
+  {
+    question: 'Does generating a Health Score store my personal data?',
+    answer: 'No. All hardware telemetry and input calculations run 100% locally in your browser using the native Gamepad API. No keystrokes, personal identifiers, or private information are transmitted or retained on our servers.',
+  },
+  {
+    question: 'How does this test differ from standard button testers?',
+    answer: 'Standard button testers only show whether an input is pressed or unpressed. The Health Score Engine performs multi-dimensional quantitative analysis, calculating resting axis drift percentages, circular perimeter deviation, trigger pressure curves, and report timing consistency.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Controller Health Score: 0-100 Grade | ControllerTesting"
-  description="Get your controller's 0-100 health score and letter grade online free. Report covers stick drift, circularity, buttons, triggers, and polling rate."
+  title="Controller Health Score: Free Gamepad Condition Grade | ControllerTesting.com"
+  description="Generate your 0–100 Controller Health Score and Condition Report online. Analyzes stick drift, circularity, triggers, buttons, and polling rate with printable proof."
+  keywords="controller health score, controller condition report, gamepad diagnostic report, test controller condition, used controller verification, gamepad health grade"
   toolName="Controller Health Score™"
   category="Flagship Diagnostic"
   categoryUrl="/test/controller"
@@ -44,31 +54,31 @@ const faqs = [
 
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title-sm">Grade Threshold Scale</h2>
+      <h2 class="section-title-sm">Hardware Grade Threshold Scale</h2>
       <div class="results-legend-grid">
         <div class="legend-card legend-pass">
           <div class="legend-icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           </div>
-          <span class="legend-grade">95–100 · Grade A+</span>
-          <strong class="legend-title">Tournament Grade</strong>
-          <p class="legend-text">Zero drift, flawless circularity, 1000Hz response capability. Ready for competitive play.</p>
+          <span class="legend-grade">85–100 · Grade A / A+</span>
+          <strong class="legend-title">Tournament Grade Condition</strong>
+          <p class="legend-text">Negligible stick drift (&lt;2.5%), smooth circularity, full trigger range, and stable polling rate. Verified ready for competitive esports play.</p>
         </div>
         <div class="legend-card legend-warning">
           <div class="legend-icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
           </div>
-          <span class="legend-grade">75–94 · Grade B</span>
-          <strong class="legend-title">Standard Play Condition</strong>
-          <p class="legend-text">Minor drift or trigger wear manageable with 5% deadzone adjustment.</p>
+          <span class="legend-grade">70–84 · Grade B</span>
+          <strong class="legend-title">Standard Playable Condition</strong>
+          <p class="legend-text">Moderate potentiometer aging or minor switch chatter. Fully usable for casual gaming with standard 5%–8% in-game deadzones.</p>
         </div>
         <div class="legend-card legend-fail">
           <div class="legend-icon" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
           </div>
-          <span class="legend-grade">&lt; 75 · Grade C / F</span>
-          <strong class="legend-title">Repair Recommended</strong>
-          <p class="legend-text">Potentiometer replacement or deadzone tuning needed immediately.</p>
+          <span class="legend-grade">&lt; 70 · Grade C / F</span>
+          <strong class="legend-title">Hardware Attention Required</strong>
+          <p class="legend-text">Severe stick drift (&gt;8%), unresponsive trigger travel, or dead button switches. Requires cleaning, component repair, or RMA return.</p>
         </div>
       </div>
     </div>
@@ -77,11 +87,12 @@ const faqs = [
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Need to fix or upgrade your controller?</h3>
-        <p class="export-desc">Weigh repair costs against replacement options with our Fix vs Replace calculator.</p>
+        <h3 class="export-title">Need to evaluate repair costs vs replacement?</h3>
+        <p class="export-desc">Compare OEM module replacement and repair expenses against new gamepad pricing with our decision calculator.</p>
       </div>
       <div class="export-buttons">
         <a href="/fix-or-replace" class="btn-primary">Fix vs Replace Calculator</a>
+        <a href="/warranty" class="btn-secondary">Check Warranty RMA</a>
       </div>
     </div>
   </Fragment>
@@ -89,24 +100,56 @@ const faqs = [
   <Fragment slot="related-tools">
     <a href="/test/controller/full-diagnostic" class="tool-card card-base card-hover">
       <h3 class="tool-name">Full Diagnostic Wizard</h3>
-      <p class="tool-desc">Run 5-step hardware checkup.</p>
+      <p class="tool-desc">Interactive 5-step guided hardware checkup.</p>
     </a>
     <a href="/test/controller/drift" class="tool-card card-base card-hover">
       <h3 class="tool-name">Stick Drift Tester</h3>
-      <p class="tool-desc">Isolated 0.1% stick drift test.</p>
+      <p class="tool-desc">High-precision 0.1% stick centering detector.</p>
     </a>
     <a href="/test/controller/circularity" class="tool-card card-base card-hover">
       <h3 class="tool-name">Circularity Test</h3>
-      <p class="tool-desc">Check 360-degree range of motion.</p>
+      <p class="tool-desc">Measure 360-degree stick range of motion and error.</p>
     </a>
   </Fragment>
 
   <Fragment slot="content">
-    <h2>Why Every Gamer Should Know Their Controller Health Score</h2>
+    <h2>Why You Need a Quantitative Controller Health Score</h2>
     <p>
-      Hardware wear occurs gradually over hundreds of hours of gameplay. By tracking your controller's Health Score over time,
-      you can catch potentiometer drift and button degradation before it affects tournament matches or ranked competitive play.
+      Gamepad wear is progressive and multi-dimensional. While catastrophic failure (such as a completely unresponsive bumper) is immediately obvious, subtle degradation—including potentiometer track carbon erosion, return spring tension loss, and conductive silicone dome softening—develops quietly over hundreds of gaming hours.
     </p>
+    <p>
+      A simple "button test" only confirms whether an electrical contact closes. The <strong>Controller Health Score™</strong> delivers a comprehensive 0–100 benchmark evaluating the mechanical health of your entire gamepad architecture.
+    </p>
+
+    <h3>The 6 Weighted Telemetry Sub-Systems</h3>
+    <ul>
+      <li><strong>1. Analog Stick Drift (30% Weight):</strong> Measures resting coordinate displacement from absolute true zero (0.0000, 0.0000) on both sticks. Lower resting variance produces a higher grade.</li>
+      <li><strong>2. Stick Circularity & Range (20% Weight):</strong> Evaluates outer perimeter reach and cardinal axis corner distortion to ensure full 1.0 magnitude vector travel across 360 degrees.</li>
+      <li><strong>3. Button Matrix & Switch Actuation (15% Weight):</strong> Tests face buttons (A/B/X/Y, Cross/Circle/Square/Triangle), shoulder bumpers (L1/R1, LB/RB), and D-pad diagonals for contact reliability and switch bounce.</li>
+      <li><strong>4. Analog Trigger Linearity (15% Weight):</strong> Evaluates analog L2/R2 (LT/RT) trigger hall/potentiometer sensors to ensure a smooth, continuous 0.00 to 1.00 pressure curve without dead zones.</li>
+      <li><strong>5. Report Frequency & Latency (10% Weight):</strong> Measures Gamepad API polling stability and report interval consistency in Hertz.</li>
+      <li><strong>6. Haptic Vibration & Motor Integrity (10% Weight):</strong> Tests dual eccentric rotating mass (ERM) or linear resonant actuator (LRA) haptic rumble motors across variable frequency pulses.</li>
+    </ul>
+
+    <h2>Using the Controller Condition Report for Secondhand Buying & Selling</h2>
+    <p>
+      Whether you are selling a used controller on eBay, Mercari, Swappa, or Reddit (r/hardwareswap), or verifying a newly purchased secondhand gamepad:
+    </p>
+    <ol>
+      <li><strong>Complete the Full Diagnostic Run:</strong> Cycle through sticks, buttons, and triggers to populate every benchmark channel.</li>
+      <li><strong>Export the Condition Snapshot:</strong> Click "Print / Export PDF Certificate" to generate an official verified test report card featuring the hardware UUID, client environment, and sub-system grades.</li>
+      <li><strong>Attach Proof to Listings:</strong> Provide buyers with objective, third-party diagnostic evidence proving zero stick drift and verified button responsiveness.</li>
+    </ol>
+
+    <h2>Measurement Boundaries & Testing Best Practices</h2>
+    <p>
+      To ensure the most accurate Health Score reading:
+    </p>
+    <ul>
+      <li><strong>Use a Direct Wired Connection:</strong> USB connections provide stable polling rates without wireless Bluetooth packet compression or interference.</li>
+      <li><strong>Disable Background Remappers:</strong> Software such as Steam Input, DS4Windows, or reWASD can inject artificial deadzones or emulate virtual Xbox 360 drivers, masking true hardware sensor readings.</li>
+      <li><strong>Allow Return-to-Center Settling:</strong> Flick each analog stick firmly in several directions and allow it to settle naturally without touching the thumbstick before recording the final score.</li>
+    </ul>
   </Fragment>
 </ToolLayout>
 

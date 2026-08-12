@@ -127,6 +127,7 @@ const { mode, uuid = "demo", embed = false } = Astro.props;
     <div class="rv-actions hide-on-print">
       <button type="button" id="rv-print" class="btn-secondary rv-action">Print / PDF</button>
       <button type="button" id="rv-share" class="btn-secondary rv-action">Copy share link</button>
+      <button type="button" id="rv-embed" class="btn-secondary rv-action">Copy for eBay / Reddit</button>
       <button type="button" id="rv-save" class="btn-primary rv-action">Save to Passport</button>
     </div>
   </div>
@@ -266,6 +267,39 @@ const { mode, uuid = "demo", embed = false } = Astro.props;
           } catch {}
         }
         showToast(okCopy ? "Share link copied to clipboard" : "Select this page's URL and copy manually");
+      });
+    }
+
+    const embedBtn = q("rv-embed");
+    if (embedBtn) {
+      embedBtn.addEventListener("click", async () => {
+        const url = buildShareUrl(report);
+        const html = [
+          `<a href="${url}">Controller Condition Report — ${report.device.name} — Grade ${grade.grade} (${driftMax.toFixed(2)}% drift)</a>`,
+          `<iframe src="${url}&embed=1" width="100%" height="420" loading="lazy" title="Controller inspection report"></iframe>`
+        ].join('\\n');
+        
+        let okCopy = false;
+        try {
+          if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(html);
+            okCopy = true;
+          }
+        } catch {}
+        if (!okCopy) {
+          try {
+            const ta = document.createElement("textarea");
+            ta.value = html;
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+            okCopy = true;
+          } catch {}
+        }
+        showToast(okCopy ? "Embed snippet copied — paste into your listing" : "Could not copy automatically");
       });
     }
 
@@ -707,7 +741,9 @@ const { mode, uuid = "demo", embed = false } = Astro.props;
       grid-template-columns: 1fr 2fr;
     }
     .rv-actions {
-      flex-direction: row;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.625rem;
     }
   }
 

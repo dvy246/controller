@@ -1,7 +1,8 @@
 ---
 /**
  * /test/mouse/cps — CPS Test (Clicks Per Second)
- * SEO Title: CPS Test — Free Online Click Speed Tester
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: cps test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,89 +16,121 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I test my CPS (Clicks Per Second)?',
-    answer: 'Select your preferred test duration (5s, 10s, or 30s) above and click inside the target box as fast as possible. The tool calculates your real-time CPS score.',
+    question: 'How do I test my clicks per second (CPS) online?',
+    answer: 'Select your preferred timer duration (1s, 5s, 10s, or 30s) above and click inside the green target pad as fast as possible. The counter uses high-resolution browser performance timers to calculate your exact average Clicks Per Second (CPS) score.',
   },
   {
-    question: 'What is a good CPS score for Minecraft and gaming?',
-    answer: 'An average mouse user scores 6.0 to 7.5 CPS. Butterfly clicking and jitter clicking techniques yield 12.0 to 16.0+ CPS for Minecraft PvP (PVP combat).',
+    question: 'What is a good CPS score for Minecraft PvP and gaming?',
+    answer: 'A standard casual player clicks between 6.0 and 7.5 CPS. Competitive Minecraft PvP combatants using butterfly clicking or jitter clicking regularly achieve 12.0 to 18.0+ CPS to reduce sprint knockback and execute breezily/godbridging blocks.',
   },
   {
-    question: 'Does this test drag clicking and butterfly clicking?',
-    answer: 'Yes! Our high-frequency event listener accurately captures normal clicking, butterfly clicking, jitter clicking, and drag clicking techniques.',
+    question: 'What is the difference between Jitter Clicking and Butterfly Clicking?',
+    answer: 'Jitter clicking uses forearm muscle tension to vibrate the index finger rapidly over the switch (10–14 CPS). Butterfly clicking alternates two fingers (index and middle) on a wide primary mouse button, striking the switch twice per cycle (14–20+ CPS).',
   },
+  {
+    question: 'Why do optical mouse switches prevent drag clicking?',
+    answer: 'Drag clicking relies on mechanical switch leaf chatter (bouncing) during friction drag. Optical switches (Razer Gen-3, optical Omron) use infrared light beams with zero debounce delay, preventing artificial double-registering on a single physical stroke.',
+  },
+  {
+    question: 'How can I increase my CPS speed?',
+    answer: 'Practice rhythmic finger alternation (butterfly clicking), use a lightweight mouse with low switch actuation force (45g–55g Kailh GM 8.0 or TTC Gold), apply textured grip tape to the button shells, and lower switch debounce time in your mouse driver.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="CPS Test: Clicks Per Second | ControllerTesting"
-  description="Test your clicks per second (CPS) in 1s, 5s, 10s, or 30s mode. Measure butterfly, jitter, and drag clicking speed free online."
+  title="CPS Test — Free Online Click Speed Test & Clicks Per Second Meter | ControllerTesting.com"
+  description="Test your clicks per second (CPS) in 1s, 5s, 10s, 30s, and 60s modes. Measure butterfly, jitter, and drag clicking speed free online with live score graphs."
+  keywords="cps test, clicks per second test, click speed test, jitter click test, butterfly click test, minecraft pvp click test, cps test 5 seconds"
   toolName="CPS Test (Click Speed)"
   category="Mouse Diagnostic"
   categoryUrl="/test/mouse"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <CPSTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">CPS Score Ratings</h2>
+      <h2 class="section-title">Click Speed Score Tiers</h2>
       <div class="results-legend-grid">
         <div class="legend-card legend-pass">
-          <strong class="legend-title">&gt; 12.0 CPS (Godlike)</strong>
-          <p class="legend-text">Pro Minecraft PvP speed. Butterfly or drag clicking mastery.</p>
+          <strong class="legend-title">&gt; 12.0 CPS (Godlike / PvP Tier)</strong>
+          <p class="legend-text">Mastery of butterfly, jitter, or drag clicking. Maximum knockback resistance in competitive Minecraft.</p>
         </div>
         <div class="legend-card legend-warning">
-          <strong class="legend-title">7.0 – 11.9 CPS (Fast)</strong>
-          <p class="legend-text">Above average gamer speed using standard or jitter clicking.</p>
+          <strong class="legend-title">7.5 – 11.9 CPS (Fast Gamer)</strong>
+          <p class="legend-text">Above-average standard or light jitter clicking speed. Quick single-tap firing in tactical FPS shooters.</p>
         </div>
         <div class="legend-card legend-fail">
-          <strong class="legend-title">&lt; 6.9 CPS (Average)</strong>
-          <p class="legend-text">Standard casual clicking speed.</p>
+          <strong class="legend-title">&lt; 7.4 CPS (Casual Baseline)</strong>
+          <p class="legend-text">Standard relaxed single-finger clicking. Suitable for daily web browsing, RPGs, and strategy games.</p>
         </div>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Test mouse double-clicking faults</h3>
-        <p class="export-desc">Check if your mouse switch suffers from unintentional double-clicking.</p>
+        <h3 class="export-title">Is your mouse registering unwanted double clicks?</h3>
+        <p class="export-desc">Run our switch chatter detector to test if your mechanical microswitch contacts have eroded.</p>
       </div>
       <div class="export-buttons">
         <a href="/test/mouse/double-click" class="btn-primary">Double-Click Test</a>
+        <a href="/test/mouse/polling-rate" class="btn-secondary">Check Mouse Hz</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
+    <a href="/test/mouse/double-click" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Double-Click Tester</h3>
+      <p class="tool-desc">Detect mechanical switch bounce chatter.</p>
+    </a>
     <a href="/test/mouse/polling-rate" class="tool-card card-base card-hover">
       <h3 class="tool-name">Mouse Polling Rate</h3>
-      <p class="tool-desc">Measure mouse Hz frequency.</p>
+      <p class="tool-desc">Measure mouse 1000Hz–8000Hz frequency.</p>
     </a>
-    <a href="/test/mouse/dpi" class="tool-card card-base card-hover">
-      <h3 class="tool-name">DPI Analyzer</h3>
-      <p class="tool-desc">Calculate mouse DPI sensitivity.</p>
+    <a href="/test/mouse/click-latency" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Click Latency Test</h3>
+      <p class="tool-desc">Measure switch response time in ms.</p>
     </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Understanding Clicks Per Second (CPS) Techniques</h2>
+    <h2>The Biomechanics & Engineering of High CPS Clicking</h2>
     <p>
-      CPS measures how many times you can actuate a mouse switch in one second. Different clicking techniques offer varying speeds for gaming.
+      Clicks Per Second (CPS) measures how many discrete switch actuations you can register in one second. In competitive gaming (especially <em>Minecraft PvP</em> and fast-firing semi-automatic weapons in FPS games), higher CPS grants decisive mechanical advantages.
     </p>
 
-    <h3>Popular Click Speed Techniques</h3>
+    <h3>4 Main Clicking Disciplines</h3>
     <ul>
-      <li><strong>Standard Clicking:</strong> Single index finger clicking yielding 5-8 CPS.</li>
-      <li><strong>Jitter Clicking:</strong> Tensing arm muscles to vibrate the finger on the switch yielding 10-14 CPS.</li>
-      <li><strong>Butterfly Clicking:</strong> Alternating two fingers (index & middle) on a single button yielding 14-20 CPS.</li>
-      <li><strong>Drag Clicking:</strong> Friction-dragging a finger across the mouse button shell triggering multiple switch bounces yielding 20-30+ CPS.</li>
+      <li>
+        <strong>Standard Clicking (6–8 CPS):</strong> Traditional single-finger index finger clicking. Emphasizes aim stability and comfort with zero hand fatigue.
+      </li>
+      <li>
+        <strong>Jitter Clicking (10–14 CPS):</strong> Rapidly tensing forearm and wrist muscles to transmit micro-vibrations through the fingertip. Achieves high burst speeds but can impair fine crosshair tracking.
+      </li>
+      <li>
+        <strong>Butterfly Clicking (14–20+ CPS):</strong> Alternating two fingers on a wide mouse button shell (like Glorious Model O or Roccat Kain 120), double-tapping the switch per stroke cycle.
+      </li>
+      <li>
+        <strong>Drag Clicking (25–35+ CPS):</strong> Moving a friction-taped finger across the matte surface of the mouse button, using micro-stick-slip friction to chatter the mechanical switch leaf dozens of times per stroke.
+      </li>
     </ul>
+
+    <h2>Mechanical vs. Optical Mouse Switch Debounce</h2>
+    <p>
+      Traditional mechanical microswitches (such as Omron D2FC or Kailh GM 8.0) require a software <strong>debounce algorithm</strong> (typically 4ms to 12ms) to prevent physical contact vibration from registering as false double-clicks. Optical switches replace metal leaves with infrared light beams, achieving zero electrical bounce and instantaneous 0.2ms click actuation.
+    </p>
   </Fragment>
 </ToolLayout>
 

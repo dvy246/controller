@@ -1,7 +1,8 @@
 ---
 /**
  * /test/mouse/scroll — Mouse Scroll Wheel Tester
- * SEO Title: Mouse Scroll Wheel Test — Test Scroll Direction & Jitter Online
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: mouse scroll wheel test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,69 +16,119 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I test my mouse scroll wheel for reverse scrolling faults?',
-    answer: 'Scroll your mouse wheel continuously in one direction (e.g. downward) over the test target box above. If the indicator briefly flickers "SCROLLING UP", your scroll encoder has a reverse scroll fault.',
+    question: 'How do I test my mouse scroll wheel for reverse scrolling and jitter online?',
+    answer: 'Place your cursor over the test pad above and scroll your mouse wheel continuously in a single direction (e.g. downward). If the real-time indicator flashes "REVERSE JUMP DETECTED" or detects positive deltaY during downscrolls, your mechanical rotary encoder is failing.',
   },
   {
-    question: 'What causes mouse scroll wheel reverse jumping?',
-    answer: 'Scroll wheel jumping occurs when dust, hair, or grease accumulates inside the mechanical rotary encoder wheel. Cleaning the encoder with 99% isopropyl alcohol or compressed air usually fixes it.',
+    question: 'What causes mouse scroll wheels to jump in the opposite direction?',
+    answer: 'Reverse scroll jumping is caused by dust, hair, or dried lubricant contaminating the internal metal contact brushes of the mechanical rotary encoder (TTC, Kailh, or ALPS). This creates electrical signal bouncing between Phase A and Phase B quadrature channels.',
   },
   {
-    question: 'Does this test free-spinning and notched scroll wheels?',
-    answer: 'Yes! It measures all optical and mechanical scroll encoders, including Logitech MagSpeed and free-spinning wheels.',
+    question: 'How do I fix a mouse scroll wheel that jumps or scrolls backwards?',
+    answer: 'Turn your mouse upside down and scroll rapidly against a clean mousepad; blow compressed air directly into the scroll wheel gap; or apply 1–2 drops of 99% isopropyl alcohol / electronic contact cleaner into the encoder housing and rotate 50 times.',
   },
+  {
+    question: 'What is the difference between mechanical and optical scroll encoders?',
+    answer: 'Mechanical encoders use rotating metal wipers that slide against conductive tracks, causing wear and reverse scrolling over 1–2 years. Optical encoders (used in Razer DeathAdder V3 and Zowie mice) use an infrared beam through an encoder disc, eliminating reverse jumps forever.',
+  },
+  {
+    question: 'Does this tool test horizontal scroll tilt wheels?',
+    answer: 'Yes! Tilting the scroll wheel left or right on supported office and productivity mice (Logitech MX Master series) emits deltaX events that will register in the live telemetry readout.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Scroll Wheel Tester | ControllerTesting"
-  description="Test mouse scroll wheel direction, line steps, and encoder jumping faults online. Detect reverse scrolling issues on gaming mice free."
+  title="Mouse Scroll Wheel Test — Free Online Scroll Tester & Reverse Jump Fix | ControllerTesting.com"
+  description="Test mouse scroll wheel direction, step lines, and encoder reverse jumping faults online for free. Detect rotary encoder jitter and jumping on gaming mice."
+  keywords="mouse scroll wheel test, mouse scroll test online, test mouse scroll jumping, fix mouse reverse scrolling, scroll wheel encoder test, mouse scroll direction test"
   toolName="Scroll Wheel Tester"
   category="Mouse Diagnostic"
   categoryUrl="/test/mouse"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <ScrollTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Scroll Wheel Diagnostics</h2>
+      <h2 class="section-title">Scroll Encoder Health Benchmarks</h2>
       <p class="results-text">
-        Scroll steps should register consistently without random direction reversals or skipped lines.
+        Scroll 20 notches in a single direction and monitor the live delta vector:
       </p>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">Consistent Direction (Healthy)</strong>
+          <p class="legend-text">100% of scroll ticks register in the intended direction with deterministic delta step values (e.g. &plusmn;100px).</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">Occasional Direction Jitter</strong>
+          <p class="legend-text">1 out of 10 ticks scrolls backwards. Caused by early dust buildup or loose rotary encoder housing claws.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">Severe Reverse Jumping</strong>
+          <p class="legend-text">Frequent opposite jumps or zero resistance free-spin. Requires contact cleaner spray or encoder replacement.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Test mouse button clicks</h3>
-        <p class="export-desc">Test left, right, middle, and side thumb buttons.</p>
+        <h3 class="export-title">Need to test mouse button switches?</h3>
+        <p class="export-desc">Audit left, right, middle click, and side thumb buttons for switch chatter.</p>
       </div>
       <div class="export-buttons">
         <a href="/test/mouse/buttons" class="btn-primary">Button Tester</a>
+        <a href="/test/mouse/double-click" class="btn-secondary">Double-Click Test</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
     <a href="/test/mouse/buttons" class="tool-card card-base card-hover">
       <h3 class="tool-name">Mouse Button Tester</h3>
-      <p class="tool-desc">Test side buttons and switches.</p>
+      <p class="tool-desc">Test MB1–MB5 buttons and switches.</p>
+    </a>
+    <a href="/test/mouse/double-click" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Double-Click Test</h3>
+      <p class="tool-desc">Detect switch bounce chatter faults.</p>
     </a>
     <a href="/test/mouse/polling-rate" class="tool-card card-base card-hover">
       <h3 class="tool-name">Polling Rate Checker</h3>
-      <p class="tool-desc">Measure mouse Hz frequency.</p>
+      <p class="tool-desc">Measure mouse Hz up to 8000Hz.</p>
     </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Mechanical Rotary Encoders vs Optical Scroll Wheels</h2>
+    <h2>The Mechanics of Rotary Encoders & Reverse Scroll Faults</h2>
     <p>
-      Most gaming mice feature TTC Gold, Kailh, or ALPS mechanical scroll encoders.
+      The vast majority of gaming and office mice utilize <strong>mechanical rotary encoders</strong> (manufactured by TTC, Kailh, ALPS, or F-Switch) to translate wheel rotation into digital scroll steps.
+    </p>
+
+    <h3>2-Phase Quadrature Output (Phase A & Phase B)</h3>
+    <p>
+      Inside the encoder, a 3-pin disc with conductive radial spokes rotates past two spring-loaded wiper fingers:
+    </p>
+    <ul>
+      <li><strong>Scrolling Down:</strong> Phase A leads Phase B (Phase A closes first, then Phase B closes).</li>
+      <li><strong>Scrolling Up:</strong> Phase B leads Phase A.</li>
+      <li>
+        <strong>The Reverse Jump Failure:</strong> When microscopic dust or oxidized lubricant coats the spoke tracks, Phase A can drop out momentarily. The mouse microcontroller misinterprets Phase B closing first, sending an erroneous <em>Scroll UP</em> packet during an intentional <em>Scroll DOWN</em> motion.
+      </li>
+    </ul>
+
+    <h2>Mechanical Encoders vs. Optical Slotted Encoders</h2>
+    <p>
+      While mechanical encoders offer distinct tactile notches (steps), they degrade with heavy gaming use (such as jumping in <em>Apex Legends</em> / <em>Counter-Strike</em> bound to scroll wheel). Optical scroll systems (infrared beam passing through a slotted wheel) eliminate physical wear entirely.
     </p>
   </Fragment>
 </ToolLayout>

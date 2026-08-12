@@ -1,0 +1,160 @@
+---
+/**
+ * /mods/[controller] — Specific Controller Mod & Repair Builder
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import WebHIDBDMDetector from '@components/tools/controller/WebHIDBDMDetector.astro';
+import ModBuilderWorkspace from '@components/tools/controller/ModBuilderWorkspace.astro';
+import modsData from '@data/modsData.json';
+
+export interface Props {
+  controller: {
+    id: string;
+    name: string;
+    slug: string;
+    description: string;
+    imageUrl: string;
+    motherboards: Array<{
+      id: string;
+      name: string;
+      identifiers: string[];
+      fccId?: string;
+      identificationGuide: string;
+      characteristics?: string[];
+    }>;
+  };
+}
+
+export function getStaticPaths() {
+  return modsData.controllers.map((controller) => ({
+    params: { controller: controller.id },
+    props: { controller },
+  }));
+}
+
+const { controller } = Astro.props;
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Mod & Repair Builder', url: '/mods' },
+  { name: controller.name }
+];
+
+const faqs = [
+  {
+    question: `How do I know which motherboard revision my ${controller.name} has?`,
+    answer: `You can either connect your controller via USB and click the 'Auto-Detect via USB (WebHID)' button above, or check the model number and FCC ID printed on the back label. For PS5 controllers, BDM-010 has no letter suffix, BDM-020 ends in 'A', BDM-030 ends in 'B', and BDM-040 ends in 'C'.`
+  },
+  {
+    question: `Can I install Hall Effect sticks on any ${controller.name} motherboard?`,
+    answer: `Yes, Hall Effect joystick modules use the standard 14-pin potentiometer pinout which is mechanically compatible across all motherboard generations. However, desoldering and installing Hall Effect sticks requires precision soldering and calibration boards to center the zero-point.`
+  },
+  {
+    question: `What happens if I install a BDM-010 back paddle kit on a BDM-030 controller?`,
+    answer: `The ribbon cable will not fit into the motherboard connector. The main flex board connector on BDM-030 controllers is narrower and uses a different pin configuration. Trying to force it will tear the ribbon or damage the motherboard.`
+  }
+];
+
+const title = `${controller.name} Mod & Repair Builder | Motherboard Compatibility`;
+const description = `Detect your ${controller.name} motherboard revision via WebHID and find guaranteed compatible Hall Effect sticks, back paddles, and clicky triggers.`;
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": `${controller.name} Mod & Repair Builder`,
+    "applicationCategory": "Utility",
+    "operatingSystem": "Any",
+    "url": `https://controllertesting.com/mods/${controller.id}`,
+    "description": description
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(f => ({
+      "@type": "Question",
+      "name": f.question,
+      "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+    }))
+  }
+];
+---
+
+<BaseLayout title={title} description={description} breadcrumbs={breadcrumbs} schema={schema} localized={false}>
+  <Header />
+
+  <main id="main-content" class="page-shell container-site">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <!-- Page Header -->
+    <header class="page-header mb-8">
+      <div class="badge-tag mb-3">Hardware Compatibility Matrix</div>
+      <h1 class="page-title text-gradient">{controller.name} Mod Builder</h1>
+      <p class="page-subtitle">
+        {controller.description}
+      </p>
+    </header>
+
+    <!-- WebHID Auto Detector & Quick Tabs -->
+    <WebHIDBDMDetector controller={controller} activeBdm="all" />
+
+    <!-- Dynamic Mod Workspace -->
+    <section class="mb-16">
+      <ModBuilderWorkspace controllerId={controller.id} initialBdm="all" />
+    </section>
+
+    <!-- Programmatic SEO Sub-category Links -->
+    <section class="mb-16 p-6 sm:p-8 rounded-[24px] bg-[var(--color-surface-1)] border border-[var(--color-border-default)]">
+      <h3 class="text-lg font-bold text-white mb-3">Popular Long-Tail Compatibility Guides</h3>
+      <p class="text-xs text-[var(--color-text-secondary)] mb-4">
+        Explore deep technical breakdowns and verified parts guides for specific board revisions:
+      </p>
+      <div class="flex flex-wrap gap-2">
+        {controller.motherboards.map((mb) => (
+          <a 
+            href={`/mods/${controller.id}/${mb.id}/hall-effect-joysticks`}
+            class="text-xs font-mono px-3 py-1.5 rounded-lg bg-[var(--color-surface-2)] text-[var(--color-text-primary)] hover:text-white hover:bg-[var(--color-accent)] border border-[var(--color-border-subtle)] transition-colors"
+          >
+            {mb.name} Hall Effect Guide →
+          </a>
+        ))}
+        {controller.motherboards.map((mb) => (
+          <a 
+            href={`/mods/${controller.id}/${mb.id}/back-paddles`}
+            class="text-xs font-mono px-3 py-1.5 rounded-lg bg-[var(--color-surface-2)] text-[var(--color-text-primary)] hover:text-white hover:bg-[var(--color-accent)] border border-[var(--color-border-subtle)] transition-colors"
+          >
+            {mb.name} Back Paddles Guide →
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- FAQ Accordion -->
+    <section class="mb-16">
+      <h2 class="text-xl sm:text-2xl font-bold text-white mb-6 flex items-center gap-2.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-[var(--color-accent)]"></span>
+        Frequently Asked Questions
+      </h2>
+
+      <div class="space-y-4">
+        {faqs.map((faq) => (
+          <details class="group p-5 rounded-2xl bg-[var(--color-surface-1)] border border-[var(--color-border-default)] open:border-[var(--color-accent)]/50 transition-colors">
+            <summary class="flex items-center justify-between font-bold text-white cursor-pointer list-none text-base">
+              <span>{faq.question}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-open:rotate-180 text-[var(--color-text-tertiary)]"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <p class="mt-4 text-sm text-[var(--color-text-secondary)] leading-relaxed border-t border-[var(--color-border-subtle)] pt-4">
+              {faq.answer}
+            </p>
+          </details>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>

@@ -1,7 +1,8 @@
 ---
 /**
  * /test/controller/microphone — Controller Microphone Tester
- * SEO Title: Controller Microphone Test — Test Built-In Mic & Headset Audio Online
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: controller microphone test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,69 +16,117 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I test the built-in microphone on a PS5 DualSense controller?',
-    answer: 'Connect your DualSense controller via USB, click "Test Microphone Input" above, grant browser microphone permissions, and speak into the controller array microphone to test live volume levels.',
+    question: 'How do I test the built-in microphone on a PS5 DualSense controller online?',
+    answer: 'Connect your DualSense via USB-C cable to your PC/Mac, select "Wireless Controller" as your default sound input device in system settings, click "Start Microphone Test" above, and speak normally. The live audio visualizer plots frequency spectrum and peak volume levels in decibels (dBFS).',
   },
   {
-    question: 'Can I test a 3.5mm headset plugged into my controller?',
-    answer: 'Yes! Connect your headset into the controller\'s 3.5mm audio jack, select the controller input device in your OS settings, and test audio volume levels in real time.',
+    question: 'Can I test a 3.5mm gaming headset plugged into my controller?',
+    answer: 'Yes! Plug your headset into the 3.5mm TRRS jack on your PS5 or Xbox controller. When selected as the system audio input, the Web Audio API analyzes microphone clarity, background noise floor, and signal-to-noise ratio.',
   },
   {
-    question: 'Does Xbox Wireless Controller have a built-in microphone?',
-    answer: 'Standard Xbox controllers do not feature an internal microphone, but they support 3.5mm headset audio input when a gaming headset is plugged in.',
+    question: 'Why does my controller headset microphone sound quiet or muffled?',
+    answer: 'Low volume is often caused by a CTIA vs. OMTP pinout standard mismatch (ground and microphone pins swapped) or dust buildup inside the 3.5mm jack housing. In Windows Sound settings, verify that input level is set to 80–90% with microphone boost enabled.',
   },
+  {
+    question: 'How does the PS5 DualSense dual-microphone noise canceling work?',
+    answer: 'The DualSense contains two MEMS microphones: a primary voice mic below the PS button and a secondary environmental mic on the top edge. Onboard DSP inverts environmental noise to phase-cancel background room hum and game audio from television speakers.',
+  },
+  {
+    question: 'Does the Xbox Wireless Controller have a built-in microphone?',
+    answer: 'No. Standard Microsoft Xbox controllers do not contain internal microphones, but they feature a 3.5mm TRRS auxiliary port and proprietary expansion port for external gaming headsets and chatpads.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Microphone Test: Built-In Mic & Headset | ControllerTesting"
-  description="Test built-in controller microphones and 3.5mm headset audio input on PS5 DualSense and Xbox controllers online. Real-time audio level visualizer."
+  title="Controller Microphone Test — Free Online Built-In Mic & Headset Tester | ControllerTesting.com"
+  description="Test built-in controller microphones and 3.5mm headset audio on PS5 DualSense and Xbox controllers online for free. Real-time audio spectrum & dBFS level meter."
+  keywords="controller microphone test, dualsense mic test, ps5 controller microphone check, test controller headset mic, xbox controller 3.5mm audio test, controller mic test online"
   toolName="Microphone Tester"
   category="Controller Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <MicrophoneTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Audio Input Guidelines</h2>
+      <h2 class="section-title">Microphone Acoustic Performance Benchmarks</h2>
       <p class="results-text">
-        Normal voice speech should register volume levels between 40 dB and 85 dB without audio clipping or persistent background hum.
+        Speak at normal conversation distance and monitor input decibel thresholds:
       </p>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">-18 dBFS to -6 dBFS (Optimal)</strong>
+          <p class="legend-text">Crisp speech clarity; low noise floor (&lt; -45 dBFS); ideal voice transmission for in-game party chat and Discord.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">&lt; -30 dBFS (Low Gain / Muffled)</strong>
+          <p class="legend-text">Weak audio signal. Requires increasing OS input gain or checking microphone positioning near the mouth.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">0 dBFS Continuous (Static / Short)</strong>
+          <p class="legend-text">Severe buzzing or constant clipping. Indicates dirty 3.5mm TRRS jack contacts, ground loop, or broken mic wire.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Run full diagnostic checkup</h3>
-        <p class="export-desc">Combine microphone testing with stick drift and button matrix diagnostics.</p>
+        <h3 class="export-title">Need a full gamepad diagnostic checkup?</h3>
+        <p class="export-desc">Combine acoustic microphone diagnostics with stick drift, haptic vibration, and button tests.</p>
       </div>
       <div class="export-buttons">
-        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+        <a href="/test/controller/vibration" class="btn-primary">Test Vibration</a>
+        <a href="/test/controller/full-diagnostic" class="btn-secondary">Full Diagnostic</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
     <a href="/test/controller/vibration" class="tool-card card-base card-hover">
       <h3 class="tool-name">Vibration Tester</h3>
-      <p class="tool-desc">Test haptic rumble motors.</p>
+      <p class="tool-desc">Test dual haptic rumble motors.</p>
     </a>
-    <a href="/test/controller/drift" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Stick Drift Tester</h3>
-      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    <a href="/test/controller/ps5" class="tool-card card-base card-hover">
+      <h3 class="tool-name">PS5 Master Tester</h3>
+      <p class="tool-desc">Complete DualSense hardware diagnostic suite.</p>
+    </a>
+    <a href="/test/controller/touchpad" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Touchpad Tester</h3>
+      <p class="tool-desc">DualSense multi-touch capacitive tracking.</p>
     </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Controller Audio & Microphone Hardware</h2>
+    <h2>Controller Audio Hardware & Microphone Acoustic Processing</h2>
     <p>
-      Modern controllers like the PS5 DualSense incorporate built-in noise-canceling dual microphone arrays and 3.5mm TRRS audio pass-through jacks.
+      Modern gaming controllers integrate high-definition USB audio codecs to transmit multi-channel party audio, spatial game effects, and microphone voice streams without requiring dedicated soundcards.
+    </p>
+
+    <h3>DualSense Beamforming MEMS Microphone Array</h3>
+    <ul>
+      <li>
+        <strong>Primary Voice Mic:</strong> Positioned directly below the PS logo button, angled toward the user’s mouth to capture primary vocal frequencies (100Hz–8kHz).
+      </li>
+      <li>
+        <strong>Secondary Ambient Mic:</strong> Located on the upper rear spine between the shoulder bumpers. It samples environmental room reverberation and button clicking noise, allowing real-time digital signal processing (DSP) to subtract ambient clutter from voice chat.
+      </li>
+    </ul>
+
+    <h3>3.5mm TRRS Headset Jack Standards: CTIA vs. OMTP</h3>
+    <p>
+      Both PlayStation and Xbox controllers adhere to the modern <strong>CTIA standard</strong>: Tip = Left Audio, Ring 1 = Right Audio, Ring 2 = Ground, Sleeve = Microphone. Connecting an older OMTP headset (where Ground and Mic are reversed) results in hollow, quiet voice capture and heavy static crackle.
     </p>
   </Fragment>
 </ToolLayout>

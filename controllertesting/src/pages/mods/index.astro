@@ -1,0 +1,210 @@
+---
+/**
+ * /mods — Controller Mod & Repair Builder Hub
+ * PCPartPicker-style compatibility matrix for gamepad mods.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import modsData from '@data/modsData.json';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Mod & Repair Builder' }
+];
+
+const faqs = [
+  {
+    question: "Why do I need to check my controller's motherboard version before buying mods?",
+    answer: "Manufacturers like Sony and Microsoft silently update the internal circuit boards across controller lifecycles without changing the packaging. For example, PS5 DualSense controllers have 4 distinct motherboard revisions (BDM-010, BDM-020, BDM-030, BDM-040) with completely different ribbon cable pinouts, screw mounts, and trigger housings. Buying a mod designed for BDM-010 will not fit a BDM-030 controller."
+  },
+  {
+    question: "What is the difference between Hall Effect and standard potentiometer joysticks?",
+    answer: "Standard joysticks use carbon film potentiometers that physically degrade and wear out from friction, causing inevitable stick drift. Hall Effect joysticks use contactless magnetic sensors that never touch or wear down, providing permanent immunity to mechanical drift."
+  },
+  {
+    question: "Do back paddle remap kits require soldering?",
+    answer: "Most modern remap kits (like eXtremeRate RISE4) are 100% solderless for remapping standard face buttons (X, O, Triangle, Square, D-pad, Bumpers, Triggers). Soldering is only optional if you want to remap the L3/R3 thumbstick click or touchpad click."
+  },
+  {
+    question: "How does the WebHID auto-detector work?",
+    answer: "When connected via USB in a supported browser (Chrome, Edge, Opera), our WebHID detector queries the controller's hardware descriptor and firmware registers to automatically identify the internal motherboard generation without requiring controller disassembly."
+  }
+];
+
+const title = "Controller Mod & Repair Builder | Motherboard Compatibility Matrix";
+const description = "Select your controller and instantly find guaranteed compatible Hall Effect sticks, back paddles, and clicky triggers. Auto-detect motherboard revisions via WebHID.";
+
+const schema = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Controller Mod & Repair Builder",
+    "applicationCategory": "Utility",
+    "operatingSystem": "Any",
+    "url": "https://controllertesting.com/mods",
+    "description": description
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map(f => ({
+      "@type": "Question",
+      "name": f.question,
+      "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+    }))
+  }
+];
+---
+
+<BaseLayout title={title} description={description} breadcrumbs={breadcrumbs} schema={schema} localized={false}>
+  <Header />
+
+  <main id="main-content" class="page-shell container-site">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <!-- Hero Header Block -->
+    <header class="page-header mb-10">
+      <div class="badge-tag mb-3">Hardware Compatibility Engine</div>
+      <h1 class="page-title text-gradient">Controller Mod &amp; Repair Builder</h1>
+      <p class="page-subtitle">
+        The PCPartPicker for gamepads. Eliminate guesswork, avoid torn ribbon cables, and find guaranteed compatible Hall Effect joysticks, back paddles, and clicky triggers for your exact controller revision.
+      </p>
+    </header>
+
+    <!-- Controller Selector Cards Grid -->
+    <section class="mb-16">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-[var(--color-accent)]"></span>
+          Select Your Controller Platform
+        </h2>
+        <span class="text-xs font-mono text-[var(--color-text-tertiary)] uppercase tracking-wider">
+          Verified Compatibility
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {modsData.controllers.map((controller) => {
+          const controllerMods = modsData.mods.filter((m) => m.controllerId === controller.id);
+          
+          return (
+            <a 
+              href={`/mods/${controller.id}`} 
+              class="group relative block p-6 sm:p-8 rounded-[24px] bg-[var(--color-surface-1)] border border-[var(--color-border-default)] hover:border-[var(--color-accent)] transition-all duration-300 overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-[var(--color-accent-glow)]"
+            >
+              <div class="absolute inset-0 bg-gradient-to-br from-[var(--color-accent)]/[0.06] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+
+              <div class="relative z-10 flex flex-col justify-between h-full">
+                <div>
+                  <div class="flex items-center justify-between mb-3">
+                    <span class="text-xs font-mono font-bold tracking-widest text-[var(--color-accent-hover)] uppercase">
+                      {controller.motherboards.length} Board Revisions
+                    </span>
+                    <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border-subtle)]">
+                      {controllerMods.length} Verified Upgrades
+                    </span>
+                  </div>
+
+                  <h3 class="text-2xl font-extrabold text-white mb-2.5 group-hover:text-blue-400 transition-colors">
+                    {controller.name}
+                  </h3>
+                  <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-6">
+                    {controller.description}
+                  </p>
+
+                  <!-- Revisions Pills -->
+                  <div class="flex flex-wrap gap-1.5 mb-8">
+                    {controller.motherboards.map((mb) => (
+                      <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border-subtle)] group-hover:border-[var(--color-accent)]/30 transition-colors">
+                        {mb.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-[var(--color-border-subtle)] text-[var(--color-accent-hover)] font-semibold text-sm">
+                  <span>Open Mod Builder &amp; Compatibility Filter</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-1.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+
+    <!-- Why Hardware Revision Matters Bento Grid -->
+    <section class="mb-16 p-8 sm:p-10 rounded-[24px] bg-[var(--color-surface-1)] border border-[var(--color-border-default)]">
+      <div class="max-w-2xl mb-8">
+        <span class="text-xs font-mono font-bold tracking-widest text-[var(--color-accent)] uppercase mb-2 block">
+          Hardware Engineering Intelligence
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          Why Gamepad Motherboard Compatibility Matters
+        </h2>
+        <p class="text-sm text-[var(--color-text-secondary)] mt-2">
+          Unlike PCs where standard form factors reign, console gamepads undergo frequent silent revisions. Here is what breaks when you buy non-matching parts:
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-5 rounded-2xl bg-[var(--color-surface-0)] border border-[var(--color-border-subtle)]">
+          <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/25 flex items-center justify-center text-red-400 font-bold mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">Incompatible Ribbon Pinouts</h3>
+          <p class="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+            Sony rearranged the main flex circuit pins between BDM-010 and BDM-030. Connecting the wrong ribbon causes permanent power shorts or unresponsive buttons.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-[var(--color-surface-0)] border border-[var(--color-border-subtle)]">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-400 font-bold mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">Trigger Housing Differences</h3>
+          <p class="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+            BDM-020 and BDM-030 use completely different adaptive trigger motor brackets and spring tensions. Clicky hair trigger kits made for one will not latch onto another.
+          </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-[var(--color-surface-0)] border border-[var(--color-border-subtle)]">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400 font-bold mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3 class="text-base font-bold text-white mb-2">100% Guaranteed Fit</h3>
+          <p class="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+            Our matrix cross-checks every single component against verified FCC IDs, board revisions, and physical latch designs to ensure your upgrade works on the first try.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Accordion Section -->
+    <section class="mb-16">
+      <h2 class="text-xl sm:text-2xl font-bold text-white mb-6 flex items-center gap-2.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-[var(--color-accent)]"></span>
+        Frequently Asked Questions
+      </h2>
+
+      <div class="space-y-4">
+        {faqs.map((faq) => (
+          <details class="group p-5 rounded-2xl bg-[var(--color-surface-1)] border border-[var(--color-border-default)] open:border-[var(--color-accent)]/50 transition-colors">
+            <summary class="flex items-center justify-between font-bold text-white cursor-pointer list-none text-base">
+              <span>{faq.question}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-open:rotate-180 text-[var(--color-text-tertiary)]"><polyline points="6 9 12 15 18 9"/></svg>
+            </summary>
+            <p class="mt-4 text-sm text-[var(--color-text-secondary)] leading-relaxed border-t border-[var(--color-border-subtle)] pt-4">
+              {faq.answer}
+            </p>
+          </details>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>

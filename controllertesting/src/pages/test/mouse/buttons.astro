@@ -1,7 +1,8 @@
 ---
 /**
  * /test/mouse/buttons — Mouse Button Tester
- * SEO Title: Mouse Button Tester — Test Mouse Buttons & Side Keys Online
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: mouse button tester
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,69 +16,115 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I test mouse side buttons (Forward / Back)?',
-    answer: 'Click any mouse button — including left click, right click, scroll wheel click, and side thumb buttons — anywhere on the page. The corresponding button card will illuminate in green.',
+    question: 'How do I test all buttons and side keys on my mouse online?',
+    answer: 'Click any button on your mouse—including Left Click (MB1), Right Click (MB2), Middle Scroll Click (MB3), Side Back (MB4), and Side Forward (MB5). The interactive visualizer illuminates the corresponding button in emerald green, counts total clicks, and tests continuous hold actuation.',
   },
   {
-    question: 'Why does right click open a context menu during testing?',
-    answer: 'Our tool automatically suppresses browser right-click context menus on this page so you can test right-click switch actuations smoothly.',
+    question: 'Why does right-clicking not open a context menu during testing?',
+    answer: 'Our testing pad intercepts and suppresses native browser contextmenu events (via event.preventDefault()), allowing you to test right-click switch actuation speed and click spamming smoothly without annoying popup menus.',
   },
   {
-    question: 'Does this test gaming mouse side buttons (MB4 / MB5)?',
-    answer: 'Yes! It tests Left Click (MB1), Right Click (MB2), Scroll Click (MB3), Side Back (MB4), and Side Forward (MB5).',
+    question: 'Why are my mouse side buttons (MB4 / MB5) not registering in browser tests?',
+    answer: 'If side buttons fail to highlight, ensure your mouse manufacturer software (Logitech G HUB, Razer Synapse, Glorious Core) has not disabled the side keys or rebound them to complex desktop shortcuts like Volume Up/Down.',
   },
+  {
+    question: 'What is the difference between standard and optical microswitches?',
+    answer: 'Standard mechanical microswitches (Omron, Kailh, Huano, TTC) use physical gold-plated metal leaf springs that can oxidize or chatter over time. Optical microswitches use infrared beams to detect actuation, providing immune protection against double-clicking.',
+  },
+  {
+    question: 'How do I fix a sticky or unresponsive mouse button?',
+    answer: 'Unresponsive buttons are often caused by dust, skin oils, or micro-debris lodged around the button plunger stem. Dispense 1–2 drops of 99% isopropyl alcohol into the switch stem and actuate rapidly to flush contaminants.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Mouse Button Tester | ControllerTesting"
-  description="Test left click, right click, scroll click, and side thumb buttons on your gaming mouse online. Real-time click counter and visualizer."
+  title="Mouse Button Tester — Free Online Mouse Button & Side Key Checker | ControllerTesting.com"
+  description="Test left click, right click, middle scroll click, and side thumb buttons (MB1–MB5) on your mouse online for free. Real-time click counter and visualizer."
+  keywords="mouse button tester, test mouse side buttons, mouse click test online, test mouse mb4 mb5, mouse button matrix check, left right click test"
   toolName="Mouse Button Tester"
   category="Mouse Diagnostic"
   categoryUrl="/test/mouse"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <MouseButtonTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Button Switch Benchmarks</h2>
+      <h2 class="section-title">Mouse Button Diagnostic Benchmarks</h2>
       <p class="results-text">
-        All buttons should highlight crisp green upon press. If a side button fails to register, check mouse driver remapping settings.
+        Actuate each switch individually and test continuous hold-and-drag reliability:
       </p>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">Crisp Actuation (100% Signal)</strong>
+          <p class="legend-text">Instant green illumination on press; stable solid hold when depressed; zero dropped clicks during drag.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">Hold-Release Intermittency</strong>
+          <p class="legend-text">Holding down the button flickers on and off. Indicates oxidized microswitch contacts or switch leaf fatigue.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">No Input Registered (Dead Switch)</strong>
+          <p class="legend-text">Button produces physical click sound but fails to fire software signal. Indicates broken solder joint or severed flex ribbon.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Test double-click switch faulting</h3>
-        <p class="export-desc">Check if your mouse switch suffers from unintentional double-clicks.</p>
+        <h3 class="export-title">Is your mouse double-clicking on single taps?</h3>
+        <p class="export-desc">Run our specialized switch bounce chatter test to detect microswitch degradation.</p>
       </div>
       <div class="export-buttons">
         <a href="/test/mouse/double-click" class="btn-primary">Double-Click Test</a>
+        <a href="/test/mouse/scroll" class="btn-secondary">Scroll Wheel Test</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
+    <a href="/test/mouse/double-click" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Double-Click Test</h3>
+      <p class="tool-desc">Detect mechanical switch bounce chatter.</p>
+    </a>
+    <a href="/test/mouse/scroll" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Scroll Wheel Test</h3>
+      <p class="tool-desc">Test scroll direction & encoder jumping.</p>
+    </a>
     <a href="/test/mouse/cps" class="tool-card card-base card-hover">
       <h3 class="tool-name">CPS Test</h3>
       <p class="tool-desc">Test clicks per second speed.</p>
     </a>
-    <a href="/test/mouse/scroll" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Scroll Test</h3>
-      <p class="tool-desc">Test scroll wheel direction & step lines.</p>
-    </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Gaming Mouse Switch Types and Microswitches</h2>
+    <h2>The Architecture of Gaming Mouse Microswitches & Side Buttons</h2>
     <p>
-      Gaming mice use mechanical microswitches (Omron, Kailh GM 8.0, Huano) or optical switches (Razer Gen-3, Light Strike).
+      Modern gaming mice integrate a combination of specialized microswitches across different button positions:
+    </p>
+
+    <h3>Standard Mouse Button Mapping (MB1 through MB5)</h3>
+    <ul>
+      <li><strong>MB1 (Left Click - Event Button 0):</strong> Primary fire switch. Typically uses high-durability microswitches (Kailh GM 8.0, Huano Blue Pink Dot, or TTC Gold) rated for 80 million clicks.</li>
+      <li><strong>MB2 (Right Click - Event Button 2):</strong> Secondary aim-down-sights (ADS) switch.</li>
+      <li><strong>MB3 (Middle Click - Event Button 1):</strong> Located beneath the scroll wheel spindle. Often utilizes a low-profile square tactile switch with higher actuation force (120g–180g) to prevent accidental clicks while scrolling.</li>
+      <li><strong>MB4 / MB5 (Side Buttons - Event Buttons 3 & 4):</strong> Thumb buttons mounted on an auxiliary vertical daughterboard, connected via flexible flat ribbon cables.</li>
+    </ul>
+
+    <h2>Diagnosing Switch Hold Failures in FPS Games</h2>
+    <p>
+      A common sign of microswitch degradation is an inability to sustain continuous automatic weapon fire or dragging items across inventory slots. When the internal leaf spring loses tension, minor changes in finger pressure break electrical continuity, resulting in dropped weapon spray patterns.
     </p>
   </Fragment>
 </ToolLayout>

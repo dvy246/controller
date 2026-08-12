@@ -1,7 +1,8 @@
 ---
 /**
  * /test/controller/buttons — Controller Button Tester & Ghosting Tool
- * SEO Title: Controller Button Tester — Test Gamepad Buttons Online
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: controller button test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,85 +16,139 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I test if a controller button is sticking or broken?',
-    answer: 'Press each face button and shoulder bumper on your gamepad while watching the Button Tester chips above. If a button chip stays green after release or fails to highlight, the physical switch is sticking or worn.',
+    question: 'How do I test if my controller buttons are sticking or unresponsive?',
+    answer: 'Press each face button, bumper, and trigger while watching the interactive button matrix visualizer above. Healthy switches illuminate instantaneously upon actuation and extinguish immediately when released. If an input stays lit or requires excessive force to register, the conductive membrane or switch is worn.',
   },
   {
-    question: 'What is gamepad button ghosting?',
-    answer: 'Button ghosting occurs when pressing multiple buttons simultaneously causes unregistered inputs or false triggers. Our tool checks matrix isolation so every simultaneous press is recognized.',
+    question: 'What is gamepad button ghosting and does this test detect it?',
+    answer: 'Button ghosting occurs when pressing multiple simultaneous inputs causes adjacent buttons to register false presses or fail to register at all. Our tool samples simultaneous button combinations across the entire 18-input Gamepad API matrix to verify proper input isolation.',
   },
   {
-    question: 'Does this test face buttons, D-pad, and stick clicks?',
-    answer: 'Yes! It tests A/Cross, B/Circle, X/Square, Y/Triangle, L1/R1, L2/R2, L3/R3 stick clicks, D-Pad (Up, Down, Left, Right), Select/Share, and Start/Options.',
+    question: 'What buttons are tested in this tool?',
+    answer: 'The matrix tests all 18 standard inputs: Face Buttons (A/Cross, B/Circle, X/Square, Y/Triangle), Shoulder Bumpers (L1/R1, LB/RB), Analog Triggers (L2/R2, LT/RT), Thumbstick Clicks (L3/R3), D-Pad (Up, Down, Left, Right), Select/Share/Back, Start/Options/Menu, and Guide/Home/Touchpad buttons.',
   },
+  {
+    question: 'Can I clean sticky controller buttons without taking the controller apart?',
+    answer: 'Yes. For minor sticking caused by dust or liquid residue, apply 2 drops of 99% isopropyl alcohol around the edges of the sticky button using a cotton swab, press the button rapidly 40 times to work the alcohol into the guide channel, and allow 15 minutes to dry before retesting.',
+  },
+  {
+    question: 'What is the difference between conductive rubber membranes and mechanical microswitches?',
+    answer: 'Most standard gamepads (DualSense, standard Xbox) use silicone rubber domes with conductive carbon pills that complete a circuit when pressed against the PCB. Pro controllers often use mechanical mouse-click microswitches with tactile metal leaf springs that offer faster actuation and zero membrane degradation.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Controller Button Test: Gamepad Check | ControllerTesting"
-  description="Test every button on your PS5, Xbox, or Switch controller online free. Detect ghosting, double-press faults, and unresponsive buttons instantly."
+  title="Controller Button Test — Free Online Gamepad Button Checker | ControllerTesting.com"
+  description="Test every button on your PS5, Xbox, Switch, or PC controller online for free. Check face buttons, bumpers, triggers, D-pad, and stick clicks for ghosting and sticking."
+  keywords="controller button test, gamepad button tester, test controller buttons online, ps5 button test, xbox controller button test, gamepad button check"
   toolName="Controller Button Test"
   category="Controller Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <ButtonTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Button Health Guidelines</h2>
+      <h2 class="section-title">Button Actuation & Health Guidelines</h2>
       <p class="results-text">
-        All action buttons and D-pad inputs should illuminate immediately upon press and clear immediately upon release. If inputs flicker or stick, clean around the membrane or conductive rubber pad with 99% isopropyl alcohol.
+        Every button input is polled in real-time at 60fps via the browser Gamepad API. Evaluate your controller switches against these standards:
       </p>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">Instant Response (Healthy)</strong>
+          <p class="legend-text">Switch activates with light pressure and releases cleanly with zero lingering or chatter.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">Sticky / Heavy Press (Watch)</strong>
+          <p class="legend-text">Button requires heavy force to actuate or slowly pops back up. Caused by residue in the plastic button channel.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">Dead Switch / Ghosting (Fault)</strong>
+          <p class="legend-text">Button fails to illuminate or triggers unpressed adjacent inputs. Membrane tear or PCB trace oxidation.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Run full diagnostic checkup</h3>
-        <p class="export-desc">Combine button testing with stick drift and trigger response analysis.</p>
+        <h3 class="export-title">Need a complete controller health checkup?</h3>
+        <p class="export-desc">Combine button testing with stick drift, trigger linearity, and rumble motor diagnostics.</p>
       </div>
       <div class="export-buttons">
         <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+        <a href="/test/controller/health-score" class="btn-secondary">Get Health Score</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
     <a href="/test/controller/drift" class="tool-card card-base card-hover">
       <h3 class="tool-name">Stick Drift Tester</h3>
-      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+      <p class="tool-desc">Isolated 0.1% stick centering detector.</p>
     </a>
     <a href="/test/controller/triggers" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Trigger Tester</h3>
-      <p class="tool-desc">Analog trigger linearity test.</p>
+      <h3 class="tool-name">Trigger Pressure Tester</h3>
+      <p class="tool-desc">Analog L2/R2 pressure curve analyzer.</p>
     </a>
     <a href="/test/controller/dpad" class="tool-card card-base card-hover">
-      <h3 class="tool-name">D-Pad Tester</h3>
-      <p class="tool-desc">8-way directional pad precision test.</p>
+      <h3 class="tool-name">8-Way D-Pad Tester</h3>
+      <p class="tool-desc">Directional pad diagonal precision test.</p>
     </a>
     <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
       <h3 class="tool-name">Polling Rate Checker</h3>
-      <p class="tool-desc">Measure input rate in Hz.</p>
+      <p class="tool-desc">Measure input report frequency in Hz.</p>
     </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>How Controller Buttons Work and Why Switches Fail</h2>
+    <h2>How Controller Button Switches Work</h2>
     <p>
-      Gamepads use conductive silicone rubber pads or mechanical microswitches beneath face buttons and shoulder bumpers.
-      When pressed, the conductive carbon pill completes a circuit on the PCB trace.
+      Face buttons, shoulder bumpers, and D-pads in gaming controllers rely on mechanical and electrical contact points to translate physical finger actuation into digital input signals.
     </p>
 
-    <h3>Common Button Issues</h3>
+    <h3>Conductive Rubber Membrane Mechanics</h3>
+    <p>
+      Standard controllers (such as the Sony DualSense and Microsoft Xbox Wireless Controller) use flexible silicone rubber membranes positioned beneath the exterior plastic keycaps.
+    </p>
     <ul>
-      <li><strong>Unresponsive Buttons:</strong> Carbon pill worn down or liquid spill residue blocking PCB contacts.</li>
-      <li><strong>Sticking Buttons:</strong> Dirt and sugar build-up inside the plastic button housing.</li>
-      <li><strong>Double Registering:</strong> Worn rubber dome spring tearing, causing false double-clicks.</li>
+      <li><strong>The Conductive Pill:</strong> Underneath each silicone dome sits a small disk of conductive carbon. When you press the button, the dome collapses and presses the carbon pill against split copper or gold PCB traces.</li>
+      <li><strong>Circuit Closure:</strong> Bridging the PCB traces completes the circuit, sending a logic-low or logic-high signal to the controller’s main microcontroller.</li>
+      <li><strong>Tactile Spring Return:</strong> The natural elasticity of the silicone rubber pushes the button back up when finger pressure is released.</li>
+    </ul>
+
+    <h2>Common Button Failures and Diagnostic Symptoms</h2>
+    <ol>
+      <li>
+        <strong>Unresponsive or Intermittent Press:</strong> The conductive carbon coating has eroded from friction, or dust/oil residue is insulating the PCB contact pads.
+      </li>
+      <li>
+        <strong>Sticky or Slow-Return Buttons:</strong> Sugary liquid residue, dirt, or plastic mold flash is binding the exterior button cylinder against the top shell guide tube.
+      </li>
+      <li>
+        <strong>Double-Press / Chatter:</strong> A torn silicone dome collapses unevenly, causing the contact pill to bounce against the PCB traces and register multiple rapid presses.
+      </li>
+      <li>
+        <strong>Broken Bumper Actuator:</strong> Xbox bumpers utilize plastic bridge fulcrums that can crack under heavy drops, preventing the physical bumper from depressing the internal microswitch.
+      </li>
+    </ol>
+
+    <h2>Step-by-Step Button Remediation Guide</h2>
+    <ul>
+      <li><strong>External Cleaning:</strong> Dip a cotton swab in 99% isopropyl alcohol and rub it around the circumference of sticky buttons while pressing rapidly.</li>
+      <li><strong>Internal Membrane Replacement:</strong> If carbon pads are worn smooth or torn, replacement silicone rubber membrane sets are readily available and require only simple screwdriver disassembly to install.</li>
+      <li><strong>Microswitch Replacement:</strong> For mouse-click style bumpers or D-pads with dead tactile switches, desoldering and installing a fresh Omron or Kailh microswitch restores crisp click response.</li>
     </ul>
   </Fragment>
 </ToolLayout>

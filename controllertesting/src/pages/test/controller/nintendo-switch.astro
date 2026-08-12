@@ -1,14 +1,14 @@
 ---
 /**
- * /test/controller/nintendo-switch — Nintendo Switch Controller Tester & Joy-Con Drift Repair Guide
- * Target keyword: nintendo-switch controller tester
+ * /test/controller/nintendo-switch — Nintendo Switch Controller Diagnostic
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: nintendo switch controller test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
 import Interactive2DVisualizer from '@components/tools/controller/Interactive2DVisualizer.astro';
 import DiagnosticResultsBento from '@components/seo/DiagnosticResultsBento.astro';
 import PremiumGuideCard from '@components/seo/PremiumGuideCard.astro';
-import PremiumFaqAccordion from '@components/seo/PremiumFaqAccordion.astro';
 
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
@@ -18,32 +18,38 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    "question": "How do I connect my Nintendo Switch controller to PC or Mac?",
-    "answer": "For Joy-Cons, press and hold the small sync button on the rail until the lights flash, then pair via Bluetooth on your PC/Mac. For the Pro Controller, use a USB-C cable or hold the sync button on top to pair via Bluetooth."
+    question: 'How do I test my Nintendo Switch Joy-Cons and Pro Controller online?',
+    answer: 'For Joy-Cons, hold the small circular pairing button on the black rail until the LED lights cycle, then pair via Bluetooth on your PC/Mac. For the Switch Pro Controller, connect via USB-C cable or hold the top pairing button. Press any button to initialize the Gamepad API.',
   },
   {
-    "question": "What is Joy-Con drift?",
-    "answer": "Joy-Con drift is a hardware defect where the analog stick registers movement even when you aren't touching it. It is caused by the carbon pads wearing down inside the potentiometer module over time."
+    question: 'What causes Joy-Con stick drift?',
+    answer: 'Joy-Cons use ultra-compact sub-miniature slider boxes with ultra-thin graphite tracks. Mechanical friction from the tiny metal contact wipers wears away the graphite substrate in as little as 100 to 200 hours of gameplay, leaving conductive debris that generates phantom analog signals.',
   },
   {
-    "question": "How can I fix Joy-Con drift permanently?",
-    "answer": "The only permanent fix is replacing the stock analog sticks with Hall-effect joystick modules. Hall-effect sensors use magnets instead of physical contacts, completely eliminating wear and tear that causes drift."
+    question: 'Are Nintendo Switch triggers analog or digital?',
+    answer: 'Both Nintendo Switch Joy-Cons (ZL/ZR) and the official Switch Pro Controller use digital microswitches (binary 0 or 1) rather than analog pressure-sensitive triggers (0.00 to 1.00) found on PlayStation and Xbox controllers.',
+  },
+  {
+    question: 'Does Nintendo repair Joy-Con stick drift for free?',
+    answer: 'Yes. In North America, the European Union, and the United Kingdom, Nintendo offers no-cost Joy-Con drift repairs and replacements under warranty and out-of-warranty RMA programs.',
+  },
+  {
+    question: 'How can I fix Joy-Con drift permanently at home?',
+    answer: 'Replacing standard potentiometer Joy-Con thumbstick modules with electromagnetic Hall-effect modules (such as GuliKit Hall Joysticks) permanently eliminates drift because magnets and Hall IC sensors have zero physical contact wear.',
   }
 ];
-
 ---
 
 <ToolLayout
-  title="Nintendo Switch Controller Test | ControllerTesting"
-  description="Test your Nintendo Switch Pro Controller and Joy-Cons for stick drift online free, plus a complete guide to fixing Joy-Con drift permanently."
+  title="Nintendo Switch Controller Test — Free Online Joy-Con & Pro Controller Tester | ControllerTesting.com"
+  description="Test your Nintendo Switch Joy-Cons and Switch Pro Controller online for free. Check stick drift, button response, digital ZL/ZR triggers, and motion gyroscopes."
+  keywords="nintendo switch controller test, joycon drift test, switch pro controller tester, test joycon online, nintendo controller test, switch stick drift check"
   toolName="Nintendo Switch Controller Test"
   category="Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
-
-
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <Interactive2DVisualizer mode="joycon" isRigid={true} />
@@ -56,50 +62,63 @@ const faqs = [
 
   {/* ── Semantic SEO Content Slot ── */}
   <Fragment slot="content">
-    <section class="max-w-4xl mx-auto mt-16 px-6">
-      <h2 class="text-h2 mb-6">Comprehensive Nintendo Switch Hardware Diagnostics</h2>
-      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-        The Switch family has two very different controllers: modular Joy-Cons for portable play and the Pro Controller for longer sessions. This tool detects whichever one you connect and tests both through the Gamepad API — drift, buttons, and gyro — no Switch console or third-party software required.
-      </p>
-      
-      <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Quantifying Joy-Con Drift</h3>
-      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-        Joy-Cons use extremely thin, proprietary graphite pads instead of full-size ALPS potentiometers, so <strong>stick drift</strong> hits them earlier. The visualizer plots the resting X and Y position of each stick on a canvas. If a stick rests above 2% variance, that is confirmed hardware drift — proceed with a Nintendo RMA or a DIY Hall-effect stick replacement.
-      </p>
-      
-      <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Validating Pro Controller Precision</h3>
-      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed">
-        The Pro Controller is a different machine: standard analog potentiometer sticks, digital shoulder triggers, and a 6-axis IMU. Use the suite to confirm the D-Pad is not registering accidental diagonals — a known issue in early batches — and that both HD Rumble actuators fire symmetrically.
-      </p>
-    </section>
+    <h2>Comprehensive Hardware Diagnostics for Nintendo Switch Controllers</h2>
+    <p>
+      The Nintendo Switch ecosystem utilizes two distinct controller architectures: modular Left/Right Joy-Cons for handheld and motion gaming, and the Switch Pro Controller for traditional gaming.
+    </p>
+    <p>
+      This diagnostic visualizer reads raw W3C Gamepad API telemetry at 60fps to identify resting stick drift, trigger actuation, button bounce, and Bluetooth connection dropouts across both platforms.
+    </p>
+
+    <h3>Joy-Con Miniature Potentiometer vs. Switch Pro Controller</h3>
+    <ul>
+      <li>
+        <strong>Joy-Con Graphite Track Wear:</strong> Due to tight enclosure constraints, Joy-Con analog sticks use ultra-thin stamped sheet-metal enclosures with carbon graphite printed films. The sharp metal wiper prongs apply heavy localized pressure, leading to premature track gouging and drift.
+      </li>
+      <li>
+        <strong>Switch Pro Controller Architecture:</strong> The Pro Controller uses full-size Alps Alpine potentiometers (similar to PS4 and Xbox One pads) and a central pivot D-pad. While more durable than Joy-Cons, its D-pad requires testing for accidental diagonal rocking.
+      </li>
+      <li>
+        <strong>Digital ZL/ZR Triggers:</strong> Switch triggers actuate instantaneously as binary on/off states (0% or 100%), verified in the live HUD.
+      </li>
+    </ul>
+
+    <h2>Permanent Fix: Electromagnetic Hall-Effect Drop-In Modules</h2>
+    <p>
+      Unlike full-size controllers that require complex desoldering, Joy-Con analog sticks connect via a modular ribbon cable and two small Phillips/Tri-point screws. Dropping in replacement Hall-effect thumbstick modules replaces physical resistive tracks with permanent magnetic sensors, completely curing Joy-Con drift forever.
+    </p>
   </Fragment>
 
   {/* ── SEO Repair Guide Section ── */}
   <Fragment slot="export">
-    <PremiumGuideCard title="What is the best way to fix Nintendo Switch controller drift?">
-      <p class="text-lg">To fix Nintendo Switch controller drift permanently, replace the faulty potentiometer stick with a Hall-effect sensor module. For a temporary fix, use electronic contact cleaner under the rubber stick skirt to remove debris. Always re-calibrate your controller in system settings afterward to ensure accurate input.</p>
+    <PremiumGuideCard title="How do you test and fix Nintendo Switch Joy-Con drift?">
+      <p class="text-lg leading-relaxed">
+        Pair your Joy-Con or Switch Pro controller via Bluetooth, open the <a href="/test/controller/drift" class="font-semibold text-accent">Stick Drift Test</a>, and release the sticks. If resting drift exceeds 2.5%, try recalibrating in Switch System Settings or apply electronic contact cleaner beneath the rubber dust boot. For persistent drift, initiate an official Nintendo no-cost RMA or install Hall-effect drop-in modules.
+      </p>
       
-      <h3 class="text-h3 text-accent mt-8 mb-4">Recommended Actions</h3>
-      <p class="text-lg">      Start with the <a href="/test/controller/drift">Stick Drift Test</a>. It works with both Joy-Cons and the Pro Controller — the reading tells you whether to file an RMA or swap in Hall-effect modules.</p>
+      <h3 class="text-h3 text-accent mt-8 mb-4">Recommended Nintendo Diagnostic Tools</h3>
+      <p class="text-lg leading-relaxed">
+        Test individual Joy-Con pairs with the <a href="/test/controller/joycon" class="font-semibold text-accent">Joy-Con Tester</a> or verify 6-axis motion sensors with our <a href="/test/controller/gyroscope" class="font-semibold text-accent">Nintendo Gyroscope Visualizer</a>.
+      </p>
     </PremiumGuideCard>
   </Fragment>
 
   {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
-    <a href="/test/controller/joycon" class="tool-hub-card card-hover card-base">
-      <div class="card-icon">🔵</div>
-      <h3 class="card-tool-name">Joy-Con Specific Tester</h3>
-      <p class="card-tool-desc">Specialized tools for testing L/R Joy-Con pairs.</p>
+    <a href="/test/controller/joycon" class="tool-hub-card card-hover card-base focus-visible:ring-2 focus-visible:ring-accent outline-none">
+      <div class="card-icon" aria-hidden="true">🔵</div>
+      <h3 class="card-tool-name text-h3">Joy-Con Pair Tester</h3>
+      <p class="card-tool-desc">Test individual Left and Right Joy-Cons independently.</p>
     </a>
-    <a href="/test/controller/switch-pro" class="tool-hub-card card-hover card-base">
-      <div class="card-icon">🎮</div>
-      <h3 class="card-tool-name">Switch Pro Diagnostics</h3>
-      <p class="card-tool-desc">Deep diagnostic suite for the Pro Controller.</p>
+    <a href="/test/controller/switch-pro" class="tool-hub-card card-hover card-base focus-visible:ring-2 focus-visible:ring-accent outline-none">
+      <div class="card-icon" aria-hidden="true">🎮</div>
+      <h3 class="card-tool-name text-h3">Switch Pro Diagnostics</h3>
+      <p class="card-tool-desc">Deep diagnostic suite for the official Pro Controller.</p>
     </a>
-    <a href="/test/controller/gyroscope" class="tool-hub-card card-hover card-base">
-      <div class="card-icon">🧭</div>
-      <h3 class="card-tool-name">Nintendo Gyro Tester</h3>
-      <p class="card-tool-desc">Test the 6-axis IMU motion controls.</p>
+    <a href="/test/controller/gyroscope" class="tool-hub-card card-hover card-base focus-visible:ring-2 focus-visible:ring-accent outline-none">
+      <div class="card-icon" aria-hidden="true">🧭</div>
+      <h3 class="card-tool-name text-h3">Nintendo Gyro Tester</h3>
+      <p class="card-tool-desc">Verify 6-axis motion controls and IMU tilt sensors.</p>
     </a>
   </Fragment>
 </ToolLayout>

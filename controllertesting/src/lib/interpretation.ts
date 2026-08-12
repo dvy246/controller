@@ -351,13 +351,13 @@ export function interpretDrift(
     });
   } else if (verdict === "watch") {
     nextSteps.push({
-      action: "Try cleaning with isopropyl alcohol",
-      href: "/fix/stick-drift",
+      action: "Upgrade to a Hall Effect Controller",
+      href: `/hall-effect-upgrade?from=${identity.reliabilityKey || 'unknown'}`,
       priority: "primary",
     });
     nextSteps.push({
-      action: "Check if your warranty covers this",
-      href: "/warranty",
+      action: "Try cleaning with isopropyl alcohol",
+      href: "/fix/stick-drift",
       priority: "secondary",
     });
     nextSteps.push({
@@ -367,16 +367,17 @@ export function interpretDrift(
     });
   } else {
     nextSteps.push({
+      action: "Upgrade to a Hall Effect Controller",
+      href: `/hall-effect-upgrade?from=${identity.reliabilityKey || 'unknown'}`,
+      priority: "primary",
+    });
+    nextSteps.push({
       action: "Check warranty coverage",
       href: "/warranty",
-      priority: "primary",
+      priority: "secondary",
     });
     nextSteps.push({
-      action: "Export evidence for warranty claim",
-      priority: "primary",
-    });
-    nextSteps.push({
-      action: "Compare fix cost vs replacement",
+      action: "Estimate fix vs replace cost",
       href: "/fix-or-replace",
       priority: "secondary",
     });
@@ -546,18 +547,18 @@ export function interpretHealthScore(
           ]
         : [
             {
-              action: "Check warranty coverage",
-              href: "/warranty",
+              action: "Upgrade to a Hall Effect Controller",
+              href: `/hall-effect-upgrade?from=${identity.reliabilityKey || 'unknown'}`,
               priority: "primary",
             },
             {
               action: "Estimate fix vs replace cost",
               href: "/fix-or-replace",
-              priority: "primary",
+              priority: "secondary",
             },
             {
-              action: "View step-by-step repair guide",
-              href: "/fix/stick-drift",
+              action: "Check warranty coverage",
+              href: "/warranty",
               priority: "secondary",
             },
           ],

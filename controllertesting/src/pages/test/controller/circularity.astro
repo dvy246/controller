@@ -1,7 +1,8 @@
 ---
 /**
  * /test/controller/circularity — Analog Stick Circularity Test
- * SEO Title: Controller Circularity Test — Test Stick Range of Motion & Outer Error
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: controller circularity test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,23 +16,32 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'What is controller circularity error?',
-    answer: 'Circularity error measures how far a thumbstick\'s actual maximum movement boundary deviates from a perfect 360-degree mathematical circle. Lower error percentages indicate better diagonal movement accuracy.',
+    question: 'What is controller analog stick circularity error?',
+    answer: 'Circularity error measures the mathematical percentage deviation between a thumbstick’s actual outer perimeter vector reach and a theoretical perfect 1.0 unit circle. Lower error percentages indicate a uniform 360-degree rotational response curve.',
   },
   {
-    question: 'What is a good circularity error score?',
-    answer: 'An error score below 5.0% is considered excellent. Factory DualSense and Xbox controllers typically score between 5% and 12% due to squarish outer gate restrictors.',
+    question: 'Why do brand new PS5 and Xbox controllers have 7% to 12% circularity error?',
+    answer: 'Factory OEM controllers from Sony and Microsoft intentionally employ "squircle" (squared circle) outer bounding algorithms. This ensures that pushing the stick diagonally achieves full 1.0 magnitude (100% speed) in games, compensating for mechanical circular shell restrictors.',
   },
   {
-    question: 'Does circularity affect aiming in FPS games?',
-    answer: 'Yes! High circularity error distorts diagonal aiming sensitivity, causing diagonal crosshair movement to feel faster or slower than cardinal (horizontal/vertical) aiming.',
+    question: 'Does high circularity error affect aiming in FPS games?',
+    answer: 'Yes. Excessive circularity error (>15%) distorts diagonal crosshair tracking, causing diagonal look sensitivity to feel faster or slower than purely horizontal or vertical aim. Calibrated circularity under 5% provides linear 1:1 angular translation.',
   },
+  {
+    question: 'How do I test my controller circularity?',
+    answer: 'Connect your controller via USB, rotate the left and right thumbsticks slowly in full 360-degree rotations along the outer plastic shell rim. The canvas visualizer plots every coordinate point and calculates the average circular error percentage in real time.',
+  },
+  {
+    question: 'How do Hall-effect joysticks achieve sub-1% circularity error?',
+    answer: 'Modern Hall-effect replacement modules and controllers with onboard DSP microcontrollers use digital lookup tables and real-time polar coordinate calibration to map the physical circular rim directly to a mathematical unit circle.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Analog Stick Circularity Test — Free Online Gamepad Precision Tester | ControllerTesting.com"
-  description="Test your controller's analog stick circularity and 360-degree range of motion. Measure stick precision and detect irregular movement patterns online for free."
+  title="Controller Circularity Test — Free Online Analog Stick Precision Tester | ControllerTesting.com"
+  description="Test your PS5, Xbox, Switch, or PC gamepad's analog stick circularity error online. Measure 360-degree range of motion, diagonal error, and boundary clipping free."
+  keywords="controller circularity test, analog stick circularity, gamepad circularity error, stick range of motion test, ps5 circularity test, xbox stick error"
   toolName="Circularity Test"
   category="Controller Diagnostic"
   categoryUrl="/test/controller"
@@ -39,69 +49,103 @@ const faqs = [
   faqs={faqs}
   telemetryEnabled
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <CircularityTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Circularity Error Ratings</h2>
+      <h2 class="section-title">Interpreting Circularity Error Ratings</h2>
       <div class="results-legend-grid">
         <div class="legend-card legend-pass">
-          <strong class="legend-title">0.0% – 5.0% (Excellent)</strong>
-          <p class="legend-text">Near-perfect circular boundary. Consistent diagonal aiming sensitivity in shooters.</p>
+          <strong class="legend-title">0.0% – 5.0% (Calibrated / Hall-Effect)</strong>
+          <p class="legend-text">Near-perfect circular mapping. Delivers 1:1 uniform diagonal aim tracking in competitive shooters.</p>
         </div>
         <div class="legend-card legend-warning">
-          <strong class="legend-title">5.1% – 12.0% (Standard Factory)</strong>
-          <p class="legend-text">Normal factory stick variance. Typical for standard PS5 and Xbox controllers.</p>
+          <strong class="legend-title">5.1% – 12.5% (Standard Factory OEM)</strong>
+          <p class="legend-text">Normal factory potentiometer behavior. DualSense and Xbox gamepads use slight squircle clamping for diagonal sprinting.</p>
         </div>
         <div class="legend-card legend-fail">
-          <strong class="legend-title">> 12.0% (High Error)</strong>
-          <p class="legend-text">Noticeable diagonal distortion. Octagonal physical gate or worn potentiometer housing.</p>
+          <strong class="legend-title">&gt; 12.5% (Severe Distortion / Clipping)</strong>
+          <p class="legend-text">Warped stick module or uncalibrated Hall sensors causing extreme diagonal speed spikes or cardinal axis truncation.</p>
         </div>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Generate comprehensive diagnostic report</h3>
-        <p class="export-desc">Combine circularity analysis with stick drift and polling rate testing.</p>
+        <h3 class="export-title">Need full gamepad diagnostic evidence?</h3>
+        <p class="export-desc">Combine circularity telemetry with stick drift and polling rate testing into a verified Health Report.</p>
       </div>
       <div class="export-buttons">
-        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+        <a href="/test/controller/health-score" class="btn-primary">Generate Health Report</a>
+        <a href="/test/controller/full-diagnostic" class="btn-secondary">Run Full Wizard</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
     <a href="/test/controller/drift" class="tool-card card-base card-hover">
       <h3 class="tool-name">Stick Drift Tester</h3>
-      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+      <p class="tool-desc">Isolated 0.1% stick centering detector.</p>
     </a>
     <a href="/test/controller/deadzone" class="tool-card card-base card-hover">
       <h3 class="tool-name">Deadzone Visualizer</h3>
-      <p class="tool-desc">Find optimal deadzone threshold settings.</p>
+      <p class="tool-desc">Simulate radial and axial deadzones against live drift.</p>
     </a>
     <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
       <h3 class="tool-name">Polling Rate Checker</h3>
-      <p class="tool-desc">Measure input rate in Hz.</p>
+      <p class="tool-desc">Measure input report frequency in Hz.</p>
+    </a>
+    <a href="/test/controller/triggers" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Trigger Pressure Tester</h3>
+      <p class="tool-desc">Analog L2/R2 pressure curve analyzer.</p>
     </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Why Analog Stick Circularity Is Critical for Competitive Gaming</h2>
+    <h2>The Mathematics of Analog Stick Circularity</h2>
     <p>
-      When playing first-person shooters or racing simulators, game engines translate 2D analog stick coordinates (X, Y) into camera rotation or steering angle.
-      If your thumbstick housing produces a squared or distorted outer boundary, diagonal inputs reach 100% magnitude earlier than cardinal inputs.
+      In 3D game engines, player movement and camera look vectors are calculated from the normalized two-dimensional coordinate plane <code>(X, Y)</code> reported by the thumbstick.
+    </p>
+    <p>
+      When a player pushes the stick to its physical outer limit, the resultant vector magnitude <code>R = &radic;(X&sup2; + Y&sup2;)</code> should theoretically equal exactly <code>1.0000</code> at all 360 degrees of rotation.
     </p>
 
-    <h3>Hall-Effect vs Potentiometer Circularity</h3>
+    <h3>Why Standard Controllers Do Not Output a Pure Circle</h3>
     <p>
-      Modern Hall-effect thumbstick replacements feature digital anti-aliasing algorithms that calibrate circularity down to sub-1.0% error rates,
-      delivering perfectly uniform 360-degree turning speeds.
+      A common misconception is that a factory DualSense or Xbox Wireless controller with a <code>8.5%</code> circularity error is "defective."
     </p>
+    <ul>
+      <li><strong>The Mechanical Ring Constraint:</strong> The physical thumbstick opening in the controller shell is circular, but the internal potentiometer sensors read along independent rectangular X and Y slider axes.</li>
+      <li><strong>Diagonal Clamping ("Squircle"):</strong> If raw circular output were strictly enforced without digital scaling, diagonal movements (such as 45-degree corner travel) would report only <code>X=0.7071, Y=0.7071</code>, which some older game engines interpret as only 70% speed. OEM firmware applies compensation algorithms that push diagonal outputs outward, resulting in the characteristic 7%–12% squircle profile.</li>
+    </ul>
+
+    <h2>Diagnosing Malfunctioning Circularity Patterns</h2>
+    <ol>
+      <li>
+        <strong>Cardinal Axis Truncation:</strong> If pushing the stick fully North, South, East, or West yields only <code>0.85</code> or <code>0.90</code> magnitude, the internal sensor housing is loose or physical debris is blocking mechanical travel.
+      </li>
+      <li>
+        <strong>Asymmetrical Egg Shape:</strong> If one diagonal corner flares out to <code>1.25</code> while another reaches only <code>0.80</code>, an uncalibrated Hall-effect replacement module or distorted magnet has created an uneven flux field.
+      </li>
+      <li>
+        <strong>Flat Corner Clipping:</strong> An octagonal restrictor gate (common in fight sticks or GameCube shells) creates 8 distinct flat edges rather than a continuous circular sweep.
+      </li>
+    </ol>
+
+    <h2>How to Calibrate Stick Circularity</h2>
+    <ul>
+      <li><strong>Hardware Calibration Boards:</strong> For DIY repairs, small PCB trim calibration boards soldered between the potentiometer pins and motherboard allow manual zeroing of circular boundaries.</li>
+      <li><strong>Digital Hall-Effect Firmware Tools:</strong> Controllers with custom firmware (such as Gulikit, 8BitDo, and Flydigi) provide companion software to toggle between raw unconstrained circles and OEM-emulated squared gating.</li>
+    </ul>
   </Fragment>
 </ToolLayout>
 

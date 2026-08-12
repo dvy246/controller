@@ -481,7 +481,10 @@ import InterpretationCard from '../../features/InterpretationCard.astro';
             if (interpNextSteps) {
               interpNextSteps.innerHTML = interpretation.nextSteps.map(step => {
                 const isPrimary = step.priority === 'primary';
-                const classes = isPrimary ? 'interp-step-primary' : 'interp-step-secondary';
+                const isCommercial = step.href && step.href.includes('hall-effect');
+                let classes = isPrimary ? 'interp-step-primary' : 'interp-step-secondary';
+                if (isCommercial) classes += ' interp-step-commercial';
+                
                 if (step.href) {
                   return `<a href="${step.href}" class="${classes}">${step.action}</a>`;
                 }

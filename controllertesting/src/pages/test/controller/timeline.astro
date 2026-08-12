@@ -1,7 +1,8 @@
 ---
 /**
  * /test/controller/timeline — Drift Timeline Tracker
- * Tracks hardware degradation and stick drift over time.
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: stick drift timeline tracker
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -14,23 +15,32 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How does the Drift Timeline work?',
-    answer: 'Every time you use our Stick Drift Test, your results are saved locally in your browser. This timeline charts those historical results so you can see if your drift is worsening over time.',
+    question: 'How does the Drift Timeline Tracker monitor controller degradation?',
+    answer: 'Every time you run a Stick Drift Test or Health Score check, your browser saves the exact timestamp, left/right stick drift percentages, and controller model key in client-side LocalStorage. The interactive chart graphs your hardware wear curve over weeks and months.',
   },
   {
-    question: 'Where is my data stored?',
-    answer: 'Your history is stored entirely in your browser\'s local storage. No data is sent to our servers.',
+    question: 'Is my controller telemetry sent to an external server?',
+    answer: 'No. All historical diagnostic snapshots, drift logs, and charts remain 100% private in your local browser storage. No identifying hardware serial numbers or IP addresses are uploaded.',
   },
   {
-    question: 'How many tests should I do?',
-    answer: 'We recommend testing your controller once a month to establish a reliable baseline of hardware degradation.',
+    question: 'How often should I log a controller drift test?',
+    answer: 'We recommend running a test every 2 to 4 weeks (or after every 50 hours of gameplay). This creates a high-resolution trendline to detect premature wear before your warranty expires.',
   },
+  {
+    question: 'What does a sudden spike in drift percentage indicate?',
+    answer: 'A sudden jump from 2% to 12% drift usually indicates physical debris (dust, pet hair, or food crumbs) trapped beneath the analog wiper rather than normal gradual track wear. Cleaning with compressed air or 99% isopropyl alcohol often reverses sudden spikes.',
+  },
+  {
+    question: 'How does the predictive wear model estimate remaining lifespan?',
+    answer: 'By calculating your monthly drift escalation rate (e.g., +0.5% drift per month), the tool projects the estimated date when drift will exceed your competitive deadzone limit (typically 8.0%), signaling when to service or replace the controller.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Stick Drift Timeline Tracker | ControllerTesting"
-  description="Track stick drift over time with our free drift timeline. Log test results, visualize hardware degradation, and know when to repair or replace your gamepad."
+  title="Stick Drift Timeline Tracker — Free Controller Wear & Lifespan Chart | ControllerTesting.com"
+  description="Track stick drift degradation over time with our free hardware timeline tracker. Log test results, visualize wear curves, and predict controller lifespan."
+  keywords="stick drift timeline tracker, controller wear tracker, gamepad degradation history, track stick drift over time, ps5 controller drift lifespan, controller drift chart"
   toolName="Drift Timeline Tracker"
   category="Controller Diagnostic"
   categoryUrl="/test/controller"
@@ -81,19 +91,19 @@ const faqs = [
 
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Understanding Your Timeline</h2>
+      <h2 class="section-title">Understanding Your Degradation Trendline</h2>
       <div class="results-legend-grid">
         <div class="legend-card legend-pass">
-          <strong class="legend-title">Stable Baseline (0.0% – 2.0%)</strong>
-          <p class="legend-text">Your drift remains consistently below 2.0%. The potentiometers are healthy.</p>
+          <strong class="legend-title">Stable Baseline (0.0% – 2.5%)</strong>
+          <p class="legend-text">Your drift remains flat within normal mechanical spring tolerances. Potentiometer carbon tracks are healthy.</p>
         </div>
         <div class="legend-card legend-warning">
-          <strong class="legend-title">Gradual Degradation (2.1% – 10.0%)</strong>
-          <p class="legend-text">A steady upward trend indicates normal wear. Adjust game deadzones accordingly.</p>
+          <strong class="legend-title">Gradual Wear (2.6% – 8.0%)</strong>
+          <p class="legend-text">Linear upward slope reflecting normal carbon film friction. Compensate by adjusting in-game inner deadzones.</p>
         </div>
         <div class="legend-card legend-fail">
-          <strong class="legend-title">Spiking Failure (> 10.0%)</strong>
-          <p class="legend-text">A sudden jump above 10% indicates debris or a failing sensor. Cleaning or repair needed.</p>
+          <strong class="legend-title">Critical Spike / Failure (&gt; 8.0%)</strong>
+          <p class="legend-text">Exceeds standard deadzone filtering capacity. Plan for sensor cleaning, Hall-effect module upgrade, or RMA claim.</p>
         </div>
       </div>
     </div>
@@ -107,7 +117,7 @@ const faqs = [
     </a>
     <a href="/test/controller/health-score" class="tool-card card-base card-hover">
       <h3 class="tool-name">Health Score Report</h3>
-      <p class="tool-desc">Generate a printable PDF report card for your controller.</p>
+      <p class="tool-desc">Generate a printable report card for your controller.</p>
     </a>
     <a href="/fix-or-replace" class="tool-card card-base card-hover">
       <h3 class="tool-name">Fix vs Replace Calculator</h3>
@@ -116,19 +126,25 @@ const faqs = [
   </Fragment>
   
   <Fragment slot="content">
-    <h2>Why Track Stick Drift Over Time?</h2>
+    <h2>The Science of Potentiometer Wear Curves</h2>
     <p>
-      Stick drift is rarely an immediate failure. It usually begins as microscopic wear on the potentiometer tracks, 
-      causing tiny phantom inputs that your game's default deadzone might mask. Test your controller regularly and 
-      track the results here to see the degradation trend <em>before</em> it costs you matches.
+      Stick drift rarely occurs overnight. In resistive thumbstick modules (such as Alps Alpine RKJXV sensors found in PS5 DualSense and Xbox controllers), degradation follows three distinct mechanical phases:
     </p>
-    
-    <h3>Predictive Maintenance for Competitive Gamers</h3>
+    <ol>
+      <li>
+        <strong>Phase 1: Factory Break-In (0–50 Hours):</strong> The metal wiper fingers smooth the initial microscopic surface roughness of the carbon graphite film. Drift typically rests between <code>0.5%</code> and <code>2.0%</code>.
+      </li>
+      <li>
+        <strong>Phase 2: Carbon Shedding & Micro-Grooving (50–400 Hours):</strong> Continuous rotational friction grinds away the carbon layer, shedding conductive graphite dust across the resistive substrate. Drift slowly climbs from <code>2.5%</code> to <code>6.0%</code>.
+      </li>
+      <li>
+        <strong>Phase 3: Substrate Pitting & Wiper Fatigue (400+ Hours):</strong> The carbon film wears through to the underlying phenolic resin baseboard. Electrical contact fluctuates wildly, producing erratic spikes greater than <code>10.0%</code> that can no longer be filtered by software deadzones.
+      </li>
+    </ol>
+
+    <h2>Predictive Lifespan Tracking for Competitive Gamers</h2>
     <p>
-      If you play Apex Legends, Valorant, or Rocket League competitively, you need predictable hardware. 
-      A timeline that shows drift creeping from 2% to 6% over a few months is an early warning. It tells you 
-      to raise your deadzone a few points or start shopping for a replacement — instead of waiting for the 
-      stick to fail mid-match.
+      By logging regular diagnostic snapshots, you can calculate your controller’s exact degradation velocity (e.g., <code>+0.4% drift per 100 hours</code>). This enables you to submit warranty claims before the 1-year coverage window closes or schedule a Hall-effect upgrade before important tournaments.
     </p>
   </Fragment>
 </ToolLayout>

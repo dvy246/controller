@@ -21,11 +21,11 @@ pages_build_output_dir = "./dist"
 # Placeholder ids — replace with real namespace ids for local dev.
 [[kv_namespaces]]
 binding = "TELEMETRY_KV"
-id = "REPLACE_WITH_TELEMETRY_KV_NAMESPACE_ID"
+id = "918dafd79a2d4ce79de5dc9f4ac417cb"
 
 [[kv_namespaces]]
 binding = "PASSPORT_KV"
-id = "REPLACE_WITH_PASSPORT_KV_NAMESPACE_ID"
+id = "9d9592c376a54e22b64b73aa5587c932"
 
 [vars]
 # Runtime secrets are set as dashboard Secrets, not here.

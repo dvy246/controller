@@ -59,8 +59,7 @@ export const onRequestPost = async ({ request, env }: Ctx): Promise<Response> =>
     return json({ ok: false, reason: "consent_required" }, 400);
   }
 
-  const cf = (request as Request & { cf?: { connectingIp?: string } }).cf;
-  const ip = cf?.connectingIp ?? "unknown";
+  const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
   const rate = await consumeRateLimit(kv, ip);
   if (!rate.allowed) {
     return json({ ok: false, reason: "rate_limited", remaining: 0 }, 429);
@@ -99,7 +98,7 @@ export const onRequestPost = async ({ request, env }: Ctx): Promise<Response> =>
   if (connectionType) sample.connectionType = connectionType;
   if (controllerAgeMonths !== null) sample.controllerAgeMonths = controllerAgeMonths;
 
-  const key = `telemetry:${modelKey}:${Date.now()}:${Math.random().toString(36).slice(2, 10)}`;
+  const key = `telemetry:${modelKey}:${Date.now()}:${crypto.randomUUID()}`;
   try {
     await kv.put(key, JSON.stringify(sample));
   } catch {

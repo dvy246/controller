@@ -1,7 +1,8 @@
 ---
 /**
  * /test/midi — MIDI Keyboard & Controller Tester
- * SEO Title: Online MIDI Tester — Test MIDI Keyboards, Drum Pads & Controllers Online
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: midi controller tester
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,68 +16,119 @@ const breadcrumbs = [
 const faqs = [
   {
     question: 'How do I test a USB MIDI keyboard or drum pad online?',
-    answer: 'Connect your USB MIDI keyboard, synthesizer, or drum pad to your computer, click "Enable Web MIDI Access" above, grant browser MIDI permissions, and press keys or pads. Real-time MIDI note events and velocity levels will display.',
+    answer: 'Connect your USB or Bluetooth MIDI controller to your computer, click "Enable MIDI Access" above, and grant browser Web MIDI permissions. Press any key, drum pad, or knob. The real-time MIDI monitor displays incoming Note ON/OFF events, velocity levels (0–127), channel numbers, and raw hex bytes.',
   },
   {
-    question: 'What MIDI messages does this online tester monitor?',
-    answer: 'Our tool monitors MIDI Note ON/OFF, Note Velocity (0-127), Continuous Controller (CC) messages, Pitch Bend, and Modulation wheel parameters via the standard Web MIDI API.',
+    question: 'What MIDI messages does this online diagnostic tool monitor?',
+    answer: 'This tool monitors Note ON (0x90), Note OFF (0x80), Key Velocity (0–127), Continuous Controller messages (CC 0–127 like Modulation Wheel CC 1 and Expression CC 11), 14-Bit Pitch Bend (0–16383), Program Change, and Channel Aftertouch.',
   },
   {
-    question: 'Which browsers support Web MIDI API testing?',
-    answer: 'Google Chrome, Microsoft Edge, Opera, and Brave natively support the Web MIDI API on Windows, macOS, and Linux without installing external MIDI drivers.',
+    question: 'Which web browsers support Web MIDI API testing?',
+    answer: 'Google Chrome, Microsoft Edge, Opera, and Brave natively support the W3C Web MIDI API on Windows, macOS, Linux, and Android. (Apple Safari and Mozilla Firefox do not support Web MIDI).',
   },
+  {
+    question: 'Why do some keys on my MIDI keyboard play at maximum volume (127)?',
+    answer: 'When a key consistently outputs a static velocity of 127 regardless of how lightly you press, it indicates dirty or damaged dual-contact silicone rubber keybed switches underneath the piano key. Cleaning the contact carbon pills with 99% isopropyl alcohol restores velocity sensitivity.',
+  },
+  {
+    question: 'Can I test wireless Bluetooth MIDI (BLE-MIDI) devices?',
+    answer: 'Yes. Pair your Bluetooth MIDI controller in your operating system settings (macOS Audio MIDI Setup or Windows Bluetooth settings), open this page in Chrome, and the device will enumerate automatically in the Web MIDI device list.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="MIDI Tester | ControllerTesting | CT"
-  description="Test USB MIDI keyboards, drum pads, pitch bend, and CC controllers online. Monitor MIDI note events, velocity (0-127), and control change messages free."
+  title="MIDI Controller Tester — Free Online MIDI Keyboard & Pad Monitor | ControllerTesting.com"
+  description="Test USB MIDI keyboards, drum pads, pitch bend, and CC knobs online for free. Monitor real-time MIDI note events, velocity (0–127), and hex packets."
+  keywords="midi controller tester, midi keyboard test online, test midi pad online, web midi monitor, midi note velocity check, midi cc tester"
   toolName="MIDI Controller & Keyboard Tester"
   category="Specialized Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <MIDITester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">MIDI Signal Guidelines</h2>
+      <h2 class="section-title">MIDI Signal & Velocity Benchmarks</h2>
       <p class="results-text">
-        Key velocity ranges from 1 (softest) to 127 (maximum dynamic velocity). Pitch bend and modulation wheel CC messages update continuously.
+        Press keys across the entire piano register and test rotary encoders:
       </p>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">Linear Dynamic Velocity (1–127)</strong>
+          <p class="legend-text">Soft keypresses register 15–40; firm strikes register 100–127. Natural acoustic velocity curve.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">Velocity Compression</strong>
+          <p class="legend-text">Output is clustered between 60 and 90 regardless of touch force. Adjust controller internal velocity curves.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">Stuck Note / Velocity 127 Max</strong>
+          <p class="legend-text">Key always triggers at 127 or fails to emit Note-OFF. Indicates dirty conductive rubber keybed contacts.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Test standard gamepad controllers</h3>
-        <p class="export-desc">Run full diagnostic checkups on PS5, Xbox, and Nintendo controllers.</p>
+        <h3 class="export-title">Need to test game controllers or fight sticks?</h3>
+        <p class="export-desc">Audit arcade stick SOCD cleaning, thumbstick drift, and trigger pressure curves.</p>
       </div>
       <div class="export-buttons">
-        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+        <a href="/test/controller/fight-stick" class="btn-primary">Fight Stick Tester</a>
+        <a href="/test/controller/full-diagnostic" class="btn-secondary">Full Diagnostic</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
     <a href="/test/controller/fight-stick" class="tool-card card-base card-hover">
       <h3 class="tool-name">Fight Stick & Hitbox</h3>
-      <p class="tool-desc">Test arcade sticks and SOCD.</p>
+      <p class="tool-desc">Test arcade sticks and SOCD cleaning rules.</p>
     </a>
     <a href="/test/controller/flight-stick" class="tool-card card-base card-hover">
       <h3 class="tool-name">Flight Stick & HOTAS</h3>
-      <p class="tool-desc">Test flight simulator controls.</p>
+      <p class="tool-desc">10-axis flight sim & throttle tester.</p>
+    </a>
+    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Button Tester</h3>
+      <p class="tool-desc">Test button ghosting and switch chatter.</p>
     </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Web MIDI API Standard and Controller Diagnostics</h2>
+    <h2>The Anatomy of MIDI Telemetry: Notes, Velocity & Control Change</h2>
     <p>
-      The W3C Web MIDI API allows web applications to communicate directly with Musical Instrument Digital Interface (MIDI) hardware over USB or Bluetooth MIDI.
+      The Musical Instrument Digital Interface (MIDI) standard serializes musical performance data into high-speed digital command packets transmitted at 31,250 baud over 5-pin DIN or full-speed USB endpoints.
+    </p>
+
+    <h3>3-Byte MIDI Packet Structure</h3>
+    <ul>
+      <li>
+        <strong>Status Byte (Byte 1):</strong> Encodes the command type and MIDI channel (0–15). For example, <code>0x90</code> denotes Note ON on Channel 1, while <code>0xB0</code> denotes Control Change (CC).
+      </li>
+      <li>
+        <strong>Data Byte 1 (Byte 2):</strong> Defines the note number (0–127, where 60 represents Middle C / C4) or the CC parameter ID (CC 1 = Modulation, CC 7 = Volume, CC 64 = Sustain Pedal).
+      </li>
+      <li>
+        <strong>Data Byte 2 (Byte 3):</strong> Defines the strike velocity (0–127) or continuous parameter value. A Note ON with velocity 0 is treated as a Note OFF command.
+      </li>
+    </ul>
+
+    <h2>Dual-Rubber Contact Keybed Mechanics</h2>
+    <p>
+      Unlike mechanical computer keyboards that use a single switch contact, velocity-sensitive MIDI keyboards (from Akai MPK, Novation Launchkey, Arturia KeyLab, and Native Instruments Komplete Kontrol) feature dual-height conductive rubber domes underneath each key. The onboard microcontroller measures the microsecond flight time between the upper contact closing and the lower contact bottoming out to calculate strike velocity.
     </p>
   </Fragment>
 </ToolLayout>

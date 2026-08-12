@@ -1,7 +1,8 @@
 ---
 /**
  * /test/controller/steering-wheel — Steering Wheel & Pedals Tester
- * SEO Title: Steering Wheel & Pedals Tester — Test Logitech, Fanatec & Thrustmaster
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: steering wheel and pedals test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,70 +16,119 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I test my racing wheel rotation angle and pedals?',
-    answer: 'Connect your Logitech G29/G923, Thrustmaster T300RS, or Fanatec racing wheel to your computer via USB, turn the wheel left and right, and depress the throttle, brake, and clutch pedals.',
+    question: 'How do I test my sim racing steering wheel and pedals online?',
+    answer: 'Connect your Logitech G29/G920/G923, Thrustmaster T300RS/T248, Fanatec, or Moza racing wheel to your PC via USB. Rotate the wheel left and right to its physical locks, and depress the throttle, brake, and clutch pedals. The live visualizer displays exact rotation angles (0° to 1080°) and pedal pressure percentages.',
   },
   {
-    question: 'Does this tool test 900-degree and 1080-degree rotation angles?',
-    answer: 'Yes! The visualizer tracks full 900° and 1080° steering lock-to-lock rotation angles in real time.',
+    question: 'How do I verify 900-degree and 1080-degree rotation angles?',
+    answer: 'Turn your wheel from full left lock to full right lock. The circular dial visualizer calculates your total degrees of rotation in real time, allowing you to verify that your wheel software (Logitech G HUB, Thrustmaster Control Panel, Fanatec FanaLab) matches your hardware operating range.',
   },
   {
-    question: 'Can I test load cell brake pedals and H-pattern shifters?',
-    answer: 'Yes! Analog pedal travel linearity is measured from 0% to 100% full depression.',
+    question: 'Can I test load cell brake pedals and potentiometer throttle pedals?',
+    answer: 'Yes. The tool measures analog axis travel from 0.00 (0% released) to 1.00 (100% depressed) with 0.1% resolution, allowing you to identify resting brake drag, non-linear throttle jumps, and pedal potentiometer dust contamination.',
   },
+  {
+    question: 'Why does my steering wheel show resting center drift?',
+    answer: 'Resting steering drift is usually caused by an uncalibrated optical encoder wheel (common in older Logitech G27/G29 wheels) or magnetic sensor offset. Disconnecting USB, allowing the wheel to auto-calibrate on power-up, and recentering in driver software resolves center drift.',
+  },
+  {
+    question: 'Does this tool test H-pattern manual shifters and paddle shifters?',
+    answer: 'Yes. Magnetic paddle shifters and individual gear gates (Gears 1 through 7 + Reverse) register in the digital button matrix to verify switch continuity and prevent missed shifts.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Steering Wheel & Pedals Test | ControllerTesting"
-  description="Test racing wheel rotation angles (900°/1080°), pedal linearity (Throttle, Brake, Clutch), and H-pattern gear shifters online for free. No download required."
+  title="Steering Wheel & Pedals Test — Free Online Sim Racing Hardware Tester | ControllerTesting.com"
+  description="Test your racing wheel rotation angles (900°/1080°), pedal linearity (Throttle, Brake, Clutch), and paddle shifters online for free on Logitech, Thrustmaster, and Fanatec."
+  keywords="steering wheel and pedals test, racing wheel tester online, logitech g29 pedal test, thrustmaster steering wheel test, fanatec pedal calibration check, sim racing wheel tester"
   toolName="Steering Wheel & Pedals Test"
   category="Specialized Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <SteeringWheelTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Racing Wheel Diagnostic Guidelines</h2>
+      <h2 class="section-title">Sim Racing Hardware Benchmarks</h2>
       <p class="results-text">
-        Steering rotation should track smoothly from center (0°) to maximum lock-to-lock angle without deadzone gaps.
+        Rotate your wheel across full operating range and actuate all three pedal axes:
       </p>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">Linear Lock-to-Lock (Calibrated)</strong>
+          <p class="legend-text">0° dead center resting angle; smooth linear progression to 900°/1080° stops; 100% full throttle & brake saturation.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">Pedal Spiking / Drag (Wear)</strong>
+          <p class="legend-text">Pedals fluctuate 1-5% at rest or jump erratically. Indicates dust in potentiometer gears or dirty optical sensor.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">Encoder Slip / Off-Center (Fault)</strong>
+          <p class="legend-text">Physical wheel is straight, but digital output rests at 15°–45°. Indicates cracked optical encoder disc or loose belt.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Run full diagnostic checkup</h3>
-        <p class="export-desc">Combine steering wheel diagnostics with complete button and vibration testing.</p>
+        <h3 class="export-title">Need to check input frequency and latency?</h3>
+        <p class="export-desc">Measure USB polling rate and millisecond response time across direct-drive sim racing bases.</p>
       </div>
       <div class="export-buttons">
-        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+        <a href="/test/controller/polling-rate" class="btn-primary">Check Polling Rate</a>
+        <a href="/test/controller/full-diagnostic" class="btn-secondary">Full Diagnostic</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
     <a href="/test/controller/triggers" class="tool-card card-base card-hover">
       <h3 class="tool-name">Trigger Pressure Test</h3>
-      <p class="tool-desc">Test analog trigger linearity.</p>
+      <p class="tool-desc">Test analog trigger and pedal linearity.</p>
     </a>
     <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
       <h3 class="tool-name">Polling Rate Checker</h3>
-      <p class="tool-desc">Measure input rate in Hz.</p>
+      <p class="tool-desc">Measure sim wheel USB report frequency in Hz.</p>
+    </a>
+    <a href="/test/controller/latency" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Latency Estimator</h3>
+      <p class="tool-desc">Measure input delay & reaction speed.</p>
     </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Sim Racing Hardware Calibration and Linearity</h2>
+    <h2>Sim Racing Hardware Calibration & Sensor Mechanics</h2>
     <p>
-      Direct-drive and belt-driven racing wheels (Logitech, Thrustmaster, Fanatec, Moza) rely on linear optical encoders to measure steering input.
+      Sim racing hardware—ranging from gear-driven Logitech G923 systems and dual-belt Thrustmaster T300RS bases to high-torque Direct Drive wheelbases (Fanatec Podium, Simucube, Moza R9/R12)—demands frame-perfect input fidelity for precision vehicle dynamics in <em>iRacing</em>, <em>Assetto Corsa Competizione</em>, and <em>F1 24</em>.
     </p>
+
+    <h3>Steering Encoders: Optical vs. Magnetic Hall Sensors</h3>
+    <ul>
+      <li>
+        <strong>Optical Encoder Discs:</strong> Classic wheelbases use a slotted plastic optical wheel rotating between an infrared emitter and photo-detector. If this plastic disc develops micro-fractures, the wheel loses center calibration during high-speed counter-steering snaps.
+      </li>
+      <li>
+        <strong>Contactless Magnetic Hall Sensors:</strong> Modern direct-drive systems track a 360-degree diametrically polarized neodymium magnet on the motor shaft, delivering frictionless angular tracking with 16-bit resolution (65,536 counts per revolution) and zero mechanical degradation.
+      </li>
+    </ul>
+
+    <h3>Pedal Sensor Technologies: Potentiometer vs. Load Cell</h3>
+    <ul>
+      <li><strong>Rotational Potentiometers:</strong> Common in entry-level pedal sets (Logitech G29 pedals). They measure physical pedal displacement distance. Over time, carpet dust and metal shavings enter the plastic potentiometer casing, causing throttle and brake spiking.</li>
+      <li><strong>Load Cell Force Transducers:</strong> High-end sim racing brakes (Fanatec CSL Load Cell, Heusinkveld Sprint) measure physical kilogram force pressure rather than travel distance, simulating real hydraulic automotive brake calibers. Test your load-cell amplification curve in the live telemetry bar above.</li>
+    </ul>
   </Fragment>
 </ToolLayout>
 

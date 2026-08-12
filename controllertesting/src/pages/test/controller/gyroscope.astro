@@ -1,7 +1,8 @@
 ---
 /**
  * /test/controller/gyroscope — Gyroscope & Motion Sensor Tester
- * SEO Title: Controller Gyroscope Test — Test Motion Controls Online
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: controller gyroscope test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,69 +16,114 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I test motion controls on PS5 DualSense or Switch Pro?',
-    answer: 'Connect your controller via USB or Bluetooth and tilt the controller up, down, left, and right. Pitch, Roll, and Yaw angles will update live on screen.',
+    question: 'How do I test motion controls on PS5 DualSense or Nintendo Switch Pro controllers?',
+    answer: 'Connect your controller via USB-C or Bluetooth, place it flat on your desk to establish a resting baseline, and then tilt the controller along Pitch, Roll, and Yaw axes. The 3D orientation visualizer mirrors physical controller movement in real time.',
   },
   {
-    question: 'Why is gyro aiming popular in competitive shooters?',
-    answer: 'Gyro aiming combines coarse thumbstick camera panning with fine motion-assisted crosshair micro-adjustments, delivering mouse-like accuracy on gamepads.',
+    question: 'What causes stationary gyro drift in controllers?',
+    answer: 'Gyro drift occurs when internal MEMS (Micro-Electro-Mechanical Systems) accelerometer and gyroscope sensors experience thermal drift or uncalibrated zero-rate output offsets. Leaving the controller flat on a stationary surface for 5 seconds triggers auto-calibration.',
   },
   {
-    question: 'Does Xbox Wireless Controller have a built-in gyroscope?',
-    answer: 'No. Standard Xbox Wireless Controllers do not feature internal motion sensors or gyroscopes. DualSense, Switch Pro, and DualShock 4 support motion controls.',
+    question: 'Why is gyro aiming considered superior to traditional thumbstick aiming?',
+    answer: 'Gyro aiming pairs coarse analog stick camera movements with mouse-like precision wrist micro-adjustments. When combined with "Flick Stick" camera controls, gyro aiming rivals native optical gaming mouse precision without relying on software aim assist.',
   },
+  {
+    question: 'Does the standard Xbox Wireless Controller have a built-in gyroscope?',
+    answer: 'No. Standard Microsoft Xbox Wireless Controllers (Series X|S, Xbox One, Elite Series 2) do not contain gyro sensors. Motion aiming requires a PS5 DualSense, PS4 DualShock 4, Nintendo Switch Joy-Con/Pro Controller, or Steam Controller.',
+  },
+  {
+    question: 'How do I recalibrate controller motion sensors on PC?',
+    answer: 'In Steam Controller Settings, select your controller, open "Calibrate", and place the controller on a level, vibration-free desk. Click "Calibrate Gyro" to reset the zero-velocity angular threshold.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Gyroscope Tester | ControllerTesting"
-  description="Test your controller's gyroscope and motion sensors online. Calibrate 3-axis motion sensing on PS5 DualSense, Switch Pro Controller, and Joy-Cons."
+  title="Controller Gyroscope Test — Free Online Motion Control & IMU Calibrator | ControllerTesting.com"
+  description="Test your controller's gyroscope and 6-axis motion sensors online for free. Calibrate 3-axis motion controls on PS5 DualSense, Switch Pro, and Joy-Cons."
+  keywords="controller gyroscope test, gyro aiming test online, dualsense gyro tester, switch pro motion test, gamepad 6 axis imu test, test controller motion controls"
   toolName="Gyroscope & Motion Tester"
   category="Controller Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <GyroscopeTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Motion Control Benchmarks</h2>
+      <h2 class="section-title">6-Axis Motion Sensor Benchmarks</h2>
       <p class="results-text">
-        Motion sensors should report smooth angular changes across all 3 axes without drifting when resting flat on a desk.
+        Place your controller on a flat desk and tilt through all 3 rotational planes:
       </p>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">Zero Resting Noise (Calibrated)</strong>
+          <p class="legend-text">0.0°/s angular velocity when resting flat; instant 1:1 angular translation on Pitch, Roll, and Yaw tilts.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">Slow Stationary Wander (Drift)</strong>
+          <p class="legend-text">Orientation angle slowly drifts 1–3° per second while stationary. Requires resting zero-point recalibration.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">Axis Inversion / Freeze (Fault)</strong>
+          <p class="legend-text">One rotational axis fails to update or flips 180°. Indicates damaged MEMS crystal or disconnected IMU ribbon.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Run full diagnostic checkup</h3>
-        <p class="export-desc">Combine gyro motion testing with stick drift and button matrix diagnostics.</p>
+        <h3 class="export-title">Need full hardware diagnostics?</h3>
+        <p class="export-desc">Combine gyro motion checks with analog stick drift, button matrix, and touchpad diagnostics.</p>
       </div>
       <div class="export-buttons">
-        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+        <a href="/test/controller/touchpad" class="btn-primary">Touchpad Tester</a>
+        <a href="/test/controller/full-diagnostic" class="btn-secondary">Full Diagnostic</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
+    <a href="/test/controller/touchpad" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Touchpad Tester</h3>
+      <p class="tool-desc">DualSense multi-touch capacitive tracking.</p>
+    </a>
     <a href="/test/controller/drift" class="tool-card card-base card-hover">
       <h3 class="tool-name">Stick Drift Tester</h3>
-      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+      <p class="tool-desc">Isolated 0.1% stick drift precision.</p>
     </a>
     <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
       <h3 class="tool-name">Polling Rate Checker</h3>
-      <p class="tool-desc">Measure input rate in Hz.</p>
+      <p class="tool-desc">Measure input update frequency in Hz.</p>
     </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Understanding Gyro Aiming and Motion Sensor Calibration</h2>
+    <h2>The Physics of Controller 6-Axis IMU Motion Sensors</h2>
     <p>
-      Gyroscope sensors measure rotational speed and angular velocity across Pitch (elevation), Roll (tilt), and Yaw (rotation).
+      Modern motion-capable controllers (such as the Sony PS5 DualSense and Nintendo Switch Pro Controller) integrate 6-Degree-of-Freedom (6-DoF) Inertial Measurement Units (IMUs).
+    </p>
+    <p>
+      An IMU combines two distinct microscopic silicon sensor chips:
+    </p>
+    <ul>
+      <li><strong>3-Axis MEMS Gyroscope:</strong> Measures angular rotational velocity (degrees per second, <code>&deg;/s</code>) around the X (Pitch), Y (Roll), and Z (Yaw) axes.</li>
+      <li><strong>3-Axis Accelerometer:</strong> Measures linear acceleration (including the downward <code>1.0g</code> pull of Earth's gravity) to calculate absolute tilt elevation.</li>
+    </ul>
+
+    <h2>Flick Stick & Competitive Gyro Aiming</h2>
+    <p>
+      In competitive shooters (like <em>Fortnite</em>, <em>Call of Duty: Modern Warfare III</em>, and <em>Splatoon 3</em>), gyro aiming enables pixel-perfect crosshair micro-tracking. Under the "Flick Stick" layout, flicking the right analog stick turns the player instantly to that exact angular bearing, while all vertical and fine horizontal aiming is handled effortlessly by wrist motion.
     </p>
   </Fragment>
 </ToolLayout>

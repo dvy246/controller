@@ -1,0 +1,261 @@
+{
+  "updatedAt": "2026-08-12",
+  "controllers": [
+    {
+      "id": "ps5-dualsense",
+      "name": "PlayStation 5 DualSense",
+      "slug": "ps5-dualsense",
+      "description": "Sony silently iterates internal DualSense motherboards across 4 generations (BDM-010 through BDM-040). Ribbon pinouts, trigger latches, and shell clips vary dramatically.",
+      "imageUrl": "/images/controllers/ps5-dualsense.webp",
+      "motherboards": [
+        {
+          "id": "bdm-010",
+          "name": "BDM-010 (Gen 1)",
+          "identifiers": ["CFI-ZCT1W (No letter suffix)"],
+          "fccId": "AK8CFIZCT1",
+          "identificationGuide": "First-generation launch model. Model CFI-ZCT1W without a letter suffix. FCC ID ends in no letter. Features large trigger torsion springs and standard 23-pin main ribbon.",
+          "characteristics": ["Thick trigger torsion springs", "23-pin main ribbon", "Standard black plastic mid-frame"]
+        },
+        {
+          "id": "bdm-020",
+          "name": "BDM-020 (Gen 2)",
+          "identifiers": ["CFI-ZCT1W A"],
+          "fccId": "AK8CFIZCT1A",
+          "identificationGuide": "Second generation. Look for an 'A' after the model CFI-ZCT1W and FCC ID ending in 'A'. Features smaller trigger torsion springs and updated microphone cable.",
+          "characteristics": ["Smaller trigger springs", "Revised touchpad bracket", "Updated mic ribbon"]
+        },
+        {
+          "id": "bdm-030",
+          "name": "BDM-030 (Gen 3)",
+          "identifiers": ["CFI-ZCT1W B"],
+          "fccId": "AK8CFIZCT1B",
+          "identificationGuide": "Third generation (common on newer consoles). Look for a 'B' after the model number. Features redesigned smaller adaptive trigger motor housings and a completely different ribbon pinout.",
+          "characteristics": ["Redesigned trigger housings", "Incompatible BDM-010/020 ribbons", "Changed mainboard mounting screws"]
+        },
+        {
+          "id": "bdm-040",
+          "name": "BDM-040 (Gen 4)",
+          "identifiers": ["CFI-ZCT1W C", "CFI-1200+"],
+          "fccId": "AK8CFIZCT1C",
+          "identificationGuide": "Fourth generation. Look for a 'C' suffix. Shares ribbon compatibility with BDM-030 but has a revised power management IC.",
+          "characteristics": ["Shares BDM-030 ribbon pinout", "New power plane", "Updated L1/R1 tactile switches"]
+        }
+      ]
+    },
+    {
+      "id": "xbox-series-x",
+      "name": "Xbox Wireless Controller (Series X|S)",
+      "slug": "xbox-series-x",
+      "description": "Microsoft's standard Xbox Series X|S controller (Model 1914) features a USB-C port, hybrid D-pad, and share button with modular split-board internal architecture.",
+      "imageUrl": "/images/controllers/xbox-series-x.webp",
+      "motherboards": [
+        {
+          "id": "model-1914",
+          "name": "Model 1914 (Series X|S)",
+          "identifiers": ["Model 1914"],
+          "fccId": "C3K1914",
+          "identificationGuide": "Standard Series X|S controller with USB-C port. Check the model number '1914' printed inside the battery compartment beneath the AA batteries.",
+          "characteristics": ["USB-C port", "Hybrid faceted D-pad", "Dedicated Share button", "Dual-board sandwich connector"]
+        },
+        {
+          "id": "model-1708",
+          "name": "Model 1708 (Xbox One S Bluetooth)",
+          "identifiers": ["Model 1708"],
+          "fccId": "C3K1708",
+          "identificationGuide": "Previous-generation Xbox One S controller with Micro-USB port and integrated faceplate. Model '1708' is labeled inside the battery compartment.",
+          "characteristics": ["Micro-USB port", "Cross-style D-pad", "Single-piece faceplate around Xbox logo"]
+        }
+      ]
+    }
+  ],
+  "modCategories": [
+    {
+      "id": "hall-effect-joysticks",
+      "name": "Hall Effect Joysticks",
+      "description": "Electromagnetic replacement joysticks that use contactless magnetic sensors. Immune to mechanical potentiometer carbon wear and stick drift.",
+      "icon": "crosshair"
+    },
+    {
+      "id": "back-paddles",
+      "name": "Back Remap Paddles",
+      "description": "Adds 2 or 4 ergonomic remappable tactile buttons/paddles to the back shell for competitive jumping, sliding, and weapon swapping without lifting thumbs.",
+      "icon": "sliders"
+    },
+    {
+      "id": "clicky-triggers",
+      "name": "Clicky Hair Triggers",
+      "description": "Converts long analog trigger pulls into instant 0.5mm - 1.5mm mouse-click tactile switches for ultra-fast weapon fire in competitive FPS games.",
+      "icon": "zap"
+    },
+    {
+      "id": "custom-shells",
+      "name": "Custom Shells & Grips",
+      "description": "Ergonomic textured, rubberized, or custom-aesthetic replacement shells and faceplates designed for exact chassis contours.",
+      "icon": "shield"
+    }
+  ],
+  "mods": [
+    {
+      "id": "extremerate-rise4-bdm-010-020",
+      "name": "eXtremeRate RISE4 Max Remap Kit (BDM-010 / BDM-020)",
+      "brand": "eXtremeRate",
+      "categoryId": "back-paddles",
+      "controllerId": "ps5-dualsense",
+      "compatibleMotherboards": ["bdm-010", "bdm-020"],
+      "priceRange": "$38 - $46",
+      "difficulty": "Moderate (1-2 hrs)",
+      "solderingRequired": false,
+      "solderingOptional": true,
+      "features": [
+        "4 Ergonomic metal/polymer back paddles",
+        "15 buttons remappable on-the-fly (X, O, Triangle, Square, D-pad, L1, R1, L2, R2)",
+        "No soldering required for face buttons (soldering only needed for L3/R3 and touchpad)",
+        "Precision molded textured back shell included"
+      ]
+    },
+    {
+      "id": "extremerate-rise4-bdm-030-040",
+      "name": "eXtremeRate RISE4 Max Remap Kit (BDM-030 / BDM-040)",
+      "brand": "eXtremeRate",
+      "categoryId": "back-paddles",
+      "controllerId": "ps5-dualsense",
+      "compatibleMotherboards": ["bdm-030", "bdm-040"],
+      "priceRange": "$38 - $46",
+      "difficulty": "Moderate (1-2 hrs)",
+      "solderingRequired": false,
+      "solderingOptional": true,
+      "features": [
+        "Dedicated FPC flex cable for BDM-030 and BDM-040 pinouts",
+        "4 Remappable back buttons with tactile microswitches",
+        "Solderless installation for standard button remapping",
+        "Includes redesigned interior latching bracket"
+      ]
+    },
+    {
+      "id": "gulikit-hall-effect-ps5",
+      "name": "GuliKit TMR / Hall Effect Electromagnetic Joystick Kit",
+      "brand": "GuliKit",
+      "categoryId": "hall-effect-joysticks",
+      "controllerId": "ps5-dualsense",
+      "compatibleMotherboards": ["bdm-010", "bdm-020", "bdm-030", "bdm-040"],
+      "priceRange": "$22 - $28",
+      "difficulty": "Expert (Soldering Required)",
+      "solderingRequired": true,
+      "solderingOptional": false,
+      "features": [
+        "Universal 14-pin potentiometer footprint (compatible across all BDM boards)",
+        "Contactless magnetic Hall sensor eliminates carbon wiper friction",
+        "Permanent zero-drift lifespan rated for 10M+ cycles",
+        "Includes calibration flex boards for precision zero-point centration"
+      ]
+    },
+    {
+      "id": "extremerate-clicky-triggers-010-020",
+      "name": "eXtremeRate Micro Switch Clicky Hair Trigger Kit (BDM-010 / 020)",
+      "brand": "eXtremeRate",
+      "categoryId": "clicky-triggers",
+      "controllerId": "ps5-dualsense",
+      "compatibleMotherboards": ["bdm-010", "bdm-020"],
+      "priceRange": "$16 - $22",
+      "difficulty": "Medium (45 mins)",
+      "solderingRequired": false,
+      "solderingOptional": false,
+      "features": [
+        "0.5mm mouse-click trigger travel distance for rapid fire",
+        "Custom molded bracket for BDM-010/020 trigger springs",
+        "100% Solderless plug-and-play installation",
+        "Reduces trigger fatigue in Warzone, Apex, and Fortnite"
+      ]
+    },
+    {
+      "id": "extremerate-clicky-triggers-030",
+      "name": "eXtremeRate Micro Switch Clicky Hair Trigger Kit (BDM-030)",
+      "brand": "eXtremeRate",
+      "categoryId": "clicky-triggers",
+      "controllerId": "ps5-dualsense",
+      "compatibleMotherboards": ["bdm-030"],
+      "priceRange": "$16 - $22",
+      "difficulty": "Medium (45 mins)",
+      "solderingRequired": false,
+      "solderingOptional": false,
+      "features": [
+        "Specifically engineered for BDM-030 smaller adaptive trigger assemblies",
+        "Instant tactile switch response with audible click",
+        "Direct drop-in replacement for internal L2/R2 dampers",
+        "No soldering required"
+      ]
+    },
+    {
+      "id": "extremerate-chameleon-shell-ps5",
+      "name": "eXtremeRate Soft Touch Custom Front & Back Shell Kit",
+      "brand": "eXtremeRate",
+      "categoryId": "custom-shells",
+      "controllerId": "ps5-dualsense",
+      "compatibleMotherboards": ["bdm-010", "bdm-020", "bdm-030", "bdm-040"],
+      "priceRange": "$24 - $32",
+      "difficulty": "Easy (30 mins)",
+      "solderingRequired": false,
+      "solderingOptional": false,
+      "features": [
+        "Anti-slip velvet soft-touch ergonomic matte finish",
+        "Includes opening prying tool and screwdriver",
+        "Exact OEM fit with zero panel gaps",
+        "Available in Chameleon, Wood Grain, and Carbon Fiber finishes"
+      ]
+    },
+    {
+      "id": "gulikit-hall-effect-xbox",
+      "name": "GuliKit Electromagnetic Hall Effect Joysticks for Xbox Series X|S",
+      "brand": "GuliKit",
+      "categoryId": "hall-effect-joysticks",
+      "controllerId": "xbox-series-x",
+      "compatibleMotherboards": ["model-1914", "model-1708"],
+      "priceRange": "$20 - $26",
+      "difficulty": "Expert (Soldering Required)",
+      "solderingRequired": true,
+      "solderingOptional": false,
+      "features": [
+        "Eliminates potentiometer stick drift permanently on Xbox controllers",
+        "Precision calibrated linear voltage curve matching Xbox MCU ADC",
+        "High durability ALPS mechanical metal shaft",
+        "Requires desoldering standard stick modules"
+      ]
+    },
+    {
+      "id": "extremerate-victor-paddles-xbox",
+      "name": "eXtremeRate Victor S Remap Kit with 4 Back Buttons (Model 1914)",
+      "brand": "eXtremeRate",
+      "categoryId": "back-paddles",
+      "controllerId": "xbox-series-x",
+      "compatibleMotherboards": ["model-1914"],
+      "priceRange": "$36 - $44",
+      "difficulty": "Moderate (1 hr)",
+      "solderingRequired": false,
+      "solderingOptional": true,
+      "features": [
+        "4 Ergonomic programmable back buttons for Xbox Series X|S",
+        "Solderless flex board connects directly to motherboard contact pads",
+        "Rubberized textured grip back shell included",
+        "Supports 14 assignable buttons"
+      ]
+    },
+    {
+      "id": "extremerate-clicky-triggers-xbox-1914",
+      "name": "eXtremeRate Tactile Clicky Hair Trigger Kit for Xbox Model 1914",
+      "brand": "eXtremeRate",
+      "categoryId": "clicky-triggers",
+      "controllerId": "xbox-series-x",
+      "compatibleMotherboards": ["model-1914"],
+      "priceRange": "$16 - $22",
+      "difficulty": "Medium (40 mins)",
+      "solderingRequired": false,
+      "solderingOptional": false,
+      "features": [
+        "Converts LT/RT trigger stops to instant microswitches",
+        "Custom designed for Xbox Series X|S Model 1914 trigger housings",
+        "Instant tactile click feedback for shooters",
+        "Includes T8H and T6 screwdrivers and prying tool"
+      ]
+    }
+  ]
+}

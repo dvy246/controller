@@ -54,18 +54,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
       {/* ── Logo ── */}
       <a href={l('/')} class="nav-logo" aria-label="ControllerTesting.com home">
         <div class="logo-icon-wrapper">
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-            <defs>
-              <linearGradient id="g-nav-logo" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#2563EB"/>
-                <stop offset="100%" stop-color="#7C3AED"/>
-              </linearGradient>
-            </defs>
-            <rect width="28" height="28" rx="7" fill="url(#g-nav-logo)"/>
-            <path d="M8 14c0-3.314 2.686-6 6-6s6 2.686 6 6-2.686 6-6 6-6-2.686-6-6z" stroke="#FFFFFF" stroke-width="1.5" fill="none"/>
-            <circle cx="14" cy="14" r="2" fill="#10B981"/>
-            <path d="M14 8v2M14 18v2M8 14h2M18 14h2" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
+          <img src="/favicon.svg" width="28" height="28" alt="" aria-hidden="true" style="display: block; border-radius: 7px;" />
           <span class="logo-glow" aria-hidden="true"></span>
         </div>
         <span class="nav-logo-text">
@@ -368,6 +357,18 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
             </svg>
           </button>
           <div class="dropdown-menu dropdown-menu-single" role="menu" aria-label="Resources">
+            <a role="menuitem" class="dropdown-item" href={l('/mods')}>
+              <div class="dropdown-item-icon" style="background: rgba(37, 99, 235, 0.15); border-color: rgba(37, 99, 235, 0.3);" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="dropdown-item-content">
+                <div class="dropdown-item-title">
+                  Mod &amp; Repair Builder
+                  <span class="nav-badge badge-pro">New</span>
+                </div>
+                <span class="dropdown-item-desc">Hardware compatibility &amp; part finder</span>
+              </div>
+            </a>
             <a role="menuitem" class="dropdown-item" href={l('/fix-or-replace')}>
               <div class="dropdown-item-icon" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.3);" aria-hidden="true">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" fill="#F59E0B" fill-opacity="0.2" stroke="#F59E0B" stroke-width="2"/></svg>
@@ -597,6 +598,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
         <div class="mobile-nav-section">
           <p class="mobile-nav-heading">Resources</p>
           <ul role="list" class="mobile-nav-links">
+            <li><a href={l('/mods')} class="mobile-nav-link"><span>Mod &amp; Repair Builder</span><span class="nav-badge badge-pro">New</span></a></li>
             <li><a href={l('/fix-or-replace')} class="mobile-nav-link"><span>Fix &amp; Repair</span></a></li>
             <li><a href={l('/warranty')} class="mobile-nav-link"><span>Warranty Check</span></a></li>
             <li><a href={l('/embeds')} class="mobile-nav-link"><span>Widgets &amp; Embeds</span><span class="nav-badge badge-widgets">15 Widgets</span></a></li>

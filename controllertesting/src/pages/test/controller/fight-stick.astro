@@ -1,7 +1,8 @@
 ---
 /**
  * /test/controller/fight-stick — Fight Stick & Hitbox Arcade Tester
- * SEO Title: Fight Stick & Hitbox Tester — Test Arcade Sticks & SOCD Cleaning
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: fight stick tester
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,69 +16,120 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I test an Arcade Stick, Hitbox, or Mixbox controller?',
-    answer: 'Connect your arcade stick or leverless controller via USB. The tool displays a Vewlix 8-button layout (LP, MP, HP, LK, MK, HK) and tests Sanwa microswitch response.',
+    question: 'How do I test an Arcade Stick, Hitbox, or leverless controller online?',
+    answer: 'Connect your fight stick or leverless controller via USB. Press any arcade button to wake the Gamepad API. The tool renders an 8-button Vewlix/Noir layout (LP, MP, HP, 3P, LK, MK, HK, 3K) and tests directional microswitches in real time.',
   },
   {
     question: 'What is SOCD (Simultaneous Opposing Cardinal Directions) cleaning?',
-    answer: 'SOCD cleaning rules dictate how leverless Hitbox controllers handle simultaneous opposing direction inputs (e.g. Left + Right or Up + Down) to ensure tournament compliance under Capcom Pro Tour rules.',
+    answer: 'SOCD cleaning governs how leverless controllers resolve conflicting simultaneous directional inputs. Under official Capcom Pro Tour (CPT) tournament rules, pressing Left + Right must output Neutral, and pressing Up + Down must output Neutral.',
   },
   {
-    question: 'Does this tool support Sanwa, Seimitsu, and Crown arcade buttons?',
-    answer: 'Yes! It tests all Japanese microswitches and Brook Universal Fighting Boards.',
+    question: 'How do I verify if my leverless controller is Capcom Pro Tour (CPT) legal?',
+    answer: 'Press and hold Left, then press Right without releasing Left. If the visualizer returns to center (Neutral), your horizontal SOCD is compliant. Next, hold Down and press Up. If the output registers Neutral (rather than Up Priority), your controller is tournament-legal.',
   },
+  {
+    question: 'Does this tester support Sanwa, Seimitsu, Crown, and Qanba microswitches?',
+    answer: 'Yes. The tester detects discrete microswitch contacts from Sanwa Denshi (OBSF-30), Seimitsu (PS-14), Samducksa Crown mechanical switches, and custom Brook Universal Fighting Boards.',
+  },
+  {
+    question: 'How do I diagnose a sticking or chatter-prone arcade pushbutton?',
+    answer: 'Press each arcade button rapidly 10 times. If a button registers double-actuations on a single stroke or remains highlighted after release, the internal microswitch leaf spring is fatigued or contaminated with dust.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Fight Stick & Hitbox SOCD Test | ControllerTesting"
-  description="Test arcade sticks, Hitbox, Mixbox, and leverless controllers online free. Vewlix 8-button visualizer plus Capcom Pro Tour SOCD cleaner test."
+  title="Fight Stick & Hitbox Tester — Free Online Arcade Stick & SOCD Checker | ControllerTesting.com"
+  description="Test your arcade stick, Hitbox, Mixbox, and leverless controller online for free. Verify 8-button Vewlix layouts, Sanwa switches, and Capcom Pro Tour SOCD rules."
+  keywords="fight stick tester, hitbox socd test, arcade stick test online, leverless controller tester, vewlix button tester, brook board latency check"
   toolName="Fight Stick & Hitbox SOCD Test"
   category="Specialized Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <FightStickTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Fighting Game Layout Guidelines</h2>
+      <h2 class="section-title">Arcade Layout & SOCD Rule Verification</h2>
       <p class="results-text">
-        All 8 arcade buttons and directional inputs should register crisp green with zero input latency or button ghosting.
+        Press individual buttons and test opposing directional combinations simultaneously:
       </p>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">CPT Legal (Neutral SOCD)</strong>
+          <p class="legend-text">Left + Right = Neutral; Up + Down = Neutral. Fully compliant with Capcom Pro Tour and EVO tournament standards.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">Legacy SOCD (Up Priority)</strong>
+          <p class="legend-text">Up + Down = Up. Permitted in casual play, but banned in modern official competitive Street Fighter 6 tournaments.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">Switch Bounce / Ghosting (Fault)</strong>
+          <p class="legend-text">Microswitch chatters or drops during sustained hold. Indicates worn mechanical leaf switch or loose spade wire.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Test controller latency in milliseconds</h3>
-        <p class="export-desc">Measure input delay on Brook fighting boards and USB converters.</p>
+        <h3 class="export-title">Need to benchmark fighting board latency?</h3>
+        <p class="export-desc">Measure input delay in milliseconds on Brook UFB, Raspberry Pi Pico (GP2040-CE), and USB encoders.</p>
       </div>
       <div class="export-buttons">
         <a href="/test/controller/latency" class="btn-primary">Test Input Latency</a>
+        <a href="/test/controller/buttons" class="btn-secondary">Button Matrix</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
-    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Button Tester</h3>
-      <p class="tool-desc">Test standard face buttons.</p>
+    <a href="/test/controller/dpad" class="tool-card card-base card-hover">
+      <h3 class="tool-name">D-Pad Tester</h3>
+      <p class="tool-desc">8-way directional pad & diagonal precision.</p>
     </a>
     <a href="/test/controller/latency" class="tool-card card-base card-hover">
       <h3 class="tool-name">Latency Estimator</h3>
-      <p class="tool-desc">Measure input response delay.</p>
+      <p class="tool-desc">Measure input delay & reaction speed.</p>
+    </a>
+    <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Polling Rate Checker</h3>
+      <p class="tool-desc">Measure USB report frequency in Hz.</p>
     </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Arcade Stick & Leverless Hitbox Controller Diagnostics</h2>
+    <h2>The Mechanics of Arcade Sticks & Leverless Controllers</h2>
     <p>
-      In competitive fighting games like <em>Street Fighter 6</em>, <em>Tekken 8</em>, and <em>Guilty Gear Strive</em>, microswitch reliability and SOCD cleaning compliance are essential for executing motion inputs.
+      In competitive fighting games (such as <em>Street Fighter 6</em>, <em>Tekken 8</em>, and <em>Guilty Gear Strive</em>), frame-perfect execution of motion buffers (quarter-circles, DP inputs, and instant air dashes) requires absolute microswitch consistency.
+    </p>
+
+    <h3>Simultaneous Opposing Cardinal Directions (SOCD) Standards</h3>
+    <p>
+      On traditional joystick fight sticks, it is physically impossible to press Left and Right simultaneously because a single restrictor gate lever connects to all four switches.
+    </p>
+    <p>
+      On all-button leverless controllers (Hitbox, Snack Box Micro, Haute42), separate thumb and finger buttons allow simultaneous opposing inputs. Modern tournament rules enforce:
+    </p>
+    <ul>
+      <li><strong>Horizontal SOCD:</strong> <code>Left + Right = Neutral</code> (no movement output).</li>
+      <li><strong>Vertical SOCD (Capcom Pro Tour Standard):</strong> <code>Down + Up = Neutral</code>. (Older firmware used "Up Priority" where <code>Down + Up = Up</code>, allowing unfair instant flash kicks).</li>
+      <li><strong>Last Input Priority (Second-Input Priority):</strong> The newer button pressed overrides the previously held direction. (Legal in Tekken, but restricted in Street Fighter 6).</li>
+    </ul>
+
+    <h2>Microswitch Debounce & Arcade Pushbutton Maintenance</h2>
+    <p>
+      Whether your stick uses Sanwa OBSF-30 pushbuttons or Cherry MX keyboard switches (common in GP2040-CE open-source boards), mechanical switch chatter occurs when contact leaves bounce before stabilizing. If you experience dropped inputs or double hits, clean the quick-disconnect spade terminals or replace the internal microswitch.
     </p>
   </Fragment>
 </ToolLayout>

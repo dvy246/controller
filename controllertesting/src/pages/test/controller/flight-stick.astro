@@ -1,7 +1,8 @@
 ---
 /**
  * /test/controller/flight-stick — Flight Stick & HOTAS Tester
- * SEO Title: Flight Stick & HOTAS Tester — Test Flight Sim Controllers Online
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: flight stick tester
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,69 +16,120 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I test a Flight Stick or HOTAS throttle quadrant?',
-    answer: 'Connect your Thrustmaster Warthog, Logitech X56, or Turtle Beach flight stick via USB. The tool measures Pitch, Roll, Yaw twist rudder, throttle lever linearity, and 8-way hat switch inputs.',
+    question: 'How do I test a Flight Stick or HOTAS throttle quadrant online?',
+    answer: 'Connect your Thrustmaster T.16000M, HOTAS Warthog, Logitech X52/X56, VKB Gladiator, or Virpil flight stick via USB. Move the flight stick through full Pitch (Y-axis) and Roll (X-axis) deflection, twist the Z-axis for Yaw rudder control, and actuate the throttle quadrant. Telemetry displays all axes and buttons in real time.',
   },
   {
-    question: 'How many buttons and axes does this flight stick tester support?',
-    answer: 'Our diagnostic engine supports up to 128 buttons and 10 independent analog axes simultaneously.',
+    question: 'How many analog axes and buttons does this flight simulator tester support?',
+    answer: 'Our diagnostic engine leverages the W3C Gamepad API to monitor up to 10 independent analog axes (Pitch, Roll, Yaw, Dual Throttles, Toe Brakes, Rotary Dials) and up to 128 discrete button inputs simultaneously.',
   },
   {
-    question: 'Can I test Microsoft Flight Simulator 2024 controllers?',
-    answer: 'Yes! It is fully compatible with MSFS 2024, DCS World, Star Citizen, and Elite Dangerous flight hardware.',
+    question: 'How do I test 8-way POV Hat Switches (Point of View)?',
+    answer: 'POV hat switches transmit either discrete directional button states or an analog directional angle. Push the top hat switch in all 8 cardinal and diagonal directions to verify view-panning registration.',
   },
+  {
+    question: 'Why does my flight stick throttle show jitter near 0% or 100%?',
+    answer: 'Throttle jitter is commonly caused by worn potentiometer wipers or unshielded USB power fluctuations. Inspect the live telemetry graph above to determine if software deadzones can filter the noise or if internal sensor cleaning is required.',
+  },
+  {
+    question: 'Is this tester compatible with MSFS 2024, DCS World, and Star Citizen?',
+    answer: 'Yes! It directly verifies hardware-level signals from all flight sim devices recognized by Windows and macOS, ensuring your gear is perfectly calibrated before launching Microsoft Flight Simulator 2024, DCS World, Star Citizen, or Elite Dangerous.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Flight Stick & HOTAS Tester | ControllerTesting"
-  description="Test Flight Sticks, HOTAS throttles, twist rudders, and 8-way hat switches online. Free diagnostic tool for MSFS 2024 and flight simulators."
+  title="Flight Stick & HOTAS Tester — Free Online Flight Sim Controller Diagnostic | ControllerTesting.com"
+  description="Test flight sticks, HOTAS throttles, rudder pedals, and 8-way POV hat switches online for free. Compatible with Thrustmaster, Logitech, VKB, and MSFS 2024."
+  keywords="flight stick tester, hotas tester online, joystick tester msfs, test thrustmaster t16000m, vkb gladiator tester, flight sim controller check"
   toolName="Flight Stick & HOTAS Tester"
   category="Specialized Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <FlightStickTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Flight Simulator Hardware Guidelines</h2>
+      <h2 class="section-title">Flight Simulator Multi-Axis Benchmarks</h2>
       <p class="results-text">
-        Pitch, Roll, and Yaw axes should maintain smooth 16-bit precision without center jitter.
+        Verify full 3-axis flight control deflection and throttle linearity:
       </p>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">16-Bit Magnetic Hall (Calibrated)</strong>
+          <p class="legend-text">Zero resting axis noise; smooth full-travel pitch/roll curves; crisp 8-way POV hat switch transitions.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">Z-Axis Twist Jitter (Wear)</strong>
+          <p class="legend-text">Rudder twist axis registers 2-5% jitter when stationary. Common in potentiometer-based twist rudders.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">Axis Saturation Truncation (Fault)</strong>
+          <p class="legend-text">Pitch or roll fails to reach 100% full deflection. Indicates broken gimbal spring or uncalibrated magnetic sensor.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Run full diagnostic checkup</h3>
-        <p class="export-desc">Combine flight stick testing with full button matrix and polling rate diagnostics.</p>
+        <h3 class="export-title">Need to test sim racing pedals or wheels?</h3>
+        <p class="export-desc">Explore our specialized diagnostic suite for 900°/1080° racing wheels and 3-pedal sets.</p>
       </div>
       <div class="export-buttons">
-        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+        <a href="/test/controller/steering-wheel" class="btn-primary">Steering Wheel Tester</a>
+        <a href="/test/controller/full-diagnostic" class="btn-secondary">Full Diagnostic</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
     <a href="/test/controller/steering-wheel" class="tool-card card-base card-hover">
       <h3 class="tool-name">Steering Wheel Tester</h3>
-      <p class="tool-desc">Test racing wheels and pedals.</p>
+      <p class="tool-desc">Test racing wheels and load cell pedals.</p>
     </a>
     <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
       <h3 class="tool-name">Polling Rate Checker</h3>
-      <p class="tool-desc">Measure input rate in Hz.</p>
+      <p class="tool-desc">Measure USB report frequency in Hz.</p>
+    </a>
+    <a href="/test/controller/latency" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Latency Estimator</h3>
+      <p class="tool-desc">Measure input delay & reaction speed.</p>
     </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>HOTAS Flight Control Systems and Axis Deadzones</h2>
+    <h2>Flight Simulation Hardware Architecture & Multi-Axis Calibration</h2>
     <p>
-      Flight simulation hardware (HOTAS and dual-stick HOSAS) requires precise Hall-effect sensors across Pitch, Roll, and Yaw axes.
+      High-fidelity flight simulators (including <em>Microsoft Flight Simulator 2024</em>, <em>DCS World</em>, <em>IL-2 Sturmovik</em>, and <em>Star Citizen</em>) require sub-millimeter precision across multiple primary and secondary flight control surfaces.
+    </p>
+
+    <h3>Primary Flight Axes: Pitch, Roll, and Yaw Mechanics</h3>
+    <ul>
+      <li>
+        <strong>Pitch (Y-Axis) & Roll (X-Axis) Gimbals:</strong> Premium flight sticks (VKB Gladiator NXT EVO, Virpil MongoosT-50CM3, Thrustmaster Warthog) employ heavy-duty metal cam-and-bearing gimbals with contactless 3D Hall sensors (16-bit resolution), providing pure linear deflection without center sticking ("crosstalk").
+      </li>
+      <li>
+        <strong>Yaw (Z-Axis Twist Rudder):</strong> Budget flight sticks place a rotational potentiometer in the grip stem. Over time, cable flex and wrist torque introduce resting yaw noise, causing continuous uncommanded aircraft slip.
+      </li>
+      <li>
+        <strong>Split Throttle Quadrants:</strong> Dual throttles with afterburner and idle mechanical detents allow independent engine management. The live analog bars confirm that both engine levers track linearly without split variance.
+      </li>
+    </ul>
+
+    <h2>8-Way POV Hat Switches & Microswitch Matrix</h2>
+    <p>
+      Flight sticks feature multi-directional hat switches for cockpit view panning, trim adjustments, and target designator management. Our matrix checks every microswitch contact to identify ghosting or missed presses.
     </p>
   </Fragment>
 </ToolLayout>

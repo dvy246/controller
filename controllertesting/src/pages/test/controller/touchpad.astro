@@ -1,7 +1,8 @@
 ---
 /**
  * /test/controller/touchpad — Touchpad Tester
- * SEO Title: Controller Touchpad Test — Test PS5 & PS4 Touchpad Online
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: ps5 touchpad test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,69 +16,120 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I test the touchpad on a PS5 DualSense or PS4 controller?',
-    answer: 'Connect your PlayStation controller via USB or Bluetooth and swipe your finger across the capacitive touchpad. The visualizer above will track your X/Y touch coordinates live.',
+    question: 'How do I test the touchpad on a PS5 DualSense or PS4 controller online?',
+    answer: 'Connect your PlayStation controller via USB-C cable or Bluetooth, click on this page to activate the browser Gamepad/HID interface, and swipe your fingers across the touchpad. The live 2D canvas tracks 2-finger multi-touch coordinates (X, Y) and highlights mechanical click events.',
   },
   {
-    question: 'Why is touchpad testing useful for PC gaming?',
-    answer: 'Using Steam Input or DS4Windows, gamers map touchpad gestures to mouse movement, radial weapon wheels, or hotkeys. Testing ensures touch tracking has zero dead zones.',
+    question: 'What is the coordinate resolution of the PS5 DualSense touchpad?',
+    answer: 'The DualSense capacitive trackpad features a native coordinate grid of 1920 &times; 942 touch units, reporting high-precision finger tracking for cursor navigation, swipe gestures, and virtual weapon wheels.',
   },
   {
-    question: 'Does the Xbox controller have a touchpad?',
-    answer: 'No. Xbox controllers do not feature a capacitive touchpad. Touchpad testing is designed for PS5 DualSense, PS4 DualShock, and Steam Controllers.',
+    question: 'Why is touchpad testing useful for PC gaming and Steam Input?',
+    answer: 'Through Steam Input, DS4Windows, and reWASD, PC gamers map the PlayStation touchpad into mouse trackpads, radial macro menus, or split touch buttons (Left Touch vs. Right Touch). Testing ensures full perimeter touch sensitivity with zero dead zones.',
   },
+  {
+    question: 'Does the Xbox controller feature a touchpad?',
+    answer: 'No. Standard Microsoft Xbox Wireless Controllers do not feature a capacitive touchpad surface. Touchpad diagnostics are designed for PlayStation DualSense, DualShock 4, and Steam Controllers.',
+  },
+  {
+    question: 'How do I fix a PlayStation touchpad that stopped tracking after a shell swap?',
+    answer: 'Touchpad failures following custom shell modifications are almost always caused by a loose 10-pin or 14-pin FFC ribbon cable or an improperly seated flex connector latch on the controller mainboard.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="PS5 DualSense Touchpad Test: Multi-Touch | ControllerTesting"
-  description="Test PS5 DualSense and PS4 DualShock touchpad gestures, multi-touch accuracy, and trackpad clicks online free — browser-based diagnostic."
+  title="PS5 Touchpad Test — Free Online DualSense & PS4 Trackpad Tester | ControllerTesting.com"
+  description="Test your PS5 DualSense and PS4 DualShock touchpad online for free. Check multi-touch tracking accuracy, coordinate gestures, and mechanical click switches."
+  keywords="ps5 touchpad test, dualsense touchpad tester, ps4 touchpad check, controller touchpad test online, test dualshock 4 trackpad, gamepad multi touch test"
   toolName="PS5 DualSense Touchpad Test"
   category="Controller Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <TouchpadTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Touchpad Performance Guidelines</h2>
+      <h2 class="section-title">Touchpad Hardware Benchmarks</h2>
       <p class="results-text">
-        Capacitive touch tracking should be smooth and continuous across the entire touchpad surface, with click actuation registering when pressed.
+        Swipe across the entire perimeter and press firmly to actuate the central mechanical click:
       </p>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">Smooth Multi-Touch (Healthy)</strong>
+          <p class="legend-text">Continuous coordinate tracking with zero line breaks; simultaneous 2-finger detection; crisp mechanical click actuation.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">Edge Dead Zones (Contamination)</strong>
+          <p class="legend-text">Touch tracking drops near outer edges. Caused by oil accumulation or misaligned front bezel housing.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">No Touch Signal (Disconnection)</strong>
+          <p class="legend-text">Mechanical click works, but capacitive touch reports nothing. Indicates loose or damaged FFC ribbon cable.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Run full diagnostic checkup</h3>
-        <p class="export-desc">Combine touchpad testing with stick drift and button matrix diagnostics.</p>
+        <h3 class="export-title">Need a complete PlayStation hardware checkup?</h3>
+        <p class="export-desc">Combine touchpad diagnostics with analog stick drift, adaptive trigger, and 6-axis gyroscope tests.</p>
       </div>
       <div class="export-buttons">
-        <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+        <a href="/test/controller/ps5" class="btn-primary">PS5 DualSense Tester</a>
+        <a href="/test/controller/full-diagnostic" class="btn-secondary">Full Diagnostic</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
-    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Button Tester</h3>
-      <p class="tool-desc">Test face buttons and shoulder bumpers.</p>
+    <a href="/test/controller/ps5" class="tool-card card-base card-hover">
+      <h3 class="tool-name">PS5 Master Tester</h3>
+      <p class="tool-desc">Complete DualSense hardware diagnostic suite.</p>
     </a>
-    <a href="/test/controller/drift" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Stick Drift Tester</h3>
-      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+    <a href="/test/controller/gyroscope" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Gyroscope Tester</h3>
+      <p class="tool-desc">6-axis IMU motion sensor calibration.</p>
+    </a>
+    <a href="/test/controller/microphone" class="tool-card card-base card-hover">
+      <h3 class="tool-name">DualSense Mic Test</h3>
+      <p class="tool-desc">Built-in microphone array audio meter.</p>
     </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>PlayStation DualSense Touchpad Architecture</h2>
+    <h2>PlayStation DualSense Capacitive Touchpad Architecture</h2>
     <p>
-      The PS5 DualSense touchpad combines a capacitive multi-touch sensor surface with a tactile mechanical click switch underneath.
+      The PlayStation 5 DualSense and PS4 DualShock 4 feature a centralized capacitive touchpad that bridges traditional gamepad inputs with precision pointer controls.
+    </p>
+
+    <h3>Capacitive Grid & Mechanical Click Mechanics</h3>
+    <ul>
+      <li>
+        <strong>1920 &times; 942 Capacitive Sensor Array:</strong> Beneath the matte plastic face lies an etched indium tin oxide (ITO) capacitive sensing grid. As your finger displaces electrostatic fields, the onboard controller ASIC calculates X and Y coordinate vectors with sub-pixel resolution.
+      </li>
+      <li>
+        <strong>Multi-Touch Finger Isolation:</strong> The controller firmware transmits discrete coordinate packets for Touch 1 and Touch 2 simultaneously, supporting pinch-to-zoom and two-finger scroll gestures.
+      </li>
+      <li>
+        <strong>Mechanical Tactile Dome Switch:</strong> Pressing down firmly anywhere on the touchpad depresses a central metal dome switch on the sub-chassis, registering a distinct digital button click.
+      </li>
+    </ul>
+
+    <h2>Configuring Touchpad Radial Menus on PC</h2>
+    <p>
+      Using Steam Input, you can divide the DualSense touchpad into a Left Pad and Right Pad, create 8-way directional touch menus for MMORPG hotkeys, or configure trackball emulation for desktop mouse navigation.
     </p>
   </Fragment>
 </ToolLayout>

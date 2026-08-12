@@ -1,14 +1,14 @@
 ---
 /**
  * /test/controller/switch-pro — Switch Pro Controller Tester & Input Validator
- * Target keyword: switch-pro controller tester
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: switch pro controller tester
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
 import Interactive2DVisualizer from '@components/tools/controller/Interactive2DVisualizer.astro';
 import DiagnosticResultsBento from '@components/seo/DiagnosticResultsBento.astro';
 import PremiumGuideCard from '@components/seo/PremiumGuideCard.astro';
-import PremiumFaqAccordion from '@components/seo/PremiumFaqAccordion.astro';
 
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
@@ -18,24 +18,38 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    "question": "Is the Switch Pro Controller prone to drift?",
-    "answer": "While generally more durable than Joy-Cons, the Switch Pro Controller still uses standard potentiometers and can develop drift over years of heavy use."
+    question: 'How do I test my Nintendo Switch Pro Controller online?',
+    answer: 'Connect your Switch Pro Controller to your PC/Mac via a USB-C cable or hold the circular pairing button on the top edge next to the charging port until the green player indicator lights cycle. Open this page and press any button to initialize the Gamepad API.',
+  },
+  {
+    question: 'Does the Nintendo Switch Pro Controller develop stick drift?',
+    answer: 'Yes. Unlike Joy-Cons that use mini slider modules, the Switch Pro Controller uses full-size Alps Alpine RKJXV potentiometers. Over 500+ hours of gameplay, friction between the metal contact wipers and carbon resistive tracks creates graphite dust, causing stick drift.',
+  },
+  {
+    question: 'Why does the Switch Pro Controller D-pad register accidental diagonals?',
+    answer: 'The original Switch Pro Controller D-pad has an undersized central pivot fulcrum ball. Pressing "Left" or "Right" with moderate pressure tilts the entire D-pad cross flat, accidentally bridging the "Up" or "Down" conductive rubber contact.',
+  },
+  {
+    question: 'How do I fix accidental D-pad misinputs on the Switch Pro Controller?',
+    answer: 'The popular "Tape Mod" resolves this issue. Opening the controller and placing four small squares of Kapton or electrical tape over the inner half of each D-pad PCB contact prevents unintended bridging while preserving normal diagonal inputs.',
+  },
+  {
+    question: 'Can I test Switch Pro Controller HD Rumble and motion gyro on PC?',
+    answer: 'Yes. Our tool triggers dual LRA HD Rumble motor pulses and streams 6-axis IMU pitch/roll/yaw motion coordinates directly through browser APIs without requiring third-party drivers.',
   }
 ];
-
 ---
 
 <ToolLayout
-  title="Switch Pro Controller Test | ControllerTesting"
-  description="Test your Nintendo Switch Pro Controller's polling rate, button inputs, and analog sticks for drift and precision issues online for free. No download required."
+  title="Switch Pro Controller Test — Free Online Nintendo Pro Controller Tester | ControllerTesting.com"
+  description="Test your Nintendo Switch Pro Controller online for free. Check stick drift, D-pad diagonal accuracy, digital ZL/ZR triggers, and HD Rumble haptics."
+  keywords="switch pro controller tester, test switch pro controller, switch pro stick drift test, nintendo pro controller test, switch pro controller pc test, switch pro dpad test"
   toolName="Switch Pro Controller Test"
   category="Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
-
-
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <Interactive2DVisualizer mode="switch-pro" isRigid={true} />
@@ -48,50 +62,57 @@ const faqs = [
 
   {/* ── Semantic SEO Content Slot ── */}
   <Fragment slot="content">
-    <section class="max-w-4xl mx-auto mt-16 px-6">
-      <h2 class="text-h2 mb-6">Switch Pro Controller Technical Diagnostics</h2>
-      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-        The Pro Controller is comfortable and long-lived — except for its sticks. The joystick modules use carbon-film potentiometers, and friction wears those tracks into <strong>stick drift</strong> over time. Connect the pad over Bluetooth or USB, and this tool shows the resting offset of each stick the moment it connects. No dedicated app required.
-      </p>
-      
-      <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">Digital Triggers and Face Buttons</h3>
-      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-        Unlike PS5 or Xbox pads, the Pro Controller uses <strong>digital ZL/ZR triggers</strong>, not analog sliders — each reads 1.0 fully pressed or 0.0 released. Use the button matrix to check those, the ABXY face buttons, and the D-pad (whose diagonals are a known weak point) for bounce-free registration.
-      </p>
-      
-      <h3 class="text-[var(--text-h3)] font-bold mb-4 mt-10">HD Rumble and Gyroscope Sensors</h3>
-      <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed">
-        The Pro Controller also packs linear resonant actuators (LRA) for Nintendo's "HD Rumble" and a 6-axis IMU for motion aiming in Splatoon and Zelda. The haptic and gyro tools stream those sensors so you can confirm they survived drops and firmware updates intact.
-      </p>
-    </section>
+    <h2>Comprehensive Hardware Diagnostics for the Switch Pro Controller</h2>
+    <p>
+      The official Nintendo Switch Pro Controller is revered for its ergonomic chassis and remarkable 40-hour battery life. However, competitive players in games like <em>Super Smash Bros. Ultimate</em> and <em>Tetris 99</em> frequently report two hardware issues: D-pad ghosting and analog stick drift.
+    </p>
+    <p>
+      This diagnostic tool provides real-time telemetry from the browser Gamepad API to isolate stick centering offsets, button bounce, and trigger actuation.
+    </p>
+
+    <h3>Switch Pro Controller Mechanical Architecture</h3>
+    <ul>
+      <li><strong>Full-Size Alps Alpine Potentiometers:</strong> The Pro Controller shares identical thumbstick modules with PlayStation and Xbox gamepads, providing smooth rotational resistance that eventually wears down carbon tracks.</li>
+      <li><strong>Digital ZL and ZR Shoulder Switches:</strong> Unlike analog triggers that measure pull depth, Switch Pro triggers utilize tactile digital switches that output instantaneous binary states (0% or 100%).</li>
+      <li><strong>Central Pivot D-Pad Flaw:</strong> An undersized center pivot ball allows the directional cross to rock flat, triggering unwanted opposite or diagonal directional commands during intense gameplay.</li>
+    </ul>
+
+    <h2>Testing Motion Gyro and HD Rumble</h2>
+    <p>
+      The Pro Controller integrates an internal 6-axis InvenSense IMU for motion aiming in <em>Splatoon 3</em> and <em>The Legend of Zelda: Tears of the Kingdom</em>. Use our <a href="/test/controller/gyroscope" class="font-semibold text-accent">Nintendo Gyroscope Visualizer</a> to test motion drift and sensor calibration.
+    </p>
   </Fragment>
 
   {/* ── SEO Repair Guide Section ── */}
   <Fragment slot="export">
-    <PremiumGuideCard title="How to calibrate a Switch Pro Controller on PC?">
-      <p class="text-lg">To calibrate a Switch Pro Controller on a PC, connect it via USB or Bluetooth. Open the Windows joy.cpl settings or Steam's controller configuration to adjust deadzones. For precise hardware-level testing, use a web-based tester to verify analog stick circularity and center offsets.</p>
+    <PremiumGuideCard title="How do you calibrate and fix Switch Pro Controller stick drift?">
+      <p class="text-lg leading-relaxed">
+        Connect your Switch Pro Controller via USB or Bluetooth, open the <a href="/test/controller/drift" class="font-semibold text-accent">Stick Drift Test</a>, and release both sticks. If drift is between 2% and 6%, recalibrating in Switch System Settings or increasing in-game deadzones provides immediate relief. If drift exceeds 10%, clean the internal sensor with 99% isopropyl alcohol or replace the potentiometer module.
+      </p>
       
-      <h3 class="text-h3 text-accent mt-8 mb-4">Recommended Actions</h3>
-      <p class="text-lg">      Start with the <a href="/test/controller/drift">Stick Drift Test</a>. Sticks resting in the 2–10% band usually respond to contact cleaner and a deadzone bump; above 10%, plan a module swap rather than repeated cleaning.</p>
+      <h3 class="text-h3 text-accent mt-8 mb-4">Recommended Switch Diagnostic Tools</h3>
+      <p class="text-lg leading-relaxed">
+        Test 8-way diagonal precision with the <a href="/test/controller/dpad" class="font-semibold text-accent">D-Pad Tester</a> or measure stick rim accuracy with our <a href="/test/controller/circularity" class="font-semibold text-accent">Circularity Test</a>.
+      </p>
     </PremiumGuideCard>
   </Fragment>
 
   {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
-    <a href="/test/controller/gyroscope" class="tool-hub-card card-hover card-base">
-      <div class="card-icon">🧭</div>
-      <h3 class="card-tool-name">Switch Gyro Tester</h3>
-      <p class="card-tool-desc">Test the 6-axis motion controls and IMU tilt.</p>
+    <a href="/test/controller/dpad" class="tool-hub-card card-hover card-base focus-visible:ring-2 focus-visible:ring-accent outline-none">
+      <div class="card-icon" aria-hidden="true">🔘</div>
+      <h3 class="card-tool-name text-h3">D-Pad Precision Tester</h3>
+      <p class="card-tool-desc">Test 8-way diagonal accuracy and prevent accidental drops.</p>
     </a>
-    <a href="/test/controller/vibration" class="tool-hub-card card-hover card-base">
-      <div class="card-icon">📳</div>
-      <h3 class="card-tool-name">HD Rumble Check</h3>
-      <p class="card-tool-desc">Verify the linear resonant actuators (LRA) are firing.</p>
+    <a href="/test/controller/gyroscope" class="tool-hub-card card-hover card-base focus-visible:ring-2 focus-visible:ring-accent outline-none">
+      <div class="card-icon" aria-hidden="true">🧭</div>
+      <h3 class="card-tool-name text-h3">Switch Gyro Tester</h3>
+      <p class="card-tool-desc">Test 6-axis motion controls and IMU tilt sensors.</p>
     </a>
-    <a href="/test/controller/circularity" class="tool-hub-card card-hover card-base">
-      <div class="card-icon">🎯</div>
-      <h3 class="card-tool-name">Stick Circularity</h3>
-      <p class="card-tool-desc">Measure the error rate on the Pro Controller's stick rims.</p>
+    <a href="/test/controller/circularity" class="tool-hub-card card-hover card-base focus-visible:ring-2 focus-visible:ring-accent outline-none">
+      <div class="card-icon" aria-hidden="true">🎯</div>
+      <h3 class="card-tool-name text-h3">Stick Circularity</h3>
+      <p class="card-tool-desc">Measure stick range of motion and outer gate error.</p>
     </a>
   </Fragment>
 </ToolLayout>

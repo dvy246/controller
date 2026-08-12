@@ -1,7 +1,8 @@
 ---
 /**
- * /test/controller/ps5 — Playstation Controller Test & Stick Drift Check
- * Target keyword: playstation controller test
+ * /test/controller/ps5 — PlayStation DualSense & PS4 Controller Diagnostic
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: ps5 controller test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -12,52 +13,47 @@ import PremiumGuideCard from '@components/seo/PremiumGuideCard.astro';
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
   { name: 'Controller Tests', url: '/test/controller' },
-  { name: 'Playstation Controller Test' },
+  { name: 'PlayStation Controller Test' },
 ];
 
 const faqs = [
   {
-    "question": "Does the PS5 DualSense get stick drift?",
-    "answer": "Yes, like all controllers using potentiometer joysticks, the PS5 DualSense can develop stick drift due to wear on internal carbon tracks over time."
+    question: 'How do I test my PS5 DualSense controller for stick drift online?',
+    answer: 'Connect your DualSense controller via USB-C cable or Bluetooth, press the PS button or any face button to wake the Gamepad API, and release the sticks. The live visualizer displays exact Left/Right analog stick coordinates and computes resting drift percentage with 0.1% precision.',
   },
   {
-    "question": "Does this tester work with PS4 DualShock 4 controllers?",
-    "answer": "Yes! You can connect your PS4 DualShock 4 controller via Bluetooth or USB. Our tester will detect all inputs, including face buttons, triggers, and the analog sticks for drift."
+    question: 'Why does the PS5 DualSense develop stick drift so quickly?',
+    answer: 'The DualSense uses Alps Alpine RKJXV rotational potentiometers rated for approximately 2,000,000 rotational cycles (roughly 400 hours of intensive gameplay). Friction wears down the resistive carbon tracks, generating conductive debris that creates phantom movement signals.',
   },
   {
-    "question": "Can I test my PS3 controller online?",
-    "answer": "Yes, the PS3 DualShock 3 controller is supported. You may need specific drivers (like DsHidMini) on Windows to ensure it is recognized by your browser, but once connected, all inputs can be tested."
+    question: 'Does this tester support PS4 DualShock 4 and PS3 controllers?',
+    answer: 'Yes! DualShock 4 connects natively via USB or Bluetooth. PS3 DualShock 3 controllers are fully supported on Windows when using the DsHidMini driver stack.',
   },
   {
-    "question": "How to reset a PS5 or PS4 controller?",
-    "answer": "Both the PS5 DualSense and PS4 DualShock 4 have a small reset hole on the back. Use a paperclip to press and hold the hidden button for 3 to 5 seconds to hard reset the controller."
+    question: 'Can I test the DualSense touchpad, gyroscope, and microphone?',
+    answer: 'Yes. Our dedicated hardware suite includes a Touchpad Multi-Touch Visualizer (/test/controller/touchpad), a 6-Axis Gyroscope Calibration Meter (/test/controller/gyroscope), and a Built-In Microphone Audio Meter (/test/controller/microphone).',
   },
   {
-    "question": "How do I check my PlayStation controller buttons online?",
-    "answer": "Connect your PlayStation controller to your PC or Mac via USB or Bluetooth. Press any button to activate the connection, and our tester will display all face buttons and D-Pad inputs."
+    question: 'How do I hard reset a PS5 DualSense controller?',
+    answer: 'Turn off the PS5 or disconnect from PC. Locate the small 1mm reset pinhole on the back of the controller next to the Sony logo. Insert a straightened paperclip, press and hold the internal micro-button for 5 seconds, and reconnect via a USB data cable.',
   },
   {
-    "question": "Why is my PS5 or PS4 controller drifting?",
-    "answer": "PlayStation controller drift happens when the ALPS potentiometer sensors degrade from use or gather dust, causing the stick to register false inputs without you touching it."
-  },
-  {
-    "question": "Why does my PS4 controller have a blinking white light?",
-    "answer": "A blinking white light usually means the controller lost connection or its battery is dying. Try resetting the controller with a paperclip and reconnecting it with a known-good data USB cable."
+    question: 'How do I calibrate replacement Hall-effect sticks on DualSense?',
+    answer: 'After soldering Hall-effect joystick modules into a DualSense motherboard, use our WebHID Zero-Point Calibrator (/test/controller/ps-calibration) to write persistent center offsets directly into the controller’s onboard EEPROM firmware without external hardware boards.',
   }
 ];
-
 ---
 
 <ToolLayout
-  title="PlayStation Controller Test | PS5 DualSense Tester"
-  description="Test your PlayStation controller online free. Check PS5 DualSense stick drift, buttons, adaptive triggers, touchpad, and gyroscope instantly — no download."
+  title="PS5 Controller Test — Free Online DualSense & PS4 Stick Drift Tester | ControllerTesting.com"
+  description="Test your PS5 DualSense or PS4 controller online for free. Check stick drift, adaptive triggers, buttons, touchpad, and 1000Hz polling rate. No download required."
+  keywords="ps5 controller test, dualsense tester online, ps5 stick drift test, playstation controller test, test ps4 controller, dualsense touchpad test"
   toolName="PS5 DualSense Controller Test"
   category="Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
-
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <Interactive2DVisualizer mode="playstation" isRigid={true} />
@@ -70,29 +66,48 @@ const faqs = [
 
   {/* ── Semantic SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2 class="text-h2 mb-6">Deep Diagnostics for Playstation Controllers</h2>
-    <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-      The DualSense is a precision instrument, but its thumbsticks wear like any other. Each stick uses an ALPS potentiometer with a carbon track, and as that track degrades you get <strong class="text-[var(--color-text-primary)]">stick drift</strong>: movement registered while your thumb is off the stick. Connect your DualSense and this tool reads the raw Gamepad API axes at 0.1% precision, so you know exactly how much drift you are dealing with before choosing a fix.
+    <h2>Deep Hardware Diagnostics for PlayStation DualSense Controllers</h2>
+    <p>
+      The Sony PlayStation 5 DualSense controller features cutting-edge peripheral technology—including dual voice-coil haptic actuators, dynamic resistance adaptive triggers, and a multi-touch capacitive trackpad. However, its analog thumbsticks rely on traditional resistive potentiometers that suffer mechanical wear over time.
+    </p>
+    <p>
+      This diagnostic visualizer reads raw W3C Gamepad API telemetry at 60fps to identify resting stick drift, trigger pressure clipping, button bounce, and polling rate instability.
     </p>
 
-    <h3 class="text-h3 mb-4 mt-10">Testing Adaptive Triggers and Polling Rates</h3>
-    <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed mb-6">
-      Beyond drift, check the L2 and R2 adaptive triggers for a linear pull, confirm the standard 250Hz Bluetooth polling rate (or up to 1000Hz overclocked over USB), and verify that both sticks hold circular geometry and every face button registers without double-clicks or ghosting.
+    <h3>DualSense Alps Alpine Potentiometer Architecture</h3>
+    <p>
+      Standard DualSense controllers (CFI-ZCT1W and BDM-010 through BDM-040 revisions) use Alps Alpine RKJXV thumbstick modules. Each module contains:
     </p>
+    <ul>
+      <li><strong>Carbon Graphite Resistive Films:</strong> Two circular tracks measuring X and Y rotational angles.</li>
+      <li><strong>Precision Metal Contact Wipers:</strong> Three-pronged metallic wipers that glide across the carbon substrate. Over hundreds of hours, mechanical friction wears micro-grooves into the carbon film, causing resistance imbalances that manifest as stick drift.</li>
+      <li><strong>Center Pivot Rocker:</strong> A central nylon pivot cup and compression spring that naturally fatigues, causing resting off-center variance.</li>
+    </ul>
 
-    <h3 class="text-h3 mb-4 mt-10">Hall Effect Joystick Upgrades</h3>
-    <p class="text-lg text-[var(--color-text-secondary)] leading-relaxed">
-      If you have soldered Hall-effect sensors into your DualSense motherboard to cure drift permanently, use the <a href="/calibrate/dualsense/hall-effect" class="font-semibold">WebHID Calibrator</a> to write the new zero-point calibration directly to the controller firmware, so the sticks recenter cleanly.
+    <h2>Testing DualSense Adaptive Triggers and 1000Hz USB Overclocking</h2>
+    <ul>
+      <li><strong>Adaptive Trigger Travel:</strong> L2 and R2 analog travel is mapped from <code>0.00</code> to <code>1.00</code> to verify that internal gear-train micro-motors or broken return springs do not truncate maximum pull.</li>
+      <li><strong>1000Hz USB Polling:</strong> When connected via direct USB-C to a PC and overclocked using HIDUSBF filter drivers, the DualSense achieves an ultra-low 1.0ms input report interval (1000Hz).</li>
+      <li><strong>Touchpad & Motion Tracking:</strong> Test multi-touch gestures and 6-axis gyro tracking using our dedicated <a href="/test/controller/touchpad" class="font-semibold text-accent">Touchpad Tester</a> and <a href="/test/controller/gyroscope" class="font-semibold text-accent">Gyroscope Visualizer</a>.</li>
+    </ul>
+
+    <h2>Calibrating Hall-Effect Joystick Upgrades</h2>
+    <p>
+      If you have upgraded your DualSense with electromagnetic Hall-effect joysticks (such as GuliKit or K-Silver modules), visit our <a href="/test/controller/ps-calibration" class="font-semibold text-accent">PS Controller WebHID Calibrator</a>. This browser tool uses low-level WebHID commands to write zero-point calibration offsets directly into the DualSense onboard memory.
     </p>
   </Fragment>
 
   {/* ── SEO Repair Guide Section ── */}
   <Fragment slot="export">
     <PremiumGuideCard title="How do you test and fix PS5 DualSense stick drift?">
-      <p class="text-lg leading-relaxed">To test for PS5 DualSense stick drift, use a web-based controller tester to measure analog stick centering precision. If drift exceeds five percent, try resetting the controller using the back pinhole. If the issue persists, the internal potentiometer requires replacement or a warranty claim.</p>
+      <p class="text-lg leading-relaxed">
+        Connect your DualSense via USB cable, open the <a href="/test/controller/drift" class="font-semibold text-accent">Stick Drift Test</a>, and release both sticks. If resting drift is below 2.5%, it is normal mechanical tolerance. If drift exceeds 8.0%, clean the sensor using 99% isopropyl alcohol, adjust in-game deadzones, or initiate an official Sony RMA warranty claim.
+      </p>
       
-      <h3 class="text-h3 text-accent mt-8 mb-4">Recommended Actions</h3>
-      <p class="text-lg leading-relaxed">Start with the <a href="/test/controller/drift" class="font-semibold">Stick Drift Test</a>. A resting offset above 2% means the potentiometer is wearing; use that number to decide between an RMA claim, a deadzone workaround, or a Hall-effect module swap before you open the shell.</p>
+      <h3 class="text-h3 text-accent mt-8 mb-4">Recommended PlayStation Tools</h3>
+      <p class="text-lg leading-relaxed">
+        Export a verified condition certificate with the <a href="/test/controller/health-score" class="font-semibold text-accent">Controller Health Score</a> or evaluate repair expenses with our <a href="/fix-or-replace" class="font-semibold text-accent">Fix vs Replace Calculator</a>.
+      </p>
     </PremiumGuideCard>
   </Fragment>
 

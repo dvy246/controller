@@ -1,7 +1,8 @@
 ---
 /**
  * /test/controller/full-diagnostic — Full Controller Diagnostic Wizard
- * Flagship tool page for comprehensive gamepad health checkup.
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: full controller diagnostic test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -10,28 +11,37 @@ import Interactive2DVisualizer from '@components/tools/controller/Interactive2DV
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
   { name: 'Controller Tests', url: '/test/controller' },
-  { name: 'Unified Diagnostic Dashboard' },
+  { name: 'Full Diagnostic Wizard' },
 ];
 
 const faqs = [
   {
-    question: 'How long does the Full Diagnostic take?',
-    answer: 'The complete diagnostic takes approximately 2 minutes and tests analog stick drift, circularity error, button response matrix, trigger linearity, and vibration rumble motors.',
+    question: 'What hardware components does the Full Diagnostic Wizard test?',
+    answer: 'The wizard conducts a synchronized multi-channel evaluation across 5 hardware domains: Left & Right Analog Stick Drift, 360-Degree Circularity Range, Face & Shoulder Button Matrix Actuation, Analog Trigger (L2/R2) Pressure Linearity, and Dual Haptic Vibration Motor Pulses.',
   },
   {
-    question: 'What is the Controller Health Score™?',
-    answer: 'The Health Score is a 0–100 proprietary algorithm that combines drift percentage (30%), circularity (20%), button response (15%), trigger linearity (15%), vibration (10%), and polling rate (10%) into a letter grade from A+ to F.',
+    question: 'How do I run a full diagnostic on my controller?',
+    answer: 'Connect your controller via USB cable or Bluetooth, press any button on the gamepad to initialize the W3C Gamepad API, and follow the interactive visualizer to cycle through sticks, triggers, buttons, and rumble motors.',
   },
   {
-    question: 'Does this test require any software or driver downloads?',
-    answer: 'No. The entire test runs locally inside your web browser using the standard Web Gamepad API. No software or extensions are required.',
+    question: 'Does this wizard test PlayStation, Xbox, and Nintendo controllers?',
+    answer: 'Yes. The unified dashboard automatically detects and maps input schemas for PS5 DualSense, PS4 DualShock, Xbox Series X/S, Xbox One, Nintendo Switch Pro Controller, Joy-Cons, Steam Deck, and generic DirectInput/XInput PC controllers.',
   },
+  {
+    question: 'Why is a unified diagnostic better than individual tool tests?',
+    answer: 'A unified diagnostic catches correlated and power-dependent faults—such as analog stick jitter caused by rumble motor electrical draw, or trigger potentiometer cross-talk with adjacent bumper switches—that isolated single-input tests cannot detect.',
+  },
+  {
+    question: 'What should I do if a component fails during the diagnostic?',
+    answer: 'Identify whether the issue is software-related (remapping software or driver deadzones) or physical hardware wear. For stick drift, adjust in-game deadzones or clean the module. For dead switches or sticking triggers, use our Fix vs Replace calculator to evaluate repair costs.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Full Controller Diagnostic Test | ControllerTesting"
-  description="Run a complete controller diagnostic free. Test stick drift, buttons, triggers, rumble, polling rate, and deadzone on PS5, Xbox, or Switch in one dashboard."
+  title="Full Controller Diagnostic Test — All-in-One Gamepad Checker | ControllerTesting.com"
+  description="Run a complete 5-step controller diagnostic online. Test stick drift, buttons, triggers, rumble motors, and polling latency on PS5, Xbox, or Switch in one unified dashboard."
+  keywords="full controller diagnostic test, gamepad diagnostic wizard, complete controller test, test ps5 controller hardware, test xbox controller hardware, all in one gamepad tester"
   toolName="Full Controller Diagnostic Test"
   category="Flagship Diagnostic"
   categoryUrl="/test/controller"
@@ -47,11 +57,12 @@ const faqs = [
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Need a printable diagnostic certificate?</h3>
-        <p class="export-desc">Generate an official PDF test report to submit for warranty claims or resale proof.</p>
+        <h3 class="export-title">Need a printable diagnostic report card?</h3>
+        <p class="export-desc">Generate an official verified Controller Condition Report with hardware UUID, component sub-scores, and diagnostic timestamps.</p>
       </div>
       <div class="export-buttons">
         <a href="/test/controller/health-score" class="btn-primary">Generate PDF Report</a>
+        <a href="/fix-or-replace" class="btn-secondary">Fix vs Replace Calculator</a>
       </div>
     </div>
   </Fragment>
@@ -60,36 +71,75 @@ const faqs = [
   <Fragment slot="related-tools">
     <a href="/test/controller/drift" class="tool-card card-base card-hover">
       <h3 class="tool-name">Stick Drift Tester</h3>
-      <p class="tool-desc">Isolated 0.1% precision stick drift test.</p>
+      <p class="tool-desc">Isolated 0.1% precision stick centering test.</p>
+    </a>
+    <a href="/test/controller/circularity" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Circularity Test</h3>
+      <p class="tool-desc">Measure 360-degree range of motion and outer perimeter error.</p>
     </a>
     <a href="/test/controller/buttons" class="tool-card card-base card-hover">
       <h3 class="tool-name">Button Tester</h3>
-      <p class="tool-desc">Test button ghosting and response speed.</p>
+      <p class="tool-desc">Test face button actuation, ghosting, and response speed.</p>
     </a>
     <a href="/test/controller/triggers" class="tool-card card-base card-hover">
       <h3 class="tool-name">Trigger Tester</h3>
-      <p class="tool-desc">Analog L2/R2 pressure curve analyzer.</p>
-    </a>
-    <a href="/test/controller/vibration" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Vibration Tester</h3>
-      <p class="tool-desc">Test haptic rumble motors independently.</p>
+      <p class="tool-desc">Analog L2/R2 pressure curve and linearity analyzer.</p>
     </a>
   </Fragment>
 
   {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Complete Controller Hardware Diagnostic Guide</h2>
+    <h2>The Unified 5-Step Controller Diagnostic Protocol</h2>
     <p>
-      A drifting stick or a button that misses presses — run the full diagnostic and pin down the exact fault before you spend money on a replacement controller.
+      When a gamepad begins acting erratically during gameplay, isolating whether the failure originates from a worn analog stick, a sticking conductive membrane, a degraded trigger spring, or wireless signal interference is critical before attempting costly repairs.
+    </p>
+    <p>
+      The <strong>Full Controller Diagnostic Wizard</strong> provides a comprehensive, browser-based hardware checkup evaluating all primary input and output subsystems simultaneously.
     </p>
 
-    <h3>What We Check in the Unified Dashboard</h3>
+    <h3>What the Unified Dashboard Evaluates</h3>
     <ul>
-      <li><strong>Analog Stick Center Offset:</strong> Detects microscopic voltage variance in resting thumbstick potentiometers.</li>
-      <li><strong>Circularity Range Error:</strong> Verifies whether your thumbsticks reach 100% full diagonal displacement.</li>
-      <li><strong>Button Matrix Ghosting:</strong> Ensures all face buttons, shoulder bumpers, and D-pad inputs trigger independently.</li>
-      <li><strong>Trigger Linearity Curve:</strong> Tests whether analog triggers increase smoothly from 0% to 100% without dead spots.</li>
-      <li><strong>Haptic Rumble Actuators:</strong> Triggers dual heavy and light vibration motors to test motor health.</li>
+      <li>
+        <strong>1. Analog Stick Neutral Centering & Drift:</strong> Samples raw <code>axes[0..3]</code> telemetry at 60fps to identify micro-voltage fluctuations in resting potentiometer or Hall-effect sensors.
+      </li>
+      <li>
+        <strong>2. 360-Degree Circularity Boundary:</strong> Evaluates corner bounding boxes to verify that thumbsticks achieve full 1.0 diagonal reach without dead spots or cardinal axis flattening.
+      </li>
+      <li>
+        <strong>3. Button Matrix Actuation & Ghosting:</strong> Tests face buttons (A/B/X/Y, Cross/Circle/Square/Triangle), shoulder bumpers (L1/R1, LB/RB), and D-pad diagonals to detect missed presses, sticking pads, or contact bounce.
+      </li>
+      <li>
+        <strong>4. Analog Trigger Pressure Curves:</strong> Evaluates L2/R2 (LT/RT) analog travel across a 0.00 to 1.00 continuous scale, identifying non-linear output, dead initial travel, or failure to reach 100% full-throttle actuation.
+      </li>
+      <li>
+        <strong>5. Dual Haptic Rumble Actuators:</strong> Sends dual-frequency vibration pulses to test heavy low-frequency ERM motors and high-frequency tactile rumble actuators independently.
+      </li>
+    </ul>
+
+    <h2>Interpreting Correlated Hardware Faults</h2>
+    <p>
+      Isolated button or stick testers often miss interconnected electrical issues:
+    </p>
+    <ol>
+      <li>
+        <strong>Voltage Sag Under Rumble:</strong> If analog sticks jitter only when vibration motors activate, the controller's internal power regulation or battery circuit is failing to maintain steady rail voltage.
+      </li>
+      <li>
+        <strong>Trigger Cross-Talk:</strong> If pressing L2 or R2 triggers unexpected L1/R1 bumper presses, conductive membrane wear or internal ribbon cable shorting has occurred.
+      </li>
+      <li>
+        <strong>Wireless Jitter vs. Mechanical Drift:</strong> If stick coordinates jump sporadically over Bluetooth but remain stable over a wired USB connection, wireless 2.4GHz interference or polling buffer congestion is the root cause.
+      </li>
+    </ol>
+
+    <h2>Technical Limits & Preparation</h2>
+    <p>
+      For the most objective diagnostic results:
+    </p>
+    <ul>
+      <li>Connect directly via high-quality USB-C or Micro-USB cable to rule out Bluetooth transport latency.</li>
+      <li>Exit background controller wrappers (Steam Input, DS4Windows, reWASD, BetterJoy) that intercept and modify raw Gamepad API input signals.</li>
+      <li>If testing on macOS, ensure browser permissions for Gamepad access are enabled in System Settings.</li>
     </ul>
   </Fragment>
 </ToolLayout>

@@ -1,7 +1,8 @@
 ---
 /**
  * /test/controller/gamepad-mapping — Gamepad Mapping & Button Rebind Tester
- * Target keyword: gamepad-mapping controller tester
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: gamepad mapping tester
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -16,80 +17,39 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    "question": "Can I remap controller buttons in the browser?",
-    "answer": "The browser Gamepad API reads inputs directly. To remap buttons globally, you must use software like Steam Input, DS4Windows, or system-level accessibility settings."
+    question: 'How do I test custom controller button mappings online?',
+    answer: 'Connect your controller via USB or Bluetooth, press any button to initialize the visualizer, and actuate each remapped face button, bumper, trigger, or rear paddle. The interactive matrix highlights the exact virtual button index registered by the browser Gamepad API.',
+  },
+  {
+    question: 'Can I remap controller buttons directly in the browser?',
+    answer: 'The browser Gamepad API is a read-only hardware telemetry interface. To remap buttons system-wide, use Steam Input, DS4Windows, reWASD, or native console accessibility settings (PlayStation Accessibility / Xbox Accessories App), then verify your mappings here.',
+  },
+  {
+    question: 'What is the standard W3C Gamepad API button index layout?',
+    answer: 'The W3C "standard" mapping defines: Button 0 (Bottom/A/Cross), Button 1 (Right/B/Circle), Button 2 (Left/X/Square), Button 3 (Top/Y/Triangle), Buttons 4–5 (L1/R1), Buttons 6–7 (L2/R2 analog triggers), Buttons 8–9 (Select/Start), Buttons 10–11 (L3/R3 stick clicks), Buttons 12–15 (D-Pad Up/Down/Left/Right), and Button 16 (Home/Guide).',
+  },
+  {
+    question: 'Why do my remapped rear paddle buttons not show up as separate inputs?',
+    answer: 'Most pro controllers (Xbox Elite, Scuf, DualSense Edge) mirror existing gamepad buttons (such as A/B/X/Y) on hardware without exposing extra HID endpoints unless using dedicated proprietary PC drivers.',
+  },
+  {
+    question: 'Why are my controller buttons swapped or inverted in retro emulators?',
+    answer: 'Nintendo controllers map A/B and X/Y in reversed physical orientations compared to Xbox XInput layouts. Verifying raw button indices allows you to configure accurate 1:1 input rebinds in RetroArch, PCSX2, and RPCS3.',
   }
 ];
-
-const schemaData = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "SoftwareApplication",
-      "name": "Gamepad Mapping & Button Rebind Tester",
-      "operatingSystem": "Web Browser",
-      "applicationCategory": "UtilitiesApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "description": "Verify your custom controller layouts and button mappings. Ensure your rebinds work perfectly before launching a game."
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://controllertesting.com/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Tests",
-          "item": "https://controllertesting.com/test/controller/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "Gamepad Mapping Tester",
-          "item": "https://controllertesting.com/test/controller/gamepad-mapping"
-        }
-      ]
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Can I remap controller buttons in the browser?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The browser Gamepad API reads inputs directly. To remap buttons globally, you must use software like Steam Input, DS4Windows, or system-level accessibility settings."
-          }
-        }
-      ]
-    }
-  ]
-};
 ---
 
 <ToolLayout
-  title="Gamepad Mapping & Button Rebind Test | ControllerTesting"
-  description="Verify your custom controller layouts and button mappings. Ensure your rebinds work perfectly before launching a game."
+  title="Gamepad Mapping Tester — Free Online Controller Button Rebind Checker | ControllerTesting.com"
+  description="Verify custom controller layouts and button mappings online for free. Test Steam Input, DS4Windows, and rebinds on PS5, Xbox, Switch, and PC gamepads."
+  keywords="gamepad mapping tester, controller button rebind test, test remapped controller buttons, steam input layout test, ds4windows button mapping check, controller button assignment test"
   toolName="Gamepad Mapping Tester"
-  category="Diagnostic"
+  category="Controller Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
   telemetryEnabled
 >
-  <Fragment slot="head">
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(schemaData)} />
-  </Fragment>
-
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <ButtonTester />
@@ -98,19 +58,19 @@ const schemaData = {
   {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Diagnostics Results</h2>
+      <h2 class="section-title">Button Mapping Verification Benchmarks</h2>
       <div class="results-legend-grid">
         <div class="legend-card legend-pass">
-          <strong class="legend-title">0.0% – 2.0% (Healthy)</strong>
-          <p class="legend-text">Normal variance. Your controller is operating flawlessly.</p>
+          <strong class="legend-title">1:1 Standard Mapping</strong>
+          <p class="legend-text">Physical button actuations match standard W3C index positions with sub-millisecond response latency.</p>
         </div>
         <div class="legend-card legend-warning">
-          <strong class="legend-title">2.1% – 10.0% (Minor Drift)</strong>
-          <p class="legend-text">Slight potentiometer wear detected.</p>
+          <strong class="legend-title">Virtual Rebind Active</strong>
+          <p class="legend-text">Software remapping (Steam Input / DS4Windows) is routing physical buttons to alternate virtual indices.</p>
         </div>
         <div class="legend-card legend-fail">
-          <strong class="legend-title">> 10.0% (Severe Drift)</strong>
-          <p class="legend-text">Severe drift detected. Repair is highly recommended.</p>
+          <strong class="legend-title">Input Ghosting / Conflict</strong>
+          <p class="legend-text">Pressing a single button triggers two indices simultaneously. Indicates driver layer collision or macro loops.</p>
         </div>
       </div>
     </div>
@@ -118,27 +78,57 @@ const schemaData = {
 
   {/* ── SEO Repair Guide Section ── */}
   <Fragment slot="export">
-    <PremiumGuideCard title="How do you verify custom gamepad button mappings?">
+    <PremiumGuideCard title="How to Verify Custom Gamepad Button Mappings">
       <p class="text-[var(--color-text-secondary)] leading-relaxed">
-        <strong>Verify custom gamepad button mappings by using an online controller mapping tool. Press each remapped button on your controller and check if the on-screen display registers the intended virtual output. This ensures software-level rebinds are functioning correctly before you launch a game.</strong>
+        <strong>Verify custom button mappings by opening your remapping utility (Steam Input, DS4Windows, or Xbox Accessories), applying your configuration, and pressing each button on this live test matrix. Each button will illuminate its active W3C Gamepad API index (Buttons 0–16), confirming that rebinds, trigger shifts, and modifier layers function as intended.</strong>
       </p>
       
-      <h3 class="text-lg font-bold text-[var(--color-text-primary)] mt-8 mb-3">Recommended Actions</h3>
+      <h3 class="text-lg font-bold text-[var(--color-text-primary)] mt-8 mb-3">Diagnostic Best Practices</h3>
       <p class="text-[var(--color-text-secondary)] leading-relaxed">
-        Before you chase a rebind problem, rule out the hardware: run the <a href="/test/controller/drift">Stick Drift Test</a>. A stick that reports movement while idle will corrupt any mapping test and look like a broken rebind.
+        Before testing rebinds, verify that your thumbsticks have zero resting wander using the <a href="/test/controller/drift" class="content-link font-semibold">Stick Drift Tester</a> to ensure unwanted analog noise does not interfere with menu navigation.
       </p>
     </PremiumGuideCard>
   </Fragment>
 
   {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
-    <a href="/test/controller/drift" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Universal Stick Drift Test</h3>
-      <p class="tool-desc">Test any controller across all major platforms.</p>
-    </a>
     <a href="/test/controller/buttons" class="tool-card card-base card-hover">
       <h3 class="tool-name">Button Tester</h3>
-      <p class="tool-desc">Check for sticky or failing face buttons and triggers.</p>
+      <p class="tool-desc">Test switch chatter and ghosting.</p>
     </a>
+    <a href="/test/controller/triggers" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Trigger Pressure Tester</h3>
+      <p class="tool-desc">Analyze L2/R2 analog pressure curves.</p>
+    </a>
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">0.1% stick centering detector.</p>
+    </a>
+  </Fragment>
+
+  {/* ── SEO Content Slot ── */}
+  <Fragment slot="content">
+    <h2>Gamepad Protocol Mapping: XInput, DirectInput & W3C Standard</h2>
+    <p>
+      Connecting a game controller across different operating systems and game engines involves translating between three major input architecture layers:
+    </p>
+
+    <h3>The 3 Controller Input Protocols</h3>
+    <ul>
+      <li>
+        <strong>Microsoft XInput:</strong> The standard Windows protocol for Xbox gamepads. Exposes 10 digital buttons, 2 analog triggers, 2 thumbsticks, and a 4-bit D-Pad bitmask.
+      </li>
+      <li>
+        <strong>DirectInput / Raw HID:</strong> Legacy and modern PlayStation/Switch protocol allowing up to 128 buttons, multi-axis throttles, and vendor-specific gyro/touchpad payloads.
+      </li>
+      <li>
+        <strong>W3C Gamepad API Standard:</strong> Browser-level canonical abstraction that maps non-standard physical buttons into unified 0–16 indices across macOS, Windows, Linux, Android, and ChromeOS.
+      </li>
+    </ul>
+
+    <h2>Troubleshooting Double-Input & Ghost Mapping Conflicts</h2>
+    <p>
+      A common issue when running third-party remappers (such as DS4Windows or Steam Input) is "double input," where a game reads both the physical DirectInput controller and the virtual XInput emulated controller simultaneously. Enabling <em>HidHide</em> or disabling desktop configuration overlays in Steam isolates the virtual device cleanly.
+    </p>
   </Fragment>
 </ToolLayout>

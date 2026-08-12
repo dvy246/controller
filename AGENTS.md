@@ -91,12 +91,13 @@ This document serves as the absolute source of truth for all AI agents, software
 4.  **Sonic-Space Spatial Audio Tester** (`/audio-test/[feature]`) — Web Audio API 3D binaural radar & Bluetooth latency flash tester (`AudioRadar.astro`).
 5.  **Mech-Matrix Keyboard Sandbox** (`/keyboard-tester/[layout]`) — 3D isometric keyboard visualizer with switch sound synthesis & NKRO matrix (`MechKeyboard.astro`).
 
-### God-Mode Programmatic SEO Suite (5 Tools)
+### God-Mode Programmatic SEO Suite (6 Tools)
 1.  **"Zero-Point" WebHID Calibrator** (`/calibrate/[controller]/[sensor]`) — Hardware-level stick center offsets (`WebHIDCalibrator.astro`).
 2.  **Competitive Deadzone Geometry Sandbox** (`/deadzone-calculator/[game]/[controller]`) — Radial/Axial overlay over drift vectors (`DeadzoneSandbox.astro`).
 3.  **High-Frequency Overclock Validator** (`/overclock-validator/[controller]/[connection]`) — True Hz frame-pacing & input latency (`OverclockValidator.astro`).
 4.  **True Circularity Grader** (`/circularity-grader/[controller]/[sensor]`) — A-F statistical grading of outer perimeter (`CircularityGrader.astro`).
 5.  **Haptic Feedback Composer** (`/haptics/[gameEngine]/[effect]`) — Dual-motor waveform generator for WebAudio API (`HapticComposer.astro`).
+6.  **Controller Mod & Repair Builder** (`/mods/[controller]/[bdm]/[modType]`) — PCPartPicker-style WebHID motherboard detector & programmatic compatibility engine for Hall Effect sticks and paddles.
 
 ---
 

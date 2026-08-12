@@ -1,0 +1,212 @@
+---
+// src/components/tools/controller/ModBuilderWorkspace.astro
+import modsData from '@data/modsData.json';
+
+export interface Props {
+  controllerId: string;
+  initialBdm?: string;
+  categoryFilter?: string;
+}
+
+const { controllerId, initialBdm = 'all', categoryFilter } = Astro.props;
+
+const allCategories = modsData.modCategories;
+const categories = categoryFilter 
+  ? allCategories.filter((cat) => cat.id === categoryFilter)
+  : allCategories;
+
+const allMods = modsData.mods.filter((m) => m.controllerId === controllerId);
+---
+
+<div id="mod-workspace" class="flex flex-col gap-12" data-controller-id={controllerId} data-initial-bdm={initialBdm}>
+  {categories.map((category) => {
+    const categoryMods = allMods.filter((m) => m.categoryId === category.id);
+    if (categoryMods.length === 0) return null;
+
+    return (
+      <section class="mod-category-section" data-category-id={category.id}>
+        <div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 pb-4 mb-6 border-b border-[var(--color-border-subtle)]">
+          <div>
+            <h3 class="text-xl sm:text-2xl font-bold text-white flex items-center gap-2.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-[var(--color-accent)]"></span>
+              {category.name}
+            </h3>
+            <p class="text-xs sm:text-sm text-[var(--color-text-secondary)] mt-1 max-w-3xl">
+              {category.description}
+            </p>
+          </div>
+          <span class="category-match-count text-xs font-mono text-[var(--color-text-tertiary)] shrink-0">
+            {categoryMods.length} parts verified
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 parts-grid">
+          {categoryMods.map((mod) => {
+            const isInitiallyVisible = initialBdm === 'all' || mod.compatibleMotherboards.includes(initialBdm);
+            const targetBdm = initialBdm !== 'all' ? initialBdm : mod.compatibleMotherboards[0];
+            const guideUrl = `/mods/${mod.controllerId}/${targetBdm}/${mod.categoryId}`;
+
+            return (
+              <div 
+                class={`mod-part-card p-5 sm:p-6 rounded-[20px] bg-[var(--color-surface-1)] border border-[var(--color-border-default)] hover:border-[var(--color-accent)] transition-all duration-300 flex flex-col justify-between group relative overflow-hidden ${
+                  isInitiallyVisible ? '' : 'hidden'
+                }`}
+                data-mod-id={mod.id}
+                data-compatible-bdms={JSON.stringify(mod.compatibleMotherboards)}
+              >
+                <!-- Subtle card hover gradient -->
+                <div class="absolute inset-0 bg-gradient-to-br from-[var(--color-accent)]/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+
+                <div class="relative z-10">
+                  <div class="flex items-start justify-between gap-4 mb-3">
+                    <div>
+                      <span class="text-[11px] font-mono font-bold tracking-widest text-[var(--color-accent-hover)] uppercase">
+                        {mod.brand}
+                      </span>
+                      <h4 class="text-lg font-bold text-white leading-snug mt-0.5 group-hover:text-blue-400 transition-colors">
+                        {mod.name}
+                      </h4>
+                    </div>
+                    <span class="px-3 py-1 rounded-lg bg-[var(--color-emerald)]/10 border border-[var(--color-emerald)]/25 text-[var(--color-emerald)] font-bold text-sm whitespace-nowrap">
+                      Est. {mod.priceRange}
+                    </span>
+                  </div>
+
+                  <!-- Badges: Difficulty & Soldering -->
+                  <div class="flex flex-wrap items-center gap-2 mb-4">
+                    <span class="text-xs px-2.5 py-1 rounded-md bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] font-medium border border-[var(--color-border-subtle)]">
+                      Difficulty: {mod.difficulty}
+                    </span>
+
+                    {mod.solderingRequired ? (
+                      <span class="text-xs px-2.5 py-1 rounded-md bg-red-500/10 text-red-400 font-medium border border-red-500/20 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                        Soldering Required
+                      </span>
+                    ) : mod.solderingOptional ? (
+                      <span class="text-xs px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-400 font-medium border border-amber-500/20 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                        Soldering Optional
+                      </span>
+                    ) : (
+                      <span class="text-xs px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 font-medium border border-emerald-500/20 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        100% Solderless
+                      </span>
+                    )}
+                  </div>
+
+                  <!-- Key Features -->
+                  {mod.features && (
+                    <ul class="space-y-1.5 mb-5 text-xs text-[var(--color-text-secondary)]">
+                      {mod.features.map((feature: string) => (
+                        <li class="flex items-start gap-2">
+                          <svg class="w-3.5 h-3.5 text-[var(--color-emerald)] shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <!-- Compatible Revisions Tags -->
+                  <div class="pt-3 border-t border-[var(--color-border-subtle)] mb-5">
+                    <div class="text-[10px] font-mono uppercase tracking-wider text-[var(--color-text-tertiary)] mb-1.5">
+                      Guaranteed Motherboard Fit:
+                    </div>
+                    <div class="flex flex-wrap gap-1.5">
+                      {mod.compatibleMotherboards.map((mbId: string) => (
+                        <span class="text-[11px] font-mono font-semibold px-2 py-0.5 rounded bg-[var(--color-surface-2)] text-[var(--color-text-primary)] border border-[var(--color-border-subtle)] uppercase">
+                          {mbId}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Internal Guide CTA / Verified State -->
+                <div class="relative z-10 pt-2 flex items-center gap-2">
+                  <a 
+                    href={guideUrl}
+                    class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--color-surface-2)] hover:bg-[var(--color-accent)] hover:text-white text-[var(--color-text-primary)] font-semibold text-xs transition-all duration-200 border border-[var(--color-border-default)] group-hover:border-[var(--color-accent)]/50"
+                  >
+                    <span>View Installation &amp; Specs</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                  </a>
+
+                  <div class="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold select-none" title="Verified Hardware Fit">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    <span class="hidden sm:inline">Verified</span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <!-- Empty category fallback -->
+        <div class="category-empty-state hidden p-8 rounded-[20px] bg-[var(--color-surface-1)] border border-dashed border-[var(--color-border-default)] text-center text-sm text-[var(--color-text-secondary)] mt-2">
+          No parts in this category are compatible with the selected revision. Try viewing all revisions or check other categories.
+        </div>
+      </section>
+    );
+  })}
+</div>
+
+<script>
+  function setupModWorkspace() {
+    const workspace = document.getElementById('mod-workspace');
+    if (!workspace) return;
+
+    function applyFilter(bdmId: string) {
+      const sections = workspace.querySelectorAll('.mod-category-section');
+
+      sections.forEach((section) => {
+        const cards = section.querySelectorAll('.mod-part-card');
+        const emptyState = section.querySelector('.category-empty-state');
+        const countLabel = section.querySelector('.category-match-count');
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+          const compatibleBdms = JSON.parse(card.getAttribute('data-compatible-bdms') || '[]');
+          
+          if (bdmId === 'all' || compatibleBdms.includes(bdmId)) {
+            card.classList.remove('hidden');
+            visibleCount++;
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+
+        if (countLabel) {
+          countLabel.textContent = `${visibleCount} part${visibleCount === 1 ? '' : 's'} verified`;
+        }
+
+        if (visibleCount === 0) {
+          emptyState?.classList.remove('hidden');
+        } else {
+          emptyState?.classList.add('hidden');
+        }
+      });
+    }
+
+    // Listen for custom event from BDM detector
+    window.addEventListener('ct:bdm-changed', (e: any) => {
+      if (e.detail && e.detail.bdmId) {
+        applyFilter(e.detail.bdmId);
+      }
+    });
+
+    // Check if initial BDM is set
+    const initialBdm = workspace.getAttribute('data-initial-bdm');
+    if (initialBdm && initialBdm !== 'all') {
+      applyFilter(initialBdm);
+    }
+  }
+
+  document.addEventListener('astro:page-load', setupModWorkspace);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupModWorkspace);
+  } else {
+    setupModWorkspace();
+  }
+</script>

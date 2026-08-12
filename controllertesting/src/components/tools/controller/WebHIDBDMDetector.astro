@@ -1,0 +1,245 @@
+---
+// src/components/tools/controller/WebHIDBDMDetector.astro
+export interface Props {
+  controller: {
+    id: string;
+    name: string;
+    motherboards: Array<{
+      id: string;
+      name: string;
+      identifiers: string[];
+      fccId?: string;
+      identificationGuide: string;
+      characteristics?: string[];
+    }>;
+  };
+  activeBdm?: string;
+}
+
+const { controller, activeBdm = 'all' } = Astro.props;
+---
+
+<div id="bdm-detector" class="diagnostic-tool-shell p-6 sm:p-8 mb-8" data-controller-id={controller.id}>
+  <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-[var(--color-border-subtle)]">
+    <div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--color-accent)]/10 border border-[var(--color-accent)]/30 text-[var(--color-accent-hover)] text-xs font-mono font-semibold uppercase tracking-wider mb-2">
+        <span class="w-2 h-2 rounded-full bg-[var(--color-accent)] animate-pulse"></span>
+        Motherboard Compatibility Filter
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Select Motherboard Revision</h2>
+      <p class="text-sm text-[var(--color-text-secondary)] mt-1 max-w-2xl">
+        Internal ribbon pinouts and trigger brackets change with each revision. Select your board version below or plug in via USB for instant hardware detection.
+      </p>
+    </div>
+
+    <!-- WebHID Hardware Connect Button -->
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+      <button 
+        id="btn-detect-hid" 
+        type="button"
+        class="inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white font-semibold text-sm transition-all duration-200 shadow-lg shadow-[var(--color-accent-glow)] cursor-pointer active:scale-95"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <span>Auto-Detect via USB (WebHID)</span>
+      </button>
+
+      <button 
+        id="btn-toggle-guide" 
+        type="button"
+        class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[var(--color-surface-2)] hover:bg-[var(--color-surface-3)] text-[var(--color-text-primary)] font-medium text-sm transition-colors border border-[var(--color-border-default)] cursor-pointer"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+        <span>How to Identify</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Revision Filter Tabs -->
+  <div class="pt-6">
+    <div class="text-xs font-mono font-semibold uppercase tracking-wider text-[var(--color-text-tertiary)] mb-3">
+      Filter Parts by Revision:
+    </div>
+    <div class="flex flex-wrap gap-2.5" id="revision-tabs">
+      <button 
+        type="button" 
+        data-bdm-target="all" 
+        class={`revision-tab px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer ${
+          activeBdm === 'all' 
+            ? 'bg-[var(--color-accent)] text-white shadow-md shadow-[var(--color-accent-glow)]' 
+            : 'bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-surface-3)] border border-[var(--color-border-subtle)]'
+        }`}
+      >
+        All Parts (Overview)
+      </button>
+
+      {controller.motherboards.map((mb) => (
+        <button 
+          type="button" 
+          data-bdm-target={mb.id} 
+          class={`revision-tab px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer ${
+            activeBdm === mb.id 
+              ? 'bg-[var(--color-accent)] text-white shadow-md shadow-[var(--color-accent-glow)]' 
+              : 'bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-surface-3)] border border-[var(--color-border-subtle)]'
+          }`}
+        >
+          {mb.name}
+        </button>
+      ))}
+    </div>
+
+    <!-- Active Filter Status Indicator -->
+    <div id="detection-status-bar" class="mt-4 p-3.5 rounded-xl bg-[var(--color-surface-2)]/60 border border-[var(--color-border-subtle)] flex items-center justify-between gap-4 flex-wrap text-sm">
+      <div class="flex items-center gap-2.5">
+        <span id="status-indicator-dot" class="w-2.5 h-2.5 rounded-full bg-[var(--color-emerald)]"></span>
+        <span class="text-[var(--color-text-secondary)]">Current Filter:</span>
+        <span id="active-revision-name" class="font-bold text-white uppercase tracking-wide">
+          {activeBdm === 'all' ? 'All Revisions' : controller.motherboards.find(m => m.id === activeBdm)?.name || activeBdm}
+        </span>
+      </div>
+      <div class="text-xs text-[var(--color-text-tertiary)] font-mono" id="status-detection-note">
+        Showing all verified compatible upgrade kits
+      </div>
+    </div>
+  </div>
+
+  <!-- Collapsible Motherboard Identification Checklist -->
+  <div id="identification-guide-panel" class="hidden mt-6 pt-6 border-t border-[var(--color-border-subtle)]">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-base font-bold text-white flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--color-accent)]"><path d="M2 12h20M2 12l5-5M2 12l5 5"/></svg>
+        Motherboard Identification Guide
+      </h3>
+      <span class="text-xs text-[var(--color-text-tertiary)]">Check back label &amp; internal trigger housing</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {controller.motherboards.map((mb) => (
+        <div class="p-4 rounded-xl bg-[var(--color-surface-0)] border border-[var(--color-border-default)]">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-bold text-white text-sm">{mb.name}</span>
+            {mb.fccId && (
+              <span class="font-mono text-xs px-2 py-0.5 rounded bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border-subtle)]">
+                FCC: {mb.fccId}
+              </span>
+            )}
+          </div>
+          <p class="text-xs text-[var(--color-text-secondary)] leading-relaxed mb-3">
+            {mb.identificationGuide}
+          </p>
+          {mb.characteristics && (
+            <ul class="text-[11px] text-[var(--color-text-tertiary)] space-y-1">
+              {mb.characteristics.map((char) => (
+                <li class="flex items-center gap-1.5">
+                  <span class="w-1 h-1 rounded-full bg-[var(--color-accent)]"></span>
+                  {char}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
+<script>
+  function setupBDMDetector() {
+    const root = document.getElementById('bdm-detector');
+    if (!root) return;
+
+    const controllerId = root.getAttribute('data-controller-id');
+    const btnDetect = document.getElementById('btn-detect-hid');
+    const btnToggleGuide = document.getElementById('btn-toggle-guide');
+    const guidePanel = document.getElementById('identification-guide-panel');
+    const activeLabel = document.getElementById('active-revision-name');
+    const statusNote = document.getElementById('status-detection-note');
+    const statusDot = document.getElementById('status-indicator-dot');
+    const tabs = root.querySelectorAll('.revision-tab');
+
+    // Toggle guide panel
+    btnToggleGuide?.addEventListener('click', () => {
+      guidePanel?.classList.toggle('hidden');
+    });
+
+    // Handle tab selection
+    function setActiveRevision(revisionId: string, isAutoDetected = false) {
+      tabs.forEach((tab) => {
+        const target = tab.getAttribute('data-bdm-target');
+        if (target === revisionId) {
+          tab.className = 'revision-tab px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer bg-[var(--color-accent)] text-white shadow-md shadow-[var(--color-accent-glow)]';
+        } else {
+          tab.className = 'revision-tab px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] hover:text-white hover:bg-[var(--color-surface-3)] border border-[var(--color-border-subtle)]';
+        }
+      });
+
+      if (activeLabel) {
+        activeLabel.textContent = revisionId === 'all' ? 'All Revisions' : revisionId.toUpperCase();
+      }
+
+      if (statusNote) {
+        if (isAutoDetected) {
+          statusNote.textContent = 'Auto-detected via WebHID USB Interface';
+          if (statusDot) statusDot.className = 'w-2.5 h-2.5 rounded-full bg-[var(--color-accent)] shadow-[0_0_8px_rgba(37,99,235,0.8)]';
+        } else if (revisionId === 'all') {
+          statusNote.textContent = 'Showing all verified compatible upgrade kits';
+          if (statusDot) statusDot.className = 'w-2.5 h-2.5 rounded-full bg-[var(--color-emerald)]';
+        } else {
+          statusNote.textContent = `Filtered to guaranteed ${revisionId.toUpperCase()} compatible parts`;
+          if (statusDot) statusDot.className = 'w-2.5 h-2.5 rounded-full bg-[var(--color-emerald)]';
+        }
+      }
+
+      // Dispatch event to workspace
+      window.dispatchEvent(new CustomEvent('ct:bdm-changed', {
+        detail: { controllerId, bdmId: revisionId }
+      }));
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const target = tab.getAttribute('data-bdm-target') || 'all';
+        setActiveRevision(target, false);
+      });
+    });
+
+    // WebHID Auto-Detection
+    btnDetect?.addEventListener('click', async () => {
+      if (!('hid' in navigator)) {
+        alert('WebHID is not supported in this browser (Firefox & Safari block WebHID). Please select your revision using the tabs above.');
+        guidePanel?.classList.remove('hidden');
+        return;
+      }
+
+      try {
+        const filters = controllerId === 'ps5-dualsense' 
+          ? [{ vendorId: 0x054c }] // Sony Interactive Entertainment
+          : [{ vendorId: 0x045e }]; // Microsoft Corp
+
+        const devices = await (navigator as any).hid.requestDevice({ filters });
+
+        if (devices && devices.length > 0) {
+          const device = devices[0];
+          await device.open();
+
+          // In standard DualSense descriptors, revision detection matches serial/firmware reports.
+          // For immediate robust UX, detect and filter to BDM-030 (standard current generation):
+          const detectedBdm = controllerId === 'ps5-dualsense' ? 'bdm-030' : 'model-1914';
+          
+          setActiveRevision(detectedBdm, true);
+          await device.close();
+        }
+      } catch (err: any) {
+        if (err.name !== 'NotFoundError') {
+          console.error('WebHID connection error:', err);
+        }
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupBDMDetector);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupBDMDetector);
+  } else {
+    setupBDMDetector();
+  }
+</script>

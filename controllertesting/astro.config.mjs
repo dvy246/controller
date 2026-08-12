@@ -37,7 +37,7 @@ export default defineConfig({
         item.priority = 0.9;
         item.changefreq = 'monthly';
         item.lastmod = dataDate;
-      } else if (/^\/(controller|compare|fix|settings|fit|best-controller-for|learn|connect|calibrate|deadzone-calculator|overclock-validator|circularity-grader)\//.test(path)) {
+      } else if (/^\/(controller|compare|fix|settings|fit|best-controller-for|learn|connect|calibrate|deadzone-calculator|overclock-validator|circularity-grader|mods)\//.test(path)) {
         item.priority = 0.9;
         item.changefreq = 'monthly';
         item.lastmod = '2026-08-10';

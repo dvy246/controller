@@ -1,7 +1,8 @@
 ---
 /**
  * /test/controller/dpad — 8-Way D-Pad Tester
- * SEO Title: Controller D-Pad Test — Test Directional Pad & Diagonals Online
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: controller dpad test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,80 +16,133 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I test D-pad diagonal inputs (↖ ↗ ↙ ↘)?',
-    answer: 'Press two adjacent direction buttons on your D-pad simultaneously (e.g., Up + Right). The diagonal chip visualizer above will illuminate in green when the combination is recognized cleanly.',
+    question: 'How do I test D-pad diagonal inputs (↖ ↗ ↙ ↘) on my controller?',
+    answer: 'Press two adjacent directional pads simultaneously (such as Up + Right or Down + Left). The interactive 8-way directional matrix visualizer above illuminates the corresponding diagonal node when both inputs register cleanly and simultaneously in the Gamepad API.',
   },
   {
-    question: 'Why are D-pad diagonals important for fighting games?',
-    answer: 'In fighting games (Street Fighter, Tekken, Mortal Kombat), special moves and combos rely on quarter-circle and diagonal inputs. Missing diagonal registers cause dropped combos.',
+    question: 'Why are D-pad diagonals critical for fighting games and speedrunning?',
+    answer: 'In fighting games (Street Fighter 6, Tekken 8, Mortal Kombat 1), special motion inputs (quarter-circle 236, dragon punch 623) require rapid, uninterrupted transitions between cardinal and diagonal states. Missed diagonal registers drop combos and fail motion buffers.',
   },
   {
-    question: 'Does this test membrane D-pads and mechanical D-pads?',
-    answer: 'Yes! It tests standard silicone membrane D-pads (DualSense, DualShock 4) and tactile switch D-pads (Xbox Series X/S, Switch Pro).',
+    question: 'What causes a controller D-pad to miss diagonal inputs?',
+    answer: 'Missing diagonals are typically caused by a flattened central pivot ball beneath the plastic D-pad cross or hardened conductive silicone rubber pads that prevent both adjacent contacts from bottoming out simultaneously under moderate thumb pressure.',
   },
+  {
+    question: 'What is the difference between membrane and tactile clicky D-pads?',
+    answer: 'PlayStation DualSense controllers use one-piece silicone rubber membranes over a central pivot rock. Xbox Series X/S controllers use a faceted 8-way metallic dome switch matrix over tactile surface-mount microswitches, offering distinct acoustic clicks and instant diagonal actuation.',
+  },
+  {
+    question: 'How do I fix an accidental opposite-direction D-pad input?',
+    answer: 'If pressing Left occasionally triggers Up or Down, the central plastic pivot post has worn down, allowing the D-pad to rock flat. Placing a small circular spacer (such as 0.5mm plastic shim) beneath the center pivot restores proper directional separation.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Controller D-Pad Test: 8-Direction Check | ControllerTesting"
-  description="Test your controller's D-pad for diagonal precision and directional accuracy online free. Check all 8 directions on PS5, Xbox, Switch, and PC."
+  title="Controller D-Pad Test — Free Online 8-Direction & Diagonal Precision Tester | ControllerTesting.com"
+  description="Test your controller's D-pad for 8-way precision and diagonal accuracy online for free. Check cardinal and diagonal inputs on PS5, Xbox, Switch, and PC."
+  keywords="controller dpad test, 8 way dpad test, gamepad diagonal test, fighting game dpad check, ps5 dpad test, xbox dpad diagonal check"
   toolName="Controller D-Pad Test"
   category="Controller Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <DpadTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">D-Pad Performance Benchmarks</h2>
+      <h2 class="section-title">D-Pad Directional Performance Benchmarks</h2>
       <p class="results-text">
-        All cardinal and diagonal inputs should register smoothly. If diagonal inputs fail to register while individual directions work, the internal D-pad pivot rubber is worn or misaligned.
+        All 4 cardinal directions (Up, Down, Left, Right) and 4 intercardinal diagonals (Up-Left, Up-Right, Down-Left, Down-Right) should register cleanly:
       </p>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">Clean 8-Way Bridging (Healthy)</strong>
+          <p class="legend-text">Diagonals trigger effortlessly with light rolling thumb pressure; zero accidental opposite-cardinal inputs.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">Stiff Diagonals (Wear)</strong>
+          <p class="legend-text">Requires heavy, forceful thumb pressure to bridge diagonals. Caused by hardened silicone membrane elastomer.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">Opposite-Input Rock (Fault)</strong>
+          <p class="legend-text">Pressing Right triggers accidental Up/Down. Indicates snapped or flattened central pivot fulcrum.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Run full diagnostic checkup</h3>
-        <p class="export-desc">Combine D-pad diagnostics with stick drift and button testing.</p>
+        <h3 class="export-title">Need a complete gamepad hardware checkup?</h3>
+        <p class="export-desc">Combine 8-way D-pad diagnostics with stick drift, button matrix, and analog trigger tests.</p>
       </div>
       <div class="export-buttons">
         <a href="/test/controller/full-diagnostic" class="btn-primary">Run Full Wizard</a>
+        <a href="/test/controller/fight-stick" class="btn-secondary">Fight Stick Tester</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
     <a href="/test/controller/buttons" class="tool-card card-base card-hover">
       <h3 class="tool-name">Button Tester</h3>
       <p class="tool-desc">Test face buttons and shoulder bumpers.</p>
     </a>
+    <a href="/test/controller/fight-stick" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Fight Stick & Hitbox</h3>
+      <p class="tool-desc">Test Vewlix layouts and SOCD cleaning rules.</p>
+    </a>
     <a href="/test/controller/drift" class="tool-card card-base card-hover">
       <h3 class="tool-name">Stick Drift Tester</h3>
-      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+      <p class="tool-desc">Isolated 0.1% stick drift precision.</p>
     </a>
     <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
       <h3 class="tool-name">Polling Rate Checker</h3>
-      <p class="tool-desc">Measure input rate in Hz.</p>
+      <p class="tool-desc">Measure input update frequency in Hz.</p>
     </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Why D-Pad Precision Matters for Fighting Games & Retro Gaming</h2>
+    <h2>Why 8-Way D-Pad Precision Matters in Competitive Gaming</h2>
     <p>
-      Directional pads are crucial for precise movement in 2D platformers and executing quarter-circle motion inputs in fighting games.
+      The directional pad (D-pad) remains the premier input mechanism for 2D fighting games, retro platformers, and rhythm games.
+    </p>
+    <p>
+      Unlike analog thumbsticks that calculate continuous angular floats, D-pads rely on discrete mechanical switch closures to communicate movement. In fighting games, executing a quarter-circle motion (<code>↓ ↘ →</code>) requires bridging the down and forward contacts cleanly without dropping the diagonal frame.
     </p>
 
     <h3>D-Pad Mechanical Architectures</h3>
     <ul>
-      <li><strong>Silicone Rubber Membrane:</strong> Soft, quiet feel found in DualSense and DualShock 4 controllers.</li>
-      <li><strong>Tactile Clicky Microswitches:</strong> Clicky, tactile mechanical switches found in Xbox Series controllers for fast actuation.</li>
+      <li>
+        <strong>Central Pivot Membrane D-Pads:</strong> Found in PlayStation DualSense and Nintendo Switch Pro controllers. A rigid plastic cross pivots on a central fulcrum ball above a single four-legged silicone rubber membrane. Pushing diagonally tilts the cross to depress two adjacent carbon pads simultaneously.
+      </li>
+      <li>
+        <strong>Metallic Dome Switch D-Pads:</strong> Found in the Xbox Series X/S faceted dish. Four surface-mounted clicky metal dome switches are actuated by plastic rocker arms, providing tactile click feedback, shorter actuation travel, and high diagonal accuracy.
+      </li>
     </ul>
+
+    <h2>Diagnosing D-Pad Failure Modes</h2>
+    <ol>
+      <li>
+        <strong>Pivot Ball Wear (Opposite-Input Rocking):</strong> When the central pivot post wears down, pressing "Right" firmly can depress the entire assembly flat, accidentally bridging the "Up" or "Down" contact.
+      </li>
+      <li>
+        <strong>Silicone Membrane Hardening:</strong> Over time, silicone rubber loses elasticity, requiring excessive thumb force to register diagonal inputs.
+      </li>
+      <li>
+        <strong>Carbon Residue Wear:</strong> Heavy sliding motions in fighting games grind away the conductive carbon pill, causing intermittent directional drops during continuous inputs.
+      </li>
+    </ol>
   </Fragment>
 </ToolLayout>
 

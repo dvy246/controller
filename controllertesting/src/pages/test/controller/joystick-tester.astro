@@ -1,7 +1,8 @@
 ---
 /**
- * /test/controller/joystick-tester — Joystick & Flight Stick Tester: HOTAS Input Check
- * Target keyword: joystick-tester controller tester
+ * /test/controller/joystick-tester — Joystick & Flight Stick Tester
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: joystick tester
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -11,85 +12,44 @@ import PremiumGuideCard from '@components/seo/PremiumGuideCard.astro';
 const breadcrumbs = [
   { name: 'Tests', url: '/test/controller' },
   { name: 'Controller Tests', url: '/test/controller' },
-  { name: 'Joystick & Flight Stick Tester' },
+  { name: 'Joystick Tester' },
 ];
 
 const faqs = [
   {
-    "question": "Why is my flight stick pulling to one side?",
-    "answer": "This is often due to improper software calibration or physical sensor misalignment. Re-calibrating in Windows or the manufacturer's software usually fixes it."
+    question: 'How do I test a PC joystick or flight stick online?',
+    answer: 'Connect your joystick or HOTAS to your computer via USB, click anywhere on this page to initialize the browser Gamepad API, and move the stick through its full Pitch and Roll range. The live visualizer displays real-time X/Y coordinates, resting center precision, and 8-way hat switch actuations.',
+  },
+  {
+    question: 'Why is my joystick pulling or drifting to one side in flight sims?',
+    answer: 'Joystick drift is caused by physical spring fatigue in the center gimbal, potentiometer carbon track wear, or uncalibrated zero-point offsets in the operating system. Recalibrating in Windows Game Controllers (joy.cpl) or establishing a 2–3% inner deadzone resolves minor drift.',
+  },
+  {
+    question: 'What is the difference between potentiometer and Hall-effect joysticks?',
+    answer: 'Traditional joysticks use contact potentiometers that wear down after 500 hours, producing electrical jitter. Modern flight sticks (such as VKB, Virpil, and Thrustmaster T.16000M) use contactless 3D Hall-effect magnetic sensors with 16-bit resolution and zero physical wear.',
+  },
+  {
+    question: 'Can I test HOTAS throttle quadrants and rudder pedals with this tool?',
+    answer: 'Yes! The browser Gamepad API maps throttle sliders, twist rudder yaw axes, and external rudder toe brakes as standard analog axes (Axes 2 through 6).',
+  },
+  {
+    question: 'How do I test POV hat switches and secondary multi-function buttons?',
+    answer: 'Move the 8-way hat switch on your stick head. In the Gamepad API, hat switches register either as 4 discrete digital buttons (Up, Down, Left, Right) or as a fractional axis value (-1.0 to +1.0).',
   }
 ];
-
-const schemaData = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "SoftwareApplication",
-      "name": "Joystick & Flight Stick Tester: HOTAS Input Check",
-      "operatingSystem": "Web Browser",
-      "applicationCategory": "UtilitiesApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "description": "Test HOTAS, flight sticks, and specialized joysticks. Check multi-axis movement, throttle quadrants, and dozens of discrete buttons."
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://controllertesting.com/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Tests",
-          "item": "https://controllertesting.com/test/controller/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "Joystick & Flight Stick Tester",
-          "item": "https://controllertesting.com/test/controller/joystick-tester"
-        }
-      ]
-    },
-    {
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "Why is my flight stick pulling to one side?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "This is often due to improper software calibration or physical sensor misalignment. Re-calibrating in Windows or the manufacturer's software usually fixes it."
-          }
-        }
-      ]
-    }
-  ]
-};
 ---
 
 <ToolLayout
-  title="Joystick & Flight Stick Tester | ControllerTesting"
-  description="Test HOTAS, flight sticks, and specialized joysticks. Check multi-axis movement, throttle quadrants, and dozens of discrete buttons."
+  title="Joystick Tester — Free Online Flight Stick & HOTAS Input Checker | ControllerTesting.com"
+  description="Test PC joysticks, flight sticks, and HOTAS controllers online for free. Check pitch, roll, yaw twist, throttle sliders, and 8-way POV hat switches."
+  keywords="joystick tester, flight stick tester online, hotas test online, test pc joystick, joystick calibration online, arcade joystick test"
   toolName="Joystick & Flight Stick Tester"
-  category="Diagnostic"
+  category="Controller Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
   telemetryEnabled
 >
-  <Fragment slot="head">
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(schemaData)} />
-  </Fragment>
-
   {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <DriftTester />
@@ -98,19 +58,19 @@ const schemaData = {
   {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Diagnostics Results</h2>
+      <h2 class="section-title">Joystick Diagnostics Benchmarks</h2>
       <div class="results-legend-grid">
         <div class="legend-card legend-pass">
-          <strong class="legend-title">0.0% – 2.0% (Healthy)</strong>
-          <p class="legend-text">Normal variance. Your controller is operating flawlessly.</p>
+          <strong class="legend-title">0.0% – 2.0% (Flight Ready)</strong>
+          <p class="legend-text">Zero resting wander on Pitch and Roll. Perfect for high-precision ILS landing approaches in flight sims.</p>
         </div>
         <div class="legend-card legend-warning">
-          <strong class="legend-title">2.1% – 10.0% (Minor Drift)</strong>
-          <p class="legend-text">Slight potentiometer wear detected.</p>
+          <strong class="legend-title">2.1% – 7.0% (Minor Gimbal Play)</strong>
+          <p class="legend-text">Slight center spring play or potentiometer wear. Requires configuring a 3% inner deadzone in DCS or MSFS.</p>
         </div>
         <div class="legend-card legend-fail">
-          <strong class="legend-title">> 10.0% (Severe Drift)</strong>
-          <p class="legend-text">Severe drift detected. Repair is highly recommended.</p>
+          <strong class="legend-title">&gt; 7.0% (Severe Axis Drift)</strong>
+          <p class="legend-text">Severe sensor jitter or broken centering spring. Requires potentiometer cleaning, sensor replacement, or RMA.</p>
         </div>
       </div>
     </div>
@@ -118,27 +78,54 @@ const schemaData = {
 
   {/* ── SEO Repair Guide Section ── */}
   <Fragment slot="export">
-    <PremiumGuideCard title="How do you calibrate a flight stick or HOTAS system?">
+    <PremiumGuideCard title="How to Calibrate a Flight Stick or HOTAS in Windows">
       <p class="text-[var(--color-text-secondary)] leading-relaxed">
-        <strong>You calibrate a flight stick or HOTAS by navigating to your operating system's USB game controller settings, selecting the device, and running the calibration wizard. Move all axes, including the throttle and rudders, to their maximum extents to register full range of motion accurately.</strong>
+        <strong>To calibrate a flight stick in Windows, press <kbd class="px-1.5 py-0.5 rounded bg-[var(--color-surface-2)] text-[var(--color-text-primary)] font-mono text-xs">Win + R</kbd>, type <code>joy.cpl</code>, select your joystick, click Properties &gt; Settings &gt; Calibrate, and follow the wizard. Move the stick, throttle, and rudder pedals through their full mechanical travel to establish accurate travel limits.</strong>
       </p>
       
-      <h3 class="text-lg font-bold text-[var(--color-text-primary)] mt-8 mb-3">Recommended Actions</h3>
+      <h3 class="text-lg font-bold text-[var(--color-text-primary)] mt-8 mb-3">Recommended Diagnostic Steps</h3>
       <p class="text-[var(--color-text-secondary)] leading-relaxed">
-        Start with the <a href="/test/controller/drift">Stick Drift Test</a> to check every axis at rest. A centered stick should sit near zero on pitch, roll, and yaw before you calibrate the throttle and hats.
+        Start by verifying neutral resting centering above. If the crosshair wanders without hand contact, check for cable tension or dry gimbal grease before adjusting software response curves.
       </p>
     </PremiumGuideCard>
   </Fragment>
 
   {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
+    <a href="/test/controller/flight-stick" class="tool-card card-base card-hover">
+      <h3 class="tool-name">HOTAS & Flight Suite</h3>
+      <p class="tool-desc">10-axis HOTAS & 128-button visualizer.</p>
+    </a>
+    <a href="/test/controller/steering-wheel" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Steering Wheel Tester</h3>
+      <p class="tool-desc">900°/1080° rotation & pedal linearity.</p>
+    </a>
     <a href="/test/controller/drift" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Universal Stick Drift Test</h3>
-      <p class="tool-desc">Test any controller across all major platforms.</p>
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">0.1% stick centering detector.</p>
     </a>
-    <a href="/test/controller/buttons" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Button Tester</h3>
-      <p class="tool-desc">Check for sticky or failing face buttons and triggers.</p>
-    </a>
+  </Fragment>
+
+  {/* ── SEO Content Slot ── */}
+  <Fragment slot="content">
+    <h2>Flight Stick & Joystick Mechanical Architecture</h2>
+    <p>
+      Modern joysticks and Hands-On Throttle-And-Stick (HOTAS) systems (such as Logitech G X52/X56, Thrustmaster T.16000M/Warthog, and VKB Gladiator NXT EVO) translate physical pilot inputs into multi-channel digital telemetry.
+    </p>
+
+    <h3>Sensor Mechanics: Potentiometer vs. 3D Hall-Effect Sensors</h3>
+    <ul>
+      <li>
+        <strong>Rotational Potentiometers:</strong> Common in entry-level sticks. Metal wipers slide along resistive carbon tracks, which can wear down over time and create electrical noise near the center detent.
+      </li>
+      <li>
+        <strong>Contactless 3D Magnetic Hall Sensors:</strong> Utilize permanent diametric magnets and Hall-effect ICs to detect magnetic flux angle without mechanical contact, ensuring lifetime precision with 16-bit analog resolution.
+      </li>
+    </ul>
+
+    <h2>Optimizing Axis Response Curves for Simulators</h2>
+    <p>
+      In simulators like <em>Microsoft Flight Simulator 2024</em>, <em>DCS World</em>, and <em>Star Citizen</em>, configuring an S-curve sensitivity profile (exponential curvature) provides fine micro-corrections during aerial refueling and formation flying while preserving full control authority at maximum stick deflection.
+    </p>
   </Fragment>
 </ToolLayout>

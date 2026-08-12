@@ -1,7 +1,8 @@
 ---
 /**
  * /test/mouse/polling-rate — Mouse Polling Rate Checker
- * SEO Title: Mouse Polling Rate Test — Test Mouse Hz & Report Rate Online
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: mouse polling rate test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,84 +16,117 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I test my mouse polling rate (Hz)?',
-    answer: 'Move your mouse cursor rapidly inside the dashed target area above. The tool measures your mouse sensor\'s report interval in milliseconds and displays real-time Hz.',
+    question: 'How do I test my mouse polling rate (Hz) online?',
+    answer: 'Move your mouse cursor rapidly in circles inside the test zone above. The diagnostic engine calculates the millisecond delta between successive mousemove PointerEvents and displays your real-time peak and average polling frequency in Hertz (Hz).',
   },
   {
-    question: 'Is 1000Hz, 4000Hz, or 8000Hz better for gaming?',
-    answer: 'Higher polling rates reduce cursor jitter and input delay. A 1000Hz mouse updates every 1.0ms, while an 8000Hz (8KHz) mouse updates every 0.125ms for ultra-smooth tracking on high-refresh monitors (240Hz+).',
+    question: 'What is the difference between 125Hz, 1000Hz, and 8000Hz (8KHz)?',
+    answer: 'A standard office mouse polls at 125Hz (updates every 8.0ms). A standard gaming mouse polls at 1000Hz (updates every 1.0ms). Modern 8000Hz (8KHz) gaming mice transmit cursor updates every 0.125ms, virtually eliminating cursor position quantization on 240Hz+ displays.',
   },
   {
-    question: 'Why is my mouse polling rate lower than advertised?',
-    answer: 'Ensure your mouse is plugged into a USB 3.0/3.1 port, close background CPU-heavy applications, and enable maximum polling rate in your mouse driver software (Razer Synapse, Logitech G HUB).',
+    question: 'Why does my 4000Hz or 8000Hz mouse cause game stuttering or FPS drops?',
+    answer: '8KHz polling generates up to 8,000 CPU interrupts per second, saturating a single CPU core in game engines (like older DirectX 11 titles) that process window messages on the main render thread. Running a modern multi-threaded CPU and enabling raw input fixes micro-stutter.',
   },
+  {
+    question: 'Why is my mouse polling rate lower than advertised during slow movements?',
+    answer: 'Optical sensors only dispatch USB interrupt packets when physical cursor motion exceeds sensor count thresholds. Slow, deliberate mouse movements naturally report lower instantaneous Hz because fewer report packets are required.',
+  },
+  {
+    question: 'How do I change my mouse polling rate to 1000Hz or higher?',
+    answer: 'Open your mouse manufacturer software (Logitech G HUB, Razer Synapse, Glorious Core, Wootility) and navigate to Device Settings &gt; Polling Rate / Report Rate. Select 1000Hz, 2000Hz, 4000Hz, or 8000Hz.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Mouse Polling Rate Test (Hz) | ControllerTesting"
-  description="Test your gaming mouse polling rate in Hz. Measure 125Hz, 500Hz, 1000Hz, 4000Hz, and 8000Hz report intervals free online."
+  title="Mouse Polling Rate Test — Free Online Mouse Hz & 8KHz Checker | ControllerTesting.com"
+  description="Test your gaming mouse polling rate in Hz online for free. Measure 125Hz, 500Hz, 1000Hz, 4000Hz, and 8000Hz (8KHz) report intervals and jitter."
+  keywords="mouse polling rate test, mouse hz test online, test mouse report rate, 8000hz mouse test, check mouse polling rate, 1000hz mouse checker"
   toolName="Mouse Polling Rate Checker"
   category="Mouse Diagnostic"
   categoryUrl="/test/mouse"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <MousePollingTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Mouse Polling Rate Ratings</h2>
+      <h2 class="section-title">Mouse Polling Rate Performance Tiers</h2>
       <div class="results-legend-grid">
         <div class="legend-card legend-pass">
-          <strong class="legend-title">1000Hz – 8000Hz (0.125ms – 1ms)</strong>
-          <p class="legend-text">Esports standard. Ultra-smooth tracking for 240Hz+ monitors.</p>
+          <strong class="legend-title">1000Hz – 8000Hz (0.125ms – 1.0ms)</strong>
+          <p class="legend-text">Competitive Esports Tier. Near-zero cursor delay; eliminates micro-stutter on 240Hz, 360Hz, and 540Hz displays.</p>
         </div>
         <div class="legend-card legend-warning">
-          <strong class="legend-title">500Hz (2ms)</strong>
-          <p class="legend-text">Standard gaming rate. Great balance of performance and CPU usage.</p>
+          <strong class="legend-title">500Hz (2.0ms)</strong>
+          <p class="legend-text">Standard Gaming Baseline. Balanced tracking performance with minimal CPU interrupt overhead.</p>
         </div>
         <div class="legend-card legend-fail">
-          <strong class="legend-title">125Hz (8ms)</strong>
-          <p class="legend-text">Office mouse default. High input delay in fast shooters.</p>
+          <strong class="legend-title">125Hz (8.0ms)</strong>
+          <p class="legend-text">Office Mouse Default. High cursor latency and visible stair-stepping motion in fast-paced FPS shooters.</p>
         </div>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Test mouse click speed (CPS)</h3>
-        <p class="export-desc">Measure how fast you can click in 5s, 10s, or 30s modes.</p>
+        <h3 class="export-title">Need to measure true hardware DPI?</h3>
+        <p class="export-desc">Calculate your optical sensor's true Dots Per Inch (DPI) and test for sensor deviation.</p>
       </div>
       <div class="export-buttons">
-        <a href="/test/mouse/cps" class="btn-primary">CPS Speed Test</a>
+        <a href="/test/mouse/dpi" class="btn-primary">DPI Analyzer</a>
+        <a href="/test/mouse/cps" class="btn-secondary">CPS Speed Test</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
+    <a href="/test/mouse/dpi" class="tool-card card-base card-hover">
+      <h3 class="tool-name">DPI Analyzer</h3>
+      <p class="tool-desc">Calculate true optical mouse sensor DPI.</p>
+    </a>
+    <a href="/test/mouse/click-latency" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Click Latency</h3>
+      <p class="tool-desc">Measure switch response time in ms.</p>
+    </a>
     <a href="/test/mouse/cps" class="tool-card card-base card-hover">
       <h3 class="tool-name">CPS Test</h3>
       <p class="tool-desc">Test clicks per second speed.</p>
     </a>
-    <a href="/test/mouse/click-latency" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Click Latency</h3>
-      <p class="tool-desc">Measure click response delay.</p>
-    </a>
-    <a href="/test/mouse/dpi" class="tool-card card-base card-hover">
-      <h3 class="tool-name">DPI Analyzer</h3>
-      <p class="tool-desc">Calculate mouse DPI sensitivity.</p>
-    </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Why Mouse Polling Rate Is Vital for High-Refresh Gaming</h2>
+    <h2>The Physics of Mouse Report Rates & High-Refresh Displays</h2>
     <p>
-      Mouse polling rate determines how many times per second your optical mouse sensor reports cursor coordinates to the operating system.
+      Your mouse's polling rate (measured in Hertz, <code>Hz</code>) determines how frequently the onboard optical sensor (such as PixArt PAW3395, PAW3950, or Logitech HERO 2) sends USB interrupt packets containing $(X, Y)$ coordinate displacement data to the operating system.
+    </p>
+
+    <h3>Report Intervals & Display Frame Pacing</h3>
+    <ul>
+      <li>
+        <strong>125Hz (8.0ms interval):</strong> On a 240Hz monitor (refreshing every 4.16ms), a 125Hz mouse skips entire video frames between coordinate updates, creating visible cursor judder.
+      </li>
+      <li>
+        <strong>1000Hz (1.0ms interval):</strong> Dispatches 1 report per millisecond, ensuring 4 fresh coordinate packets for every frame displayed at 240Hz.
+      </li>
+      <li>
+        <strong>8000Hz (0.125ms interval):</strong> Dispatches 8 reports per millisecond, aligning with pixel scanout on ultra-high-refresh 360Hz, 480Hz, and 540Hz OLED gaming monitors.
+      </li>
+    </ul>
+
+    <h2>USB Host Controllers & 8KHz CPU Interrupt Demands</h2>
+    <p>
+      Running 8000Hz polling requires connecting your mouse directly to a rear motherboard USB 3.2 Gen 2 port directly routed to the CPU PCIe lanes (avoiding unpowered front panel USB headers or external hubs) to prevent packet queue congestion and USB bus resets.
     </p>
   </Fragment>
 </ToolLayout>

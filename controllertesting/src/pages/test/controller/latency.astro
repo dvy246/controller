@@ -1,7 +1,8 @@
 ---
 /**
  * /test/controller/latency — Controller Latency & Reaction Delay Tool
- * SEO Title: Controller Input Latency Test — Test Gamepad Reaction Speed Online
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: controller latency test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,93 +16,117 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I test my controller input latency?',
-    answer: 'Connect your controller above, click Start Reaction Test, and press any button immediately when the screen turns emerald green. The tool measures your reaction delay in milliseconds.',
+    question: 'How do I test my controller input latency online?',
+    answer: 'Connect your controller via USB or Bluetooth, click Start Reaction Test above, and press any face button or trigger as soon as the screen flashes emerald green. The high-resolution timer (using window.performance.now) calculates your end-to-end reaction latency in milliseconds.',
   },
   {
-    question: 'What is a good controller reaction latency time?',
-    answer: 'Average human visual reaction speed is between 190ms and 250ms. Competitive gamers using 1000Hz overclocked controllers regularly achieve response times under 170ms.',
+    question: 'What is a good controller reaction latency benchmark?',
+    answer: 'Standard human visual reaction time averages between 190ms and 240ms. Competitive esports players using 1000Hz overclocked wired controllers and 240Hz+ gaming monitors regularly achieve composite times under 160ms to 175ms.',
   },
   {
-    question: 'Does wireless Bluetooth add input latency compared to USB cable?',
-    answer: 'Yes. Bluetooth adds 4ms to 8ms of input delay compared to a wired USB connection. Overclocking USB polling rates to 1000Hz minimizes hardware latency to sub-1ms levels.',
+    question: 'How much input lag does Bluetooth add compared to a wired USB connection?',
+    answer: 'Standard Bluetooth adds between 4ms and 12ms of transport latency due to wireless packet queuing and interference. Direct USB connections reduce transport latency to 1ms (at 1000Hz polling rate) or 4ms (at standard 250Hz XInput).',
   },
+  {
+    question: 'What constitutes the "Total System Latency" pipeline in gaming?',
+    answer: 'Total system latency is the sum of: Controller Hardware Actuation (~1ms) + Polling Transport Lag (1–8ms) + Game Engine Processing (~16ms at 60fps) + GPU Render Queue (~5–10ms) + Display Scanout & Pixel Response (~2–10ms) + Human Neural Reaction Time (~180–220ms).',
+  },
+  {
+    question: 'How do I minimize controller input delay on PC?',
+    answer: 'Connect directly to a motherboard USB 3.0 port with a high-quality data cable, overclock your PlayStation controller to 1000Hz using HIDUSBF, enable Nvidia Reflex Low Latency or AMD Anti-Lag in game settings, and use a high refresh rate monitor with low display lag.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Controller Input Latency Test: Lag Check | ControllerTesting"
-  description="Measure your controller's input latency and response time online free. Compare wired vs wireless delay on PS5, Xbox, Switch, and PC."
+  title="Controller Input Latency Test — Free Online Gamepad Response Timer | ControllerTesting.com"
+  description="Measure your controller input latency and reaction speed online for free. Benchmark wired vs Bluetooth lag on PS5, Xbox, Switch, and PC controllers."
+  keywords="controller latency test, gamepad input lag test, controller reaction time test, bluetooth vs wired controller lag, ps5 controller latency test, xbox input delay test"
   toolName="Controller Input Latency Test"
   category="Controller Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <LatencyEstimator />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Reaction Speed Benchmarks</h2>
+      <h2 class="section-title">Composite Reaction Speed Benchmarks</h2>
       <div class="results-legend-grid">
         <div class="legend-card legend-pass">
           <strong class="legend-title">&lt; 180 ms (Esports Tier)</strong>
-          <p class="legend-text">Top 5% human reaction speed. Ideal for competitive FPS and fighting games.</p>
+          <p class="legend-text">Top 5% human reaction speed combined with low-latency wired hardware. Instant trigger response in tactical shooters.</p>
         </div>
         <div class="legend-card legend-warning">
-          <strong class="legend-title">180 – 240 ms (Average Gamer)</strong>
-          <p class="legend-text">Standard human reaction window. Great performance for casual and ranked play.</p>
+          <strong class="legend-title">180 – 240 ms (Standard Gamer)</strong>
+          <p class="legend-text">Average human visual reaction window. Excellent responsiveness for ranked battle royale and fighting games.</p>
         </div>
         <div class="legend-card legend-fail">
-          <strong class="legend-title">&gt; 250 ms (Below Average)</strong>
-          <p class="legend-text">Slower response. Consider switching from Bluetooth to wired USB mode.</p>
+          <strong class="legend-title">&gt; 240 ms (High Total Delay)</strong>
+          <p class="legend-text">Noticeable visual or input delay. Consider switching from Bluetooth to wired USB or enabling Game Mode on your monitor.</p>
         </div>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Test your controller polling rate in Hz</h3>
-        <p class="export-desc">Check if your controller reports at 125Hz, 250Hz, 500Hz, or 1000Hz over USB.</p>
+        <h3 class="export-title">Need to check input reporting frequency?</h3>
+        <p class="export-desc">Measure your controller’s USB polling rate in Hz (125Hz, 250Hz, 500Hz, 1000Hz) and packet jitter.</p>
       </div>
       <div class="export-buttons">
-        <a href="/test/controller/polling-rate" class="btn-primary">Check Polling Rate</a>
+        <a href="/test/controller/polling-rate" class="btn-primary">Check Polling Rate (Hz)</a>
+        <a href="/test/controller/full-diagnostic" class="btn-secondary">Full Diagnostic</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
     <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
       <h3 class="tool-name">Polling Rate Checker</h3>
       <p class="tool-desc">Measure input report frequency in Hz.</p>
     </a>
-    <a href="/test/controller/drift" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Stick Drift Tester</h3>
-      <p class="tool-desc">Test 0.1% stick drift precision.</p>
-    </a>
     <a href="/test/controller/buttons" class="tool-card card-base card-hover">
       <h3 class="tool-name">Button Tester</h3>
-      <p class="tool-desc">Test button ghosting and click speed.</p>
+      <p class="tool-desc">Test button ghosting and mechanical switch chatter.</p>
+    </a>
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Tester</h3>
+      <p class="tool-desc">Isolated 0.1% stick centering detector.</p>
     </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>How Controller Input Latency Impacts Gaming Performance</h2>
+    <h2>The Anatomy of Gaming Input Latency</h2>
     <p>
-      Total latency equals the sum of human visual reaction time, controller polling delay, OS processing overhead, and display lag.
-      Reducing controller latency by 5ms gives players a distinct advantage in high-stakes firefights.
+      In competitive gaming (such as <em>Call of Duty: Warzone</em>, <em>Apex Legends</em>, <em>Fortnite</em>, and <em>Rocket League</em>), victory often comes down to milliseconds.
+    </p>
+    <p>
+      When an in-game event occurs on screen, your total response delay is governed by a multi-stage input pipeline:
     </p>
 
-    <h3>3 Ways to Reduce Controller Latency</h3>
-    <ul>
-      <li><strong>Switch to Wired Mode:</strong> Connect via high-speed USB-C cable rather than standard Bluetooth.</li>
-      <li><strong>Overclock Polling Rate:</strong> Use USB polling rate utility software to boost report frequency to 1000Hz (1ms).</li>
-      <li><strong>Enable Game Mode on Display:</strong> Turn on low-latency Game Mode on your monitor or TV to cut display lag.</li>
-    </ul>
+    <h3>The 5 Stages of the Gaming Latency Pipeline</h3>
+    <ol>
+      <li><strong>Display Lag (1–15ms):</strong> The time it takes for your monitor to receive a video frame from the GPU, process pixel overdrive, and illuminate the liquid crystal/OLED matrix.</li>
+      <li><strong>Human Neural Processing (180–220ms):</strong> Optical photons hit the retina, travel via the optic nerve to the visual cortex, and trigger motor neurons in the thumb/fingers.</li>
+      <li><strong>Mechanical Switch Pre-Travel (1–3ms):</strong> Physical displacement of the button or trigger before closing the conductive silicone membrane or microswitch contact.</li>
+      <li><strong>Controller USB/Wireless Transport (1–8ms):</strong> The microcontroller serializes the input packet and transmits it across USB interrupt endpoints or Bluetooth 2.4GHz RF channels.</li>
+      <li><strong>Operating System & Game Engine Render Loop (4–16ms):</strong> Windows/macOS driver stack, game input buffering, simulation tick, and DirectX/Vulkan frame presentation.</li>
+    </ol>
+
+    <h2>Wired USB vs. Bluetooth Wireless Comparison</h2>
+    <p>
+      While modern Bluetooth controllers (such as Xbox Wireless and DualSense) provide freedom of movement, wireless packet loss and 2.4GHz Wi-Fi congestion can cause periodic latency spikes of 15ms to 30ms. A direct wired USB-C connection overclocked to <code>1000Hz</code> guarantees a deterministic 1.0ms transport interval on every single frame.
+    </p>
   </Fragment>
 </ToolLayout>
 

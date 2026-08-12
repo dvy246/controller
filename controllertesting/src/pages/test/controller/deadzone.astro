@@ -1,7 +1,8 @@
 ---
 /**
- * /test/controller/deadzone — Deadzone Visualizer Tool
- * SEO Title: Controller Deadzone Test — Find Optimal Game Deadzone Online
+ * /test/controller/deadzone — Deadzone Visualizer & Calculator
+ * Master SEO & Technical Content Optimization
+ * Primary keyword: controller deadzone test
  */
 
 import ToolLayout from '@layouts/ToolLayout.astro';
@@ -15,81 +16,136 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'What is controller deadzone?',
-    answer: 'A deadzone is a designated area around an analog stick\'s central resting point where movement is intentionally ignored by games. It prevents minor thumbstick drift from causing unwanted camera or character movement.',
+    question: 'What is a controller deadzone?',
+    answer: 'A deadzone is a programmed threshold surrounding an analog stick’s neutral center position where physical thumbstick movements are ignored by the game engine. It prevents natural potentiometer resting variance and minor drift from triggering unintended character or camera motion.',
   },
   {
-    question: 'Should I use a lower or higher deadzone in FPS games?',
-    answer: 'Competitive FPS players (Apex Legends, COD) aim for the lowest possible inner deadzone (3% to 5%) for faster reaction times. If your controller has stick drift, increase the deadzone until camera movement stops.',
+    question: 'How do I find my ideal in-game inner deadzone?',
+    answer: 'Connect your gamepad, release both thumbsticks, and adjust the inner deadzone slider in the visualizer above until your resting drift coordinate dot is fully enclosed inside the shaded inner circle. That exact threshold percentage is your minimum stable in-game deadzone.',
   },
   {
-    question: 'What is outer deadzone?',
-    answer: 'Outer deadzone sets the threshold where stick input registers at 100% maximum value. Setting an outer deadzone of 95% ensures you reach full turn speed even if your stick housing is slightly worn.',
+    question: 'What is the difference between Radial (Circular) and Axial (Cross) deadzones?',
+    answer: 'A Radial deadzone applies an omnidirectional circular cutoff based on overall vector distance from center, preserving true 360-degree diagonal aiming. An Axial deadzone filters the X and Y axes independently along a cross shape, creating unnatural stickiness along the horizontal and vertical axes.',
   },
+  {
+    question: 'Why should I configure an outer deadzone?',
+    answer: 'An outer deadzone (typically set between 90% and 98%) defines the threshold where stick input registers at 100% full-throttle speed. If an analog stick module has worn potentiometer tracks that cap out at 92% maximum travel, a 10% outer deadzone ensures you can still sprint or turn at full speed.',
+  },
+  {
+    question: 'Does a 0% deadzone provide lower input lag?',
+    answer: 'A 0% deadzone eliminates software processing delays near the center, delivering instant micro-aim responsiveness. However, if your controller has any resting drift above 0.0%, a 0% deadzone will cause continuous crosshair wandering in games that lack built-in filtering.',
+  }
 ];
 ---
 
 <ToolLayout
-  title="Controller Deadzone Test & Visualizer | ControllerTesting"
-  description="Visualize and measure your controller's inner and outer deadzone thresholds online. Tune the perfect deadzone for competitive FPS on PS5, Xbox, and PC."
+  title="Controller Deadzone Test & Visualizer — Find Optimal In-Game Deadzones | ControllerTesting.com"
+  description="Visualize, measure, and calculate your controller's inner and outer deadzones online. Tune the lowest stable deadzone for Apex Legends, Warzone, Fortnite, and Halo."
+  keywords="controller deadzone test, gamepad deadzone visualizer, best deadzone settings, inner deadzone calculator, ps5 deadzone test, xbox deadzone checker"
   toolName="Controller Deadzone Test"
   category="Controller Diagnostic"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
 >
+  {/* ── Tool Interactive Island ── */}
   <Fragment slot="tool">
     <DeadzoneTester />
   </Fragment>
 
+  {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Optimal Deadzone Guidelines</h2>
+      <h2 class="section-title">Deadzone Optimization Guidelines</h2>
       <p class="results-text">
-        Adjust the inner deadzone slider above until your resting thumbsticks show "Filtered (Deadzone)". That exact percentage is your ideal in-game inner deadzone setting.
+        Adjust the interactive inner deadzone slider until your resting thumbstick coordinate dots display <strong>"Filtered (Deadzone Safe)"</strong>. That exact percentage is your mathematical minimum threshold:
       </p>
+      <div class="results-legend-grid">
+        <div class="legend-card legend-pass">
+          <strong class="legend-title">0.0% – 4.0% (Esports Tier)</strong>
+          <p class="legend-text">Zero noticeable resting drift. Enables instant micro-adjustments for precision sniper tracking in competitive shooters.</p>
+        </div>
+        <div class="legend-card legend-warning">
+          <strong class="legend-title">5.0% – 10.0% (Standard Stable)</strong>
+          <p class="legend-text">Default range for standard controllers. Effectively absorbs normal potentiometer mechanical centering play.</p>
+        </div>
+        <div class="legend-card legend-fail">
+          <strong class="legend-title">&gt; 10.0% (High Lag / Hardware Wear)</strong>
+          <p class="legend-text">Significant physical drift. Requires heavy software filtering that introduces noticeable initial crosshair delay.</p>
+        </div>
+      </div>
     </div>
   </Fragment>
 
+  {/* ── Export Slot ── */}
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Optimize settings for your favorite games</h3>
-        <p class="export-desc">Get custom deadzone recommendations for Apex Legends, Warzone, and Fortnite.</p>
+        <h3 class="export-title">Need custom deadzone settings for your games?</h3>
+        <p class="export-desc">Explore pre-tested competitive sensitivity and deadzone configs for Apex Legends, Call of Duty, and Fortnite.</p>
       </div>
       <div class="export-buttons">
-        <a href="/test/controller/competitive-readiness" class="btn-primary">View Game Presets</a>
+        <a href="/test/controller/competitive-readiness" class="btn-primary">Competitive Presets</a>
+        <a href="/test/controller/drift" class="btn-secondary">Check Stick Drift</a>
       </div>
     </div>
   </Fragment>
 
+  {/* ── Related Tools Slot ── */}
   <Fragment slot="related-tools">
     <a href="/test/controller/drift" class="tool-card card-base card-hover">
       <h3 class="tool-name">Stick Drift Tester</h3>
-      <p class="tool-desc">Test 0.1% stick drift precision.</p>
+      <p class="tool-desc">Isolated 0.1% stick centering detector.</p>
     </a>
     <a href="/test/controller/circularity" class="tool-card card-base card-hover">
       <h3 class="tool-name">Circularity Test</h3>
-      <p class="tool-desc">Measure stick range of motion.</p>
+      <p class="tool-desc">Measure stick range of motion and perimeter error.</p>
     </a>
     <a href="/test/controller/polling-rate" class="tool-card card-base card-hover">
       <h3 class="tool-name">Polling Rate Checker</h3>
-      <p class="tool-desc">Measure input rate in Hz.</p>
+      <p class="tool-desc">Measure input update frequency in Hz.</p>
+    </a>
+    <a href="/test/controller/full-diagnostic" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Full Diagnostic Wizard</h3>
+      <p class="tool-desc">Complete 5-step hardware checkup.</p>
     </a>
   </Fragment>
 
+  {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>How Controller Deadzones Work and How to Tune Them</h2>
+    <h2>The Science of Gamepad Deadzone Geometry</h2>
     <p>
-      In competitive gaming, deadzones bridge the gap between mechanical hardware wear and software responsiveness.
-      Setting your deadzone too high creates input lag; setting it too low causes stick drift.
+      In competitive first-person shooters, analog stick deadzones determine the exact boundary where physical finger displacement translates into in-game crosshair acceleration.
+    </p>
+    <p>
+      Setting your deadzone too high creates artificial input lag and destroys fine recoil control; setting it too low exposes resting potentiometer drift, causing unwanted camera jitter.
     </p>
 
-    <h3>Inner vs Outer Deadzones</h3>
+    <h3>Radial vs. Axial Deadzone Architectures</h3>
     <ul>
-      <li><strong>Inner Deadzone:</strong> Filters out small resting stick vibrations near the center position.</li>
-      <li><strong>Outer Deadzone:</strong> Caps maximum input distance, allowing full speed activation without pushing to the physical gate edge.</li>
+      <li>
+        <strong>Radial (Circular) Deadzones:</strong> The game engine computes the true Euclidean distance from center <code>d = &radic;(X&sup2; + Y&sup2;)</code>. If <code>d &lt; Threshold</code>, input is zeroed. Once the stick crosses the threshold, the output is smoothly remapped from <code>0.0</code> to <code>1.0</code>, ensuring true 360-degree diagonal smoothness.
+      </li>
+      <li>
+        <strong>Axial (Cross-Axis) Deadzones:</strong> The engine evaluates the X and Y axes separately. If <code>|X| &lt; Threshold</code>, horizontal motion is ignored while vertical motion is permitted. This creates a cross-shaped "snapping" deadzone that causes diagonal crosshair movements to feel stepped or sticky.
+      </li>
     </ul>
+
+    <h2>Step-by-Step Tuning Guide for Competitive Shooters</h2>
+    <ol>
+      <li>
+        <strong>Measure Resting Drift Baseline:</strong> Use the live visualizer above with hands off the controller. Note your maximum resting coordinate radius (e.g., <code>0.035</code> = 3.5% drift).
+      </li>
+      <li>
+        <strong>Set In-Game Inner Deadzone:</strong> Open your game settings (e.g., Call of Duty: Warzone → Controller → Deadzones). Set the Inner Deadzone to <strong>Resting Drift + 1%</strong> (e.g., 4% or 5%).
+      </li>
+      <li>
+        <strong>Test Return-to-Center Repeatability:</strong> Flick the right thumbstick firmly and release it. If the crosshair remains completely still, you have achieved the lowest possible latency without drift.
+      </li>
+      <li>
+        <strong>Tune Outer Deadzone:</strong> Set your Outer Deadzone between <code>0.95</code> and <code>0.98</code>. This guarantees that full turning speed activates reliably even if you do not exert maximum downward thumb force.
+      </li>
+    </ol>
   </Fragment>
 </ToolLayout>
 

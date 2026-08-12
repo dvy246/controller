@@ -1,0 +1,269 @@
+---
+/**
+ * /hall-effect-upgrade — The Decision Terminus for the Flagship Workflow
+ * Guides users from a broken controller to a drift-immune Hall Effect replacement.
+ */
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import FitBlueprint from '@components/tools/fit/FitBlueprint.astro';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Hall Effect Upgrade Guide' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'Hall Effect Controller Upgrade Guide',
+  description: 'Never experience stick drift again. Compare the best drift-immune Hall Effect controllers for PS5, Xbox, PC, and Switch.',
+};
+---
+
+<BaseLayout
+  title="Hall Effect Controller Upgrade Guide | ControllerTesting"
+  description="Never experience stick drift again. Compare the best drift-immune Hall Effect controllers for PS5, Xbox, PC, and Switch."
+  breadcrumbs={breadcrumbs}
+  schema={schema}
+  localized={false}>
+  <Header />
+
+  <main id="main-content" class="upgrade-page">
+    <div class="container-site">
+      <Breadcrumbs items={breadcrumbs} />
+
+      <header class="page-hero">
+        <span class="badge-tag mb-3">Upgrade Pathway</span>
+        <h1 class="text-h1 mb-3">Never Experience Stick Drift Again</h1>
+        <p class="text-lead">
+          If your controller's carbon potentiometers have failed, buying another standard controller means the clock is just ticking until it drifts again.
+          <strong>Hall Effect controllers use contactless magnetic sensors that never wear out.</strong>
+        </p>
+      </header>
+
+      <div class="upgrade-layout">
+        <div class="upgrade-content">
+          <div id="recommendation-box" class="card-base highlight-box" style="display: none;">
+            <h2 class="text-h3" id="rec-title">Based on your test...</h2>
+            <p id="rec-desc" class="text-secondary text-sm mt-2"></p>
+          </div>
+
+          <section class="upgrade-section" id="ps5">
+            <h2 class="text-h2">PlayStation 5 (DualSense) Alternatives</h2>
+            <p class="text-secondary text-sm mt-2 mb-4">
+              Sony does not currently manufacture a first-party Hall Effect DualSense. To get magnetic sticks on PS5, you must look at licensed third-party pro controllers or DIY repairs.
+            </p>
+            <div class="product-card card-base">
+              <div class="product-info">
+                <h3 class="text-h4">Nacon Revolution 5 Pro</h3>
+                <span class="badge-pass mt-1 inline-block">Official PS5 License</span>
+                <p class="text-sm text-secondary mt-3">
+                  The only officially licensed PS5 controller with Hall Effect sticks out of the box. Asymmetric (Xbox-style) layout.
+                </p>
+              </div>
+              <div class="product-action">
+                <span class="price-tag">$199.99</span>
+                <a href="https://amzn.to/example" target="_blank" rel="nofollow noopener" class="btn-primary">Check on Amazon &nearr;</a>
+              </div>
+            </div>
+            <div class="product-card card-base mt-4">
+              <div class="product-info">
+                <h3 class="text-h4">DIY Hall Effect Solder Kit</h3>
+                <span class="badge-warning mt-1 inline-block">Advanced Repair</span>
+                <p class="text-sm text-secondary mt-3">
+                  If you have micro-soldering experience, you can desolder the broken Alps Alpine modules on your DualSense and install K-Silver Hall Effect modules.
+                </p>
+              </div>
+              <div class="product-action">
+                <span class="price-tag">~$15.00</span>
+                <a href="/mods/ps5-dualsense" class="btn-secondary">View Motherboard Guide &rarr;</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="upgrade-section mt-10" id="xbox-pc">
+            <h2 class="text-h2">Xbox Series X|S & PC Alternatives</h2>
+            <p class="text-secondary text-sm mt-2 mb-4">
+              The PC and Xbox ecosystems have the best Hall Effect options on the market, ranging from budget to premium.
+            </p>
+            <div class="product-card card-base">
+              <div class="product-info">
+                <h3 class="text-h4">GameSir G7 SE</h3>
+                <span class="badge-pass mt-1 inline-block">Officially Licensed Xbox</span>
+                <p class="text-sm text-secondary mt-3">
+                  Wired-only Xbox controller with excellent Hall Effect sticks and two back buttons. An incredible value replacement.
+                </p>
+              </div>
+              <div class="product-action">
+                <span class="price-tag">$45.00</span>
+                <a href="https://amzn.to/example" target="_blank" rel="nofollow noopener" class="btn-primary">Check on Amazon &nearr;</a>
+              </div>
+            </div>
+            <div class="product-card card-base mt-4">
+              <div class="product-info">
+                <h3 class="text-h4">8BitDo Ultimate Bluetooth</h3>
+                <span class="badge-pass mt-1 inline-block">PC / Switch / Deck</span>
+                <p class="text-sm text-secondary mt-3">
+                  The gold standard for PC and Switch. Includes a charging dock, 2.4g adapter, and flawless Gulikit Hall Effect sensors.
+                </p>
+              </div>
+              <div class="product-action">
+                <span class="price-tag">$69.99</span>
+                <a href="https://amzn.to/example" target="_blank" rel="nofollow noopener" class="btn-primary">Check on Amazon &nearr;</a>
+              </div>
+            </div>
+          </section>
+          
+          <section class="upgrade-section mt-10" id="switch">
+            <h2 class="text-h2">Nintendo Switch Alternatives</h2>
+            <p class="text-secondary text-sm mt-2 mb-4">
+              While Nintendo repairs standard Joy-Cons for free, you can permanently eliminate the issue by upgrading.
+            </p>
+            <div class="product-card card-base">
+              <div class="product-info">
+                <h3 class="text-h4">NYXI Wizard / Hyperion</h3>
+                <span class="badge-pass mt-1 inline-block">Joy-Con Replacement</span>
+                <p class="text-sm text-secondary mt-3">
+                  Ergonomic Joy-Con alternatives with built-in Hall Effect sticks. Great for handheld mode.
+                </p>
+              </div>
+              <div class="product-action">
+                <span class="price-tag">$60.00</span>
+                <a href="https://amzn.to/example" target="_blank" rel="nofollow noopener" class="btn-primary">Check on Amazon &nearr;</a>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="upgrade-sidebar">
+          <div class="sticky-sidebar">
+            <h3 class="text-h3 mb-3">Will it fit your hands?</h3>
+            <p class="text-sm text-secondary mb-4">
+              Before you buy a replacement, calibrate your hand size against the published dimensions of these controllers.
+            </p>
+            <div class="fit-embed-container">
+              <FitBlueprint client:visible />
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const from = params.get('from');
+    
+    if (from) {
+      const recBox = document.getElementById('recommendation-box');
+      const recTitle = document.getElementById('rec-title');
+      const recDesc = document.getElementById('rec-desc');
+      
+      if (recBox && recTitle && recDesc) {
+        let matched = false;
+        
+        if (from.includes('ps5') || from.includes('dualsense')) {
+          recTitle.textContent = 'Upgrading your PS5 Controller';
+          recDesc.textContent = 'Since you are replacing a PlayStation controller, we recommend checking the Nacon Revolution 5 Pro below, or considering a DIY repair if you want to keep the OEM shell.';
+          document.getElementById('ps5')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          matched = true;
+        } else if (from.includes('xbox') || from.includes('pc') || from.includes('xinput')) {
+          recTitle.textContent = 'Upgrading your Xbox/PC Controller';
+          recDesc.textContent = 'The GameSir G7 SE or 8BitDo Ultimate are the perfect drift-immune replacements for your setup.';
+          document.getElementById('xbox-pc')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          matched = true;
+        } else if (from.includes('switch') || from.includes('joycon') || from.includes('nintendo')) {
+          recTitle.textContent = 'Upgrading your Nintendo Switch Controller';
+          recDesc.textContent = 'Check out the NYXI alternatives or the 8BitDo Ultimate for a permanent fix to Joy-Con drift.';
+          document.getElementById('switch')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          matched = true;
+        }
+        
+        if (matched) {
+          recBox.style.display = 'block';
+        }
+      }
+    }
+  });
+</script>
+
+<style>
+  .upgrade-page { padding-top: 80px; padding-bottom: var(--spacing-section); }
+  .page-hero { max-width: 800px; margin-bottom: 3rem; }
+  
+  .upgrade-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 3rem;
+    align-items: start;
+  }
+  
+  @media (max-width: 1024px) {
+    .upgrade-layout { grid-template-columns: 1fr; }
+  }
+
+  .highlight-box {
+    border: 2px solid var(--color-accent);
+    background: rgba(37, 99, 235, 0.03);
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .product-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+  
+  @media (max-width: 640px) {
+    .product-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .product-action {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .product-info { flex: 1; }
+  .product-action {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+    min-width: 140px;
+  }
+  
+  .price-tag {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-text-primary);
+  }
+
+  .sticky-sidebar {
+    position: sticky;
+    top: 100px;
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-card);
+    padding: 1.5rem;
+  }
+  
+  .fit-embed-container {
+    /* Scale down the fit blueprint slightly to fit in sidebar */
+    transform-origin: top left;
+  }
+</style>
