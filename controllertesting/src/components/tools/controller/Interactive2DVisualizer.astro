@@ -275,17 +275,23 @@ const { isRigid = false, mode = 'default' } = Astro.props;
   import { GamepadLoop } from '../../../lib/gamepad';
 
   document.addEventListener('DOMContentLoaded', () => {
-    const subtext = document.getElementById('connection-subtext');
+    const statusBadge = document.getElementById('controller-status');
     const matrixContainer = document.getElementById('competitor-matrix');
     const bentoStatusSubtext = document.getElementById('bento-status-subtext');
     const bentoStatusDot = document.getElementById('bento-status-dot');
-    const masterHz = document.getElementById('master-hz');
-    const masterLatency = document.getElementById('master-latency');
+    const pollingRateVal = document.getElementById('polling-rate-val');
+    const latencyVal = document.getElementById('latency-val');
     const vibeFeedbackTag = document.getElementById('vibe-feedback-tag');
     const stickLCap = document.getElementById('stick-l-cap');
     const stickRCap = document.getElementById('stick-r-cap');
     const l2Fill = document.getElementById('l2-wire-fill');
     const r2Fill = document.getElementById('r2-wire-fill');
+
+    // Map gamepad button index → the [data-btn="N"] SVG element.
+    const svgButtonEls: (Element | null)[] = [];
+    for (let i = 0; i < 18; i++) {
+      svgButtonEls.push(document.querySelector(`[data-btn="${i}"]`));
+    }
 
     // Populate matrix
     const matrixEls: HTMLElement[] = [];
@@ -311,17 +317,17 @@ const { isRigid = false, mode = 'default' } = Astro.props;
         const hz = Math.round((frameCount * 1000) / (now - lastHzTime));
         frameCount = 0;
         lastHzTime = now;
-        if (masterHz) masterHz.textContent = `${hz} Hz`;
-        if (masterLatency) masterLatency.textContent = `${(1000 / (hz || 60)).toFixed(1)} ms`;
+        if (pollingRateVal) pollingRateVal.textContent = `${hz} Hz`;
+        if (latencyVal) latencyVal.textContent = `${(1000 / (hz || 60)).toFixed(1)} ms`;
       }
 
       if (state && state.connected) {
         const idLower = (state.id || '').toLowerCase();
         const isPS = idLower.includes('dualsense') || idLower.includes('playstation') || idLower.includes('dualshock') || idLower.includes('054c') || idLower.includes('wireless controller');
 
-        if (subtext) {
-          subtext.textContent = isPS ? `PS5 DualSense Connected (${state.id.substring(0, 16)}...)` : `Controller Connected (${state.id.substring(0, 16)}...)`;
-          subtext.className = "text-emerald-400 font-mono text-xs font-bold";
+        if (statusBadge) {
+          statusBadge.textContent = isPS ? `DualSense Connected` : `Controller Connected`;
+          statusBadge.className = "px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
         }
         
         if (bentoStatusSubtext) {
@@ -340,7 +346,7 @@ const { isRigid = false, mode = 'default' } = Astro.props;
 
         // Buttons
         state.buttons.forEach((pressed, idx) => {
-          const btnEl = document.getElementById(`btn-${idx}`);
+          const btnEl = svgButtonEls[idx] as HTMLElement | null;
           if (btnEl) {
             if (idx === 6 && l2Fill) {
               const val = state.triggers ? state.triggers.l2 : (pressed ? 1 : 0);
@@ -350,7 +356,7 @@ const { isRigid = false, mode = 'default' } = Astro.props;
               r2Fill.style.opacity = (val * 0.9).toString();
             } else if (pressed) {
               btnEl.classList.add('is-pressed');
-              btnEl.style.filter = "url(#glow-blue)";
+              btnEl.style.filter = "brightness(1.6) drop-shadow(0 0 6px rgba(37,99,235,0.7))";
             } else {
               btnEl.classList.remove('is-pressed');
               btnEl.style.filter = "none";
@@ -394,9 +400,9 @@ const { isRigid = false, mode = 'default' } = Astro.props;
           }
         });
       } else {
-        if (subtext) {
-          subtext.textContent = "Press any button to connect";
-          subtext.className = "text-stone-400 font-mono text-xs font-semibold";
+        if (statusBadge) {
+          statusBadge.textContent = "Press any button to connect";
+          statusBadge.className = "px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 animate-pulse";
         }
         if (bentoStatusSubtext) {
           bentoStatusSubtext.textContent = "Connect a controller or press any button to inspect live Gamepad API telemetry.";

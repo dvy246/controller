@@ -196,8 +196,8 @@ const relatedTools = resolveToolsForGame('beat-drop');
       );
       if (overScoreEl) overScoreEl.textContent = String(score);
       if (overPanel) overPanel.hidden = false;
+      requestAnimationFrame(idle);
     }
-
     function startBeat() {
       if (isPlaying) return;
       if (timerId) clearInterval(timerId);
@@ -218,6 +218,11 @@ const relatedTools = resolveToolsForGame('beat-drop');
         timeLeft--;
         if (timeLeft <= 0) endGame();
       }, 1000);
+    }
+
+    function idle() {
+      frame();
+      if (!isPlaying) requestAnimationFrame(idle);
     }
 
     function frame() {
@@ -328,7 +333,7 @@ const relatedTools = resolveToolsForGame('beat-drop');
     document.getElementById('btn-start-beat')?.addEventListener('click', startBeat);
     document.getElementById('btn-beat-again')?.addEventListener('click', startBeat);
 
-    frame();
+    idle();
   });
 </script>
 

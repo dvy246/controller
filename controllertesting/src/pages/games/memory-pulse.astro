@@ -168,8 +168,10 @@ const relatedTools = resolveToolsForGame('memory-pulse');
         i++;
         if (i >= sequence.length) {
           window.clearInterval(interval);
-          flashPad = -1;
-          isShowing = false;
+          window.setTimeout(() => {
+            flashPad = -1;
+            isShowing = false;
+          }, 450);
         }
       }, 600);
     }

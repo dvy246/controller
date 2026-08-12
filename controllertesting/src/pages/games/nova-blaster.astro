@@ -233,6 +233,7 @@ const relatedTools = resolveToolsForGame('nova-blaster');
       if (overTitleEl) overTitleEl.textContent = 'Run Over';
       if (overScoreEl) overScoreEl.textContent = String(score);
       if (overPanel) overPanel.hidden = false;
+      requestAnimationFrame(idle);
     }
 
     function startRun() {
@@ -402,7 +403,7 @@ const relatedTools = resolveToolsForGame('nova-blaster');
       frame();
       if (!isPlaying) requestAnimationFrame(idle);
     }
-    frame();
+    idle();
   });
 </script>
 

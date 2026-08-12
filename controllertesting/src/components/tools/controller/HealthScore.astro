@@ -357,8 +357,12 @@
         if (i === idx) {
           p.classList.remove('opacity-0', 'pointer-events-none');
           p.style.display = 'flex';
+          p.style.opacity = '1';
+          p.style.pointerEvents = 'auto';
         } else {
           p.classList.add('opacity-0', 'pointer-events-none');
+          p.style.opacity = '0';
+          p.style.pointerEvents = 'none';
         }
       });
       if (this.stepInd && idx > 0) {

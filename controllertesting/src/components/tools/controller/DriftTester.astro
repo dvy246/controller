@@ -85,10 +85,10 @@ import InterpretationCard from '../../features/InterpretationCard.astro';
 
   {/* ── Controls & Calibration ── */}
   <div class="tester-controls mt-4 relative z-10">
-    <button type="button" class="premium-btn btn-primary shadow-lg shadow-blue-500/20" id="btn-calibrate">
+    <a href="/test/controller/deadzone" class="premium-btn btn-primary shadow-lg shadow-blue-500/20" id="btn-calibrate">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-crosshair"><circle cx="12" cy="12" r="10"/><line x1="22" x2="18" y1="12" y2="12"/><line x1="6" x2="2" y1="12" y2="12"/><line x1="12" x2="12" y1="6" y2="2"/><line x1="12" x2="12" y1="22" y2="18"/></svg>
       Calibrate Deadzone
-    </button>
+    </a>
     <button type="button" class="premium-btn btn-secondary glass-panel hover:bg-white/5" id="btn-reset-history">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
       Reset Canvas Trail

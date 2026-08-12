@@ -102,6 +102,27 @@
       const peakVal = document.getElementById('poll-peak-val');
       if (peakVal) peakVal.textContent = '0 Hz';
     });
+
+    document.getElementById('btn-start-poll-test')?.addEventListener('click', () => {
+      if (isTestRunning) return;
+      isTestRunning = true;
+      peakHz = 0;
+      samples = [];
+      const ratingEl = document.getElementById('poll-status-rating');
+      const btn = document.getElementById('btn-start-poll-test');
+      if (ratingEl) ratingEl.textContent = 'Sweep running…';
+      if (btn) btn.textContent = 'Sweep running…';
+      setTimeout(() => {
+        isTestRunning = false;
+        if (btn) btn.textContent = 'Start 5-Second Test Sweep';
+        if (ratingEl) {
+          if (peakHz >= 800) ratingEl.textContent = 'Esports Ultra (1000Hz)';
+          else if (peakHz >= 400) ratingEl.textContent = 'High Speed (500Hz)';
+          else if (peakHz >= 200) ratingEl.textContent = 'Standard (250Hz)';
+          else ratingEl.textContent = peakHz > 0 ? `Sweep complete: ${peakHz} Hz` : 'No input detected';
+        }
+      }, 5000);
+    });
   });
 </script>
 

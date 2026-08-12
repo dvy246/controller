@@ -279,7 +279,6 @@ const relatedTools = resolveToolsForGame('kart-drift');
       raceStartTime = now;
       
       if (overPanel) overPanel.hidden = true;
-      render();
     }
 
     // Distance from point to line segment
@@ -431,7 +430,6 @@ const relatedTools = resolveToolsForGame('kart-drift');
               k.lap++;
               if (k.lap > totalLaps) {
                 endGame(k);
-                return;
               }
             }
           }
