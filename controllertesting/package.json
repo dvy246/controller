@@ -7,7 +7,7 @@
     "predev": "node scripts/sync-locales.js",
     "build": "astro build",
     "prebuild": "node scripts/sync-locales.js",
-    "deploy": "npm run build && npx --yes wrangler pages deploy dist --project-name=controller-test",
+    "deploy": "npm run build && npx wrangler pages deploy dist --project-name=controller-test",
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",

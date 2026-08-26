@@ -114,22 +114,26 @@ const schema = [
         Explore deep technical breakdowns and verified parts guides for specific board revisions:
       </p>
       <div class="flex flex-wrap gap-2">
-        {controller.motherboards.map((mb) => (
-          <a 
-            href={`/mods/${controller.id}/${mb.id}/hall-effect-joysticks`}
-            class="text-xs font-mono px-3 py-1.5 rounded-lg bg-[var(--color-surface-2)] text-[var(--color-text-primary)] hover:text-white hover:bg-[var(--color-accent)] border border-[var(--color-border-subtle)] transition-colors"
-          >
-            {mb.name} Hall Effect Guide →
-          </a>
-        ))}
-        {controller.motherboards.map((mb) => (
-          <a 
-            href={`/mods/${controller.id}/${mb.id}/back-paddles`}
-            class="text-xs font-mono px-3 py-1.5 rounded-lg bg-[var(--color-surface-2)] text-[var(--color-text-primary)] hover:text-white hover:bg-[var(--color-accent)] border border-[var(--color-border-subtle)] transition-colors"
-          >
-            {mb.name} Back Paddles Guide →
-          </a>
-        ))}
+        {controller.motherboards
+          .filter((mb) => modsData.mods.some((m) => m.controllerId === controller.id && m.categoryId === 'hall-effect-joysticks' && m.compatibleMotherboards.includes(mb.id)))
+          .map((mb) => (
+            <a 
+              href={`/mods/${controller.id}/${mb.id}/hall-effect-joysticks`}
+              class="text-xs font-mono px-3 py-1.5 rounded-lg bg-[var(--color-surface-2)] text-[var(--color-text-primary)] hover:text-white hover:bg-[var(--color-accent)] border border-[var(--color-border-subtle)] transition-colors"
+            >
+              {mb.name} Hall Effect Guide →
+            </a>
+          ))}
+        {controller.motherboards
+          .filter((mb) => modsData.mods.some((m) => m.controllerId === controller.id && m.categoryId === 'back-paddles' && m.compatibleMotherboards.includes(mb.id)))
+          .map((mb) => (
+            <a 
+              href={`/mods/${controller.id}/${mb.id}/back-paddles`}
+              class="text-xs font-mono px-3 py-1.5 rounded-lg bg-[var(--color-surface-2)] text-[var(--color-text-primary)] hover:text-white hover:bg-[var(--color-accent)] border border-[var(--color-border-subtle)] transition-colors"
+            >
+              {mb.name} Back Paddles Guide →
+            </a>
+          ))}
       </div>
     </section>
 

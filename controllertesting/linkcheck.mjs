@@ -27,10 +27,11 @@ for (const p of pages) {
     const href = m[1];
     if (href.startsWith('/api/') || href.startsWith('mailto') || href.includes('#')) continue;
     checked++;
-    let target = href.replace(/\.html$/, '') + '.html';
-    if (href === '/') target = 'index.html';
+    const [pathname] = href.split('?');
+    let target = pathname.replace(/\.html$/, '') + '.html';
+    if (pathname === '/') target = 'index.html';
     if (!target.startsWith('/')) continue;
-    const direct = files.has(href.slice(1));
+    const direct = files.has(pathname.slice(1));
     const ok = direct || files.has(target.slice(1)) || target.slice(1) === '404.html';
     if (!ok) {
       if (!broken.has(href)) broken.set(href, []);
