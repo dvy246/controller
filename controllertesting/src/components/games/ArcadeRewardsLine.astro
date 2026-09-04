@@ -1,20 +1,21 @@
 ---
 /**
- * ArcadeRewardsLine.astro — shared rewards/level/streak block for game-over panels.
- * Rendered inside the game-over panel after the final score, before the actions.
- * Element IDs follow `${baseId}-over-*` so games can update them via arcadeRewards.ts.
+ * ArcadeRewardsLine.astro with i18n support
  */
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+const currentLang = getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
+
 interface Props {
-  /** Unique per-game prefix, e.g. 'sniper', 'blitz', 'maze', 'trig', 'draw'. */
   baseId: string;
-  /** XP amount this game awards (must match claimArcadeXp call). */
   xp: number;
 }
 
 const { baseId, xp } = Astro.props;
 ---
+
 <div class="over-rewards">
-  <span class="badge badge-pass over-xp" id={`${baseId}-over-xp`}>+{xp} XP earned</span>
+  <span class="badge badge-pass over-xp" id={`${baseId}-over-xp`}>+{xp} {t("game.xpEarned")}</span>
   <span class="over-level-line mono" id={`${baseId}-over-level`} hidden>Level 1 · 0 XP</span>
   <div class="over-levelup" id={`${baseId}-over-levelup`} hidden role="status">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>

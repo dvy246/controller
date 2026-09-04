@@ -121,12 +121,25 @@ const faqs = [
   },
 ];
 
-const howToSchema = {
+const articleSchema = {
   '@context': 'https://schema.org',
-  '@type': 'HowTo',
-  name: `How to connect the ${controller.name} to ${platform.name}`,
+  '@type': 'TechArticle',
+  headline: `How to connect the ${controller.name} to ${platform.name}`,
   description: `Step-by-step pairing for the ${controller.name} with ${platform.name}, including a verification test.`,
-  step: platform.steps.map((s, i) => ({ '@type': 'HowToStep', position: i + 1, text: s })),
+  articleSection: 'Controller Connection & Pairing',
+  author: {
+    '@type': 'Organization',
+    name: 'ControllerTesting Hardware Lab',
+    url: 'https://controllertesting.com'
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'ControllerTesting.com',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://controllertesting.com/favicon.svg'
+    }
+  }
 };
 ---
 
@@ -134,7 +147,7 @@ const howToSchema = {
   title={`Connect ${controller.name} to ${platform.name} | CT`}
   description={`How to connect and pair the ${controller.name} with ${platform.name}: Bluetooth pairing, USB setup, first-run mapping, and verification with our free tester.`}
   breadcrumbs={breadcrumbs}
-  schema={howToSchema}
+  schema={articleSchema}
 
   localized={false}>
   <Header />

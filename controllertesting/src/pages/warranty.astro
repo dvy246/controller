@@ -21,14 +21,23 @@ const warrantyPolicies = [
 
 const schema = {
   '@context': 'https://schema.org',
-  '@type': 'HowTo',
-  name: 'How to File a Controller Warranty Claim for Stick Drift',
+  '@type': 'TechArticle',
+  headline: 'How to File a Controller Warranty Claim for Stick Drift',
   description: 'Step-by-step guide to check warranty coverage and file a claim with PlayStation, Xbox, or Nintendo.',
-  step: [
-    { '@type': 'HowToStep', name: 'Find Serial Number', text: 'Locate the 17-digit serial number on the back of your controller.' },
-    { '@type': 'HowToStep', name: 'Run Diagnostic Test', text: 'Run our Stick Drift Test to export a verified PDF proof of drift.' },
-    { '@type': 'HowToStep', name: 'Submit Online Claim', text: 'Submit the serial number and PDF test result on the official manufacturer portal.' },
-  ],
+  articleSection: 'Warranty & RMA',
+  author: {
+    '@type': 'Organization',
+    name: 'ControllerTesting Hardware Lab',
+    url: 'https://controllertesting.com'
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'ControllerTesting.com',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://controllertesting.com/favicon.svg'
+    }
+  }
 };
 ---
 

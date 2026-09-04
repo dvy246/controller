@@ -6,9 +6,10 @@ export interface Props {
   controllerId: string;
   initialBdm?: string;
   categoryFilter?: string;
+  strictFilter?: boolean;
 }
 
-const { controllerId, initialBdm = 'all', categoryFilter } = Astro.props;
+const { controllerId, initialBdm = 'all', categoryFilter, strictFilter = false } = Astro.props;
 
 const allCategories = modsData.modCategories;
 const categories = categoryFilter 
@@ -20,7 +21,13 @@ const allMods = modsData.mods.filter((m) => m.controllerId === controllerId);
 
 <div id="mod-workspace" class="flex flex-col gap-12" data-controller-id={controllerId} data-initial-bdm={initialBdm}>
   {categories.map((category) => {
-    const categoryMods = allMods.filter((m) => m.categoryId === category.id);
+    const categoryMods = allMods.filter((m) => {
+      if (m.categoryId !== category.id) return false;
+      if (strictFilter && initialBdm !== 'all') {
+        return m.compatibleMotherboards.includes(initialBdm);
+      }
+      return true;
+    });
     if (categoryMods.length === 0) return null;
 
     return (

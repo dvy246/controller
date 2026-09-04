@@ -8,6 +8,9 @@
 import DualSenseSilhouette from './DualSenseSilhouette.astro';
 import PremiumStickCanvas from './PremiumStickCanvas.astro';
 import TriggerBars from './TriggerBars.astro';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+const currentLang = getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 ---
 
 <div class="relative w-full max-w-7xl mx-auto group">
@@ -29,18 +32,18 @@ import TriggerBars from './TriggerBars.astro';
     <div class="flex items-center justify-between sm:justify-start gap-2.5 w-full sm:w-auto">
       <div class="flex items-center gap-2.5">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_#10B981] shrink-0" id="master-status-dot"></span>
-        <span id="master-status-text" class="text-xs font-bold text-gray-200 uppercase tracking-wider whitespace-nowrap">Awaiting DualSense Input</span>
+        <span id="master-status-text" class="text-xs font-bold text-gray-200 uppercase tracking-wider whitespace-nowrap">{t('tester.promptConnect')}</span>
       </div>
     </div>
     
     <div class="flex flex-wrap items-center justify-between sm:justify-end gap-2 text-xs font-mono w-full sm:w-auto">
       <div class="flex items-center gap-2">
         <div class="bg-black/50 border border-white/10 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
-          <span class="text-stone-400 text-[10px] sm:text-[11px]">POLLING:</span>
+          <span class="text-stone-400 text-[10px] sm:text-[11px]">{t('telemetry.polling')}:</span>
           <span id="master-hz" class="text-blue-400 font-bold tabular-nums text-[11px] sm:text-xs">-- Hz</span>
         </div>
         <div class="bg-black/50 border border-white/10 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
-          <span class="text-stone-400 text-[10px] sm:text-[11px]">LATENCY:</span>
+          <span class="text-stone-400 text-[10px] sm:text-[11px]">{t('telemetry.latency')}:</span>
           <span id="master-latency" class="text-emerald-400 font-bold tabular-nums text-[11px] sm:text-xs">-- ms</span>
         </div>
       </div>
@@ -59,8 +62,8 @@ import TriggerBars from './TriggerBars.astro';
     <!-- LEFT STAGE: Real-Time Vector Controller Viewport (7 Cols) -->
     <div class="lg:col-span-7 p-6 sm:p-8 flex flex-col items-center bg-black/20 border-b lg:border-b-0 lg:border-r border-white/10">
       <div class="w-full flex items-center justify-between mb-2 font-mono text-xs text-stone-400">
-        <span class="font-bold text-gray-300 uppercase tracking-widest">Real-Time DualSense Telemetry</span>
-        <span id="master-status-sub" class="text-emerald-400 font-bold">0-Latency Vector Pipeline</span>
+        <span class="font-bold text-gray-300 uppercase tracking-widest">{t('suite.playstation')}</span>
+        <span id="master-status-sub" class="text-emerald-400 font-bold">Gamepad API Active</span>
       </div>
       <div class="w-full flex-1 flex items-center justify-center py-4">
         <DualSenseSilhouette />
@@ -68,11 +71,11 @@ import TriggerBars from './TriggerBars.astro';
       <div class="flex items-center gap-6 font-mono text-xs text-stone-400 px-4 py-1.5 rounded-full bg-black/40 border border-white/10">
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block shadow-[0_0_8px_#3B82F6]"></span>
-          <span>Button Active</span>
+          <span>{t('tester.status')}</span>
         </div>
         <div class="flex items-center gap-2">
           <span class="w-2.5 h-2.5 rounded-full bg-stone-600 inline-block"></span>
-          <span>Rest State</span>
+          <span>{t('tester.healthy')}</span>
         </div>
       </div>
     </div>
@@ -86,8 +89,8 @@ import TriggerBars from './TriggerBars.astro';
           <div class="flex items-center gap-2.5">
             <svg class="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
             <div>
-              <h3 class="text-xs font-bold text-white font-mono leading-none m-0">Analog Sticks & Drift</h3>
-              <span class="text-[9px] text-emerald-400 font-mono leading-none block mt-1">Linearity, Drift & Circularity</span>
+              <h3 class="text-xs font-bold text-white font-mono leading-none m-0">{t('tester.leftStick')} &amp; {t('tester.rightStick')}</h3>
+              <span class="text-[9px] text-emerald-400 font-mono leading-none block mt-1">{t('nav.stickDriftTest')}</span>
             </div>
           </div>
           <button id="recenter-sticks-btn" title="Re-center Sticks" class="text-gray-400 hover:text-white transition-colors p-1 shrink-0">
@@ -104,7 +107,7 @@ import TriggerBars from './TriggerBars.astro';
         <div class="flex items-center gap-2.5">
           <svg class="w-4 h-4 text-indigo-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 11V3M1 14h6M9 8h6M17 16h6"/></svg>
           <div>
-            <h3 class="text-xs font-bold text-white font-mono leading-none m-0">Analog Triggers (L2 / R2)</h3>
+            <h3 class="text-xs font-bold text-white font-mono leading-none m-0">{t('tester.triggers')} (L2 / R2)</h3>
             <span class="text-[9px] text-indigo-400 font-mono leading-none block mt-1">Pressure Curve (0.000 – 1.000)</span>
           </div>
         </div>
@@ -125,7 +128,7 @@ import TriggerBars from './TriggerBars.astro';
         <div class="flex items-center gap-2.5 mb-3">
           <svg class="w-4 h-4 text-blue-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
           <div>
-            <h3 class="text-xs font-bold text-white font-mono leading-none m-0">Raw Gamepad API Data</h3>
+            <h3 class="text-xs font-bold text-white font-mono leading-none m-0">{t('telemetry.gamepadApi')}</h3>
             <span class="text-[9px] text-blue-400 font-mono block mt-1">0-17 Buttons &amp; Active Axes</span>
           </div>
         </div>
@@ -181,7 +184,7 @@ import TriggerBars from './TriggerBars.astro';
 
         <div class="flex items-center gap-2 mt-3 py-2 px-3 rounded-xl bg-white/[0.04] border border-white/10 font-mono text-xs w-full">
           <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
-          <span id="raw-data-subtext" class="text-stone-300 font-medium leading-normal">Connect a controller or press any button to inspect live Gamepad API telemetry.</span>
+          <span id="raw-data-subtext" class="text-stone-300 font-medium leading-normal">{t('tester.promptConnect')}</span>
         </div>
       </div>
     </div>
@@ -193,30 +196,30 @@ import TriggerBars from './TriggerBars.astro';
           <div class="flex items-center gap-2.5">
             <svg class="w-4 h-4 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             <div>
-              <h3 class="text-xs font-bold text-white font-mono leading-none m-0">Haptic Vibration Test</h3>
+              <h3 class="text-xs font-bold text-white font-mono leading-none m-0">{t('nav.vibrationTest')}</h3>
               <span class="text-[9px] text-amber-400 font-mono block mt-1 font-semibold">Dual Rumble Actuators</span>
             </div>
           </div>
-          <span id="master-vibe-tag" class="text-[10px] font-mono text-stone-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded font-semibold whitespace-nowrap">Awaiting Command</span>
+          <span id="master-vibe-tag" class="text-[10px] font-mono text-stone-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded font-semibold whitespace-nowrap">Ready</span>
         </div>
         <p class="text-xs text-stone-400 font-mono leading-relaxed mb-3">
-          Tests dual-rumble actuators (Left Heavy &amp; Right Light) via browser Vibration API.
+          {t('vibe.title')}
         </p>
         <div class="grid grid-cols-4 gap-2 w-full">
           <button class="master-vibe-btn text-[10px] font-mono font-bold uppercase py-2.5 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors cursor-pointer text-center flex flex-col items-center justify-center gap-1.5" data-vibe="heavy">
-            <span>HEAVY</span>
+            <span>{t('vibe.heavy')}</span>
             <span class="w-4 h-1 bg-amber-500 rounded-full"></span>
           </button>
           <button class="master-vibe-btn text-[10px] font-mono font-bold uppercase py-2.5 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors cursor-pointer text-center flex flex-col items-center justify-center gap-1.5" data-vibe="light">
-            <span>LIGHT</span>
+            <span>{t('vibe.light')}</span>
             <span class="w-4 h-1 bg-blue-500 rounded-full"></span>
           </button>
           <button class="master-vibe-btn text-[10px] font-mono font-bold uppercase py-2.5 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors cursor-pointer text-center flex flex-col items-center justify-center gap-1.5" data-vibe="burst">
-            <span>BURST</span>
+            <span>{t('vibe.burst')}</span>
             <span class="w-4 h-1 bg-purple-500 rounded-full"></span>
           </button>
           <button class="master-vibe-btn text-[10px] font-mono font-bold uppercase py-2.5 px-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/15 text-stone-300 transition-colors cursor-pointer text-center flex flex-col items-center justify-center gap-1.5" data-vibe="pulse">
-            <span>PULSE</span>
+            <span>{t('vibe.pulse')}</span>
             <span class="w-4 h-1 bg-rose-500 rounded-full"></span>
           </button>
         </div>

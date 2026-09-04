@@ -1,13 +1,10 @@
-# Production domain — always indexable
-https://controllertesting.com/*
-  X-Robots-Tag: index, follow
-
-# Preview / staging domain — block all crawlers
-https://*.pages.dev/*
-  X-Robots-Tag: noindex, nofollow
-
-https://controller-test-9ka.pages.dev/*
-  X-Robots-Tag: noindex, nofollow
+# Embed widgets — allowable in iframes on any third-party domain
+/embed/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), geolocation=(), microphone=(self "*"), midi=(self "*"), gamepad=(self "*")
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob:; frame-ancestors *;
 
 /*.js
   Content-Type: text/javascript; charset=utf-8

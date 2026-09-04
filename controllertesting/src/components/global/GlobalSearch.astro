@@ -1,86 +1,89 @@
 ---
-/**
- * GlobalSearch.astro — Cmd+K Instant Site-Wide Search Modal
- * Indexes 32 diagnostic tools, 5 arcade games, embed widgets, repair guides, and warranty tools.
- * Accessible keyboard navigation (Up/Down/Enter/Esc), ARIA labels, zero-layout-shift modal overlay.
- */
+import { getLangFromUrl, useTranslations, l } from '../../i18n/utils';
+const currentLang = getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 
-const searchItems = [
+const rawSearchItems = [
   // Controller Tools
-  { title: 'Quick Health Check (60s)', category: 'Controller Tools', url: '/test/controller/quick-health', desc: '60-second guided check for stick drift, face buttons & triggers' },
-  { title: 'Stick Drift Detector', category: 'Controller Tools', url: '/test/controller/drift', desc: 'Real-time 0.1% stick drift visualizer canvas' },
-  { title: 'Full Diagnostic Wizard', category: 'Controller Tools', url: '/test/controller/full-diagnostic', desc: '5-step hardware checkup for sticks, buttons & triggers' },
-  { title: 'Controller Health Score™', category: 'Controller Tools', url: '/test/controller/health-score', desc: '0-100 score grade & printable PDF report card' },
-  { title: 'PS Controller WebHID Calibration', category: 'Controller Tools', url: '/test/controller/ps-calibration', desc: 'Firmware-level center offset calibration & save' },
-  { title: 'Steering Wheel & Pedals', category: 'Controller Tools', url: '/test/controller/steering-wheel', desc: 'Test 900°/1080° steering rotation & pedal linearity' },
-  { title: 'Fight Stick & Hitbox', category: 'Controller Tools', url: '/test/controller/fight-stick', desc: 'Vewlix 8-button layout & Capcom SOCD cleaner test' },
-  { title: 'Flight Stick & HOTAS', category: 'Controller Tools', url: '/test/controller/flight-stick', desc: 'Flight sim joysticks, 128+ buttons & throttle quadrant' },
-  { title: 'Button Tester', category: 'Controller Tools', url: '/test/controller/buttons', desc: 'Interactive button matrix & ghosting detector' },
-  { title: 'Trigger Pressure Tester', category: 'Controller Tools', url: '/test/controller/triggers', desc: 'Analog L2/R2 pressure curve analyzer' },
-  { title: 'Vibration Tester', category: 'Controller Tools', url: '/test/controller/vibration', desc: 'Dual haptic rumble motor pulse tester' },
-  { title: 'Circularity Test', category: 'Controller Tools', url: '/test/controller/circularity', desc: '360-degree stick range of motion & error' },
-  { title: 'Deadzone Visualizer', category: 'Controller Tools', url: '/test/controller/deadzone', desc: 'Inner & outer deadzone threshold tuning' },
-  { title: 'Polling Rate Checker', category: 'Controller Tools', url: '/test/controller/polling-rate', desc: 'Real-time Hz input report frequency' },
-  { title: '8-Way D-Pad Tester', category: 'Controller Tools', url: '/test/controller/dpad', desc: '8-way directional pad precision & diagonal inputs' },
-  { title: 'Latency Estimator', category: 'Controller Tools', url: '/test/controller/latency', desc: 'Input delay & visual reaction speed timer' },
-  { title: 'Multi-Controller Tester', category: 'Controller Tools', url: '/test/controller/multi', desc: 'Test 4 gamepads simultaneously in browser' },
-  { title: 'Drift Timeline Tracker', category: 'Controller Tools', url: '/test/controller/timeline', desc: 'LocalStorage hardware degradation tracker' },
-  { title: 'Gyroscope Tester', category: 'Controller Tools', url: '/test/controller/gyroscope', desc: '3-axis motion sensor calibration' },
-  { title: 'Touchpad Tester', category: 'Controller Tools', url: '/test/controller/touchpad', desc: 'PS5 DualSense multi-touch trackpad' },
-  { title: 'Microphone Tester', category: 'Controller Tools', url: '/test/controller/microphone', desc: 'Built-in mic & 3.5mm headset audio' },
-  { title: 'Competitive Readiness', category: 'Controller Tools', url: '/test/controller/competitive-readiness', desc: 'Esports tournament benchmark assessor' },
+  { title: t('nav.quickHealth'), category: t('nav.controllerTests'), url: '/test/controller/quick-health', desc: t('nav.quickHealthDesc') },
+  { title: t('nav.stickDriftTest'), category: t('nav.controllerTests'), url: '/test/controller/drift', desc: t('nav.stickDriftDesc') },
+  { title: t('nav.fullDiag'), category: t('nav.controllerTests'), url: '/test/controller/full-diagnostic', desc: t('nav.fullDiagDesc') },
+  { title: t('nav.healthScore'), category: t('nav.controllerTests'), url: '/test/controller/health-score', desc: '0-100 score grade & printable PDF report card' },
+  { title: t('nav.calibrator'), category: t('nav.controllerTests'), url: '/test/controller/ps-calibration', desc: t('nav.calibratorDesc') },
+  { title: 'Steering Wheel & Pedals', category: t('nav.controllerTests'), url: '/test/controller/steering-wheel', desc: 'Test 900°/1080° steering rotation & pedal linearity' },
+  { title: 'Fight Stick & Hitbox', category: t('nav.controllerTests'), url: '/test/controller/fight-stick', desc: 'Vewlix 8-button layout & Capcom SOCD cleaner test' },
+  { title: 'Flight Stick & HOTAS', category: t('nav.controllerTests'), url: '/test/controller/flight-stick', desc: 'Flight sim joysticks, 128+ buttons & throttle quadrant' },
+  { title: 'Button Tester', category: t('nav.controllerTests'), url: '/test/controller/buttons', desc: 'Interactive button matrix & ghosting detector' },
+  { title: 'Trigger Pressure Tester', category: t('nav.controllerTests'), url: '/test/controller/triggers', desc: 'Analog L2/R2 pressure curve analyzer' },
+  { title: 'Vibration Tester', category: t('nav.controllerTests'), url: '/test/controller/vibration', desc: 'Dual haptic rumble motor pulse tester' },
+  { title: 'Circularity Test', category: t('nav.controllerTests'), url: '/test/controller/circularity', desc: '360-degree stick range of motion & error' },
+  { title: 'Deadzone Visualizer', category: t('nav.controllerTests'), url: '/test/controller/deadzone', desc: 'Inner & outer deadzone threshold tuning' },
+  { title: t('nav.pollingRate'), category: t('nav.controllerTests'), url: '/test/controller/polling-rate', desc: 'Real-time Hz input report frequency' },
+  { title: '8-Way D-Pad Tester', category: t('nav.controllerTests'), url: '/test/controller/dpad', desc: '8-way directional pad precision & diagonal inputs' },
+  { title: 'Latency Estimator', category: t('nav.controllerTests'), url: '/test/controller/latency', desc: 'Input delay & visual reaction speed timer' },
+  { title: 'Multi-Controller Tester', category: t('nav.controllerTests'), url: '/test/controller/multi', desc: 'Test 4 gamepads simultaneously in browser' },
+  { title: 'Drift Timeline Tracker', category: t('nav.controllerTests'), url: '/test/controller/timeline', desc: 'LocalStorage hardware degradation tracker' },
+  { title: 'Gyroscope Tester', category: t('nav.controllerTests'), url: '/test/controller/gyroscope', desc: '3-axis motion sensor calibration' },
+  { title: 'Touchpad Tester', category: t('nav.controllerTests'), url: '/test/controller/touchpad', desc: 'PS5 DualSense multi-touch trackpad' },
+  { title: 'Microphone Tester', category: t('nav.controllerTests'), url: '/test/controller/microphone', desc: 'Built-in mic & 3.5mm headset audio' },
+  { title: 'Competitive Readiness', category: t('nav.controllerTests'), url: '/test/controller/competitive-readiness', desc: 'Esports tournament benchmark assessor' },
 
   // Specialized / MIDI
-  { title: 'MIDI Keyboard & Controller', category: 'Specialized Tools', url: '/test/midi', desc: 'Test USB MIDI keyboards, drum pads, CC messages & velocity' },
+  { title: t('nav.keyboardMidi'), category: t('nav.diagTools'), url: '/test/midi', desc: t('nav.keyboardMidiDesc') },
 
   // Mouse Tools
-  { title: 'CPS Test (Clicks Per Second)', category: 'Mouse Tools', url: '/test/mouse/cps', desc: '1s, 5s, 10s click speed test' },
-  { title: 'Mouse Polling Rate (Hz)', category: 'Mouse Tools', url: '/test/mouse/polling-rate', desc: 'Measure report rate up to 8000Hz (8KHz)' },
-  { title: 'DPI Sensitivity Analyzer', category: 'Mouse Tools', url: '/test/mouse/dpi', desc: 'Calculate hardware mouse DPI' },
-  { title: 'Click Latency Test', category: 'Mouse Tools', url: '/test/mouse/click-latency', desc: 'Measure mouse click delay in ms' },
-  { title: 'Mouse Button Matrix', category: 'Mouse Tools', url: '/test/mouse/buttons', desc: 'Test MB1, MB2, MB3, MB4, MB5 side buttons' },
-  { title: 'Scroll Wheel Tester', category: 'Mouse Tools', url: '/test/mouse/scroll', desc: 'Scroll direction & encoder jumping faults' },
-  { title: 'Double-Click Fault Test', category: 'Mouse Tools', url: '/test/mouse/double-click', desc: 'Switch bounce & chatter detector' },
+  { title: 'CPS Test (Clicks Per Second)', category: t('nav.mouseSuite'), url: '/test/mouse/cps', desc: '1s, 5s, 10s click speed test' },
+  { title: 'Mouse Polling Rate (Hz)', category: t('nav.mouseSuite'), url: '/test/mouse/polling-rate', desc: 'Measure report rate up to 8000Hz (8KHz)' },
+  { title: 'DPI Sensitivity Analyzer', category: t('nav.mouseSuite'), url: '/test/mouse/dpi', desc: 'Calculate hardware mouse DPI' },
+  { title: 'Click Latency Test', category: t('nav.mouseSuite'), url: '/test/mouse/click-latency', desc: 'Measure mouse click delay in ms' },
+  { title: 'Mouse Button Matrix', category: t('nav.mouseSuite'), url: '/test/mouse/buttons', desc: 'Test MB1, MB2, MB3, MB4, MB5 side buttons' },
+  { title: 'Scroll Wheel Tester', category: t('nav.mouseSuite'), url: '/test/mouse/scroll', desc: 'Scroll direction & encoder jumping faults' },
+  { title: 'Double-Click Fault Test', category: t('nav.mouseSuite'), url: '/test/mouse/double-click', desc: 'Switch bounce & chatter detector' },
 
   // Games & Arcade
-  { title: 'Stick Sniper Aim Trainer', category: 'Games Arcade', url: '/games/stick-sniper', desc: 'Canvas target acquisition precision game' },
-  { title: 'Button Blitz Reaction Challenge', category: 'Games Arcade', url: '/games/button-blitz', desc: 'Reflex button prompt challenge' },
-  { title: 'Stick Maze Runner', category: 'Games Arcade', url: '/games/stick-maze', desc: 'Navigate vector corridors with analog stick' },
-  { title: 'Trigger Racer', category: 'Games Arcade', url: '/games/trigger-racer', desc: 'Analog trigger throttle control race' },
-  { title: 'Quick Draw Reaction', category: 'Games Arcade', url: '/games/quick-draw', desc: 'Millisecond signal reaction shootout' },
+  { title: 'Stick Sniper Aim Trainer', category: t('nav.play'), url: '/games/stick-sniper', desc: 'Canvas target acquisition precision game' },
+  { title: 'Button Blitz Reaction Challenge', category: t('nav.play'), url: '/games/button-blitz', desc: 'Reflex button prompt challenge' },
+  { title: 'Stick Maze Runner', category: t('nav.play'), url: '/games/stick-maze', desc: 'Navigate vector corridors with analog stick' },
+  { title: 'Trigger Racer', category: t('nav.play'), url: '/games/trigger-racer', desc: 'Analog trigger throttle control race' },
+  { title: 'Quick Draw Reaction', category: t('nav.play'), url: '/games/quick-draw', desc: 'Millisecond signal reaction shootout' },
 
   // Widgets & Embeds
-  { title: 'Embeddable Widgets Hub', category: 'Widgets & Embeds', url: '/embeds', desc: 'Free <iframe> widget code snippets for website owners' },
-  { title: 'Stick Drift Embed Widget', category: 'Widgets & Embeds', url: '/embed/drift', desc: 'Embeddable stick drift visualizer widget' },
-  { title: 'Polling Rate Embed Widget', category: 'Widgets & Embeds', url: '/embed/polling', desc: 'Embeddable polling rate Hz widget' },
-  { title: 'Full Gamepad Embed Widget', category: 'Widgets & Embeds', url: '/embed/gamepad', desc: 'Embeddable 5-step full diagnostic wizard' },
-  { title: 'Health Score Embed Widget', category: 'Widgets & Embeds', url: '/embed/health', desc: 'Embeddable 0–100 health score generator' },
-  { title: 'Button Tester Embed Widget', category: 'Widgets & Embeds', url: '/embed/buttons', desc: 'Embeddable face button matrix tester' },
-  { title: 'Trigger Pressure Embed Widget', category: 'Widgets & Embeds', url: '/embed/triggers', desc: 'Embeddable L2/R2 pressure curve tester' },
-  { title: 'Vibration Embed Widget', category: 'Widgets & Embeds', url: '/embed/vibration', desc: 'Embeddable dual rumble motor tester' },
-  { title: 'Circularity Embed Widget', category: 'Widgets & Embeds', url: '/embed/circularity', desc: 'Embeddable 360° stick range tester' },
-  { title: 'Deadzone Embed Widget', category: 'Widgets & Embeds', url: '/embed/deadzone', desc: 'Embeddable deadzone threshold visualizer' },
-  { title: 'D-Pad Embed Widget', category: 'Widgets & Embeds', url: '/embed/dpad', desc: 'Embeddable 8-way D-pad precision tester' },
-  { title: 'Latency Embed Widget', category: 'Widgets & Embeds', url: '/embed/latency', desc: 'Embeddable input latency estimator' },
-  { title: 'Gyroscope Embed Widget', category: 'Widgets & Embeds', url: '/embed/gyroscope', desc: 'Embeddable 3-axis motion sensor tester' },
-  { title: 'Touchpad Embed Widget', category: 'Widgets & Embeds', url: '/embed/touchpad', desc: 'Embeddable PS5 touchpad tester' },
-  { title: 'Microphone Embed Widget', category: 'Widgets & Embeds', url: '/embed/microphone', desc: 'Embeddable mic + headset audio meter' },
-  { title: 'Mouse Scroll Embed Widget', category: 'Widgets & Embeds', url: '/embed/scroll', desc: 'Embeddable mouse scroll wheel tester (mouse widget)' },
+  { title: t('nav.widgets'), category: t('nav.widgets'), url: '/embeds', desc: 'Free <iframe> widget code snippets for website owners' },
+  { title: 'Stick Drift Embed Widget', category: t('nav.widgets'), url: '/embed/drift', desc: 'Embeddable stick drift visualizer widget' },
+  { title: 'Polling Rate Embed Widget', category: t('nav.widgets'), url: '/embed/polling', desc: 'Embeddable polling rate Hz widget' },
+  { title: 'Full Gamepad Embed Widget', category: t('nav.widgets'), url: '/embed/gamepad', desc: 'Embeddable 5-step full diagnostic wizard' },
+  { title: 'Health Score Embed Widget', category: t('nav.widgets'), url: '/embed/health', desc: 'Embeddable 0–100 health score generator' },
+  { title: 'Button Tester Embed Widget', category: t('nav.widgets'), url: '/embed/buttons', desc: 'Embeddable face button matrix tester' },
+  { title: 'Trigger Pressure Embed Widget', category: t('nav.widgets'), url: '/embed/triggers', desc: 'Embeddable L2/R2 pressure curve tester' },
+  { title: 'Vibration Embed Widget', category: t('nav.widgets'), url: '/embed/vibration', desc: 'Embeddable dual rumble motor tester' },
+  { title: 'Circularity Embed Widget', category: t('nav.widgets'), url: '/embed/circularity', desc: 'Embeddable 360° stick range tester' },
+  { title: 'Deadzone Embed Widget', category: t('nav.widgets'), url: '/embed/deadzone', desc: 'Embeddable deadzone threshold visualizer' },
+  { title: 'D-Pad Embed Widget', category: t('nav.widgets'), url: '/embed/dpad', desc: 'Embeddable 8-way D-pad precision tester' },
+  { title: 'Latency Embed Widget', category: t('nav.widgets'), url: '/embed/latency', desc: 'Embeddable input latency estimator' },
+  { title: 'Gyroscope Embed Widget', category: t('nav.widgets'), url: '/embed/gyroscope', desc: 'Embeddable 3-axis motion sensor tester' },
+  { title: 'Touchpad Embed Widget', category: t('nav.widgets'), url: '/embed/touchpad', desc: 'Embeddable PS5 touchpad tester' },
+  { title: 'Microphone Embed Widget', category: t('nav.widgets'), url: '/embed/microphone', desc: 'Embeddable mic + headset audio meter' },
+  { title: 'Mouse Scroll Embed Widget', category: t('nav.widgets'), url: '/embed/scroll', desc: 'Embeddable mouse scroll wheel tester (mouse widget)' },
 
   // Decision & Guides
-  { title: 'Warranty Assistant', category: 'Decision Tools', url: '/warranty', desc: 'Check RMA claim eligibility & generate reports' },
-  { title: 'Reliability Dashboard', category: 'Decision Tools', url: '/reliability/dashboard', desc: 'Modeled-reference drift & circularity baselines dashboard' },
-  { title: 'Reliability Data Hub', category: 'Decision Tools', url: '/reliability', desc: 'Stick drift baselines by controller model' },
-  { title: 'Controller Fit Blueprint', category: 'Decision Tools', url: '/fit', desc: 'Hand-to-grip fit analyzer with named picks' },
-  { title: 'Best Controllers for Small Hands', category: 'Decision Tools', url: '/best-controller-for/small-hands', desc: 'Computed picks for a 150 mm reference span' },
-  { title: 'Best Controllers for Large Hands', category: 'Decision Tools', url: '/best-controller-for/large-hands', desc: 'Computed picks for a 205 mm reference span' },
-  { title: 'Best Controllers for Limited Grip Strength', category: 'Decision Tools', url: '/best-controller-for/limited-grip-strength', desc: 'Lightweight picks ranked by published weight' },
-  { title: 'Fix vs Replace Calculator', category: 'Decision Tools', url: '/fix-or-replace', desc: 'Weigh repair cost vs replacement price' },
-  { title: 'PS5 DualSense Repair Guide', category: 'Repair Guides', url: '/fix/stick-drift/ps5-dualsense', desc: 'Step-by-step stick drift repair guide' },
-  { title: 'PS5 DualSense Hardware Profile', category: 'Hardware Profiles', url: '/controller/ps5-dualsense', desc: 'Teardown specs, latency & polling rate' },
-  { title: 'Controller Mod Builder', category: 'Repair Guides', url: '/mods', desc: 'Find compatible parts via WebHID motherboard detection' },
-  { title: 'Suggest a Test or Game Idea', category: 'Decision Tools', url: '/suggest', desc: 'Propose a new diagnostic tool or arcade game' },
+  { title: t('nav.warranty'), category: t('nav.resources'), url: '/warranty', desc: 'Check RMA claim eligibility & generate reports' },
+  { title: 'Reliability Dashboard', category: t('nav.resources'), url: '/reliability/dashboard', desc: 'Modeled-reference drift & circularity baselines dashboard' },
+  { title: 'Reliability Data Hub', category: t('nav.resources'), url: '/reliability', desc: 'Stick drift baselines by controller model' },
+  { title: 'Controller Fit Blueprint', category: t('nav.resources'), url: '/fit', desc: 'Hand-to-grip fit analyzer with named picks' },
+  { title: 'Best Controllers for Small Hands', category: t('nav.resources'), url: '/best-controller-for/small-hands', desc: 'Computed picks for a 150 mm reference span' },
+  { title: 'Best Controllers for Large Hands', category: t('nav.resources'), url: '/best-controller-for/large-hands', desc: 'Computed picks for a 205 mm reference span' },
+  { title: 'Best Controllers for Limited Grip Strength', category: t('nav.resources'), url: '/best-controller-for/limited-grip-strength', desc: 'Lightweight picks ranked by published weight' },
+  { title: t('nav.fixRepair'), category: t('nav.resources'), url: '/fix-or-replace', desc: 'Weigh repair cost vs replacement price' },
+  { title: 'PS5 DualSense Repair Guide', category: t('nav.resources'), url: '/fix/stick-drift/ps5-dualsense', desc: 'Step-by-step stick drift repair guide' },
+  { title: 'PS5 DualSense Hardware Profile', category: t('nav.resources'), url: '/controller/ps5-dualsense', desc: 'Teardown specs, latency & polling rate' },
+  { title: t('nav.modBuilder'), category: t('nav.resources'), url: '/mods', desc: 'Find compatible parts via WebHID motherboard detection' },
+  { title: t('nav.suggestTool'), category: t('nav.resources'), url: '/suggest', desc: 'Propose a new diagnostic tool or arcade game' },
 ];
+
+const searchItems = rawSearchItems.map((item) => ({
+  ...item,
+  url: l(item.url, currentLang),
+}));
 ---
 
 <div id="search-modal-backdrop" class="search-modal-backdrop" aria-hidden="true" hidden>
@@ -94,7 +97,7 @@ const searchItems = [
         type="text"
         id="global-search-input"
         class="search-input"
-        placeholder="Type to search tools, games, guides... (Esc to close)"
+        placeholder={t('nav.searchPlaceholder')}
         autocomplete="off"
         spellcheck="false"
       />
@@ -105,9 +108,9 @@ const searchItems = [
       <div class="search-empty-state" id="search-initial-state">
         <span>Popular Quick Searches:</span>
         <div class="search-quick-tags">
-          <button type="button" class="quick-tag" data-query="drift">Stick Drift</button>
-          <button type="button" class="quick-tag" data-query="polling">Polling Rate</button>
-          <button type="button" class="quick-tag" data-query="calibration">PS Calibration</button>
+          <button type="button" class="quick-tag" data-query="drift">{t('nav.stickDriftTest')}</button>
+          <button type="button" class="quick-tag" data-query="polling">{t('nav.pollingRate')}</button>
+          <button type="button" class="quick-tag" data-query="calibration">{t('nav.calibrator')}</button>
           <button type="button" class="quick-tag" data-query="mouse">Mouse Hz</button>
           <button type="button" class="quick-tag" data-query="wheel">Steering Wheel</button>
         </div>

@@ -10,7 +10,7 @@ if [ ! -d "dist" ]; then
 fi
 
 # 2. Check for unexpected noindex tags in production output
-NOINDEX_FILES=$(grep -rn "noindex" dist/ 2>/dev/null | grep -vE "404.html|500.html" || true)
+NOINDEX_FILES=$(grep -rn "noindex" dist/ 2>/dev/null | grep -vE "404.html|500.html|embed/|report/" || true)
 if [ -n "$NOINDEX_FILES" ]; then
   echo "⚠️ Warning: Found noindex tags in live build output:"
   echo "$NOINDEX_FILES"
@@ -52,4 +52,9 @@ else
   exit 1
 fi
 
+# 6. Deep Route, Link & Language Integrity Validation
+echo "🔍 Running Deep Route & Link Integrity Verification..."
+python3 scripts/verify-routes-and-links.py
+
 echo "🚀 SEO Quality Gate PASSED successfully!"
+

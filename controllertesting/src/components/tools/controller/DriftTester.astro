@@ -7,8 +7,11 @@
  * UPGRADED: High-energy premium UI & dynamic hardware simulator overlay.
  */
 import InterpretationCard from '../../features/InterpretationCard.astro';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+const currentLang = getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 ---
-<div class="doppelrand-shell group relative" id="drift-tester-root" data-model="none">
+<div class="doppelrand-shell group relative" id="drift-tester-root" data-model="none" data-connected={t("telemetry.activeState")} data-healthy={t("tester.healthy")} data-minor-drift={t("tester.driftDetected")} data-severe-drift={t("tester.severeDrift")}>
   <div class="doppelrand-core flex flex-col gap-8 relative z-10">
     {/* Dynamic ambient glow based on controller type */}
     <div class="ambient-glow" id="ambient-glow"></div>
@@ -17,9 +20,9 @@ import InterpretationCard from '../../features/InterpretationCard.astro';
     <div class="tester-status-bar card-base">
       <div class="status-indicator">
         <span class="status-dot" id="gp-status-dot"></span>
-        <span class="status-text font-medium" id="gp-status-text">Connect a controller and press any button...</span>
+        <span class="status-text font-medium" id="gp-status-text">{t("tester.promptConnect")}</span>
       </div>
-      <div class="controller-name tracking-wider text-accent" id="gp-model-name">NO DEVICE</div>
+      <div class="controller-name tracking-wider text-accent" id="gp-model-name">{t("tester.noDevice")}</div>
     </div>
 
   {/* ── Visualizers Grid (Left & Right Sticks) ── */}
@@ -28,7 +31,7 @@ import InterpretationCard from '../../features/InterpretationCard.astro';
     {/* Left Analog Stick */}
     <div class="stick-card card-gradient card-hover group/stick">
       <div class="stick-card-header">
-        <h3 class="stick-title text-primary font-bold tracking-tight">Left Analog Stick</h3>
+        <h3 class="stick-title text-primary font-bold tracking-tight">{t("tester.leftStick")}</h3>
         <span class="drift-value font-mono text-2xl" id="left-drift-val">0.0%</span>
       </div>
 
@@ -39,16 +42,16 @@ import InterpretationCard from '../../features/InterpretationCard.astro';
 
       <div class="stick-metrics">
         <div class="metric">
-          <span class="m-label uppercase tracking-widest text-xs text-secondary">X Axis</span>
+          <span class="m-label uppercase tracking-widest text-xs text-secondary">{t("tester.xAxis")}</span>
           <span class="m-val mono text-primary" id="left-x-val">0.0000</span>
         </div>
         <div class="metric">
-          <span class="m-label uppercase tracking-widest text-xs text-secondary">Y Axis</span>
+          <span class="m-label uppercase tracking-widest text-xs text-secondary">{t("tester.yAxis")}</span>
           <span class="m-val mono text-primary" id="left-y-val">0.0000</span>
         </div>
         <div class="metric">
-          <span class="m-label uppercase tracking-widest text-xs text-secondary">Status</span>
-          <span class="m-val badge-pass inline-flex" id="left-status-badge">Healthy</span>
+          <span class="m-label uppercase tracking-widest text-xs text-secondary">{t("tester.status")}</span>
+          <span class="m-val badge-pass inline-flex" id="left-status-badge">{t("tester.healthy")}</span>
         </div>
       </div>
     </div>
@@ -56,7 +59,7 @@ import InterpretationCard from '../../features/InterpretationCard.astro';
     {/* Right Analog Stick */}
     <div class="stick-card card-gradient card-hover group/stick">
       <div class="stick-card-header">
-        <h3 class="stick-title text-primary font-bold tracking-tight">Right Analog Stick</h3>
+        <h3 class="stick-title text-primary font-bold tracking-tight">{t("tester.rightStick")}</h3>
         <span class="drift-value font-mono text-2xl" id="right-drift-val">0.0%</span>
       </div>
 
@@ -67,16 +70,16 @@ import InterpretationCard from '../../features/InterpretationCard.astro';
 
       <div class="stick-metrics">
         <div class="metric">
-          <span class="m-label uppercase tracking-widest text-xs text-secondary">X Axis</span>
+          <span class="m-label uppercase tracking-widest text-xs text-secondary">{t("tester.xAxis")}</span>
           <span class="m-val mono text-primary" id="right-x-val">0.0000</span>
         </div>
         <div class="metric">
-          <span class="m-label uppercase tracking-widest text-xs text-secondary">Y Axis</span>
+          <span class="m-label uppercase tracking-widest text-xs text-secondary">{t("tester.yAxis")}</span>
           <span class="m-val mono text-primary" id="right-y-val">0.0000</span>
         </div>
         <div class="metric">
-          <span class="m-label uppercase tracking-widest text-xs text-secondary">Status</span>
-          <span class="m-val badge-pass inline-flex" id="right-status-badge">Healthy</span>
+          <span class="m-label uppercase tracking-widest text-xs text-secondary">{t("tester.status")}</span>
+          <span class="m-val badge-pass inline-flex" id="right-status-badge">{t("tester.healthy")}</span>
         </div>
       </div>
     </div>
@@ -359,8 +362,13 @@ import InterpretationCard from '../../features/InterpretationCard.astro';
       }
 
       if (activeGp) {
+        const txtConnected = rootEl?.getAttribute('data-connected') || 'Controller Connected';
+        const txtHealthy = rootEl?.getAttribute('data-healthy') || 'Healthy';
+        const txtMinor = rootEl?.getAttribute('data-minor-drift') || 'Minor Drift';
+        const txtSevere = rootEl?.getAttribute('data-severe-drift') || 'Severe Drift';
+
         if (statusDot) statusDot.className = 'status-dot active';
-        if (statusText) statusText.textContent = 'Controller Connected';
+        if (statusText) statusText.textContent = txtConnected;
         if (modelName) modelName.textContent = activeGp.id;
 
         const state = parseGamepadState(activeGp);
@@ -388,13 +396,13 @@ import InterpretationCard from '../../features/InterpretationCard.astro';
 
         if (leftBadge) {
           if (state.leftStick.driftPct > 10) {
-            leftBadge.textContent = 'Severe Drift';
+            leftBadge.textContent = txtSevere;
             leftBadge.className = 'm-val badge-fail inline-flex px-2 py-0.5 rounded-md';
           } else if (state.leftStick.driftPct > 2) {
-            leftBadge.textContent = 'Minor Drift';
+            leftBadge.textContent = txtMinor;
             leftBadge.className = 'm-val badge-warning inline-flex px-2 py-0.5 rounded-md';
           } else {
-            leftBadge.textContent = 'Healthy';
+            leftBadge.textContent = txtHealthy;
             leftBadge.className = 'm-val badge-pass inline-flex px-2 py-0.5 rounded-md';
           }
         }
@@ -410,13 +418,13 @@ import InterpretationCard from '../../features/InterpretationCard.astro';
 
         if (rightBadge) {
           if (state.rightStick.driftPct > 10) {
-            rightBadge.textContent = 'Severe Drift';
+            rightBadge.textContent = txtSevere;
             rightBadge.className = 'm-val badge-fail inline-flex px-2 py-0.5 rounded-md';
           } else if (state.rightStick.driftPct > 2) {
-            rightBadge.textContent = 'Minor Drift';
+            rightBadge.textContent = txtMinor;
             rightBadge.className = 'm-val badge-warning inline-flex px-2 py-0.5 rounded-md';
           } else {
-            rightBadge.textContent = 'Healthy';
+            rightBadge.textContent = txtHealthy;
             rightBadge.className = 'm-val badge-pass inline-flex px-2 py-0.5 rounded-md';
           }
         }

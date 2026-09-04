@@ -38,17 +38,14 @@ function formatDate(iso: string | undefined): string {
 const displayPublished = formatDate(datePublished);
 const displayModified = formatDate(dateModified);
 
-// Person schema for E-E-A-T
+const isTeam = name.includes('Team') || name.includes('Lab') || name.includes('ControllerTesting');
+
+// Schema for E-E-A-T (valid typing for Persons vs Organizations)
 const authorSchema = {
   '@context': 'https://schema.org',
-  '@type': 'Person',
+  '@type': isTeam ? 'Organization' : 'Person',
   name,
-  jobTitle: role,
-  worksFor: {
-    '@type': 'Organization',
-    name: 'ControllerTesting.com',
-    url: 'https://controllertesting.com'
-  },
+  ...(isTeam ? {} : { jobTitle: role, worksFor: { '@type': 'Organization', name: 'ControllerTesting.com', url: 'https://controllertesting.com' } }),
   url: 'https://controllertesting.com/about',
   knowsAbout: [
     'Gamepad API', 'Controller Hardware', 'Stick Drift', 'Hall Effect Sensors',
@@ -57,7 +54,7 @@ const authorSchema = {
 };
 ---
 
-<div class="author-byline" itemscope itemtype="https://schema.org/Person">
+<div class="author-byline" itemscope itemtype={isTeam ? "https://schema.org/Organization" : "https://schema.org/Person"}>
   <div class="author-avatar" aria-hidden="true">
     <!-- CT Research Team icon -->
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">

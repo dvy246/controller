@@ -5,8 +5,10 @@
 import { ui, defaultLang, languages } from "./translations";
 
 export function getLangFromUrl(url: URL) {
-  const [, lang] = url.pathname.split("/");
-  if (lang in ui) return lang as keyof typeof ui;
+  const cleanPath = url.pathname.replace(/\.html$/, '');
+  const segments = cleanPath.split('/').filter(Boolean);
+  const lang = segments[0];
+  if (lang && lang in ui) return lang as keyof typeof ui;
   return defaultLang;
 }
 
@@ -19,6 +21,8 @@ export function useTranslations(lang: keyof typeof ui) {
 export function getLocalizedUrl(url: URL, lang: keyof typeof languages, overridePath?: string) {
   const currentLang = getLangFromUrl(url);
   let pathname = overridePath !== undefined ? overridePath : url.pathname;
+  // Ensure clean route without .html extension
+  pathname = pathname.replace(/\.html$/, '');
 
   if (currentLang !== defaultLang && overridePath === undefined) {
     pathname = pathname.replace(`/${currentLang}`, "");
@@ -38,5 +42,15 @@ export function getLocalizedUrl(url: URL, lang: keyof typeof languages, override
   const targetPath = pathname.startsWith("/") ? pathname : "/" + pathname;
   const result = lang === defaultLang ? targetPath : `/${lang}${targetPath}`;
 
-  return result.length > 1 && result.endsWith("/") ? result.slice(0, -1) : result;
+  const cleanResult = result.length > 1 && result.endsWith("/") ? result.slice(0, -1) : result;
+  return cleanResult.replace(/\.html$/, '');
 }
+
+export function l(path: string, currentLang: keyof typeof languages = defaultLang): string {
+  if (currentLang === defaultLang) return path;
+  if (path === '/' || path === '') return `/${currentLang}`;
+  return `/${currentLang}${path.startsWith('/') ? path : '/' + path}`;
+}
+
+export const supportedLocales = Object.keys(languages) as (keyof typeof languages)[];
+export const nonDefaultLocales = supportedLocales.filter((loc) => loc !== defaultLang);

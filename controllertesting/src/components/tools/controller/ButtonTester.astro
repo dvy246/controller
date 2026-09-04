@@ -1,10 +1,12 @@
 ---
 /**
  * ButtonTester.astro — Interactive Button Response & Ghosting Diagnostic Tool
- * Visual gamepad outline with real-time button highlights, latency counter per button,
- * and multi-button ghosting test.
  */
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+const currentLang = getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 ---
+
 
 <div class="doppelrand-shell group relative" data-model="none" id="btn-tester-root">
   <div class="ambient-glow"></div>
@@ -12,15 +14,15 @@
   <div class="tester-status-bar card-base">
     <div class="status-indicator">
       <span class="status-dot" id="btn-status-dot"></span>
-      <span class="status-text" id="btn-status-text">Press any button to begin testing...</span>
+      <span class="status-text" id="btn-status-text">{t("tester.promptConnect")}</span>
     </div>
-    <div class="controller-name" id="btn-model-name">Gamepad Disconnected</div>
+    <div class="controller-name" id="btn-model-name">{t("tester.disconnected")}</div>
   </div>
 
   <div class="button-tester-grid">
     {/* Face Buttons */}
     <div class="btn-group-card card-gradient card-hover">
-      <h3 class="group-title">Face Buttons (Action)</h3>
+      <h3 class="group-title">{t("tester.faceButtons")}</h3>
       <div class="chips-flex">
         <div class="chip-item" id="chip-btn-0"><span class="chip-label">A / Cross</span> <span class="chip-count" id="count-0">0</span></div>
         <div class="chip-item" id="chip-btn-1"><span class="chip-label">B / Circle</span> <span class="chip-count" id="count-1">0</span></div>
@@ -31,7 +33,7 @@
 
     {/* Bumpers & Triggers */}
     <div class="btn-group-card card-gradient card-hover">
-      <h3 class="group-title">Shoulders & Triggers</h3>
+      <h3 class="group-title">{t("tester.shouldersTriggers")}</h3>
       <div class="chips-flex">
         <div class="chip-item" id="chip-btn-4"><span class="chip-label">L1 / LB</span> <span class="chip-count" id="count-4">0</span></div>
         <div class="chip-item" id="chip-btn-5"><span class="chip-label">R1 / RB</span> <span class="chip-count" id="count-5">0</span></div>
@@ -42,12 +44,12 @@
 
     {/* D-Pad */}
     <div class="btn-group-card card-gradient card-hover">
-      <h3 class="group-title">D-Pad Directional</h3>
+      <h3 class="group-title">{t("tester.dpadDirectional")}</h3>
       <div class="chips-flex">
-        <div class="chip-item" id="chip-btn-12"><span class="chip-label">Up</span> <span class="chip-count" id="count-12">0</span></div>
-        <div class="chip-item" id="chip-btn-13"><span class="chip-label">Down</span> <span class="chip-count" id="count-13">0</span></div>
-        <div class="chip-item" id="chip-btn-14"><span class="chip-label">Left</span> <span class="chip-count" id="count-14">0</span></div>
-        <div class="chip-item" id="chip-btn-15"><span class="chip-label">Right</span> <span class="chip-count" id="count-15">0</span></div>
+        <div class="chip-item" id="chip-btn-12"><span class="chip-label">{t("tester.up")}</span> <span class="chip-count" id="count-12">0</span></div>
+        <div class="chip-item" id="chip-btn-13"><span class="chip-label">{t("tester.down")}</span> <span class="chip-count" id="count-13">0</span></div>
+        <div class="chip-item" id="chip-btn-14"><span class="chip-label">{t("tester.left")}</span> <span class="chip-count" id="count-14">0</span></div>
+        <div class="chip-item" id="chip-btn-15"><span class="chip-label">{t("tester.right")}</span> <span class="chip-count" id="count-15">0</span></div>
       </div>
     </div>
 

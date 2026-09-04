@@ -14,6 +14,9 @@ interface Props {
 const { title, toolSlug } = Astro.props;
 const cleanPath = Astro.url.pathname === '/' ? '/' : Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '');
 const canonicalUrl = `https://controllertesting.com${cleanPath}`;
+const targetUrl = toolSlug === 'scroll' 
+  ? 'https://controllertesting.com/test/mouse/scroll' 
+  : `https://controllertesting.com/test/controller/${toolSlug}`;
 ---
 
 <!DOCTYPE html>
@@ -29,9 +32,10 @@ const canonicalUrl = `https://controllertesting.com${cleanPath}`;
   </head>
   <body class="embed-body">
     <div class="embed-wrapper">
+      <h1 class="sr-only">{title}</h1>
       <slot />
       <div class="embed-footer">
-        <a href={`https://controllertesting.com/test/controller/${toolSlug}`} target="_blank" rel="noopener noreferrer" class="embed-attribution">
+        <a href={targetUrl} target="_blank" rel="noopener noreferrer" class="embed-attribution">
           Powered by <span class="brand-highlight">ControllerTesting.com</span>
         </a>
       </div>

@@ -1,8 +1,10 @@
 ---
-import { getLangFromUrl } from '../../i18n/utils';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 const currentLang = getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 const l = (path: string) =>
   currentLang === 'en' ? path : path === '/' ? `/${currentLang}` : `/${currentLang}${path}`;
+
 
 /**
  * Header.astro — ControllerTesting.com
@@ -68,7 +70,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
         <li class="nav-dropdown">
           <button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">
             <span class="nav-dot" aria-hidden="true"></span>
-            Tools
+            {t("nav.tools")}
             <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M6 9l6 6 6-6"/>
             </svg>
@@ -76,17 +78,17 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
           <div class="dropdown-menu" role="menu" aria-label="Diagnostics">
             <div class="dropdown-grid">
               <div class="dropdown-column">
-                <span class="dropdown-category">Diagnostic Tools</span>
+                <span class="dropdown-category">{t('nav.diagTools')}</span>
                 <a role="menuitem" class="dropdown-item" href={l('/test/controller')}>
                   <div class="dropdown-item-icon" style="background: rgba(59, 130, 246, 0.12); border-color: rgba(59, 130, 246, 0.3);" aria-hidden="true">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="nav-ctrl" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#60A5FA"/></linearGradient></defs><rect x="2" y="6" width="20" height="12" rx="4" fill="url(#nav-ctrl)" fill-opacity="0.25" stroke="#3B82F6" stroke-width="2"/><path d="M6 12h4M8 10v4" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/><circle cx="15" cy="11" r="1.5" fill="#EF4444"/><circle cx="18" cy="13" r="1.5" fill="#10B981"/></svg>
                   </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">
-                      Controller Tests
+                      {t('nav.controllerTests')}
                       <span class="nav-badge badge-core">Core</span>
                     </div>
-                    <span class="dropdown-item-desc">Stick drift, circularity &amp; input latency</span>
+                    <span class="dropdown-item-desc">{t('nav.controllerTestsDesc')}</span>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href={l('/test/controller/drift')}>
@@ -95,10 +97,10 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                   </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">
-                      Stick Drift Test
+                      {t('nav.stickDriftTest')}
                       <span class="nav-badge badge-speed">Hot</span>
                     </div>
-                    <span class="dropdown-item-desc">High-precision 0.1% drift detection</span>
+                    <span class="dropdown-item-desc">{t('nav.stickDriftDesc')}</span>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href={l('/test/mouse')}>
@@ -107,10 +109,10 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                   </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">
-                      Mouse Suite
+                      {t('nav.mouseSuite')}
                       <span class="nav-badge badge-precision">8KHz</span>
                     </div>
-                    <span class="dropdown-item-desc">CPS, polling rate, DPI &amp; double-click</span>
+                    <span class="dropdown-item-desc">{t('nav.mouseSuiteDesc')}</span>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href={l('/test/keyboard')}>
@@ -119,26 +121,26 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                   </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">
-                      Keyboard &amp; MIDI
+                      {t('nav.keyboardMidi')}
                       <span class="nav-badge badge-midi">WebMIDI</span>
                     </div>
-                    <span class="dropdown-item-desc">NKRO matrix &amp; MIDI velocity</span>
+                    <span class="dropdown-item-desc">{t('nav.keyboardMidiDesc')}</span>
                   </div>
                 </a>
               </div>
               
               <div class="dropdown-column">
-                <span class="dropdown-category">Wizards &amp; Telemetry</span>
+                <span class="dropdown-category">{t('nav.wizardsTelemetry')}</span>
                 <a role="menuitem" class="dropdown-item dropdown-item-featured" href={l('/test/controller/full-diagnostic')}>
                   <div class="dropdown-item-icon" style="background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.35);" aria-hidden="true">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="nav-diag" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F59E0B"/><stop offset="100%" stop-color="#EF4444"/></linearGradient></defs><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="url(#nav-diag)" fill-opacity="0.3" stroke="#F59E0B" stroke-width="2" stroke-linejoin="round"/></svg>
                   </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">
-                      Full Diagnostic Wizard
+                      {t('nav.fullDiag')}
                       <span class="nav-badge badge-pro">PRO</span>
                     </div>
-                    <span class="dropdown-item-desc">5-step hardware checkup &amp; score</span>
+                    <span class="dropdown-item-desc">{t('nav.fullDiagDesc')}</span>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href={l('/test/controller/quick-health')}>
@@ -147,10 +149,10 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                   </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">
-                      Quick Health Check
+                      {t('nav.quickHealth')}
                       <span class="nav-badge badge-speed">60s</span>
                     </div>
-                    <span class="dropdown-item-desc">Instant hardware status grade</span>
+                    <span class="dropdown-item-desc">{t('nav.quickHealthDesc')}</span>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href={l('/test/controller/passport')}>
@@ -159,25 +161,25 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                   </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">
-                      Controller Passport
+                      {t('nav.passport')}
                       <span class="nav-badge badge-live">Live</span>
                     </div>
-                    <span class="dropdown-item-desc">Verifiable hardware evidence report</span>
+                    <span class="dropdown-item-desc">{t('nav.passportDesc')}</span>
                   </div>
                 </a>
               </div>
               <div class="dropdown-column">
-                <span class="dropdown-category">Advanced Diagnostics</span>
+                <span class="dropdown-category">{t('nav.advDiagnostics')}</span>
                 <a role="menuitem" class="dropdown-item" href={l('/calibrate/dualsense/hall-effect')}>
                   <div class="dropdown-item-icon" style="background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.3);" aria-hidden="true">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 11V3" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"/><circle cx="4" cy="12" r="2.5" fill="#38BDF8"/><circle cx="12" cy="10" r="2.5" fill="#818CF8"/><circle cx="20" cy="14" r="2.5" fill="#C084FC"/></svg>
                   </div>
                   <div class="dropdown-item-content">
                     <div class="dropdown-item-title">
-                      WebHID Calibrator
+                      {t('nav.calibrator')}
                       <span class="nav-badge badge-pass">New</span>
                     </div>
-                    <span class="dropdown-item-desc">Hardware zero-point reset</span>
+                    <span class="dropdown-item-desc">{t('nav.calibratorDesc')}</span>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href={l('/deadzone-calculator/apex-legends/ps5')}>
@@ -185,8 +187,8 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#EF4444" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="#F59E0B" fill-opacity="0.3" stroke="#F59E0B" stroke-width="1.5"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="#EF4444" stroke-width="1.5"/></svg>
                   </div>
                   <div class="dropdown-item-content">
-                    <div class="dropdown-item-title">Deadzone Sandbox</div>
-                    <span class="dropdown-item-desc">Game-engine specific tuning</span>
+                    <div class="dropdown-item-title">{t('nav.deadzoneSandbox')}</div>
+                    <span class="dropdown-item-desc">{t('nav.deadzoneSandboxDesc')}</span>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href={l('/overclock-validator/ps5/usb-c')}>
@@ -194,8 +196,8 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FACC15" stroke-width="2"/><polyline points="12 6 12 12 16 14" stroke="#00F2FE" stroke-width="2.5" stroke-linecap="round"/></svg>
                   </div>
                   <div class="dropdown-item-content">
-                    <div class="dropdown-item-title">Overclock Validator</div>
-                    <span class="dropdown-item-desc">Observed Hz &amp; input latency</span>
+                    <div class="dropdown-item-title">{t('nav.overclockValidator')}</div>
+                    <span class="dropdown-item-desc">{t('nav.overclockValidatorDesc')}</span>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href={l('/haptics/unreal/explosion')}>
@@ -203,19 +205,20 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M2 12h2M6 8v8M10 4v16M14 6v12M18 9v6M22 12h-2" stroke="#EC4899" stroke-width="2.5" stroke-linecap="round"/></svg>
                   </div>
                   <div class="dropdown-item-content">
-                    <div class="dropdown-item-title">Haptic Composer</div>
-                    <span class="dropdown-item-desc">WebAudio rumble generation</span>
+                    <div class="dropdown-item-title">{t('nav.hapticComposer')}</div>
+                    <span class="dropdown-item-desc">{t('nav.hapticComposerDesc')}</span>
                   </div>
                 </a>
               </div>
               <div class="dropdown-column">
-                <span class="dropdown-category">Niche Testers</span>
+                <span class="dropdown-category">{t('nav.nicheTesters')}</span>
+
                 <a role="menuitem" class="dropdown-item" href={l('/test/controller/nintendo-switch')}>
                   <div class="dropdown-item-icon" style="background: rgba(230, 0, 18, 0.15); border-color: rgba(230, 0, 18, 0.3);" aria-hidden="true">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="12" rx="4" fill="#E60012" fill-opacity="0.2" stroke="#E60012" stroke-width="2"/><circle cx="8" cy="12" r="2" fill="#E60012"/><circle cx="16" cy="12" r="2" fill="#00C3E3"/></svg>
                   </div>
                   <div class="dropdown-item-content">
-                    <div class="dropdown-item-title">Nintendo Switch</div>
+                    <div class="dropdown-item-title">{t("nav.nintendoSwitch")}</div>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href={l('/test/controller/ps5')}>
@@ -223,7 +226,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="12" rx="4" fill="#2563EB" fill-opacity="0.2" stroke="#2563EB" stroke-width="2"/><path d="M6 12h4M8 10v4" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="12" r="1.5" fill="#3B82F6"/></svg>
                   </div>
                   <div class="dropdown-item-content">
-                    <div class="dropdown-item-title">PS5 DualSense</div>
+                    <div class="dropdown-item-title">{t("nav.ps5DualSense")}</div>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href={l('/test/controller/xbox')}>
@@ -231,7 +234,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="12" rx="4" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="2"/><circle cx="8" cy="12" r="2" fill="#10B981"/><circle cx="16" cy="12" r="2" fill="#34D399"/></svg>
                   </div>
                   <div class="dropdown-item-content">
-                    <div class="dropdown-item-title">Xbox Controller</div>
+                    <div class="dropdown-item-title">{t("nav.xboxController")}</div>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href={l('/test/controller/joycon')}>
@@ -239,7 +242,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="6" y="2" width="12" height="20" rx="6" fill="#F43F5E" fill-opacity="0.2" stroke="#F43F5E" stroke-width="2"/><circle cx="12" cy="8" r="2" fill="#F43F5E"/></svg>
                   </div>
                   <div class="dropdown-item-content">
-                    <div class="dropdown-item-title">Joy-Con</div>
+                    <div class="dropdown-item-title">{t("nav.joycon")}</div>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href={l('/test/controller/switch-pro')}>
@@ -247,7 +250,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="12" rx="4" fill="#7C3AED" fill-opacity="0.2" stroke="#7C3AED" stroke-width="2"/><path d="M6 12h4M8 10v4" stroke="#A855F7" stroke-width="2" stroke-linecap="round"/></svg>
                   </div>
                   <div class="dropdown-item-content">
-                    <div class="dropdown-item-title">Switch Pro</div>
+                    <div class="dropdown-item-title">{t("nav.switchPro")}</div>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href={l('/test/controller/joystick-tester')}>
@@ -255,7 +258,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2v14" stroke="#F97316" stroke-width="3" stroke-linecap="round"/><circle cx="12" cy="20" r="3" fill="#F59E0B"/></svg>
                   </div>
                   <div class="dropdown-item-content">
-                    <div class="dropdown-item-title">Joystick Tester</div>
+                    <div class="dropdown-item-title">{t("nav.joystickTester")}</div>
                   </div>
                 </a>
                 <a role="menuitem" class="dropdown-item" href={l('/test/controller/gamepad-mapping')}>
@@ -263,14 +266,14 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polygon points="12 2 2 7 12 12 22 7 12 2" fill="#8B5CF6" fill-opacity="0.3" stroke="#8B5CF6" stroke-width="2"/><polyline points="2 17 12 22 22 17" stroke="#EC4899" stroke-width="2"/><polyline points="2 12 12 17 22 12" stroke="#06B6D4" stroke-width="2"/></svg>
                   </div>
                   <div class="dropdown-item-content">
-                    <div class="dropdown-item-title">Gamepad Mapping</div>
+                    <div class="dropdown-item-title">{t("nav.gamepadMapping")}</div>
                   </div>
                 </a>
               </div>
             </div>
             <div class="dropdown-footer">
               <a role="menuitem" class="dropdown-footer-link" href={l('/tools')}>
-                <span>View All 39 Diagnostic Tools</span>
+                <span>{t("nav.viewAllTools")}</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </a>
             </div>
@@ -284,7 +287,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
         <li class="nav-dropdown">
           <button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">
             <span class="nav-dot" aria-hidden="true"></span>
-            Play
+            {t("nav.play")}
             <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M6 9l6 6 6-6"/>
             </svg>
@@ -294,12 +297,12 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
               {
                 [
                   [
-                    { label: 'Aim & Control', games: ['stick-sniper', 'stick-maze', 'trigger-racer', 'nova-blaster'] },
-                    { label: 'Combo & Arcade', games: ['combo-rush', 'kart-drift'] },
+                    { label: t('nav.aimControl'), games: ['stick-sniper', 'stick-maze', 'trigger-racer', 'nova-blaster'] },
+                    { label: t('nav.comboArcade'), games: ['combo-rush', 'kart-drift'] },
                   ],
                   [
-                    { label: 'Reflex & Timing', games: ['button-blitz', 'quick-draw', 'beat-drop', 'memory-pulse', 'asteroid-dash'] },
-                    { label: 'Party & Multiplayer', games: ['neon-striker', 'signal-salvage'] },
+                    { label: t('nav.reflexTiming'), games: ['button-blitz', 'quick-draw', 'beat-drop', 'memory-pulse', 'asteroid-dash'] },
+                    { label: t('nav.partyMultiplayer'), games: ['neon-striker', 'signal-salvage'] },
                   ],
                 ].map((groups) => (
                   <div class="dropdown-column">
@@ -323,7 +326,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                                   </div>
                                   <div class="dropdown-item-content">
                                     <div class="dropdown-item-title">
-                                      {game.name}
+                                      {t(('game.' + slug + '.name') as any) || game.name}
                                       <span class="nav-badge badge-games" style="font-size:0.6rem; padding:1px 6px; border-radius:10px; background:rgba(236,72,153,0.15); color:#ec4899; border:1px solid rgba(236,72,153,0.3);">{game.xp} XP</span>
                                     </div>
                                   </div>
@@ -340,7 +343,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
             </div>
             <div class="dropdown-footer">
               <a role="menuitem" class="dropdown-footer-link" href={l('/games')}>
-                <span>View All {gameEntries.length} Arcade Games</span>
+                <span>{t("nav.viewAllGames")}</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </a>
             </div>
@@ -351,7 +354,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
         <li class="nav-dropdown">
           <button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">
             <span class="nav-dot" aria-hidden="true"></span>
-            Resources
+            {t("nav.resources")}
             <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M6 9l6 6 6-6"/>
             </svg>
@@ -363,10 +366,10 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
               </div>
               <div class="dropdown-item-content">
                 <div class="dropdown-item-title">
-                  Mod &amp; Repair Builder
+                  {t("nav.modBuilder")}
                   <span class="nav-badge badge-pro">New</span>
                 </div>
-                <span class="dropdown-item-desc">Hardware compatibility &amp; part finder</span>
+                <span class="dropdown-item-desc">{t("nav.modBuilderDesc")}</span>
               </div>
             </a>
             <a role="menuitem" class="dropdown-item" href={l('/fix-or-replace')}>
@@ -374,8 +377,8 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" fill="#F59E0B" fill-opacity="0.2" stroke="#F59E0B" stroke-width="2"/></svg>
               </div>
               <div class="dropdown-item-content">
-                <div class="dropdown-item-title">Fix &amp; Repair</div>
-                <span class="dropdown-item-desc">Repair cost vs replacement decision calculator</span>
+                <div class="dropdown-item-title">{t("nav.fixRepair")}</div>
+                <span class="dropdown-item-desc">{t("nav.fixRepairDesc")}</span>
               </div>
             </a>
             <a role="menuitem" class="dropdown-item" href={l('/warranty')}>
@@ -383,8 +386,8 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="#10B981" fill-opacity="0.25" stroke="#10B981" stroke-width="2"/></svg>
               </div>
               <div class="dropdown-item-content">
-                <div class="dropdown-item-title">Warranty Assistant</div>
-                <span class="dropdown-item-desc">RMA eligibility checker &amp; claim evidence</span>
+                <div class="dropdown-item-title">{t("nav.warranty")}</div>
+                <span class="dropdown-item-desc">{t("nav.warrantyDesc")}</span>
               </div>
             </a>
             <a role="menuitem" class="dropdown-item" href={l('/embeds')}>
@@ -393,10 +396,10 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
               </div>
               <div class="dropdown-item-content">
                 <div class="dropdown-item-title">
-                  Widgets &amp; Embeds
+                  {t("nav.widgets")}
                   <span class="nav-badge badge-widgets">15 Widgets</span>
                 </div>
-                <span class="dropdown-item-desc">Embed diagnostic widgets on your site</span>
+                <span class="dropdown-item-desc">{t("nav.widgetsDesc")}</span>
               </div>
             </a>
             <a role="menuitem" class="dropdown-item" href={l('/compatibility')}>
@@ -404,8 +407,8 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><line x1="18" y1="20" x2="18" y2="10" stroke="#06B6D4" stroke-width="3" stroke-linecap="round"/><line x1="12" y1="20" x2="12" y2="4" stroke="#3B82F6" stroke-width="3" stroke-linecap="round"/><line x1="6" y1="20" x2="6" y2="14" stroke="#10B981" stroke-width="3" stroke-linecap="round"/></svg>
               </div>
               <div class="dropdown-item-content">
-                <div class="dropdown-item-title">Compatibility Matrix</div>
-                <span class="dropdown-item-desc">Browser API support across OS &amp; controllers</span>
+                <div class="dropdown-item-title">{t("nav.compatibility")}</div>
+                <span class="dropdown-item-desc">{t("nav.compatibilityDesc")}</span>
               </div>
             </a>
             <div class="dropdown-sep" role="separator"></div>
@@ -414,8 +417,8 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="#6366F1" stroke-width="2"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" fill="#6366F1" fill-opacity="0.2" stroke="#818CF8" stroke-width="2"/></svg>
               </div>
               <div class="dropdown-item-content">
-                <div class="dropdown-item-title">Learn Guides</div>
-                <span class="dropdown-item-desc">Deep-dive technical repair &amp; tuning articles</span>
+                <div class="dropdown-item-title">{t("nav.learn")}</div>
+                <span class="dropdown-item-desc">{t("nav.learnDesc")}</span>
               </div>
             </a>
             <div class="dropdown-sep" role="separator"></div>
@@ -424,8 +427,8 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#3B82F6" stroke-width="2"/><line x1="12" y1="16" x2="12" y2="12" stroke="#60A5FA" stroke-width="2.5" stroke-linecap="round"/><circle cx="12" cy="8" r="1.25" fill="#60A5FA"/></svg>
               </div>
               <div class="dropdown-item-content">
-                <div class="dropdown-item-title">About Us</div>
-                <span class="dropdown-item-desc">Our engineering mission &amp; architecture</span>
+                <div class="dropdown-item-title">{t("nav.about")}</div>
+                <span class="dropdown-item-desc">{t("nav.aboutDesc")}</span>
               </div>
             </a>
             <a role="menuitem" class="dropdown-item" href={l('/contact')}>
@@ -433,8 +436,8 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="3" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="2"/><path d="M3 7l9 6 9-6" stroke="#34D399" stroke-width="2" stroke-linecap="round"/></svg>
               </div>
               <div class="dropdown-item-content">
-                <div class="dropdown-item-title">Contact Us</div>
-                <span class="dropdown-item-desc">Get in touch with support &amp; engineering</span>
+                <div class="dropdown-item-title">{t("nav.contact")}</div>
+                <span class="dropdown-item-desc">{t("nav.contactDesc")}</span>
               </div>
             </a>
             <a role="menuitem" class="dropdown-item" href={l('/privacy')}>
@@ -442,8 +445,8 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="#8B5CF6" fill-opacity="0.2" stroke="#8B5CF6" stroke-width="2"/><circle cx="12" cy="11" r="2.5" stroke="#A855F7" stroke-width="1.5"/></svg>
               </div>
               <div class="dropdown-item-content">
-                <div class="dropdown-item-title">Privacy Policy</div>
-                <span class="dropdown-item-desc">Zero telemetry tracking &amp; data commitment</span>
+                <div class="dropdown-item-title">{t("nav.privacy")}</div>
+                <span class="dropdown-item-desc">{t("nav.privacyDesc")}</span>
               </div>
             </a>
             <a role="menuitem" class="dropdown-item" href={l('/terms')}>
@@ -451,7 +454,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="#F59E0B" fill-opacity="0.2" stroke="#F59E0B" stroke-width="2"/><polyline points="14 2 14 8 20 8" stroke="#FBBF24" stroke-width="2"/><line x1="8" y1="13" x2="16" y2="13" stroke="#FBBF24" stroke-width="2"/><line x1="8" y1="17" x2="14" y2="17" stroke="#FBBF24" stroke-width="2"/></svg>
               </div>
               <div class="dropdown-item-content">
-                <div class="dropdown-item-title">Terms of Service</div>
+                <div class="dropdown-item-title">{t("nav.terms")}</div>
                 <span class="dropdown-item-desc">Usage terms, disclaimers &amp; licensing</span>
               </div>
             </a>
@@ -462,7 +465,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
         <li>
           <a href={l('/suggest')} class="nav-link nav-suggest-link">
             <svg class="suggest-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
-            Suggest a Tool
+            {t("nav.suggestTool")}
           </a>
         </li>
       </ul>
@@ -480,7 +483,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
             <circle cx="11" cy="11" r="8"></circle>
             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
           </svg>
-          <span class="search-btn-text">Search diagnostic tools…</span>
+          <span class="search-btn-text">{t('nav.searchPlaceholder')}</span>
           <kbd class="search-btn-kbd" title="Press ⌘K or Ctrl+K to search">⌘K</kbd>
         </button>
 
@@ -495,88 +498,104 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
           role="switch"
           aria-checked="true"
           aria-label="Toggle dark and light theme"
+          title="Toggle color theme (Dark / Light)"
         >
-          <span class="theme-track" aria-hidden="true">
-            <svg class="track-icon track-sun" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
-              <circle cx="12" cy="12" r="5"/>
-              <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-            </svg>
-            <svg class="track-icon track-moon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-            </svg>
+          <span class="theme-track">
+            <span class="track-icon track-sun" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="m4.93 4.93 1.41 1.41"></path>
+                <path d="m17.66 17.66 1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="m6.34 17.66-1.41 1.41"></path>
+                <path d="m19.07 4.93-1.41 1.41"></path>
+              </svg>
+            </span>
+            <span class="track-icon track-moon" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+              </svg>
+            </span>
             <span class="theme-knob"></span>
           </span>
         </button>
 
-        {/* Primary CTA */}
-        <a href={l('/test/controller/full-diagnostic')} class="btn-primary nav-cta">
-          How to Connect
-        </a>
-
-        {/* Mobile menu button */}
+        {/* Mobile menu trigger */}
         <button
+          id="mobile-menu-toggle"
           class="mobile-menu-btn"
-          aria-label="Toggle navigation menu"
+          type="button"
           aria-expanded="false"
           aria-controls="mobile-menu"
-          id="mobile-menu-toggle"
-          type="button"
+          aria-label="Toggle Navigation Menu"
         >
-          <span class="hamburger-box" aria-hidden="true">
-            <span class="hamburger-line line-top"></span>
-            <span class="hamburger-line line-mid"></span>
-            <span class="hamburger-line line-bot"></span>
-          </span>
+          <svg class="icon-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <svg class="icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
         </button>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </div>
 
-  {/* ── Mobile menu ── */}
-  <div id="mobile-menu" class="mobile-menu" aria-hidden="true" hidden>
+  {/* ── Mobile menu drawer ── */}
+  <div id="mobile-menu" class="mobile-menu-drawer" hidden aria-hidden="true">
     <div class="mobile-menu-inner">
       <div class="mobile-search-wrapper">
         <button
           type="button"
           class="mobile-search-btn"
-          onclick="if(window.openGlobalSearch) window.openGlobalSearch()"
+          onclick="if(window.openGlobalSearch) { window.openGlobalSearch(); var m = document.getElementById('mobile-menu'); if(m){ m.classList.remove('open'); setTimeout(function(){ m.hidden = true; }, 220); } }"
         >
-          <div class="mobile-search-content">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <div class="mobile-search-btn-inner">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <span>Search diagnostic tools...</span>
+            <span>{t('nav.searchPlaceholder')}</span>
           </div>
           <kbd class="search-btn-kbd">⌘K</kbd>
         </button>
       </div>
 
+      <div class="mobile-lang-wrapper px-4 py-2 flex items-center justify-between border-b border-white/5">
+        <span class="text-xs font-mono text-stone-400 font-semibold">{t('nav.language') || 'Language'}:</span>
+        <LanguageSelector />
+      </div>
+
       <div class="mobile-nav-grid">
         <div class="mobile-nav-section">
-          <p class="mobile-nav-heading">Diagnostics</p>
+          <p class="mobile-nav-heading">{t('nav.diagnostics')}</p>
           <ul role="list" class="mobile-nav-links">
-            <li><a href={l('/test/controller')} class="mobile-nav-link"><span>Controller Tests</span><span class="nav-badge badge-core">Core</span></a></li>
-            <li><a href={l('/test/mouse')} class="mobile-nav-link"><span>Mouse Suite</span><span class="nav-badge badge-precision">8KHz</span></a></li>
-            <li><a href={l('/test/keyboard')} class="mobile-nav-link"><span>Keyboard &amp; MIDI</span><span class="nav-badge badge-midi">WebMIDI</span></a></li>
-            <li><a href={l('/test/controller/quick-health')} class="mobile-nav-link mobile-nav-link-em"><span>Quick Health Check</span><span class="nav-badge badge-speed">60s</span></a></li>
-            <li><a href={l('/test/controller/full-diagnostic')} class="mobile-nav-link mobile-nav-link-em"><span>Full Diagnostic Wizard</span><span class="nav-badge badge-pro">PRO</span></a></li>
-            <li><a href={l('/test/controller/passport')} class="mobile-nav-link"><span>Controller Passport</span></a></li>
-            <li><a href={l('/calibrate/dualsense/hall-effect')} class="mobile-nav-link"><span>WebHID Calibrator</span></a></li>
-            <li><a href={l('/deadzone-calculator/apex-legends/ps5')} class="mobile-nav-link"><span>Deadzone Sandbox</span></a></li>
-            <li><a href={l('/tools')} class="mobile-nav-link"><span>All 39 Diagnostic Tools</span></a></li>
+            <li><a href={l('/test/controller')} class="mobile-nav-link"><span>{t('nav.controllerTests')}</span><span class="nav-badge badge-core">Core</span></a></li>
+            <li><a href={l('/test/mouse')} class="mobile-nav-link"><span>{t('nav.mouseSuite')}</span><span class="nav-badge badge-precision">8KHz</span></a></li>
+            <li><a href={l('/test/keyboard')} class="mobile-nav-link"><span>{t('nav.keyboardMidi')}</span><span class="nav-badge badge-midi">WebMIDI</span></a></li>
+            <li><a href={l('/test/controller/quick-health')} class="mobile-nav-link mobile-nav-link-em"><span>{t('nav.quickHealth')}</span><span class="nav-badge badge-speed">60s</span></a></li>
+            <li><a href={l('/test/controller/full-diagnostic')} class="mobile-nav-link mobile-nav-link-em"><span>{t('nav.fullDiag')}</span><span class="nav-badge badge-pro">PRO</span></a></li>
+            <li><a href={l('/test/controller/passport')} class="mobile-nav-link"><span>{t('nav.passport')}</span></a></li>
+            <li><a href={l('/calibrate/dualsense/hall-effect')} class="mobile-nav-link"><span>{t('nav.calibrator')}</span></a></li>
+            <li><a href={l('/deadzone-calculator/apex-legends/ps5')} class="mobile-nav-link"><span>{t('nav.deadzoneSandbox')}</span></a></li>
+            <li><a href={l('/tools')} class="mobile-nav-link"><span>{t('nav.viewAllTools')}</span></a></li>
           </ul>
         </div>
 
         <div class="mobile-nav-section mobile-nav-section-games">
-          <p class="mobile-nav-heading">Arcade Games</p>
+          <p class="mobile-nav-heading">{t('nav.play')}</p>
           <ul role="list" class="mobile-nav-links">
             {
               [
-                { label: 'Aim & Control', games: ['stick-sniper', 'stick-maze', 'trigger-racer', 'nova-blaster'] },
-                { label: 'Combo & Arcade', games: ['combo-rush', 'kart-drift'] },
-                { label: 'Reflex & Timing', games: ['button-blitz', 'quick-draw', 'beat-drop', 'memory-pulse', 'asteroid-dash'] },
-                { label: 'Party & Multiplayer', games: ['neon-striker', 'signal-salvage'] },
+                { label: t('nav.aimControl'), games: ['stick-sniper', 'stick-maze', 'trigger-racer', 'nova-blaster'] },
+                { label: t('nav.comboArcade'), games: ['combo-rush', 'kart-drift'] },
+                { label: t('nav.reflexTiming'), games: ['button-blitz', 'quick-draw', 'beat-drop', 'memory-pulse', 'asteroid-dash'] },
+                { label: t('nav.partyMultiplayer'), games: ['neon-striker', 'signal-salvage'] },
               ].map((group) => (
                 <>
                   <li class="mobile-nav-category">{group.label}</li>
@@ -584,33 +603,33 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                     group.games.map((slug) => {
                       const game = GAMES[slug];
                       return (
-                        <li><a href={l(game.href)} class="mobile-nav-link"><span>{game.name}</span><span class="nav-badge badge-games">{game.xp} XP</span></a></li>
+                        <li><a href={l(game.href)} class="mobile-nav-link"><span>{t(('game.' + slug + '.name') as any) || game.name}</span><span class="nav-badge badge-games">{game.xp} XP</span></a></li>
                       );
                     })
                   }
                 </>
               ))
             }
-            <li><a href={l('/games')} class="mobile-nav-link mobile-nav-link-em"><span>All Arcade Games</span></a></li>
+            <li><a href={l('/games')} class="mobile-nav-link mobile-nav-link-em"><span>{t('nav.viewAllGames')}</span></a></li>
           </ul>
         </div>
 
         <div class="mobile-nav-section">
-          <p class="mobile-nav-heading">Resources</p>
+          <p class="mobile-nav-heading">{t('nav.resources')}</p>
           <ul role="list" class="mobile-nav-links">
-            <li><a href={l('/mods')} class="mobile-nav-link"><span>Mod &amp; Repair Builder</span><span class="nav-badge badge-pro">New</span></a></li>
-            <li><a href={l('/fix-or-replace')} class="mobile-nav-link"><span>Fix &amp; Repair</span></a></li>
-            <li><a href={l('/warranty')} class="mobile-nav-link"><span>Warranty Check</span></a></li>
-            <li><a href={l('/embeds')} class="mobile-nav-link"><span>Widgets &amp; Embeds</span><span class="nav-badge badge-widgets">15 Widgets</span></a></li>
-            <li><a href={l('/compatibility')} class="mobile-nav-link"><span>Compatibility Matrix</span></a></li>
-            <li><a href={l('/learn')} class="mobile-nav-link"><span>Technical Learn Guides</span></a></li>
+            <li><a href={l('/mods')} class="mobile-nav-link"><span>{t("nav.modBuilder")}</span><span class="nav-badge badge-pro">New</span></a></li>
+            <li><a href={l('/fix-or-replace')} class="mobile-nav-link"><span>{t('nav.fixRepair')}</span></a></li>
+            <li><a href={l('/warranty')} class="mobile-nav-link"><span>{t('nav.warranty')}</span></a></li>
+            <li><a href={l('/embeds')} class="mobile-nav-link"><span>{t('nav.widgets')}</span><span class="nav-badge badge-widgets">15 Widgets</span></a></li>
+            <li><a href={l('/compatibility')} class="mobile-nav-link"><span>{t('nav.compatibility')}</span></a></li>
+            <li><a href={l('/learn')} class="mobile-nav-link"><span>{t('nav.learn')}</span></a></li>
           </ul>
         </div>
       </div>
 
       <div class="mobile-cta-wrapper">
         <a href={l('/test/controller/full-diagnostic')} class="btn-primary mobile-cta">
-          Run Full Hardware Diagnostic
+          {t('nav.runDiagnostic')}
         </a>
       </div>
     </div>
@@ -1327,7 +1346,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.25rem;
+    padding: 0.2rem;
     border: 1px solid transparent;
     border-radius: var(--radius-pill);
     background: transparent;
@@ -1337,8 +1356,13 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
   }
 
   .theme-switch:hover {
-    background: var(--color-surface-2);
-    border-color: var(--color-border-subtle);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  :global([data-theme="light"]) .theme-switch:hover {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
   }
 
   .theme-switch:focus-visible {
@@ -1348,53 +1372,71 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
 
   .theme-track {
     position: relative;
-    display: block;
-    width: 44px;
-    height: 24px;
+    display: flex;
+    align-items: center;
+    width: 48px;
+    height: 26px;
     border-radius: 999px;
-    border: 1px solid var(--color-border-subtle);
-    background: var(--color-surface-2);
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.18);
-    transition: background 300ms var(--ease-smooth), border-color 300ms var(--ease-smooth);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(18, 18, 22, 0.85);
+    box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.45);
+    transition: background 250ms ease, border-color 250ms ease;
+  }
+
+  :global([data-theme="light"]) .theme-track {
+    background: rgba(228, 228, 231, 0.85);
+    border-color: rgba(0, 0, 0, 0.12);
+    box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.12);
   }
 
   .track-icon {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
     pointer-events: none;
-    transition: opacity 250ms var(--ease-smooth);
+    transition: opacity 250ms ease, transform 250ms ease;
   }
 
   .track-sun {
-    left: 6px;
-    color: var(--color-warning);
-    opacity: 0.55;
+    left: 5px;
+    color: #f59e0b;
+    opacity: 0.35;
   }
 
   .track-moon {
-    right: 6px;
-    color: var(--color-accent);
-    opacity: 0.55;
+    right: 5px;
+    color: #818cf8;
+    opacity: 0.95;
   }
 
-  :global([data-theme="dark"]) .track-sun { opacity: 0.25; }
-  :global([data-theme="light"]) .track-moon { opacity: 0.25; }
+  :global([data-theme="dark"]) .track-sun { opacity: 0.35; transform: translateY(-50%) scale(0.9); }
+  :global([data-theme="dark"]) .track-moon { opacity: 1; transform: translateY(-50%) scale(1); }
+
+  :global([data-theme="light"]) .track-sun { opacity: 1; transform: translateY(-50%) scale(1); }
+  :global([data-theme="light"]) .track-moon { opacity: 0.35; transform: translateY(-50%) scale(0.9); }
 
   .theme-knob {
     position: absolute;
     top: 2px;
     left: 2px;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
-    background: var(--color-text-primary);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
-    transition: transform 320ms var(--ease-spring), background 300ms var(--ease-smooth);
+    background: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.45), 0 0 10px rgba(99, 102, 241, 0.35);
+    transform: translateX(22px);
+    transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1), background 200ms ease, box-shadow 200ms ease;
   }
 
   :global([data-theme="light"]) .theme-knob {
-    transform: translateX(20px);
+    transform: translateX(0px);
+    background: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 0 10px rgba(245, 158, 11, 0.35);
   }
 
   /* ── Mobile Menu Toggle Button ── */

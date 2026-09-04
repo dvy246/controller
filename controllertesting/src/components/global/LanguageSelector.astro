@@ -8,10 +8,8 @@ import { languages, defaultLang } from '../../i18n/translations';
 import { getLangFromUrl, getLocalizedUrl } from '../../i18n/utils';
 
 const currentLang = getLangFromUrl(Astro.url);
-// En-only launch (2026-08-10): locale trees are disabled until genuine
-// translations exist, so a selector listing /es /de ... would link to 404s.
-// Re-enable when sync-locales.js ships real translated content.
-const availableLangs = Object.keys(languages).filter((l) => l === defaultLang);
+const availableLangs = Object.keys(languages) as (keyof typeof languages)[];
+
 ---
 
 <div class="lang-selector-wrapper">
@@ -20,19 +18,77 @@ const availableLangs = Object.keys(languages).filter((l) => l === defaultLang);
     id="lang-select"
     class="lang-select"
     aria-label="Language selector"
-    onchange="window.location.href = this.value;"
   >
     {availableLangs.map((code) => {
-      const url = getLocalizedUrl(Astro.url, code as keyof typeof languages);
       const name = languages[code as keyof typeof languages];
       return (
-        <option value={url} selected={code === currentLang}>
+        <option value={code} selected={code === currentLang}>
           {name}
         </option>
       );
     })}
   </select>
 </div>
+
+<script is:inline>
+  (function() {
+    function handleLangChange(e) {
+      var targetLang = e.target.value;
+      var rawPath = window.location.pathname || '/';
+      // Normalize path
+      var cleanPath = rawPath.replace(/\.html$/, '');
+      if (cleanPath.length > 1 && cleanPath.endsWith('/')) {
+        cleanPath = cleanPath.slice(0, -1);
+      }
+
+      var supported = ['es', 'de', 'fr', 'ja', 'pt', 'ko', 'ru', 'zh-tw', 'it'];
+      var basePath = cleanPath;
+
+      for (var i = 0; i < supported.length; i++) {
+        var loc = supported[i];
+        if (basePath === '/' + loc) {
+          basePath = '/';
+          break;
+        } else if (basePath.startsWith('/' + loc + '/')) {
+          basePath = basePath.substring(loc.length + 1);
+          break;
+        }
+      }
+
+      if (!basePath.startsWith('/')) {
+        basePath = '/' + basePath;
+      }
+
+      var destination = '/';
+      if (targetLang === 'en') {
+        destination = basePath;
+      } else {
+        destination = (basePath === '/') ? ('/' + targetLang) : ('/' + targetLang + basePath);
+      }
+
+      // Preserve search params and hash if present
+      var search = window.location.search || '';
+      var hash = window.location.hash || '';
+      window.location.assign(destination + search + hash);
+    }
+
+    function initLangSelectors() {
+      var selects = document.querySelectorAll('.lang-select');
+      selects.forEach(function(select) {
+        if (select.dataset.i18nBound === 'true') return;
+        select.dataset.i18nBound = 'true';
+        select.addEventListener('change', handleLangChange);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initLangSelectors);
+    } else {
+      initLangSelectors();
+    }
+    document.addEventListener('astro:page-load', initLangSelectors);
+  })();
+</script>
 
 <style>
   .lang-selector-wrapper {

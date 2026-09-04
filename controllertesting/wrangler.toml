@@ -18,7 +18,6 @@ name = "controller-test"
 compatibility_date = "2025-08-01"
 pages_build_output_dir = "./dist"
 
-# Placeholder ids — replace with real namespace ids for local dev.
 [[kv_namespaces]]
 binding = "TELEMETRY_KV"
 id = "918dafd79a2d4ce79de5dc9f4ac417cb"

@@ -13,32 +13,56 @@
           "name": "BDM-010 (Gen 1)",
           "identifiers": ["CFI-ZCT1W (No letter suffix)"],
           "fccId": "AK8CFIZCT1",
-          "identificationGuide": "First-generation launch model. Model CFI-ZCT1W without a letter suffix. FCC ID ends in no letter. Features large trigger torsion springs and standard 23-pin main ribbon.",
-          "characteristics": ["Thick trigger torsion springs", "23-pin main ribbon", "Standard black plastic mid-frame"]
+          "identificationGuide": "Launch generation controller shipped with original 2020 PS5 consoles. Identified by model CFI-ZCT1W with no letter suffix after the FCC ID. Uses a 23-pin wide main interconnect ribbon and heavy-gauge trigger torsion return springs.",
+          "characteristics": [
+            "Wide 23-pin FPC mainboard ribbon bus",
+            "0.35mm heavy-gauge trigger torsion return springs",
+            "Full-perimeter black mid-frame cradle",
+            "Standard through-hole analog potentiometer pin pitch (2.54mm)",
+            "Legacy touchpad grounding pad position"
+          ]
         },
         {
           "id": "bdm-020",
           "name": "BDM-020 (Gen 2)",
           "identifiers": ["CFI-ZCT1W A"],
           "fccId": "AK8CFIZCT1A",
-          "identificationGuide": "Second generation. Look for an 'A' after the model CFI-ZCT1W and FCC ID ending in 'A'. Features smaller trigger torsion springs and updated microphone cable.",
-          "characteristics": ["Smaller trigger springs", "Revised touchpad bracket", "Updated mic ribbon"]
+          "identificationGuide": "Second-generation revision introduced in late 2021. Marked by an 'A' suffix on the back label. Sony upgraded the trigger return springs to 0.3mm to prevent fatigue breakage and redesigned the microphone flex cable connector.",
+          "characteristics": [
+            "Reinforced 0.3mm wire trigger return springs",
+            "Updated touchpad bracket with integrated silicone dampening",
+            "Narrowed microphone ribbon cable connector (12-pin)",
+            "Modified rumble motor solder pads for robotic manufacturing",
+            "Lightened internal plastic chassis structure"
+          ]
         },
         {
           "id": "bdm-030",
           "name": "BDM-030 (Gen 3)",
           "identifiers": ["CFI-ZCT1W B"],
           "fccId": "AK8CFIZCT1B",
-          "identificationGuide": "Third generation (common on newer consoles). Look for a 'B' after the model number. Features redesigned smaller adaptive trigger motor housings and a completely different ribbon pinout.",
-          "characteristics": ["Redesigned trigger housings", "Incompatible BDM-010/020 ribbons", "Changed mainboard mounting screws"]
+          "identificationGuide": "Third-generation DualSense motherboard introduced with CFI-1200 series. Marked with a 'B' suffix on the back label. Features redesigned compact trigger motor assemblies with smaller ribbon connectors. Trigger ribbons connect to a 16-pin daughterboard instead of the legacy 23-pin mainboard bus.",
+          "characteristics": [
+            "Compact adaptive trigger motor modules",
+            "16-pin main ribbon connector with altered trace pitch",
+            "Altered ground plane solder points near analog stick potentiometers",
+            "Single mid-frame mounting screw layout requiring revised pry technique",
+            "Distinct L2/R2 flex cable routing around haptic motor brackets"
+          ]
         },
         {
           "id": "bdm-040",
           "name": "BDM-040 (Gen 4)",
           "identifiers": ["CFI-ZCT1W C", "CFI-1200+"],
           "fccId": "AK8CFIZCT1C",
-          "identificationGuide": "Fourth generation. Look for a 'C' suffix. Shares ribbon compatibility with BDM-030 but has a revised power management IC.",
-          "characteristics": ["Shares BDM-030 ribbon pinout", "New power plane", "Updated L1/R1 tactile switches"]
+          "identificationGuide": "Fourth-generation revision found in newer Slim and updated standard consoles. Marked with a 'C' suffix. Introduces a redesigned power management IC (PMIC), micro-switch bumper contacts, and modified battery bracket retaining clips that differ physically from the BDM-030 shell.",
+          "characteristics": [
+            "Surface-mount micro-switches for L1/R1 tactile feedback",
+            "Redesigned PMIC with isolated voltage rails for analog sensor pots",
+            "Updated internal battery frame featuring snap-fit alignment tabs",
+            "Relocated test points (TP) for rear paddle mod solder wire routing",
+            "Reinforced USB-C anchoring tabs on the main PCB perimeter"
+          ]
         }
       ]
     },

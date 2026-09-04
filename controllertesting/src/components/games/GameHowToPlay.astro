@@ -1,9 +1,10 @@
 ---
 /**
- * GameHowToPlay.astro — Reusable "How to Play" section for arcade games.
- * Renders goal, controls, how-to steps, and pro tips on a unified card
- * consistent with the site's surface/typography design system.
+ * GameHowToPlay.astro — Reusable "How to Play" section for arcade games with i18n support.
  */
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+const currentLang = getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 
 interface Props {
   goal: string;
@@ -22,20 +23,21 @@ const {
 } = Astro.props;
 ---
 
+
 <section class="howto-section" aria-labelledby="howto-title" data-reveal>
   <div class="howto-card card-base">
     <header class="howto-head">
       <div class="howto-head-top">
-        <span class="badge-tag">How to Play</span>
-        {xp && <span class="howto-xp mono">+{xp} XP per round</span>}
+        <span class="badge-tag">{t("game.howToPlay")}</span>
+        {xp && <span class="howto-xp mono">+{xp} {t("game.xpPerRound")}</span>}
       </div>
-      <h2 class="howto-title" id="howto-title">How to Play</h2>
+      <h2 class="howto-title" id="howto-title">{t("game.howToPlay")}</h2>
       <p class="howto-goal">{goal}</p>
     </header>
 
     <div class="howto-grid">
       <div class="howto-col">
-        <h3 class="howto-col-title">Controls</h3>
+        <h3 class="howto-col-title">{t("game.controls")}</h3>
         <ul class="howto-list howto-controls" role="list">
           {controls.map((c) => (
             <li class="howto-control" role="listitem">
@@ -47,7 +49,7 @@ const {
       </div>
 
       <div class="howto-col">
-        <h3 class="howto-col-title">Objective</h3>
+        <h3 class="howto-col-title">{t("game.objective")}</h3>
         <ol class="howto-list howto-steps" role="list">
           {steps.map((s, i) => (
             <li class="howto-step" role="listitem">
@@ -61,7 +63,7 @@ const {
 
     {tips.length > 0 && (
       <div class="howto-tips">
-        <h3 class="howto-col-title">Pro Tips</h3>
+        <h3 class="howto-col-title">{t("game.proTips")}</h3>
         <ul class="howto-tips-list" role="list">
           {tips.map((t) => (
             <li class="howto-tip" role="listitem">

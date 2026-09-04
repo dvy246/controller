@@ -124,6 +124,56 @@ const schema = [
     }))
   }
 ];
+
+const technicalInstallGuides: Record<string, Record<string, {
+  summary: string;
+  pcbNuance: string;
+  solderingTips: string;
+  pitfalls: string[];
+}>> = {
+  'ps5-dualsense': {
+    'bdm-010': {
+      summary: 'Launch BDM-010 circuit boards feature a high-thermal-mass ground plane, wide 23-pin flexible printed circuits, and heavy-gauge 0.35mm trigger return springs.',
+      pcbNuance: 'Motherboard uses a wide 23-pin bus linking the midframe assembly. Trigger torsion springs are heavy-gauge 0.35mm piano wire with wide retention pins.',
+      solderingTips: 'Ground pins on potentiometer legs connect directly to thick copper planes. Preheating the board to 140°C or using a 360°C chisel tip with active flux prevents barrel pad lifting.',
+      pitfalls: ['Do not attempt to use narrow 16-pin ribbons from BDM-030 or BDM-040 models', 'Fragile plastic microphone alignment pegs on the front housing must be lifted vertically']
+    },
+    'bdm-020': {
+      summary: 'BDM-020 revised boards feature reduced copper ground plane thickness, refined 0.30mm trigger return springs, and integrated silicone dampeners.',
+      pcbNuance: 'Sony reduced solder volume on trigger motor tabs. The touchpad bracket incorporates molded silicone damping pads to prevent rattling.',
+      solderingTips: 'Copper trace layers are thinner than BDM-010. Keep soldering iron contact time strictly under 3 seconds per pin at 330°C to preserve through-hole copper barrels.',
+      pitfalls: ['Microphone flex cable connector is a narrower 12-pin layout requiring delicate tweezers', 'Avoid mixing BDM-010 trigger return springs as travel resistance will feel uneven']
+    },
+    'bdm-030': {
+      summary: 'BDM-030 represents a major internal architecture overhaul featuring a 16-pin daughterboard layout and miniaturized adaptive trigger gearboxes.',
+      pcbNuance: 'Uses a 16-pin flex interconnect. Adaptive trigger motor housings are miniaturized and physically incompatible with BDM-010/020 tactile trigger kits.',
+      solderingTips: 'Test points for L3/R3 remap paddles are relocated near the MCU shielding edge. Always verify zero-point magnetic centering using WebHID after installing Hall Effect modules.',
+      pitfalls: ['BDM-010/020 shell faceplates and midframes will not snap closed over BDM-030 internals', 'Trigger ribbon pinout has inverted ground reference lines compared to Gen 1']
+    },
+    'bdm-040': {
+      summary: 'BDM-040 is the latest revision found in Slim and newer standard consoles, featuring updated PMIC silicon, snap-fit battery cradles, and surface-mount bumper switches.',
+      pcbNuance: 'Features surface-mount tactile switches for L1/R1 bumpers and snap-fit battery cradle tabs. Hall Effect stick installs require sharing the clean 1.8V regulated analog rail.',
+      solderingTips: 'Carefully route paddle remap wires away from the snap-in battery cradle perimeter to avoid wire pinch damage during final shell closure.',
+      pitfalls: ['Do not overtighten the central PCB mounting screw to prevent board warping', 'Ensure tactile trigger kits are explicitly rated for BDM-040 clip tolerances']
+    }
+  },
+  'xbox-series-x': {
+    'model-1914': {
+      summary: 'Model 1914 controllers utilize a modular split-board sandwich design connected via a 14-pin board-to-board header.',
+      pcbNuance: 'Top board houses triggers, rumble motors, and the USB-C port; lower board contains sticks, MCU, and face buttons.',
+      solderingTips: 'Desolder the 4 trigger rumble motor wires before separating the dual boards. Stick potentiometers are lead-free soldered; generous flux and desoldering braid or a motorized vacuum desoldering gun are essential.',
+      pitfalls: ['Do not bend the 14-pin inter-board header connector pins during separation', 'Inspect D-pad tactile dome sticker alignment before snapping midframe back together']
+    },
+    'model-1708': {
+      summary: 'Model 1708 Xbox One S controller uses Micro-USB with traditional dual-board sandwich construction.',
+      pcbNuance: 'Single-piece front shell bezel with separate side grip panels concealing T8 security Torx screws.',
+      solderingTips: 'Stick modules use 10k potentiometer wipers. Clean contact wipers with 99% isopropyl alcohol before reassembly.',
+      pitfalls: ['Requires a T8 Security Torx driver with center hole for housing screws', 'Trigger rumble motor wires are delicate 32AWG gauge']
+    }
+  }
+};
+
+const guide = technicalInstallGuides[controller.id]?.[bdm.id];
 ---
 
 <BaseLayout title={title} description={description} breadcrumbs={breadcrumbs} schema={schema} localized={false}>
@@ -148,6 +198,33 @@ const schema = [
         <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-4">
           {bdm.identificationGuide}
         </p>
+
+        {guide && (
+          <div class="mt-6 pt-6 border-t border-[var(--color-border-subtle)]">
+            <h3 class="text-base font-bold text-white mb-2">Engineering Teardown & PCB Analysis</h3>
+            <p class="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-4">
+              {guide.summary}
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+              <div class="p-3.5 rounded-xl bg-[var(--color-surface-0)] border border-[var(--color-border-subtle)]">
+                <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--color-accent)] block mb-1">PCB Architecture:</span>
+                <p class="text-xs text-[var(--color-text-secondary)] leading-relaxed">{guide.pcbNuance}</p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-[var(--color-surface-0)] border border-[var(--color-border-subtle)]">
+                <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--color-emerald)] block mb-1">Soldering Notes:</span>
+                <p class="text-xs text-[var(--color-text-secondary)] leading-relaxed">{guide.solderingTips}</p>
+              </div>
+            </div>
+            <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200">
+              <strong class="font-bold text-amber-300 block mb-1">Revision-Specific Precautions:</strong>
+              <ul class="list-disc list-inside space-y-1 text-amber-200/90">
+                {guide.pitfalls.map((p: string) => (
+                  <li>{p}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
         
         {bdm.characteristics && (
           <div class="p-4 rounded-xl bg-[var(--color-surface-0)] border border-[var(--color-border-subtle)] mb-4">
@@ -177,7 +254,7 @@ const schema = [
 
     <!-- Mod Builder Workspace Filtered to this BDM -->
     <section class="mb-16">
-      <ModBuilderWorkspace controllerId={controller.id} initialBdm={bdm.id} categoryFilter={category.id} />
+      <ModBuilderWorkspace controllerId={controller.id} initialBdm={bdm.id} categoryFilter={category.id} strictFilter={true} />
     </section>
 
     <!-- FAQ Accordion -->

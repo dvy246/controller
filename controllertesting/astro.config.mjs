@@ -8,18 +8,36 @@ import partytown from '@astrojs/partytown';
 export default defineConfig({
   site: 'https://controllertesting.com',
   output: 'static',
-  trailingSlash: 'never',
+  build: {
+    format: 'file'
+  },
   compressHTML: true,
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'es', 'de', 'fr', 'ja', 'pt', 'ko', 'ru', 'zh-tw', 'it'],
+    routing: {
+      prefixDefaultLocale: false,
+      redirectToDefaultLocale: false,
+    },
+  },
+
   integrations: [react(), sitemap({
     filter: (page) => {
       const path = new URL(page).pathname;
-      const prefixExcludes = ['/api/', '/admin/', '/embed/'];
+      const cleanPath = path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path;
+      const prefixExcludes = ['/api/', '/admin/', '/embed/', '/es/', '/de/', '/fr/', '/ja/', '/pt/', '/ko/', '/ru/', '/zh-tw/', '/it/'];
       const exactExcludes = ['/404', '/500', '/report', '/verify', '/course-cards-demo', '/feature-cards-demo'];
-      if (prefixExcludes.some(p => path.startsWith(p))) return false;
-      if (exactExcludes.includes(path)) return false;
+      if (prefixExcludes.some(p => cleanPath.startsWith(p))) return false;
+      if (exactExcludes.includes(cleanPath)) return false;
       return true;
     },
     serialize: (item) => {
+      // Ensure sitemap URLs match canonical tags without trailing slashes (except root)
+      if (item.url === 'https://controllertesting.com') {
+        item.url = 'https://controllertesting.com/';
+      } else if (item.url.endsWith('/') && !item.url.endsWith('controllertesting.com/')) {
+        item.url = item.url.slice(0, -1);
+      }
       const path = new URL(item.url).pathname;
       const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
       // Reliability data snapshot date
@@ -57,14 +75,17 @@ export default defineConfig({
       return item;
     }
   }), partytown()],
+  server: {
+    host: true,
+  },
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      allowedHosts: true,
+    },
     build: {
       assetsInlineLimit: 4096,
     },
-  },
-  build: {
-    format: 'file',
   },
   prefetch: {
     prefetchAll: false,

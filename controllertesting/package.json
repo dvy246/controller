@@ -4,9 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "predev": "node scripts/sync-locales.js",
     "build": "astro build",
-    "prebuild": "node scripts/sync-locales.js",
     "deploy": "npm run build && npx wrangler pages deploy dist --project-name=controller-test",
     "preview": "astro preview",
     "astro": "astro",

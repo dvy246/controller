@@ -24,6 +24,7 @@ import HowToGetStarted from '../components/global/HowToGetStarted.astro';
 import InterlinkStrip from '../components/global/InterlinkStrip.astro';
 import SemanticGlossary from '../components/global/SemanticGlossary.astro';
 import { resolveGamesForTool } from '../data/arcadeInterlinks';
+import { getLangFromUrl, useTranslations, l } from '../i18n/utils';
 
 export interface Props {
   title: string;
@@ -113,6 +114,8 @@ const allSchemas = [
   ...(Array.isArray(schema) ? schema : [schema]),
 ];
 
+const currentLang = getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 const relatedGames = resolveGamesForTool(Astro.url.pathname);
 ---
 
@@ -141,7 +144,7 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
             <span class="tool-category-badge">{category}</span>
             <span class="tool-hero-live-badge" aria-hidden="true">
               <span class="live-dot"></span>
-              Browser API
+              {t("tool.browserApi")}
             </span>
           </div>
           <h1 class="tool-title">{toolName}</h1>
@@ -175,8 +178,8 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
       {/* ── 5. Action Cards (3-col: Fix / Optimize / Upgrade) ── */}
       <section class="tool-actions-section" aria-label="Recommended next actions">
         <div class="actions-header">
-          <h2 class="actions-title">What would you like to do next?</h2>
-          <p class="actions-subtitle">Select a diagnostic calibration suite, deadzone analyzer, or high-frequency overclock tool.</p>
+          <h2 class="actions-title">{t("tool.nextActions")}</h2>
+          <p class="actions-subtitle">{t("tool.nextActionsSubtitle")}</p>
         </div>
         <div class="actions-grid">
 
@@ -187,14 +190,14 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
                 <div class="action-icon-v2 action-icon-v2--amber" aria-hidden="true">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
                 </div>
-                <span class="action-badge-v2 action-badge-v2--amber">Fix</span>
+                <span class="action-badge-v2 action-badge-v2--amber">{t("tool.fixBadge")}</span>
               </div>
-              <h3 class="action-title-v2 action-title-v2--amber">Repair &amp; Calibration</h3>
-              <p class="action-desc-v2">Calibrate zero-point offsets or follow step-by-step repair guides.</p>
+              <h3 class="action-title-v2 action-title-v2--amber">{t("tool.repairTitle")}</h3>
+              <p class="action-desc-v2">{t("tool.repairDesc")}</p>
             </div>
             <div class="action-card-footer">
               <a href="/calibrate/dualsense/hall-effect" class="action-cta action-cta--amber">
-                <span>WebHID Calibration</span>
+                <span>{t("nav.calibrator")}</span>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </a>
             </div>
@@ -207,14 +210,14 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
                 <div class="action-icon-v2 action-icon-v2--emerald" aria-hidden="true">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/></svg>
                 </div>
-                <span class="action-badge-v2 action-badge-v2--emerald">Optimize</span>
+                <span class="action-badge-v2 action-badge-v2--emerald">{t("tool.optimizeBadge")}</span>
               </div>
-              <h3 class="action-title-v2 action-title-v2--emerald">Game Deadzones</h3>
-              <p class="action-desc-v2">Calculate exact radial vs axial deadzone overlays for Fortnite, Apex, &amp; COD.</p>
+              <h3 class="action-title-v2 action-title-v2--emerald">{t("tool.deadzoneTitle")}</h3>
+              <p class="action-desc-v2">{t("tool.deadzoneDesc")}</p>
             </div>
             <div class="action-card-footer">
               <a href="/deadzone-calculator/fortnite/ps5" class="action-cta action-cta--emerald">
-                <span>Deadzone Calculator</span>
+                <span>{t("nav.deadzoneSandbox")}</span>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </a>
             </div>
@@ -227,14 +230,14 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
                 <div class="action-icon-v2 action-icon-v2--blue" aria-hidden="true">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
                 </div>
-                <span class="action-badge-v2 action-badge-v2--blue">Telemetry</span>
+                <span class="action-badge-v2 action-badge-v2--blue">{t("tool.telemetryBadge")}</span>
               </div>
-              <h3 class="action-title-v2 action-title-v2--blue">Overclock &amp; Circularity</h3>
-              <p class="action-desc-v2">Verify browser-observed update timing Hz stability and statistical circularity grades.</p>
+              <h3 class="action-title-v2 action-title-v2--blue">{t("tool.overclockTitle")}</h3>
+              <p class="action-desc-v2">{t("tool.overclockDesc")}</p>
             </div>
             <div class="action-card-footer">
               <a href="/overclock-validator/ps5/usb-c" class="action-cta action-cta--blue">
-                <span>Hz &amp; Circularity Tools</span>
+                <span>{t("tool.overclockCta")}</span>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </a>
             </div>
@@ -289,7 +292,7 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
       <div class="mb-16 methodology-collapsible-wrap" data-reveal>
         <details class="methodology-collapsible">
           <summary class="methodology-summary">
-            <span class="methodology-label">How this test works &amp; its limits</span>
+            <span class="methodology-label">{t("methodology.collapsibleTitle")}</span>
             <span class="methodology-icon-wrap" aria-hidden="true">
               <svg class="methodology-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -299,14 +302,14 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
           </summary>
           <div class="methodology-body">
             <ul class="methodology-list">
-              <li>This test reads your controller through the browser's standard Gamepad API — no drivers, no installs, nothing leaves your device.</li>
-              <li>Readings depend on connection mode: Bluetooth reports at lower rates than USB. Compare like-for-like (wired vs wired).</li>
-              <li>We measure the input reaching the browser — display lag and game-engine queues are outside this test's view.</li>
-              <li>A clean reading now does not guarantee no drift in-game: deadzones differ per game, and wear develops over time. Use the Drift Timeline to track yours.</li>
-              <li>This is a diagnostic, not a hardware-lab certification. For repair or RMA decisions, confirm with a second run or second tool.</li>
+              <li>{t("methodology.point1")}</li>
+              <li>{t("methodology.point2")}</li>
+              <li>{t("methodology.point3")}</li>
+              <li>{t("methodology.point4")}</li>
+              <li>{t("methodology.point5")}</li>
             </ul>
             <a href="/test/methodology" class="methodology-link">
-              <span>Read the full methodology</span>
+              <span>{t("methodology.readFull")}</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </a>
           </div>
@@ -328,8 +331,8 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
               <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
             </svg>
             <div>
-              <strong class="trust-title">100% Client-Side</strong>
-              <p class="trust-desc">All Gamepad API data stays in your browser. Zero tracking or data collection.</p>
+              <strong class="trust-title">{t("trust.clientSideTitle")}</strong>
+              <p class="trust-desc">{t("trust.clientSideDesc")}</p>
             </div>
           </div>
           <div class="trust-item">
@@ -343,8 +346,8 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="url(#g-trust-zap)" fill-opacity="0.25" stroke="url(#g-trust-zap)" stroke-width="2" stroke-linejoin="round"/>
             </svg>
             <div>
-              <strong class="trust-title">Instant Results</strong>
-              <p class="trust-desc">No downloads, plugins, or software installation needed. Works instantly.</p>
+              <strong class="trust-title">{t("trust.instantTitle")}</strong>
+              <p class="trust-desc">{t("trust.instantDesc")}</p>
             </div>
           </div>
           <div class="trust-item">
@@ -359,8 +362,8 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
               <polyline points="16 9 10.5 15 8 12.5" stroke="#3B82F6" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <div>
-              <strong class="trust-title">Free Forever</strong>
-              <p class="trust-desc">No paywalls, subscription requirements, or hidden usage limits.</p>
+              <strong class="trust-title">{t("trust.freeTitle")}</strong>
+              <p class="trust-desc">{t("trust.freeDesc")}</p>
             </div>
           </div>
         </div>

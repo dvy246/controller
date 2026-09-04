@@ -4,12 +4,6 @@ dist/
 .DS_Store
 .astro/
 # Auto-generated locale directories
-src/pages/es/
-src/pages/de/
-src/pages/fr/
-src/pages/ja/
-src/pages/pt/
-src/pages/ko/
-src/pages/ru/
-src/pages/zh-tw/
-src/pages/it/
+# src/pages/es/ etc was from legacy sync-locales
+.i18n-baseline/
+.i18n-quarantine/

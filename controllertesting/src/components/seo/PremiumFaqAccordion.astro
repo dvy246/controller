@@ -1,4 +1,8 @@
 ---
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+const currentLang = getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
+
 interface Props {
   faqs: { question: string; answer: string }[];
   title?: string;
@@ -7,8 +11,8 @@ interface Props {
 
 const { 
   faqs, 
-  title = "Frequently Asked Questions",
-  subtitle = "Everything you need to know about testing your controller."
+  title = t("faq.headerTitle"),
+  subtitle = t("faq.headerSubtitle")
 } = Astro.props;
 ---
 
@@ -61,43 +65,29 @@ const {
   }
 
   .faq-subtitle {
-    font-size: var(--text-body);
+    font-size: 1.0625rem;
     color: var(--color-text-secondary);
-    max-width: 56ch;
-    line-height: 1.6;
   }
 
-  /* Flex gap — replaces broken space-y-3 Astro SSG fragments */
   .faq-list {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
   }
 
-  /* Core accordion item */
   .faq-item {
-    background: var(--color-surface-1);
-    border: 1px solid var(--color-border-default);
+    border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-card);
+    background: var(--color-surface-1);
     overflow: hidden;
-    /* Enumerate explicit properties — no transition: all (Vercel guideline) */
-    transition:
-      border-color var(--duration-fast) var(--ease-smooth),
-      box-shadow var(--duration-fast) var(--ease-smooth);
+    transition: border-color var(--transition-fast), background-color var(--transition-fast);
   }
 
-  .faq-item:hover {
-    border-color: rgba(37, 99, 235, 0.45);
-    box-shadow: 0 2px 12px rgba(37, 99, 235, 0.08);
-  }
-
-  /* Pure CSS [open] selector — no Tailwind group-open: variant needed */
   .faq-item[open] {
-    border-color: rgba(37, 99, 235, 0.35);
-    box-shadow: 0 4px 20px rgba(37, 99, 235, 0.1);
+    border-color: var(--color-border-strong);
+    background: var(--color-surface-2);
   }
 
-  /* Summary row */
   .faq-summary {
     display: flex;
     align-items: center;
@@ -105,93 +95,39 @@ const {
     gap: 1rem;
     padding: 1.25rem 1.5rem;
     cursor: pointer;
-    list-style: none;
     user-select: none;
-  }
-
-  /* Remove browser disclosure triangle */
-  .faq-summary::-webkit-details-marker { display: none; }
-  .faq-summary::marker { display: none; }
-
-  /* :focus-visible ring — use focus-visible not focus (Vercel guideline) */
-  .faq-summary:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: -2px;
-    border-radius: calc(var(--radius-card) - 2px);
-  }
-  .faq-summary:focus:not(:focus-visible) {
-    outline: none;
-  }
-
-  /* Question text */
-  .faq-question-text {
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 1.45;
+    font-weight: 600;
     color: var(--color-text-primary);
-    flex: 1;
-    min-width: 0;
-    transition: color var(--duration-fast) var(--ease-smooth);
+    list-style: none;
   }
 
-  .faq-item[open] .faq-question-text {
-    color: var(--color-accent);
+  .faq-summary::-webkit-details-marker {
+    display: none;
   }
 
-  /* Icon wrap */
   .faq-icon-wrap {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-    width: 2rem;
-    height: 2rem;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    background: var(--color-surface-2);
-    border: 1px solid var(--color-border-subtle);
-    color: var(--color-text-secondary);
-    transition:
-      background var(--duration-fast) var(--ease-smooth),
-      color var(--duration-fast) var(--ease-smooth),
-      border-color var(--duration-fast) var(--ease-smooth);
+    background: var(--color-surface-3);
+    color: var(--color-accent);
+    flex-shrink: 0;
+    transition: transform var(--transition-fast), background-color var(--transition-fast);
   }
 
   .faq-item[open] .faq-icon-wrap {
-    background: rgba(37, 99, 235, 0.12);
-    border-color: rgba(37, 99, 235, 0.3);
-    color: var(--color-accent);
-  }
-
-  /* + icon rotates to × on open — transform only (compositor-friendly) */
-  .faq-icon {
-    display: block;
-    transition: transform var(--duration-normal) var(--ease-spring);
-  }
-
-  .faq-item[open] .faq-icon {
     transform: rotate(45deg);
+    background: var(--color-accent);
+    color: var(--color-text-inverse);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .faq-item,
-    .faq-icon-wrap,
-    .faq-icon,
-    .faq-question-text {
-      transition: none;
-    }
-  }
-
-  /* Answer body */
   .faq-body {
-    overflow: hidden;
-  }
-
-  .faq-answer {
-    margin: 0 1.5rem;
-    padding: 1rem 0 1.25rem;
-    border-top: 1px solid var(--color-border-subtle);
-    font-size: var(--text-body);
-    line-height: 1.7;
+    padding: 0 1.5rem 1.25rem;
     color: var(--color-text-secondary);
+    line-height: 1.7;
+    font-size: 0.9375rem;
   }
 </style>

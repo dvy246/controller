@@ -1,8 +1,10 @@
 ---
-import { getLangFromUrl } from '../../i18n/utils';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 const currentLang = getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
 const l = (path: string) =>
   currentLang === 'en' ? path : path === '/' ? `/${currentLang}` : `/${currentLang}${path}`;
+
 
 /**
  * Footer.astro — ControllerTesting.com
@@ -25,21 +27,20 @@ const l = (path: string) =>
           <span>ControllerTesting.com</span>
         </a>
         <p class="footer-tagline">
-          The only platform that owns the entire controller lifecycle from diagnosis to optimization.
-          Free, instant, private — all processing in your browser.
+          {t('footer.tagline')}
         </p>
         <div class="trust-badges">
           <span class="trust-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            Private
+            {t('footer.privacy')}
           </span>
           <span class="trust-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-            Instant
+            {t('footer.instant')}
           </span>
           <span class="trust-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-            Free Forever
+            {t('footer.free')}
           </span>
         </div>
       </div>
@@ -47,41 +48,41 @@ const l = (path: string) =>
       {/* ── Nav columns ── */}
       <nav class="footer-nav" aria-label="Footer navigation">
         <div class="footer-col">
-          <h3 class="footer-col-title">Controller Tests <span class="footer-col-icon">▼</span></h3>
+          <h3 class="footer-col-title">{t('footer.colController')} <span class="footer-col-icon">▼</span></h3>
           <ul role="list">
-            <li><a href={l('/test/controller/drift')}>Stick Drift Test</a></li>
-            <li><a href={l('/test/controller/full-diagnostic')}>Full Diagnostic</a></li>
-            <li><a href={l('/test/controller/buttons')}>Button Tester</a></li>
-            <li><a href={l('/test/controller/triggers')}>Trigger Test</a></li>
-            <li><a href={l('/test/controller/health-score')}>Health Score</a></li>
-            <li><a href={l('/test/controller/vibration')}>Vibration Test</a></li>
-            <li><a href={l('/test/controller')}>All 21 Tools</a></li>
+            <li><a href={l('/test/controller/drift')}>{t('nav.stickDriftTest')}</a></li>
+            <li><a href={l('/test/controller/full-diagnostic')}>{t('nav.fullDiag')}</a></li>
+            <li><a href={l('/test/controller/buttons')}>{t('nav.buttonTester')}</a></li>
+            <li><a href={l('/test/controller/triggers')}>{t('nav.triggerTest')}</a></li>
+            <li><a href={l('/test/controller/health-score')}>{t('nav.healthScore')}</a></li>
+            <li><a href={l('/test/controller/vibration')}>{t('nav.vibrationTest')}</a></li>
+            <li><a href={l('/test/controller')}>{t('nav.controllerTests')}</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h3 class="footer-col-title">More Tests <span class="footer-col-icon">▼</span></h3>
+          <h3 class="footer-col-title">{t('footer.colMore')} <span class="footer-col-icon">▼</span></h3>
           <ul role="list">
-            <li><a href={l('/test/mouse')}>Mouse Tests</a></li>
-            <li><a href={l('/test/keyboard')}>Keyboard Tests</a></li>
+            <li><a href={l('/test/mouse')}>{t('nav.mouseSuite')}</a></li>
+            <li><a href={l('/test/keyboard')}>{t('nav.keyboardMidi')}</a></li>
             <li><a href={l('/test/midi')}>MIDI &amp; Drum Pads</a></li>
-            <li><a href={l('/audio-test/surround-sound')}>Spatial Audio Test</a></li>
+            <li><a href={l('/audio-test/surround-sound')}>{t("nav.spatialAudio")}</a></li>
             <li><a href={l('/hz-test/144hz')}>Hz &amp; Ghosting Test</a></li>
-            <li><a href={l('/games')}>Game Arcade</a></li>
+            <li><a href={l('/games')}>{t('nav.play')}</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h3 class="footer-col-title">Fix &amp; Optimize <span class="footer-col-icon">▼</span></h3>
+          <h3 class="footer-col-title">{t('footer.colFix')} <span class="footer-col-icon">▼</span></h3>
           <ul role="list">
-            <li><a href={l('/warranty')}>Warranty Assistant</a></li>
-            <li><a href={l('/fix-or-replace')}>Fix vs Replace Calc</a></li>
-            <li><a href={l('/fix/stick-drift/ps5-dualsense')}>Fix PS5 Drift</a></li>
-            <li><a href={l('/test/controller/timeline')}>Drift Timeline Tracker</a></li>
-            <li><a href={l('/test/controller/competitive-readiness')}>Competitive Readiness</a></li>
+            <li><a href={l('/warranty')}>{t('nav.warranty')}</a></li>
+            <li><a href={l('/fix-or-replace')}>{t('nav.fixRepair')}</a></li>
+            <li><a href={l('/fix/stick-drift/ps5-dualsense')}>{t("nav.fixPS5Drift")}</a></li>
+            <li><a href={l('/test/controller/timeline')}>{t("nav.driftTimeline")}</a></li>
+            <li><a href={l('/test/controller/competitive-readiness')}>{t("nav.competitiveReadiness")}</a></li>
             <li><a href={l('/test/controller/ps-calibration')}>PS4/PS5 Calibration</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h3 class="footer-col-title">Compare &amp; Data <span class="footer-col-icon">▼</span></h3>
+          <h3 class="footer-col-title">{t('footer.colCompare')} <span class="footer-col-icon">▼</span></h3>
           <ul role="list">
             <li><a href={l('/compare/dualsense-vs-xbox-series')}>DualSense vs Xbox Series</a></li>
             <li><a href={l('/compare/dualsense-edge-vs-xbox-elite-2')}>Edge vs Elite Series 2</a></li>
@@ -89,21 +90,21 @@ const l = (path: string) =>
             <li><a href={l('/controller/xbox-wireless')}>Xbox Wireless Profile</a></li>
             <li><a href={l('/reliability/ps5-dualsense')}>DualSense Reliability</a></li>
             <li><a href={l('/reliability/xbox-series-x')}>Xbox Series X Reliability</a></li>
-            <li><a href={l('/press')}>Press Kit</a></li>
+            <li><a href={l('/press')}>{t("nav.pressKit")}</a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h3 class="footer-col-title">Learn &amp; Connect <span class="footer-col-icon">▼</span></h3>
+          <h3 class="footer-col-title">{t('footer.colLearn')} <span class="footer-col-icon">▼</span></h3>
           <ul role="list">
-            <li><a href={l('/shop')}>Repair Shop Suite</a></li>
-            <li><a href={l('/verify')}>Verify Certificate</a></li>
+            <li><a href={l('/shop')}>{t("nav.repairShop")}</a></li>
+            <li><a href={l('/verify')}>{t("nav.verifyCert")}</a></li>
             <li><a href={l('/passport')}>Controller Passport</a></li>
-            <li><a href={l('/learn')}>Controller Guides</a></li>
+            <li><a href={l('/learn')}>{t('nav.learn')}</a></li>
             <li><a href={l('/connect')}>Connect &amp; Pair</a></li>
-            <li><a href={l('/suggest')}>Suggest a Test or Game</a></li>
-            <li><a href={l('/learn/hall-effect-vs-potentiometer-guide')}>Hall Effect vs Potentiometer</a></li>
-            <li><a href={l('/test/methodology')}>How Tests Work</a></li>
-            <li><a href={l('/reliability/report')}>Monthly Reliability Report</a></li>
+            <li><a href={l('/suggest')}>{t('nav.suggestTool')}</a></li>
+            <li><a href={l('/learn/hall-effect-vs-potentiometer-guide')}>{t("nav.hallEffectGuide")}</a></li>
+            <li><a href={l('/test/methodology')}>{t("nav.howTestsWork")}</a></li>
+            <li><a href={l('/reliability/report')}>{t("nav.monthlyReport")}</a></li>
           </ul>
         </div>
       </nav>
@@ -112,18 +113,16 @@ const l = (path: string) =>
     {/* ── Bottom: Legal ── */}
     <div class="footer-bottom">
       <div class="footer-legal-links" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem; font-size: 0.8125rem; font-weight: 500;">
-        <a href={l('/about')} style="color: var(--color-text-secondary); text-decoration: none;">About Us</a>
-        <a href={l('/contact')} style="color: var(--color-text-secondary); text-decoration: none;">Contact Us</a>
-        <a href={l('/privacy')} style="color: var(--color-text-secondary); text-decoration: none;">Privacy Policy</a>
-        <a href={l('/terms')} style="color: var(--color-text-secondary); text-decoration: none;">Terms of Service</a>
+        <a href={l('/about')} style="color: var(--color-text-secondary); text-decoration: none;">{t('nav.about')}</a>
+        <a href={l('/contact')} style="color: var(--color-text-secondary); text-decoration: none;">{t('nav.contact')}</a>
+        <a href={l('/privacy')} style="color: var(--color-text-secondary); text-decoration: none;">{t('nav.privacy')}</a>
+        <a href={l('/terms')} style="color: var(--color-text-secondary); text-decoration: none;">{t('nav.terms')}</a>
       </div>
       <p class="footer-legal">
-        &copy; {new Date().getFullYear()} ControllerTesting.com. All rights reserved.
-        Results are informational only. Controller testing accuracy depends on browser Gamepad API implementation.
-        Repair guides: always consult a professional for complex repairs. We are not responsible for any damage.
+        &copy; {new Date().getFullYear()} ControllerTesting.com. {t('footer.copyright')}
       </p>
       <p class="footer-affiliate">
-        <strong>Affiliate disclosure:</strong> Some links on this site are affiliate links. We may earn a commission if you purchase through them, at no extra cost to you. All recommendations are based on our independent testing and analysis.
+        {t('footer.disclosure')}
       </p>
     </div>
   </div>

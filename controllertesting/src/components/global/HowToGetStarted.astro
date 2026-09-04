@@ -3,6 +3,10 @@
  * HowToGetStarted.astro — ControllerTesting.com
  * Standardized 3-Step Guide component matching user reference design 1:1.
  */
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+const currentLang = getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
+
 interface Step {
   num: string;
   title: string;
@@ -16,27 +20,28 @@ interface Props {
 }
 
 const {
-  title = "How to Get Started",
-  subtitle = "Just three steps to run a complete controller test and understand your controller's health status.",
+  title = t("howTo.title"),
+  subtitle = t("howTo.subtitle"),
   steps = [
     {
       num: "01",
-      title: "Connect Controller",
-      desc: "Connect your controller to your computer via USB cable or Bluetooth. If the browser doesn't respond, press any button on the controller to activate the connection."
+      title: t("howTo.s1Title"),
+      desc: t("howTo.s1Desc")
     },
     {
       num: "02",
-      title: "Button Detection",
-      desc: "Press each button in the visual interface and confirm the corresponding area lights up on screen. This helps troubleshoot unresponsive or double-clicking buttons."
+      title: t("howTo.s2Title"),
+      desc: t("howTo.s2Desc")
     },
     {
       num: "03",
-      title: "Sticks & Vibration",
-      desc: "Rotate the sticks to check linearity and drift issues; click the vibration test button to feel if the left and right motor feedback is working properly."
+      title: t("howTo.s3Title"),
+      desc: t("howTo.s3Desc")
     }
   ]
 } = Astro.props;
 ---
+
 
 <section class="how-to-get-started-card">
   {/* Top Settings Icon Badge */}

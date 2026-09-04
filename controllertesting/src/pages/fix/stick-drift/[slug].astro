@@ -243,17 +243,25 @@ const breadcrumbs = [
   { name: guide.name },
 ];
 
-const howToSchema = {
+const articleSchema = {
   '@context': 'https://schema.org',
-  '@type': 'HowTo',
-  name: `How to Fix ${guide.name} Stick Drift`,
+  '@type': 'TechArticle',
+  headline: `How to Fix ${guide.name} Stick Drift`,
   description: `Step-by-step guide to fix ${guide.name} controller stick drift: diagnose, clean, adjust deadzones, repair or replace, and verify.`,
-  step: guide.steps.map((s, i) => ({
-    '@type': 'HowToStep',
-    position: i + 1,
-    name: s.title,
-    text: s.body,
-  })),
+  articleSection: 'Hardware Repair',
+  author: {
+    '@type': 'Organization',
+    name: 'ControllerTesting Hardware Lab',
+    url: 'https://controllertesting.com'
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'ControllerTesting.com',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://controllertesting.com/favicon.svg'
+    }
+  }
 };
 
 const reliabilitySnippet = guide.reliabilitySlug
@@ -264,7 +272,7 @@ const reliabilitySnippet = guide.reliabilitySlug
 <BaseLayout
   title={`Fix ${guide.name.replace(/ \(Series X\/S\)/, '').replace(' Controller', '')} Stick Drift | CT`}
   description={`Step-by-step guide to fix ${guide.name} stick drift: ${guide.sensor.replace(/ \(.*?\)/g, '').split(' · ')[0]} diagnosis, cleaning, deadzone tuning, replacement.`}
-  schema={howToSchema}
+  schema={articleSchema}
   breadcrumbs={breadcrumbs}
 
   localized={false}>

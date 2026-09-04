@@ -40,7 +40,7 @@ const { mode, uuid = "demo", embed = false } = Astro.props;
             <span class="rv-eyebrow">CONTROLLER HEALTH CERTIFICATE</span>
             <span id="rv-confidence" class="badge-pass rv-badge">High Confidence</span>
           </div>
-          <h1 id="rv-device" class="rv-device">Loading controller…</h1>
+          <h2 id="rv-device" class="rv-device">Loading controller…</h2>
           <p class="rv-meta mono">
             Report ID: <span id="rv-uuid" class="rv-accent">{uuid === 'demo' ? 'demo' : (uuid || 'Loading...')}</span>
             <span class="rv-dot">•</span> Protocol v<span id="rv-version">2.4.0</span>
