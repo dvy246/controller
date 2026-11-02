@@ -250,9 +250,10 @@ const articleSchema = {
   description: `Step-by-step guide to fix ${guide.name} controller stick drift: diagnose, clean, adjust deadzones, repair or replace, and verify.`,
   articleSection: 'Hardware Repair',
   author: {
-    '@type': 'Organization',
-    name: 'ControllerTesting Hardware Lab',
-    url: 'https://controllertesting.com'
+    '@type': 'Person',
+    '@id': 'https://controllertesting.com/about#divy-yadav',
+    name: 'Divy Yadav',
+    url: 'https://controllertesting.com/about'
   },
   publisher: {
     '@type': 'Organization',
@@ -290,8 +291,6 @@ const reliabilitySnippet = guide.reliabilitySlug
         </p>
         <AuthorByline
           datePublished="2026-08-02"
-          dateModified="2026-08-10"
-          readingTime="8 min read"
         />
       </header>
 

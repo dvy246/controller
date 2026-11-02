@@ -61,6 +61,7 @@ const schemaData = {
 ---
 
 <BaseLayout
+  noindex={model.widthMm == null || model.weightG == null}
   title={`${model.name.replace('Nintendo Switch Pro Controller', 'Switch Pro').replace('Xbox Wireless Controller (Series X/S)', 'Xbox Series X/S')} Controller Fit Guide | CT`}
   description={`Does the ${model.name} fit your hands? Width ${model.widthMm ?? 'unmeasured'} mm, ${model.weightG ?? 'unmeasured'} g, ${model.stickLayout} sticks — verdicts for small, medium, large hands.`}
   canonical={canonicalUrl}

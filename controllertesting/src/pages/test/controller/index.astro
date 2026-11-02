@@ -1,10 +1,11 @@
 ---
 /**
  * /test/controller/index.astro — Controller Tools Hub
- * SEO Title: Online Controller Tester — 39 Core Gamepad Diagnostic Tools
+ * SEO Title: Online Controller Tester — Gamepad Diagnostic Tools
  * Hub index listing all 21 controller tools.
  */
 
+import HubIntro from '../../../components/global/HubIntro.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
@@ -20,7 +21,7 @@ const controllerTools = [
   { name: 'Stick Drift Detector', href: '/test/controller/drift', desc: 'Real-time 0.1% stick drift canvas visualizer', badge: 'High Priority' },
   { name: 'Full Diagnostic Wizard', href: '/test/controller/full-diagnostic', desc: '5-step hardware checkup for sticks, buttons & triggers', badge: 'Flagship' },
   { name: 'Controller Health Score™', href: '/test/controller/health-score', desc: 'Compute 0-100 score & export printable PDF report card', badge: 'Flagship' },
-  { name: 'PS Controller WebHID Calibration', href: '/test/controller/ps-calibration', desc: 'Firmware-level center offset calibration & permanent save via WebHID', badge: 'Flagship' },
+  { name: 'PS Controller Calibration Check', href: '/test/controller/ps-calibration', desc: 'Measure stick center offset and outer range on DualSense & DualShock 4', badge: 'Flagship' },
   { name: 'Steering Wheel & Pedals', href: '/test/controller/steering-wheel', desc: 'Test 900°/1080° steering rotation, throttle, brake & clutch linearity', badge: 'Specialized' },
   { name: 'Fight Stick & Hitbox', href: '/test/controller/fight-stick', desc: 'Vewlix 8-button layout & SOCD cleaner test for arcade sticks', badge: 'Specialized' },
   { name: 'Flight Stick & HOTAS', href: '/test/controller/flight-stick', desc: 'Flight sim joysticks, 128+ buttons & multi-axis throttle quadrant', badge: 'Specialized' },
@@ -82,8 +83,8 @@ function getHubIcon(href: string) {
 ---
 
 <BaseLayout
-  title="Controller Test Tools: 39 Gamepad Tests | ControllerTesting"
-  description="Free online controller testing suite: 39 diagnostic tools for stick drift, buttons, triggers, polling rate, deadzone, and vibration on PS5, Xbox, Switch & PC."
+  title="Controller Tester: Online Gamepad Tests | ControllerTesting"
+  description="Free online controller tests for stick drift, buttons, triggers, polling rate, deadzone, and vibration on PS5, Xbox, Switch & PC."
   keywords="controller test tools, gamepad diagnostic, controller tester online, stick drift test, button tester, trigger test, polling rate test, deadzone test, vibration test, free gamepad tester"
   schema={itemListSchema}
   breadcrumbs={breadcrumbs}
@@ -96,12 +97,23 @@ function getHubIcon(href: string) {
       <Breadcrumbs items={breadcrumbs} />
 
       <header class="hub-header">
-        <span class="badge-tag">39 Core Diagnostic Tools</span>
+        <span class="badge-tag">{controllerTools.length} Controller Tests</span>
         <h1 class="hub-title text-h1">Controller Diagnostic Hub</h1>
         <p class="hub-subtitle">
           Select a tool below to diagnose stick drift, button responsiveness, trigger linearity, or complete health checkups. All tools run 100% locally in your browser.
         </p>
       </header>
+      <HubIntro title="Which controller test do you need?" faqs={[{"question": "How do I test my controller online?", "answer": "Connect it to your computer by USB or Bluetooth, open any test on this page in Chrome, Edge or Firefox, and press a button so the browser exposes the controller. Sticks, buttons and triggers then update live."}, {"question": "Does the gamepad tester work with PS5, Xbox and Switch controllers?", "answer": "Yes. Anything your operating system recognises as a game controller works, including DualSense, DualShock 4, Xbox Wireless, Switch Pro, Joy-Cons and most third-party USB pads. Some features, like DualSense adaptive triggers, are not exposed to browsers."}, {"question": "Why doesn't my controller show up?", "answer": "Browsers hide controllers until you press a button on them. If it still doesn't appear, check it works in your system's game controller settings, try a different USB cable (some are charge-only), and close apps like Steam that can take exclusive control."}]}>
+        <p>Plug in your controller (USB or Bluetooth), press any button, and the browser reads it through the Gamepad API. Nothing is installed and your input stays in your browser. Pick the test that matches the problem:</p>
+        <ul>
+          <li><strong>The character or camera moves on its own:</strong> the <a href="/test/controller/drift">Stick Drift test</a>. Resting drift up to 2.5% is normal wear; above 8% usually means cleaning or replacing the stick.</li>
+          <li><strong>A button misses presses or double-fires:</strong> the <a href="/test/controller/buttons">Button tester</a>.</li>
+          <li><strong>Aim feels uneven in one direction:</strong> the <a href="/test/controller/circularity">Circularity test</a> shows whether the stick's outer range is round.</li>
+          <li><strong>Triggers stop short or feel loose:</strong> the <a href="/test/controller/triggers">Trigger tester</a>.</li>
+        </ul>
+        <p>Not sure where to start? The <a href="/test/controller/full-diagnostic">Full Diagnostic</a> runs the core checks in one pass.</p>
+      </HubIntro>
+
 
       <div class="grid-tools">
         {controllerTools.map((tool) => (

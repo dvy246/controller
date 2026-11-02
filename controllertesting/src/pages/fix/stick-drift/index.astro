@@ -3,6 +3,7 @@
  * /fix/stick-drift — Stick Drift Repair category hub (12 controllers)
  */
 
+import HubIntro from '../../../components/global/HubIntro.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
@@ -49,6 +50,10 @@ const breadcrumbs = [
           Diagnose with a real measurement, clean or replace, then verify the fix with a re-test. Choose your controller:
         </p>
       </header>
+      <HubIntro title="Pick your controller, then follow the steps in order">
+        <p>Every guide follows the same order because it saves money: measure the drift, raise the in-game deadzone if it is mild, clean the stick if it is moderate, and replace the module only if the drift keeps coming back. Each guide adds what is specific to that controller: how its shell opens, whether the sticks are soldered, and which replacement parts fit.</p>
+      </HubIntro>
+
 
       <div class="guide-grid">
         {guides.map((g) => (

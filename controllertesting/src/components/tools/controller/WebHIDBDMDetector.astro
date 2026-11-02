@@ -28,7 +28,7 @@ const { controller, activeBdm = 'all' } = Astro.props;
       </div>
       <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Select Motherboard Revision</h2>
       <p class="text-sm text-[var(--color-text-secondary)] mt-1 max-w-2xl">
-        Internal ribbon pinouts and trigger brackets change with each revision. Select your board version below or plug in via USB for instant hardware detection.
+        Internal ribbon pinouts and trigger brackets change with each revision. Select your board version below. Plugging in via USB reads the controller's model and product ID, which narrows the options, but the board revision itself is only visible on the PCB (see the identification guide).
       </p>
     </div>
 
@@ -40,8 +40,9 @@ const { controller, activeBdm = 'all' } = Astro.props;
         class="inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl bg-[var(--color-accent)] hover:bg-[var(--color-accent-hover)] text-white font-semibold text-sm transition-all duration-200 shadow-lg shadow-[var(--color-accent-glow)] cursor-pointer active:scale-95"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        <span>Auto-Detect via USB (WebHID)</span>
+        <span>Read Model via USB (WebHID)</span>
       </button>
+      <p id="hid-status" class="hidden text-sm text-[var(--color-text-secondary)]" role="status"></p>
 
       <button 
         id="btn-toggle-guide" 
@@ -97,7 +98,7 @@ const { controller, activeBdm = 'all' } = Astro.props;
         </span>
       </div>
       <div class="text-xs text-[var(--color-text-tertiary)] font-mono" id="status-detection-note">
-        Showing all verified compatible upgrade kits
+        Showing upgrade kits for all revisions
       </div>
     </div>
   </div>
@@ -178,13 +179,13 @@ const { controller, activeBdm = 'all' } = Astro.props;
 
       if (statusNote) {
         if (isAutoDetected) {
-          statusNote.textContent = 'Auto-detected via WebHID USB Interface';
+          statusNote.textContent = 'Controller connected; match your board using the guide';
           if (statusDot) statusDot.className = 'w-2.5 h-2.5 rounded-full bg-[var(--color-accent)] shadow-[0_0_8px_rgba(37,99,235,0.8)]';
         } else if (revisionId === 'all') {
-          statusNote.textContent = 'Showing all verified compatible upgrade kits';
+          statusNote.textContent = 'Showing upgrade kits for all revisions';
           if (statusDot) statusDot.className = 'w-2.5 h-2.5 rounded-full bg-[var(--color-emerald)]';
         } else {
-          statusNote.textContent = `Filtered to guaranteed ${revisionId.toUpperCase()} compatible parts`;
+          statusNote.textContent = `Filtered to parts listed for ${revisionId.toUpperCase()}`;
           if (statusDot) statusDot.className = 'w-2.5 h-2.5 rounded-full bg-[var(--color-emerald)]';
         }
       }
@@ -221,11 +222,15 @@ const { controller, activeBdm = 'all' } = Astro.props;
           const device = devices[0];
           await device.open();
 
-          // In standard DualSense descriptors, revision detection matches serial/firmware reports.
-          // For immediate robust UX, detect and filter to BDM-030 (standard current generation):
-          const detectedBdm = controllerId === 'ps5-dualsense' ? 'bdm-030' : 'model-1914';
-          
-          setActiveRevision(detectedBdm, true);
+          // WebHID exposes the USB product name and ID, not the board revision,
+          // so report what was read and send the user to the visual guide.
+          const pid = device.productId.toString(16).padStart(4, '0').toUpperCase();
+          const status = document.getElementById('hid-status');
+          if (status) {
+            status.textContent = `Connected: ${device.productName || 'Unknown device'} (product ID 0x${pid}). USB does not report the board revision; match your PCB markings using the guide below.`;
+            status.classList.remove('hidden');
+          }
+          guidePanel?.classList.remove('hidden');
           await device.close();
         }
       } catch (err: any) {

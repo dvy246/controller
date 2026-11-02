@@ -4,6 +4,7 @@
  * Zero competitor coverage (verified: controllertest.io has no /compare pages).
  */
 
+import HubIntro from '../../components/global/HubIntro.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
@@ -65,6 +66,10 @@ const schemaData = [
           Figures are labeled approximate — measure your own unit with our free diagnostics.
         </p>
       </header>
+      <HubIntro title="How these comparisons work">
+        <p>Each head-to-head compares what actually differs between two controllers: the stick sensor type (which drives drift behavior), launch price, features like back buttons, and how to test either one. We do not publish latency or polling figures here, because they change with connection mode, platform and firmware; measure your own controller with the <a href="/test/controller/polling-rate">polling rate test</a> instead.</p>
+      </HubIntro>
+
 
       <div class="compare-grid">
         {comparisons.map((c) => (

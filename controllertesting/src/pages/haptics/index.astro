@@ -5,6 +5,7 @@
  * Hub index for the Haptic Feedback Composer routes.
  */
 
+import HubIntro from '../../components/global/HubIntro.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
@@ -53,6 +54,10 @@ const itemListSchema = {
           Design dual-motor rumble waveforms visually, preview them on your controller in real time, and export production-ready code for your game engine.
         </p>
       </header>
+      <HubIntro title="Design and preview controller rumble">
+        <p>The haptic composer lets you shape a dual-motor rumble pattern (strong and weak motor intensity over time), play it on a connected controller through the browser's vibration support, and copy the pattern as starter code for Unity or Unreal. Vibration preview works in Chromium browsers with controllers that expose rumble, such as Xbox and DualSense pads.</p>
+      </HubIntro>
+
 
       <div class="grid-tools">
         {engines.map((e) => (

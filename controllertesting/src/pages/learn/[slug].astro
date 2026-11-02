@@ -8,6 +8,7 @@
  * where measurement could vary.
  */
 
+import { DRIFT_BANDS } from '../../lib/thresholds';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
@@ -25,14 +26,14 @@ export function getStaticPaths() {
         h: 'How stick drift is measured',
         body: [
           'A resting analog stick should report the same center position (X/Y ≈ 0.000) on every read. Drift is the offset from that center, expressed as a percentage of the stick\'s full range of travel. Our Stick Drift Detector reads the raw Gamepad API values and converts the at-rest offset into a drift percentage with 0.1% precision.',
-          'For example, a stick reporting an X value of 0.012 at rest is drifting at roughly 1.2%. Values under 2% are considered clean; 2–10% is minor drift you will notice in aim-heavy games; above 10% is severe and usually requires hardware attention.',
+          `For example, a stick reporting an X value of 0.012 at rest is drifting at roughly 1.2%. Up to ${DRIFT_BANDS.healthyMax}% is normal wear; ${DRIFT_BANDS.healthyMax}–${DRIFT_BANDS.moderateMax}% is drift you will notice in aim-heavy games; above ${DRIFT_BANDS.moderateMax}% usually needs hardware attention.`,
         ],
       },
       {
         h: 'What causes it',
         body: [
           'Most first-party controllers use potentiometer sensors: a wiper glides over a carbon track and the voltage at that position becomes the stick\'s coordinate. Drift happens when carbon dust accumulates on the track or the wiper wears, shifting the voltage reading even when the stick is untouched.',
-          'Hall-effect sticks measure a magnetic field instead of a physical wiper — they have no wear contact, which is why our baseline dataset shows them aging dramatically better (see the Hall-effect vs potentiometer guide).',
+          'Hall-effect sticks measure a magnetic field instead of a physical wiper — they have no wear contact, which is why our modeled estimates expect them to age far better (see the Hall-effect vs potentiometer guide).',
         ],
       },
       {
@@ -52,7 +53,7 @@ export function getStaticPaths() {
     faqs: [
       {
         q: 'How much stick drift is acceptable?',
-        a: 'Under 2% at rest is effectively clean — most games ship with deadzones well above that. Between 2% and 10% you will notice it in aim-heavy titles and should raise the in-game deadzone. Above 10% is severe drift; repair or replacement beats masking it.',
+        a: `Up to ${DRIFT_BANDS.healthyMax}% at rest is normal wear — most games ship with deadzones above that. Between ${DRIFT_BANDS.healthyMax}% and ${DRIFT_BANDS.moderateMax}% you will notice it in aim-heavy titles and should raise the in-game deadzone. Above ${DRIFT_BANDS.moderateMax}%, repair or replacement beats masking it.`,
       },
       {
         q: 'Can stick drift be fixed permanently?',
@@ -93,7 +94,7 @@ export function getStaticPaths() {
     related: [
       { label: 'Visualize your deadzones', href: '/test/controller/deadzone', primary: true },
       { label: 'Measure drift first', href: '/test/controller/drift' },
-      { label: 'Per-game settings', href: '/settings/fortnite/ps5-dualsense' },
+      { label: 'Per-game settings', href: '/settings/fortnite' },
     ],
     faqs: [
       {
@@ -280,7 +281,7 @@ export function getStaticPaths() {
       {
         h: '1. Sensor type is the durability question',
         body: [
-          'The single most important hardware question is potentiometer vs Hall-effect sticks. Our modeled reference baselines measure 0.1% average drift at 12 months for Hall-effect vs 3.1–5.2% for potentiometers — a 30–50× gap. If you are buying for longevity, Hall-effect sticks are the defining feature; our reliability report and controller comparisons show the per-model data.',
+          'The single most important hardware question is potentiometer vs Hall-effect sticks. Our modeled reference baselines estimate 0.1% average drift at 12 months for Hall-effect vs 3.1–5.2% for potentiometers — a 30–50× gap. If you are buying for longevity, Hall-effect sticks are the defining feature; our reliability report and controller comparisons show the per-model data.',
         ],
       },
       {
@@ -991,10 +992,10 @@ const articleSchema = {
   headline: article.title,
   description: article.subtitle,
   datePublished: '2026-08-02T00:00:00Z',
-  dateModified: '2026-08-10T00:00:00Z',
   author: {
-    '@type': 'Organization',
-    name: 'ControllerTesting.com Research Team',
+    '@type': 'Person',
+    '@id': 'https://controllertesting.com/about#divy-yadav',
+    name: 'Divy Yadav',
     url: 'https://controllertesting.com/about'
   },
   publisher: {
@@ -1034,8 +1035,6 @@ const articleSchema = {
 
       <AuthorByline
         datePublished="2026-08-02"
-        dateModified="2026-08-10"
-        readingTime="5 min read"
       />
 
       <div class="learn-body card-base">

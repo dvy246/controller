@@ -4,7 +4,7 @@
  *
  * Reads the last stick-drift measurement persisted by DriftTester (`ct_last_drift`)
  * and turns it into a game-specific tuning verdict. Thresholds match DriftTester
- * badges (clean <2%, minor 2–10%, severe ≥10%) — no invented numbers.
+ * badges from the shared DRIFT_BANDS (src/lib/thresholds.ts) — no invented numbers.
  * Progressive enhancement: static default text renders without JS; the island
  * upgrades it in-place when a measurement exists in localStorage.
  */
@@ -34,6 +34,7 @@ const { gameName, gameRange, controllerName } = Astro.props;
 </div>
 
 <script>
+  import { DRIFT_BANDS } from '../../../lib/thresholds';
   function renderOptimizer() {
     const card = document.getElementById('settings-optimizer');
     const body = document.getElementById('opt-body');
@@ -65,11 +66,11 @@ const { gameName, gameRange, controllerName } = Astro.props;
     let zone: 'clean' | 'minor' | 'severe';
     let verdict: string;
     let action: string;
-    if (drift < 2) {
+    if (drift <= DRIFT_BANDS.healthyMax) {
       zone = 'clean';
       verdict = `${rec.model || 'Your controller'} reads ~${drift.toFixed(1)}% stick drift — well inside the clean zone.`;
       action = `Start at the lowest edge of ${gameName}'s recommended range (${gameRange}) and test in-game; a clean stick can usually run lower.`;
-    } else if (drift < 10) {
+    } else if (drift <= DRIFT_BANDS.moderateMax) {
       zone = 'minor';
       verdict = `${rec.model || 'Your controller'} reads ~${drift.toFixed(1)}% on the ${sideLabel} stick — minor drift.`;
       action = `In ${gameName}, set the ${sideLabel} stick deadzone in the upper half of the range (${gameRange}) for now. Re-test every few weeks — drift tends to climb as the stick wears.`;

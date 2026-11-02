@@ -5,6 +5,7 @@
  * Hub index for the Mech-Matrix Keyboard Sandbox routes.
  */
 
+import HubIntro from '../../components/global/HubIntro.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
@@ -54,6 +55,11 @@ const itemListSchema = {
           Diagnose NKRO rollover limits, matrix ghosting, and switch health on your mechanical keyboard. Pick the diagnostic that matches your physical layout.
         </p>
       </header>
+      <HubIntro title="Test every key on your keyboard" faqs={[{"question": "Can a browser test N-key rollover?", "answer": "Up to a point. The page shows every key the keyboard reports, so you can see whether all your held keys register. A missing key in a combination means the keyboard's own rollover limit was reached."}]}>
+        <p>Pick the layout that matches your keyboard (full-size, tenkeyless or 60%) and press each key: it lights up when the browser receives it. Holding several keys at once shows how many simultaneous presses your keyboard reports, which is how you spot ghosting.</p>
+        <p>A few keys never reach a web page: Fn is handled inside the keyboard, and the operating system keeps some shortcuts (like the Windows key combinations) for itself. A key that stays dark but works elsewhere is usually one of those, not a fault.</p>
+      </HubIntro>
+
 
       <div class="grid-tools">
         {layouts.map((tool) => (

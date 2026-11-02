@@ -89,16 +89,16 @@ const breadcrumbs = [
 ];
 
 const title = `Best ${category.name} for ${controller.name} (${bdm.name}) | Compatibility Guide`;
-const description = `Guaranteed compatible ${category.name.toLowerCase()} for ${controller.name} motherboard revision ${bdm.name}. Compare prices, difficulty, and soldering requirements.`;
+const description = `Compatibility notes: ${category.name.toLowerCase()} for ${controller.name} motherboard revision ${bdm.name}. Compare prices, difficulty, and soldering requirements.`;
 
 const faqs = [
   {
-    question: `Are these ${category.name.toLowerCase()} guaranteed to fit my ${bdm.name} controller?`,
-    answer: `Yes. Every part featured on this page has been verified to match the specific circuit traces, ribbon cable pitch, and internal housing brackets of the ${bdm.name} revision.`
+    question: `Will these ${category.name.toLowerCase()} fit my ${bdm.name} controller?`,
+    answer: `They are listed for the ${bdm.name} revision, but we have not fitted every part ourselves. Confirm your board marking first, then check the seller's own compatibility list before ordering.`
   },
   {
     question: `How do I confirm my controller is definitely a ${bdm.name}?`,
-    answer: `${bdm.identificationGuide} You can also connect your controller via USB to run the WebHID auto-detector above.`
+    answer: `${bdm.identificationGuide} Connecting via USB with the WebHID reader above confirms the controller model, but not the board revision.`
   },
   {
     question: `What tools do I need to install ${category.name.toLowerCase()} on a ${bdm.name}?`,
@@ -176,7 +176,8 @@ const technicalInstallGuides: Record<string, Record<string, {
 const guide = technicalInstallGuides[controller.id]?.[bdm.id];
 ---
 
-<BaseLayout title={title} description={description} breadcrumbs={breadcrumbs} schema={schema} localized={false}>
+<BaseLayout
+  noindex title={title} description={description} breadcrumbs={breadcrumbs} schema={schema} localized={false}>
   <Header />
 
   <main id="main-content" class="page-shell container-site">
@@ -187,7 +188,7 @@ const guide = technicalInstallGuides[controller.id]?.[bdm.id];
       <div class="badge-tag mb-3">{bdm.name} Compatibility Guide</div>
       <h1 class="page-title text-gradient">{category.name} for {controller.name} ({bdm.name})</h1>
       <p class="page-subtitle">
-        Verified hardware compatibility guide and parts catalog. Upgrading your {controller.name} with {category.name.toLowerCase()} on the {bdm.name} motherboard architecture.
+        Compatibility notes and parts list. Upgrading your {controller.name} with {category.name.toLowerCase()} on the {bdm.name} motherboard architecture.
       </p>
     </header>
 
@@ -243,7 +244,7 @@ const guide = technicalInstallGuides[controller.id]?.[bdm.id];
         <div class="p-3.5 rounded-xl bg-[var(--color-accent)]/10 border border-[var(--color-accent)]/20 text-xs text-[var(--color-text-primary)] flex items-start gap-2.5">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-[var(--color-accent)] shrink-0 mt-0.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
           <span>
-            <strong>Compatibility Guarantee:</strong> All {matchingMods.length} components listed below have been verified for direct mechanical and electrical compatibility with {bdm.name} motherboards.
+            <strong>Fitment note:</strong> {matchingMods.length === 1 ? 'The component below is' : `The ${matchingMods.length} components below are`} listed as compatible with {bdm.name} boards based on manufacturer fitment information. Confirm your board revision before buying.
           </span>
         </div>
       </div>

@@ -126,6 +126,7 @@ const webSiteSchema = {
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
+  '@id': 'https://controllertesting.com/#organization',
   name: 'ControllerTesting.com',
   url: 'https://controllertesting.com',
   logo: {
@@ -136,9 +137,12 @@ const organizationSchema = {
   },
   description: t('site.description'),
   foundingDate: '2025',
-  sameAs: [
-    'https://x.com/controllertest'
-  ],
+  founder: {
+    '@type': 'Person',
+    '@id': 'https://controllertesting.com/about#divy-yadav',
+    name: 'Divy Yadav',
+    url: 'https://controllertesting.com/about',
+  },
   knowsAbout: [
     'Gamepad API',
     'Hardware Diagnostics',
@@ -189,6 +193,32 @@ const schemas = [
       })();
     </script>
 
+    {/* ── Google Consent Mode v2 defaults (required for AdSense EU compliance) ── */}
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      // Default: deny all until user consents (GDPR/ePrivacy compliant)
+      gtag('consent', 'default', {
+        'ad_storage': 'denied',
+        'analytics_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'wait_for_update': 500
+      });
+      // Restore previous consent if stored
+      try {
+        var stored = localStorage.getItem('ct_cookie_consent');
+        if (stored && stored.indexOf('accepted') !== -1) {
+          gtag('consent', 'update', {
+            'ad_storage': 'granted',
+            'analytics_storage': 'granted',
+            'ad_user_data': 'granted',
+            'ad_personalization': 'granted'
+          });
+        }
+      } catch(e) {}
+    </script>
+
     {/* ── Google tag (gtag.js) via Partytown worker ── */}
     <script type="text/partytown" src="https://www.googletagmanager.com/gtag/js?id=G-VKC2B5MT4P"></script>
     <script type="text/partytown">
@@ -214,7 +244,7 @@ const schemas = [
     {keywords && <meta name="keywords" content={keywords} />}
     <link rel="canonical" href={canonicalUrl} />
     {!noindex && <meta http-equiv="content-language" content={currentLang} />}
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    {noindex && <meta name="robots" content="noindex, follow" />}
     {!noindex && <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />}
 
     {/* ── hreflang alternate links ── */}
@@ -278,31 +308,6 @@ const schemas = [
       <script type="application/ld+json" set:html={JSON.stringify(schemas.length === 1 ? schemas[0] : schemas)} />
     )}
 
-    {/* ── Google Consent Mode v2 defaults (required for AdSense EU compliance) ── */}
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      // Default: deny all until user consents (GDPR/ePrivacy compliant)
-      gtag('consent', 'default', {
-        'ad_storage': 'denied',
-        'analytics_storage': 'denied',
-        'ad_user_data': 'denied',
-        'ad_personalization': 'denied',
-        'wait_for_update': 500
-      });
-      // Restore previous consent if stored
-      try {
-        var stored = localStorage.getItem('ct_cookie_consent');
-        if (stored && stored.indexOf('accepted') !== -1) {
-          gtag('consent', 'update', {
-            'ad_storage': 'granted',
-            'analytics_storage': 'granted',
-            'ad_user_data': 'granted',
-            'ad_personalization': 'granted'
-          });
-        }
-      } catch(e) {}
-    </script>
 
     <slot name="head" />
   </head>

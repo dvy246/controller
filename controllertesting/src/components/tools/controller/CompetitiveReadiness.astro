@@ -1,7 +1,7 @@
 ---
 /**
  * CompetitiveReadiness.astro — Esports Benchmark & Competitive Readiness Assessor
- * Benchmarks stick drift, circularity error, polling rate, trigger travel, and button response against tournament standards for Apex, COD, and Fortnite.
+ * Measures resting drift, circularity error and trigger range from live Gamepad API samples against the site's competitive benchmarks.
  */
 ---
 
@@ -9,33 +9,33 @@
   <div class="flex items-center justify-between py-3 px-5 bg-surface-2 border border-surface-3 rounded-lg">
     <div class="flex items-center gap-3">
       <span class="w-2.5 h-2.5 rounded-full bg-neutral transition-all duration-300" id="cr-status-dot"></span>
-      <span class="text-sm text-secondary" id="cr-status-text">Connect controller for esports tournament benchmark audit...</span>
+      <span class="text-sm text-secondary" id="cr-status-text">Connect a controller and press any button to start.</span>
     </div>
     <div class="font-mono text-sm font-semibold text-primary" id="cr-model-name">No Controller Detected</div>
   </div>
 
   <div class="bg-surface-2 border border-surface-3 rounded-2xl p-8 flex flex-col gap-6 text-center">
     <div class="flex flex-col items-center gap-2">
-      <span class="font-mono text-3xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-emerald to-emerald/70" id="cr-grade-text">PRO CERTIFIED</span>
-      <span class="text-base text-secondary max-w-2xl mx-auto leading-relaxed" id="cr-sub-text">Meets all hardware specifications for Apex Legends ALGS and Call of Duty League (CDL) competition.</span>
+      <span class="font-mono text-3xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-emerald to-emerald/70" id="cr-grade-text">NOT TESTED</span>
+      <span class="text-base text-secondary max-w-2xl mx-auto leading-relaxed" id="cr-sub-text">Run the 10-second benchmark: leave the sticks centered for 2 seconds, then rotate both sticks around the edge and fully pull both triggers.</span>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
       <div class="flex flex-col items-center justify-center text-center gap-2 p-6 bg-surface-1 border border-surface-3 rounded-lg">
-        <span class="text-sm font-semibold">Polling Rate (&gt; 1000Hz)</span>
-        <span class="font-mono text-[10px] md:text-xs font-bold py-1 px-3 rounded-full bg-emerald/15 border border-emerald/30 text-emerald" id="cr-poll-badge">PASSED</span>
+        <span class="text-sm font-semibold">Observed Update Rate</span>
+        <span class="font-mono text-[10px] md:text-xs font-bold py-1 px-3 rounded-full bg-neutral/15 border border-neutral/30 text-neutral" id="cr-poll-badge">—</span>
       </div>
       <div class="flex flex-col items-center justify-center text-center gap-2 p-6 bg-surface-1 border border-surface-3 rounded-lg">
-        <span class="text-sm font-semibold">Circularity Error (&lt; 3.0%)</span>
-        <span class="font-mono text-[10px] md:text-xs font-bold py-1 px-3 rounded-full bg-emerald/15 border border-emerald/30 text-emerald" id="cr-circ-badge">PASSED</span>
+        <span class="text-sm font-semibold">Circularity Error (&lt; 8.5%)</span>
+        <span class="font-mono text-[10px] md:text-xs font-bold py-1 px-3 rounded-full bg-neutral/15 border border-neutral/30 text-neutral" id="cr-circ-badge">—</span>
       </div>
       <div class="flex flex-col items-center justify-center text-center gap-2 p-6 bg-surface-1 border border-surface-3 rounded-lg">
-        <span class="text-sm font-semibold">Hardware Deadzone (&lt; 2.0%)</span>
-        <span class="font-mono text-[10px] md:text-xs font-bold py-1 px-3 rounded-full bg-emerald/15 border border-emerald/30 text-emerald" id="cr-drift-badge">PASSED</span>
+        <span class="text-sm font-semibold">Resting Drift (&lt; 2.0%)</span>
+        <span class="font-mono text-[10px] md:text-xs font-bold py-1 px-3 rounded-full bg-neutral/15 border border-neutral/30 text-neutral" id="cr-drift-badge">—</span>
       </div>
       <div class="flex flex-col items-center justify-center text-center gap-2 p-6 bg-surface-1 border border-surface-3 rounded-lg">
-        <span class="text-sm font-semibold">Trigger Travel (Smart Triggers)</span>
-        <span class="font-mono text-[10px] md:text-xs font-bold py-1 px-3 rounded-full bg-emerald/15 border border-emerald/30 text-emerald" id="cr-trigger-badge">PASSED</span>
+        <span class="text-sm font-semibold">Trigger Full Range</span>
+        <span class="font-mono text-[10px] md:text-xs font-bold py-1 px-3 rounded-full bg-neutral/15 border border-neutral/30 text-neutral" id="cr-trigger-badge">—</span>
       </div>
     </div>
     
@@ -46,88 +46,145 @@
 </div>
 
 <script>
-  import { parseGamepadState } from '../../../lib/gamepad';
+  // Phase 1 (0–2 s): sticks at rest → resting drift.
+  // Phase 2 (2–10 s): full stick rotations + full trigger pulls → circularity and trigger range.
+  // Update rate is the browser-observed rate of new gamepad reports (capped by the
+  // display refresh rate), so it is reported for information only.
+  const REST_MS = 2000;
+  const TEST_MS = 10000;
+  const DRIFT_LIMIT = 2.0;
+  const CIRC_LIMIT = 8.5;
+  const BINS = 36;
 
   document.addEventListener('DOMContentLoaded', () => {
     let isTesting = false;
-    
-    document.getElementById('cr-run-test-btn')?.addEventListener('click', () => {
-        isTesting = true;
-        const btn = document.getElementById('cr-run-test-btn');
-        if (btn) btn.textContent = 'Testing (Rotate sticks & press triggers...)';
-        
-        setTimeout(() => {
-            isTesting = false;
-            if (btn) btn.textContent = 'Run 10s Benchmark';
-            
-            // Generate realistic values that pass or fail based on connected controller state
-            const driftBadge = document.getElementById('cr-drift-badge');
-            const circBadge = document.getElementById('cr-circ-badge');
-            const pollBadge = document.getElementById('cr-poll-badge');
-            const triggerBadge = document.getElementById('cr-trigger-badge');
-            
-            const gradeText = document.getElementById('cr-grade-text');
-            const subText = document.getElementById('cr-sub-text');
-            
-            const hz = 1000 + Math.random() * 50; // mock > 1000Hz 
-            const circ = 1.0 + Math.random() * 1.5; // mock 1.0-2.5%
-            const drift = 0.5 + Math.random() * 1.0; // mock 0.5-1.5%
-            const triggerTravel = 0.05 + Math.random() * 0.1; // near zero analog travel
-            
-            let passed = hz >= 1000 && circ < 3.0 && drift < 2.0 && triggerTravel < 0.2;
-            
-            if (passed) {
-               if (gradeText) {
-                 gradeText.textContent = 'PRO TOURNAMENT READY';
-                 gradeText.className = 'font-mono text-3xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-emerald to-emerald/70';
-               }
-               if (subText) subText.textContent = `Excellent metrics: ${hz.toFixed(0)}Hz, ${circ.toFixed(1)}% circ, ${drift.toFixed(1)}% dz, Digital Triggers.`;
-            } else {
-               if (gradeText) {
-                 gradeText.textContent = 'NOT COMPETITIVE READY';
-                 gradeText.className = 'font-mono text-3xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-warning to-warning/70';
-               }
-               if (subText) subText.textContent = `Failed metrics: ${hz.toFixed(0)}Hz, ${circ.toFixed(1)}% circ, ${drift.toFixed(1)}% dz.`;
-            }
-            
-            function updateBadge(badge: HTMLElement | null, condition: boolean) {
-                 if (!badge) return;
-                badge.textContent = condition ? 'PASSED' : 'FAILED';
-                badge.className = condition 
-                  ? 'font-mono text-[10px] md:text-xs font-bold py-1 px-3 rounded-full bg-emerald/15 border border-emerald/30 text-emerald'
-                  : 'font-mono text-[10px] md:text-xs font-bold py-1 px-3 rounded-full bg-warning/15 border border-warning/30 text-warning';
-            }
+    let startedAt = 0;
+    let restMax = 0;
+    let lastTimestamp = 0;
+    let reportCount = 0;
+    let trigMax = [0, 0];
+    let trigMin = [1, 1];
+    let binMax: number[][] = [];
 
-            updateBadge(pollBadge, hz >= 1000);
-            updateBadge(circBadge, circ < 3.0);
-            updateBadge(driftBadge, drift < 2.0);
-            updateBadge(triggerBadge, triggerTravel < 0.2);
-            
-        }, 3000);
+    const btn = document.getElementById('cr-run-test-btn');
+    const gradeText = document.getElementById('cr-grade-text');
+    const subText = document.getElementById('cr-sub-text');
+
+    function activeGamepad(): Gamepad | null {
+      const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+      for (const gp of pads) if (gp && gp.connected) return gp;
+      return null;
+    }
+
+    function setBadge(id: string, state: 'pass' | 'fail' | 'info', label: string) {
+      const badge = document.getElementById(id);
+      if (!badge) return;
+      badge.textContent = label;
+      const tone = {
+        pass: 'bg-emerald/15 border-emerald/30 text-emerald',
+        fail: 'bg-warning/15 border-warning/30 text-warning',
+        info: 'bg-neutral/15 border-neutral/30 text-neutral',
+      }[state];
+      badge.className = `font-mono text-[10px] md:text-xs font-bold py-1 px-3 rounded-full border ${tone}`;
+    }
+
+    btn?.addEventListener('click', () => {
+      if (!activeGamepad()) {
+        if (subText) subText.textContent = 'No controller detected. Connect one and press any button, then run the benchmark.';
+        return;
+      }
+      isTesting = true;
+      startedAt = performance.now();
+      restMax = 0;
+      lastTimestamp = 0;
+      reportCount = 0;
+      trigMax = [0, 0];
+      trigMin = [1, 1];
+      binMax = [new Array(BINS).fill(0), new Array(BINS).fill(0)];
+      if (btn) btn.textContent = 'Hands off the sticks…';
+      if (gradeText) gradeText.textContent = 'MEASURING';
     });
 
-    function pollCompetitive() {
-      const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-      let activeGp: Gamepad | null = null;
-      for (let i = 0; i < gamepads.length; i++) {
-        if (gamepads[i] && gamepads[i]?.connected) {
-          activeGp = gamepads[i];
-          break;
-        }
+    function sample(gp: Gamepad, elapsed: number) {
+      if (gp.timestamp !== lastTimestamp) {
+        lastTimestamp = gp.timestamp;
+        reportCount++;
       }
+      const sticks = [[gp.axes[0] ?? 0, gp.axes[1] ?? 0], [gp.axes[2] ?? 0, gp.axes[3] ?? 0]];
+      if (elapsed < REST_MS) {
+        for (const [x, y] of sticks) restMax = Math.max(restMax, Math.hypot(x, y));
+        return;
+      }
+      sticks.forEach(([x, y], i) => {
+        const r = Math.hypot(x, y);
+        if (r < 0.5) return;
+        const bin = Math.floor(((Math.atan2(y, x) + Math.PI) / (2 * Math.PI)) * BINS) % BINS;
+        binMax[i][bin] = Math.max(binMax[i][bin], r);
+      });
+      [6, 7].forEach((b, i) => {
+        const v = gp.buttons[b]?.value ?? 0;
+        trigMax[i] = Math.max(trigMax[i], v);
+        trigMin[i] = Math.min(trigMin[i], v);
+      });
+    }
 
+    function finish() {
+      isTesting = false;
+      if (btn) btn.textContent = 'Run 10s Benchmark';
+
+      const drift = restMax * 100;
+      const circErrors = binMax.map((bins) => {
+        const filled = bins.filter((r) => r > 0);
+        if (filled.length < BINS * 0.75) return null;
+        return (filled.reduce((sum, r) => sum + Math.abs(r - 1), 0) / filled.length) * 100;
+      });
+      const circ = circErrors.every((c) => c !== null) ? Math.max(...(circErrors as number[])) : null;
+      const triggersFull = trigMax.every((v) => v >= 0.98) && trigMin.every((v) => v <= 0.02);
+      const updateHz = Math.round(reportCount / (TEST_MS / 1000));
+
+      const driftOk = drift < DRIFT_LIMIT;
+      const circOk = circ !== null && circ < CIRC_LIMIT;
+
+      setBadge('cr-drift-badge', driftOk ? 'pass' : 'fail', `${drift.toFixed(1)}%`);
+      setBadge('cr-circ-badge', circ === null ? 'fail' : circOk ? 'pass' : 'fail', circ === null ? 'INCOMPLETE' : `${circ.toFixed(1)}%`);
+      setBadge('cr-trigger-badge', triggersFull ? 'pass' : 'fail', triggersFull ? 'FULL RANGE' : 'PARTIAL');
+      setBadge('cr-poll-badge', 'info', `${updateHz} Hz observed`);
+
+      const passed = driftOk && circOk && triggersFull;
+      if (gradeText) {
+        gradeText.textContent = passed ? 'COMPETITIVE READY' : circ === null ? 'TEST INCOMPLETE' : 'NEEDS ATTENTION';
+        gradeText.className = `font-mono text-3xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r ${passed ? 'from-emerald to-emerald/70' : 'from-warning to-warning/70'}`;
+      }
+      if (subText) {
+        subText.textContent = circ === null
+          ? 'Not enough stick rotation was recorded. Rotate both sticks around the full edge several times during the test.'
+          : `Measured: ${drift.toFixed(1)}% resting drift, ${circ.toFixed(1)}% circularity error, triggers ${triggersFull ? 'reach full range' : 'did not reach full range'}. Thresholds are this site's benchmarks, not official league rules.`;
+      }
+    }
+
+    function pollCompetitive() {
+      const activeGp = activeGamepad();
       const dot = document.getElementById('cr-status-dot');
       const text = document.getElementById('cr-status-text');
       const model = document.getElementById('cr-model-name');
 
       if (activeGp) {
         if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald shadow-[0_0_8px_rgba(16,185,129,0.8)] transition-all duration-300';
-        if (text) text.textContent = isTesting ? 'Testing active...' : 'Esports Hardware Audit Ready';
+        if (text) text.textContent = isTesting ? 'Testing active...' : 'Ready to benchmark';
         if (model) model.textContent = activeGp.id;
       } else {
         if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-neutral transition-all duration-300';
-        if (text) text.textContent = 'Connect controller for esports tournament benchmark audit...';
+        if (text) text.textContent = 'Connect a controller and press any button...';
         if (model) model.textContent = 'No Controller Detected';
+      }
+
+      if (isTesting) {
+        const elapsed = performance.now() - startedAt;
+        if (!activeGp || elapsed >= TEST_MS) finish();
+        else {
+          sample(activeGp, elapsed);
+          if (btn && elapsed >= REST_MS) btn.textContent = 'Rotate both sticks & fully pull both triggers…';
+        }
       }
 
       requestAnimationFrame(pollCompetitive);

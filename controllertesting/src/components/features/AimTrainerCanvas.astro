@@ -18,7 +18,7 @@ const { device, game } = Astro.props;
         </svg>
         Target Practice & Input Precision
       </h2>
-      <p class="text-xs text-slate-400 mt-1">Profile: <span class="capitalize font-semibold text-blue-400">{device}</span> • Engine: <span class="capitalize font-semibold text-blue-400">{game.replace('-', ' ')}</span></p>
+      <p class="text-xs text-slate-400 mt-1">Profile: <span class="capitalize font-semibold text-blue-400">{device}</span> • Game: <span class="capitalize font-semibold text-blue-400">{game.replaceAll('-', ' ')}</span></p>
     </div>
 
     <!-- Stats Bar -->

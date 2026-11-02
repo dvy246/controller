@@ -39,6 +39,8 @@ export interface Props {
   /** Set true only for tools that actually wire recordTelemetry
       (drift, circularity, …). Hides the consent banner otherwise. */
   telemetryEnabled?: boolean;
+  /** Keep the page usable but out of search (noindex, follow) and out of the sitemap. */
+  noindex?: boolean;
 }
 
 const {
@@ -52,6 +54,7 @@ const {
   faqs = [],
   schema = [],
   telemetryEnabled = false,
+  noindex = false,
 } = Astro.props;
 
 const webAppSchema = {
@@ -63,22 +66,8 @@ const webAppSchema = {
   applicationCategory: 'Utility',
   operatingSystem: 'Web Browser',
   browserRequirements: 'Requires a browser with Gamepad API support (Chrome 53+, Firefox 48+, Edge 12+)',
-  datePublished: '2025-01-01',
-  dateModified: '2026-08-10',
-  author: {
-    '@type': 'Organization',
-    name: 'ControllerTesting.com',
-    url: 'https://controllertesting.com'
-  },
-  publisher: {
-    '@type': 'Organization',
-    name: 'ControllerTesting.com',
-    url: 'https://controllertesting.com',
-    logo: {
-      '@type': 'ImageObject',
-      url: 'https://controllertesting.com/favicon.svg'
-    }
-  },
+  author: { '@id': 'https://controllertesting.com/about#divy-yadav' },
+  publisher: { '@id': 'https://controllertesting.com/#organization' },
   offers: {
     '@type': 'Offer',
     price: '0',
@@ -126,6 +115,7 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
   breadcrumbs={breadcrumbs}
   schema={allSchemas}
   localized={true}
+  noindex={noindex}
 >
   <Header />
 
@@ -196,7 +186,7 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
               <p class="action-desc-v2">{t("tool.repairDesc")}</p>
             </div>
             <div class="action-card-footer">
-              <a href="/calibrate/dualsense/hall-effect" class="action-cta action-cta--amber">
+              <a href="/test/controller/ps-calibration" class="action-cta action-cta--amber">
                 <span>{t("nav.calibrator")}</span>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </a>
@@ -216,7 +206,7 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
               <p class="action-desc-v2">{t("tool.deadzoneDesc")}</p>
             </div>
             <div class="action-card-footer">
-              <a href="/deadzone-calculator/fortnite/ps5" class="action-cta action-cta--emerald">
+              <a href="/settings" class="action-cta action-cta--emerald">
                 <span>{t("nav.deadzoneSandbox")}</span>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </a>
@@ -236,7 +226,7 @@ const relatedGames = resolveGamesForTool(Astro.url.pathname);
               <p class="action-desc-v2">{t("tool.overclockDesc")}</p>
             </div>
             <div class="action-card-footer">
-              <a href="/overclock-validator/ps5/usb-c" class="action-cta action-cta--blue">
+              <a href="/test/controller/polling-rate" class="action-cta action-cta--blue">
                 <span>{t("tool.overclockCta")}</span>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </a>

@@ -24,9 +24,10 @@ const schemaData = {
 
 <BaseLayout
   title="Repair Shop & Refurbisher Suite | CT"
-  description="Empower your controller repair shop with self-verifying hardware health certificates, branded diagnostic reports, and zero-point calibration tools."
+  description="Empower your controller repair shop with self-verifying hardware health certificates, branded diagnostic reports, and stick center checks."
   canonical={canonicalUrl}
   breadcrumbs={breadcrumbs}
+  noindex={true}
 
   localized={false}>
   <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
@@ -72,12 +73,12 @@ const schemaData = {
           <div class="w-12 h-12 rounded-xl bg-emerald-bg flex items-center justify-center mb-6 text-emerald">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </div>
-          <h2 class="text-xl font-bold mb-3">Hall-Effect Zero-Point Sampling</h2>
+          <h2 class="text-xl font-bold mb-3">Hall-Effect Center Check</h2>
           <p class="text-secondary text-sm leading-relaxed">
-            Perform low-level WebHID calibration for PS5 DualSense and Xbox controllers after Hall-effect stick swaps directly in the browser.
+            Measure the resting offset of PS5 DualSense and Xbox sticks after a Hall-effect swap, directly in the browser.
           </p>
         </div>
-        <span class="text-xs font-mono text-emerald font-semibold mt-auto pt-6">WebHID Hardware API</span>
+        <span class="text-xs font-mono text-emerald font-semibold mt-auto pt-6">Gamepad API</span>
       </div>
 
       <div class="card-base p-8 flex flex-col">

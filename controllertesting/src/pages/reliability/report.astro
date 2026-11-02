@@ -105,17 +105,17 @@ const reportTitle = `Reliability Baselines Report — ${new Date(reliabilityData
       </section>
 
       <section class="card-base p-6 mb-8">
-        <h2 class="section-title mb-4">Key findings — August 2026</h2>
+        <h2 class="section-title mb-4">What the modeled estimates suggest</h2>
         <ul class="space-y-3 text-secondary leading-relaxed">
-          <li><strong class="text-primary">Hall-effect sensors dominate drift resistance.</strong> The hall-effect
-            reference model shows 0.1% average drift after 12 months versus 3.1–5.2% for potentiometer-based models —
+          <li><strong class="text-primary">Hall-effect sensors should resist drift far better.</strong> The hall-effect
+            reference model estimates 0.1% average drift after 12 months versus 3.1–5.2% for potentiometer-based models —
             a 30–50× gap, and an average lifespan before drift onset of 36 months versus 9–14.</li>
-          <li><strong class="text-primary">Xbox Wireless is the most drift-prone tracked model</strong> at 5.2%
-            average drift after 12 months, followed by DualSense at 4.8%.</li>
-          <li><strong class="text-primary">Circularity error tracks sensor type, not brand.</strong> Hall-effect
-            models average 4.2% error vs 6.8–8.4% for potentiometer models.</li>
-          <li><strong class="text-primary">We still cannot publish figures</strong> for DualSense Edge, SCUF, Razer,
-            or 8BitDo-specific models — our dataset has no baseline for them yet, and we will not invent numbers.</li>
+          <li><strong class="text-primary">Xbox Wireless has the highest modeled drift</strong> at 5.2%
+            after 12 months, followed by DualSense at 4.8%. These are estimates, not measured failure rates.</li>
+          <li><strong class="text-primary">Modeled circularity error tracks sensor type, not brand.</strong> Hall-effect
+            models are estimated at 4.2% error vs 6.8–8.4% for potentiometer models.</li>
+          <li><strong class="text-primary">We still cannot publish figures</strong> for SCUF, Razer
+            or 8BitDo-specific models: we have no basis for an estimate yet, and we will not invent numbers.</li>
         </ul>
       </section>
 

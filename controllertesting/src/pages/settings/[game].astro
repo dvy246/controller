@@ -1,0 +1,197 @@
+---
+/**
+ * /settings/[game] — Game-Specific Controller & Deadzone Settings
+ * One page per game. Replaces the 30 /settings/[game]/[controller] and 15
+ * /deadzone-calculator/[game]/[controller] variants (both 301 here) so each
+ * game's guidance lives on a single URL instead of a name-swapped grid.
+ * All values are labeled as starting points, not absolute truths — test first.
+ */
+
+import ToolLayout from '@layouts/ToolLayout.astro';
+import AuthorByline from '@components/global/AuthorByline.astro';
+import SettingsOptimizer from '@components/tools/controller/SettingsOptimizer.astro';
+import DeadzoneSandbox from '@components/tools/controller/DeadzoneSandbox.astro';
+import { GAMES } from '../../data/gameSettings';
+
+export function getStaticPaths() {
+  return GAMES.map((game) => ({ params: { game: game.slug }, props: { game } }));
+}
+
+const { game } = Astro.props;
+
+// Worked example: a measured 4% resting offset translated onto this game's scale.
+const example = (() => {
+  if (game.deadzoneScale.startsWith('No in-game')) {
+    return `${game.name} has no deadzone slider, so a 4% resting offset reaches the game untouched. That shows up as phantom movement, and the fix is cleaning or replacing the stick module (or a platform-level remapper on PC), not a setting.`;
+  }
+  if (game.deadzoneScale === '0–1 float') {
+    return `Say the Stick Drift test reads a 4% resting offset on your left stick. On ${game.name}'s 0–1 float scale that is 0.04, so set the controller deadzone to 0.05: one step above the noise. Keep it there unless the car rotates on its own mid-match.`;
+  }
+  if (game.deadzoneScale === '0–10 sliders') {
+    return `Say the Stick Drift test reads a 4% resting offset on your right stick. ${game.name}'s center deadzone runs 0–10, so start the center slider at 1 and leave axial at 0. Raise the center by one step only if the reticle creeps during a Battle Rifle burst.`;
+  }
+  return `Say the Stick Drift test reads a 4% resting offset on your right stick. Set ${game.name}'s stick deadzone to about 5 on its ${game.deadzoneScale}: just above the noise. Then play a few minutes; if aim creeps while you hold still, raise it one step at a time rather than jumping to the ${game.deadzoneRange} community range.`;
+})();
+
+const controllerList = game.controllers.map((c) => c.name).join(', ');
+
+const breadcrumbs = [
+  { name: 'Settings', url: '/settings' },
+  { name: game.name },
+];
+
+const faqs = [
+  {
+    question: `What is the best stick deadzone for ${game.name}?`,
+    answer: `${game.name} uses a ${game.deadzoneScale} and the community starting point is ${game.deadzoneRange}. ${game.deadzoneNote} Measure your own stick first: the right value is just above its resting noise, not a number copied from someone else's controller.`,
+  },
+  {
+    question: `Which stick response curve should I use in ${game.name}?`,
+    answer: game.responseCurve === 'N/A'
+      ? `${game.name} does not expose a stick response curve setting. ${game.curveNote}`
+      : `${game.responseCurve} is the common competitive choice in ${game.name}. ${game.curveNote}`,
+  },
+  {
+    question: `Do the ${game.name} settings differ between ${controllerList}?`,
+    answer: `The in-game values do not: ${game.name} applies the same slider to every pad. What differs is the stick's own noise and the input layer in between (Steam Input on PC, for example), so measure the controller you actually play on.`,
+  },
+];
+---
+
+<ToolLayout
+  title={`${game.name} Controller Settings & Deadzone | CT`}
+  description={`${game.name} deadzone, response curve and sensitivity starting points for ${controllerList}, plus how to measure your stick before you tune.`}
+  toolName={`${game.name} Controller Settings`}
+  category="Game Settings"
+  categoryUrl="/settings"
+  breadcrumbs={breadcrumbs}
+  faqs={faqs}
+>
+  <Fragment slot="tool">
+    <div class="settings-byline">
+      <AuthorByline dateModified="2026-11-01" />
+    </div>
+    <div class="settings-card card-base">
+      <div class="settings-header">
+        <span class="badge-accent">COMMUNITY STARTING POINTS</span>
+        <h2 class="settings-title">{game.name} controller settings</h2>
+      </div>
+
+      <div class="settings-grid">
+        <div class="setting-item">
+          <span class="s-label">Stick Deadzone</span>
+          <span class="s-val text-gradient">{game.deadzoneRange}</span>
+        </div>
+        <div class="setting-item">
+          <span class="s-label">Deadzone Scale</span>
+          <span class="s-val mono">{game.deadzoneScale}</span>
+        </div>
+        <div class="setting-item">
+          <span class="s-label">Response Curve</span>
+          <span class="s-val mono">{game.responseCurve}</span>
+        </div>
+        <div class="setting-item">
+          <span class="s-label">Sensitivity</span>
+          <span class="s-val mono">{game.sensNote}</span>
+        </div>
+        <div class="setting-item">
+          <span class="s-label">Triggers</span>
+          <span class="s-val mono">{game.triggerNote}</span>
+        </div>
+        {game.deadzone && (
+          <div class="setting-item">
+            <span class="s-label">Deadzone Shape</span>
+            <span class="s-val mono capitalize">{game.deadzone.shape}</span>
+          </div>
+        )}
+      </div>
+
+      <p class="settings-note">
+        <strong>About these numbers:</strong> {game.deadzoneNote} {game.curveNote} They are starting points, not
+        guarantees: every stick has its own noise floor.
+      </p>
+      <p class="settings-note"><strong>Worked example:</strong> {example}</p>
+    </div>
+
+    {game.deadzone
+      ? <DeadzoneSandbox shape={game.deadzone.shape} gameName={game.name} />
+      : <SettingsOptimizer gameName={game.name} gameRange={game.deadzoneRange} controllerName="your controller" />}
+  </Fragment>
+
+  <Fragment slot="results">
+    <div class="results-summary">
+      <h2 class="section-title">Test before you tune</h2>
+      <p class="results-text">
+        {game.driftRiskNote} Run the 2-minute Stick Drift test first. If your stick's resting offset is above the
+        {game.deadzoneRange} starting point, fixing the stick beats raising the deadzone.
+      </p>
+    </div>
+  </Fragment>
+
+  <Fragment slot="export">
+    <div class="export-banner">
+      <div>
+        <h3 class="text-h3">Measure your stick drift now</h3>
+        <p class="export-desc">Get your resting drift % before applying {game.name} settings.</p>
+      </div>
+      <div class="export-buttons">
+        <a href="/test/controller/drift" class="btn-primary">Test Stick Drift</a>
+      </div>
+    </div>
+  </Fragment>
+
+  <Fragment slot="related-tools">
+    <a href="/test/controller/deadzone" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Deadzone Visualizer</h3>
+      <p class="tool-desc">Find inner & outer threshold limits.</p>
+    </a>
+    <a href="/test/controller/drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Detector</h3>
+      <p class="tool-desc">Test analog stick drift in real time.</p>
+    </a>
+    <a href="/fix/stick-drift" class="tool-card card-base card-hover">
+      <h3 class="tool-name">Stick Drift Repair Guides</h3>
+      <p class="tool-desc">Step-by-step controller fixes.</p>
+    </a>
+  </Fragment>
+
+  <Fragment slot="content">
+    <h2>How {game.name} handles stick input</h2>
+    <p>{game.editorial}</p>
+
+    {game.deadzone && (
+      <>
+        <h2>Deadzone geometry in {game.name}</h2>
+        <p>{game.deadzone.deep}</p>
+        <p>{game.deadzone.editorial}</p>
+      </>
+    )}
+
+    <h2>Controller notes for {game.name}</h2>
+    {game.controllers.map((c) => (
+      <section id={c.slug} class="controller-note">
+        <h3>{c.name}</h3>
+        <p>{c.sticks} {c.connection}</p>
+      </section>
+    ))}
+  </Fragment>
+</ToolLayout>
+
+<style>
+  .settings-byline { margin-bottom: 1rem; }
+  .settings-card { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
+  .settings-header { display: flex; flex-direction: column; gap: 0.5rem; }
+  .badge-accent { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
+  .settings-title { font-size: 1.5rem; font-weight: 800; color: var(--color-text-primary); }
+  .settings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+  .setting-item { background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.375rem; text-align: center; }
+  .s-label { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: var(--color-text-tertiary); letter-spacing: 0.06em; }
+  .s-val { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
+  .settings-note { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1rem; }
+  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
+  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
+  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
+  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .controller-note { scroll-margin-top: 5rem; }
+  @media (max-width: 768px) { .settings-grid { grid-template-columns: 1fr; } }
+</style>

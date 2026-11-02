@@ -24,7 +24,7 @@ const toolsSchema = {
     { '@type': 'ListItem', 'position': 2, 'url': 'https://controllertesting.com/test/controller/drift', 'name': 'Stick Drift Detector' },
     { '@type': 'ListItem', 'position': 3, 'url': 'https://controllertesting.com/test/controller/polling-rate', 'name': 'Polling Rate Checker' },
     { '@type': 'ListItem', 'position': 4, 'url': 'https://controllertesting.com/test/controller/circularity', 'name': 'Circularity Test' },
-    { '@type': 'ListItem', 'position': 5, 'url': 'https://controllertesting.com/test/controller/ps-calibration', 'name': 'PS Controller WebHID Calibration' }
+    { '@type': 'ListItem', 'position': 5, 'url': 'https://controllertesting.com/test/controller/ps-calibration', 'name': 'PS Controller Calibration Check' }
   ]
 };
 
@@ -33,7 +33,7 @@ const controllerTools = [
   { name: 'Stick Drift Detector', url: '/test/controller/drift', desc: '0.1% stick drift canvas visualizer.', badge: 'High Priority' },
   { name: 'Controller Health Score™', url: '/test/controller/health-score', desc: '0-100 grade & printable PDF report card.', badge: 'Flagship' },
   { name: 'Nintendo Switch Tester & Repair', url: '/test/controller/nintendo-switch', desc: 'Joy-Con drift tester and Hall-effect replacement guide.' },
-  { name: 'PS Controller WebHID Calibration', url: '/test/controller/ps-calibration', desc: 'Low-level WebHID zero-point sampling & compatible-device WebHID calibration.', badge: 'Flagship' },
+  { name: 'PS Controller Calibration Check', url: '/test/controller/ps-calibration', desc: 'Measure stick center offset and outer range on DualSense & DualShock 4.', badge: 'Flagship' },
   { name: 'Steering Wheel & Pedals', url: '/test/controller/steering-wheel', desc: '900°/1080° rotation disc & Throttle/Brake/Clutch linearity.' },
   { name: 'Fight Stick & Hitbox', url: '/test/controller/fight-stick', desc: 'Vewlix 8-button layout & Capcom SOCD cleaner rule check.' },
   { name: 'Flight Stick & HOTAS', url: '/test/controller/flight-stick', desc: 'Pitch/roll/yaw, 128+ buttons & throttle quadrant.' },
@@ -153,7 +153,7 @@ function getToolIconSvg(url: string) {
         </h1>
         <p class="text-base sm:text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-2xl font-medium">
           The most comprehensive, privacy-first diagnostic suite available in the browser. 
-          No downloads required. Hardware telemetry powers our empirical reliability database.
+          No downloads required. Your controller input stays in your browser.
         </p>
       </header>
 

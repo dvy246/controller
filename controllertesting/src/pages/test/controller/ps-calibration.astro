@@ -16,34 +16,34 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: 'How do I calibrate analog stick zero-points on PS5 DualSense and PS4 controllers?',
-    answer: 'Connect your PlayStation controller via direct USB-C/micro-USB cable in Google Chrome or Microsoft Edge. Click "Connect via WebHID", select your Wireless Controller from the browser prompt, release both sticks to their neutral center, and click "Sample & Save Center Offset".',
+    question: 'How do I check whether my PS5 or PS4 controller needs calibrating?',
+    answer: 'Connect the controller, press a button, let go of both sticks and press "Sample Center". The tool reports each stick\'s resting offset as a percentage. Up to about 2.5% is normal wear; higher values mean games see the stick as slightly pushed even when you are not touching it.',
   },
   {
-    question: 'What is WebHID hardware controller calibration?',
-    answer: 'WebHID is a W3C browser standard that communicates directly with low-level Human Interface Device (HID) feature reports. It sends vendor-specific memory read/write commands directly to the PlayStation microcontroller without requiring external software drivers.',
+    question: 'Does this page recalibrate my controller?',
+    answer: 'No. It reads the sticks through the browser\'s Gamepad API and changes nothing on the controller. It tells you whether calibration (or cleaning or replacing the stick) is worth doing, and lets you check the result afterwards.',
   },
   {
-    question: 'Does WebHID calibration fix PS5 stick drift permanently?',
-    answer: 'Yes. For controllers with minor spring fatigue or newly installed Hall-effect modules, WebHID calibration writes new zero-point coordinate offsets directly into the controller’s persistent memory, permanently restoring dead center (0.00, 0.00).',
+    question: 'How do I actually recalibrate DualSense or DualShock 4 sticks?',
+    answer: 'Sony offers no official recalibration tool for the DualSense or DualShock 4. The open-source community utility dualshock-tools sends the controller\'s own calibration commands over WebHID from Chrome or Edge. It is third-party software, so read its instructions first, use a USB cable, and re-test here afterwards.',
   },
   {
-    question: 'Does this calibration persist when playing on a PS5 console?',
-    answer: 'Yes! Because the calibrated zero-point offsets are written directly into the controller’s onboard hardware memory, the calibration remains active when disconnected from PC and plugged into a PlayStation 5 or PlayStation 4 console.',
+    question: 'Will calibration fix stick drift?',
+    answer: 'Only partly. Recalibration re-centers a stick whose resting point has shifted slightly, which is common after a Hall-effect module swap. A worn potentiometer keeps getting worse, so if the resting offset climbs again within weeks, the module needs cleaning or replacing.',
   },
   {
-    question: 'Can I calibrate Hall-effect replacement sticks with this tool?',
-    answer: 'Yes. After soldering magnetic Hall-effect sticks (such as GuliKit or K-Silver modules) into a DualSense motherboard, the resting center often has a 5–15% offset. This WebHID tool zeros that offset permanently without requiring external PCB potentiometer trim boards.',
-  }
+    question: 'What does the outer range check measure?',
+    answer: 'While you roll the sticks around their edge for 8 seconds, it counts how many of 36 ten-degree directions reach at least 90% deflection. A healthy stick covers nearly all of them; gaps point to debris or a worn gate limiting travel.',
+  },
 ];
 ---
 
 <ToolLayout
-  title="PS5 Controller Calibration — Free WebHID DualSense & PS4 Zero-Point Fix | ControllerTesting.com"
-  description="Calibrate PS5 DualSense and PS4 DualShock 4 analog sticks online via WebHID hardware access. Recalibrate resting center zero-points and Hall-effect sticks free."
-  keywords="ps5 controller calibration, dualsense webhid calibration, ps4 controller calibration online, fix ps5 stick drift without opening, calibrate dualsense hall effect sticks, playstation zero point calibration"
-  toolName="PS5 DualSense Stick Calibration"
-  category="Flagship Calibration"
+  title="PS5 & PS4 Controller Calibration Check | CT"
+  description="Measure your DualSense or DualShock 4 stick center offset and outer range in the browser, then learn when and how recalibration actually helps."
+  keywords="ps5 controller calibration, dualsense calibration check, ps4 controller calibration, dualsense stick center offset"
+  toolName="PS5 / PS4 Stick Calibration Check"
+  category="Controller Tests"
   categoryUrl="/test/controller"
   breadcrumbs={breadcrumbs}
   faqs={faqs}
@@ -56,22 +56,19 @@ const faqs = [
   {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">WebHID Hardware Calibration Protocol</h2>
-      <p class="results-text">
-        Follow the hardware connection requirements below to ensure successful EEPROM communication:
-      </p>
+      <h2 class="section-title">Reading your result</h2>
       <div class="results-legend-grid">
         <div class="legend-card legend-pass">
-          <strong class="legend-title">Direct USB Connection</strong>
-          <p class="legend-text">Must connect via high-speed USB data cable. Bluetooth connections do not expose raw HID vendor feature report pipelines.</p>
+          <strong class="legend-title">0 – 2.5% resting offset</strong>
+          <p class="legend-text">Normal. A game deadzone just above this value hides it without costing aim precision.</p>
         </div>
         <div class="legend-card legend-warning">
-          <strong class="legend-title">Chromium Browser Required</strong>
-          <p class="legend-text">WebHID API is supported in Google Chrome, Microsoft Edge, Brave, and Opera. (Firefox and Safari do not support WebHID).</p>
+          <strong class="legend-title">2.5 – 8%</strong>
+          <p class="legend-text">Noticeable. Recalibration can help if the stick was recently replaced; otherwise clean the module and re-test.</p>
         </div>
         <div class="legend-card legend-fail">
-          <strong class="legend-title">Hands-Off Sampling</strong>
-          <p class="legend-text">Do not touch or tilt analog sticks during the 3-second sampling window to ensure an accurate neutral electrical baseline.</p>
+          <strong class="legend-title">Above 8%</strong>
+          <p class="legend-text">Heavy offset. Usually a worn potentiometer. Calibration will not hold for long; plan a module replacement.</p>
         </div>
       </div>
     </div>
@@ -81,12 +78,12 @@ const faqs = [
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Verify post-calibration centering precision</h3>
-        <p class="export-desc">Launch the 0.1% Stick Drift Visualizer to verify that both analog sticks rest at exact 0.00 coordinates.</p>
+        <h3 class="export-title">Watch the drift live</h3>
+        <p class="export-desc">The Stick Drift test plots both sticks in real time, which helps after cleaning or recalibrating.</p>
       </div>
       <div class="export-buttons">
-        <a href="/test/controller/drift" class="btn-primary">Verify Stick Drift</a>
-        <a href="/test/controller/health-score" class="btn-secondary">Get Health Score</a>
+        <a href="/test/controller/drift" class="btn-primary">Test Stick Drift</a>
+        <a href="/fix/stick-drift/ps5-dualsense" class="btn-secondary">DualSense Repair Guide</a>
       </div>
     </div>
   </Fragment>
@@ -95,11 +92,11 @@ const faqs = [
   <Fragment slot="related-tools">
     <a href="/test/controller/drift" class="tool-card card-base card-hover">
       <h3 class="tool-name">Stick Drift Tester</h3>
-      <p class="tool-desc">Isolated 0.1% stick drift detector.</p>
+      <p class="tool-desc">Live resting-offset plot for both sticks.</p>
     </a>
     <a href="/test/controller/ps5" class="tool-card card-base card-hover">
-      <h3 class="tool-name">PS5 Master Tester</h3>
-      <p class="tool-desc">Complete DualSense hardware diagnostic suite.</p>
+      <h3 class="tool-name">PS5 Controller Tester</h3>
+      <p class="tool-desc">Buttons, triggers, sticks and vibration in one view.</p>
     </a>
     <a href="/test/controller/circularity" class="tool-card card-base card-hover">
       <h3 class="tool-name">Circularity Test</h3>
@@ -109,29 +106,34 @@ const faqs = [
 
   {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Hardware-Level WebHID PlayStation Controller Calibration</h2>
+    <h2>What "calibrating" a PlayStation controller means</h2>
     <p>
-      Traditional deadzone tuning in game menus merely applies software filters that mask stick drift while sacrificing fine micro-aim control.
-    </p>
-    <p>
-      Our <strong>WebHID Zero-Point Calibrator</strong> communicates directly with the internal microcontroller of your Sony PlayStation 5 DualSense (BDM-010 through BDM-040) or PlayStation 4 DualShock 4 over USB, reading raw 16-bit analog-to-digital converter (ADC) voltages and writing persistent center offset values into hardware memory.
+      Each stick reports two positions, X and Y. The controller stores a center point and an outer range for each
+      stick and maps the raw reading onto them. When a stick wears or a new module is fitted, the real resting point
+      drifts away from the stored center, and games see a small push you never made. Recalibration stores a new
+      center and range; it does not repair a worn part.
     </p>
 
-    <h3>Why Calibrating Replacement Hall-Effect Joysticks Is Essential</h3>
+    <h3>Measure first</h3>
     <p>
-      When soldering electromagnetic Hall-effect joystick modules (GuliKit, K-Silver, or Favor Union) into a controller PCB, the resting magnetic field rarely aligns perfectly with factory zero-points. Without hardware recalibration, the controller will report 5% to 15% resting drift even though the sensors are brand new.
+      This page measures the two things calibration changes: the resting offset (step 2) and whether each stick
+      reaches full deflection all the way around (step 3). It reads the sticks through the browser's Gamepad API in
+      any modern browser, over USB or Bluetooth, and writes nothing to the controller.
     </p>
+
+    <h3>When recalibration is worth it</h3>
     <ul>
-      <li><strong>Old Solution:</strong> Soldering secondary calibration flex PCBs with manual potentiometer screw adjusters.</li>
-      <li><strong>WebHID Digital Solution:</strong> Sampling raw resting sensor voltages in the browser and updating the microcontroller’s internal zero-point lookup table digitally in 5 seconds.</li>
+      <li><strong>After fitting Hall-effect or replacement sticks:</strong> new modules rarely rest exactly where the old center was stored, so an offset of several percent is expected until you recalibrate.</li>
+      <li><strong>A stable, small offset:</strong> if the resting value is the same every time you test, re-centering removes it.</li>
+      <li><strong>Not for a worsening stick:</strong> if the offset grows from week to week, the potentiometer is wearing out. Clean or replace it; see the <a href="/fix/stick-drift/ps5-dualsense" class="content-link">DualSense drift repair guide</a>.</li>
     </ul>
 
-    <h2>Supported Hardware & Open-Source Community Tools</h2>
+    <h2>How to recalibrate</h2>
     <p>
-      This tool supports official Sony PlayStation 4 DualShock 4 and PlayStation 5 DualSense controllers connected via direct USB in Chromium browsers.
-    </p>
-    <p>
-      For advanced four-step range calibration on DualSense Edge and PS VR2 Sense controllers, we also acknowledge the excellent open-source <a href="https://dualshock-tools.github.io/" rel="noopener" target="_blank" class="content-link font-semibold">dualshock-tools</a> utility maintained by the r/consolerepair community.
+      Sony does not publish a recalibration tool. The open-source <a href="https://dualshock-tools.github.io/" rel="noopener" target="_blank" class="content-link font-semibold">dualshock-tools</a>
+      utility, maintained by the r/consolerepair community, sends the controller's built-in calibration commands over
+      WebHID in Chrome or Edge with a USB cable. It is third-party software; follow its instructions, then come back
+      and run steps 2 and 3 again to confirm the offset dropped.
     </p>
   </Fragment>
 </ToolLayout>

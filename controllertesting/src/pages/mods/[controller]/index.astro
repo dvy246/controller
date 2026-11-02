@@ -47,7 +47,7 @@ const breadcrumbs = [
 const faqs = [
   {
     question: `How do I know which motherboard revision my ${controller.name} has?`,
-    answer: `You can either connect your controller via USB and click the 'Auto-Detect via USB (WebHID)' button above, or check the model number and FCC ID printed on the back label. For PS5 controllers, BDM-010 has no letter suffix, BDM-020 ends in 'A', BDM-030 ends in 'B', and BDM-040 ends in 'C'.`
+    answer: `Check the model number and FCC ID printed on the back label. The 'Read Model via USB (WebHID)' button above confirms the controller model but cannot read the board revision. For PS5 controllers, BDM-010 has no letter suffix, BDM-020 ends in 'A', BDM-030 ends in 'B', and BDM-040 ends in 'C'.`
   },
   {
     question: `Can I install Hall Effect sticks on any ${controller.name} motherboard?`,
@@ -60,7 +60,7 @@ const faqs = [
 ];
 
 const title = `${controller.name} Mod & Repair Builder | Motherboard Compatibility`;
-const description = `Detect your ${controller.name} motherboard revision via WebHID and find guaranteed compatible Hall Effect sticks, back paddles, and clicky triggers.`;
+const description = `Detect your ${controller.name} motherboard revision and find Hall Effect sticks, back paddles, and clicky triggers.`;
 
 const schema = [
   {
@@ -84,7 +84,8 @@ const schema = [
 ];
 ---
 
-<BaseLayout title={title} description={description} breadcrumbs={breadcrumbs} schema={schema} localized={false}>
+<BaseLayout
+  noindex title={title} description={description} breadcrumbs={breadcrumbs} schema={schema} localized={false}>
   <Header />
 
   <main id="main-content" class="page-shell container-site">
@@ -111,7 +112,7 @@ const schema = [
     <section class="mb-16 p-6 sm:p-8 rounded-[24px] bg-[var(--color-surface-1)] border border-[var(--color-border-default)]">
       <h3 class="text-lg font-bold text-white mb-3">Popular Long-Tail Compatibility Guides</h3>
       <p class="text-xs text-[var(--color-text-secondary)] mb-4">
-        Explore deep technical breakdowns and verified parts guides for specific board revisions:
+        Explore parts notes for specific board revisions:
       </p>
       <div class="flex flex-wrap gap-2">
         {controller.motherboards
