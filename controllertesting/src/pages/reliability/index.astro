@@ -6,6 +6,7 @@
  * No competitor has this content type (verified).
  */
 
+import HubIntro from '../../components/global/HubIntro.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
@@ -58,6 +59,10 @@ const schemaData = [
           snapshot {reliabilityData.updatedAt}, not measured results. Baselines, not promises about any individual unit.
         </p>
       </header>
+      <HubIntro title="What these reliability figures are">
+        <p>The reliability pages show modeled reference estimates for how stick drift develops over time in common controllers, and how Hall-effect sticks compare with potentiometer sticks. They are engineering estimates, labeled as such, not measurements from a large population of controllers. They will be replaced by measured figures as visitors who opt in contribute anonymous drift samples from the Stick Drift test.</p>
+      </HubIntro>
+
 
       <div class="model-grid">
         {models.map(([slug, m]) => (

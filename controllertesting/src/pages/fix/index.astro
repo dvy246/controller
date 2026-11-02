@@ -4,6 +4,7 @@
  * Zero competitor coverage (verified: controllertest.io has no /fix pages).
  */
 
+import HubIntro from '../../components/global/HubIntro.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
@@ -77,6 +78,10 @@ const schemaData = [
           no blind disassembly, no guesswork.
         </p>
       </header>
+      <HubIntro title="Fix it, claim it, or replace it">
+        <p>Start by measuring the problem: a number from the <a href="/test/controller/drift">Stick Drift test</a> tells you whether a setting change, a cleaning or a new part is the right fix. If the controller is still under warranty, the <a href="/warranty">warranty guide</a> comes first, because opening the shell can void it. Out of warranty, the step-by-step guides cover cleaning and replacing sticks, and the <a href="/fix-or-replace">fix-or-replace calculator</a> compares the cost of repair with a new controller.</p>
+      </HubIntro>
+
 
       <section class="hub-categories">
         {categories.map((cat) => (

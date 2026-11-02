@@ -1,9 +1,10 @@
 ---
 /**
- * /connect/[controller]/[platform] — How to connect & pair your controller per platform.
- * Hypothesis batch (not per-dossier-verified): setup steps are general, platform-accurate
- * guidance; anything model-specific is kept conservative and linked to the tool that
- * verifies the result. No invented figures.
+ * /connect/[controller]/[platform] — How to connect & pair a controller on one platform.
+ * Every controller × platform pair has its own steps, wired notes, failure fixes and FAQs,
+ * written from the official Sony, Microsoft, Apple, Nintendo and Valve support pages listed
+ * in its `sources` (each URL checked 2026-11-01). No invented test results or figures.
+ * Screenshot slots are HTML comments only; the site owner adds real screenshots later.
  */
 
 import BaseLayout from '@layouts/BaseLayout.astro';
@@ -14,123 +15,364 @@ import AuthorByline from '@components/global/AuthorByline.astro';
 
 export function getStaticPaths() {
   const controllers = [
-    {
-      slug: 'ps5-dualsense',
-      name: 'PS5 DualSense',
-      source: { name: 'PlayStation Official', url: 'https://www.playstation.com/accessories/dualsense-wireless-controller/' },
-      sensor: 'Potentiometer sticks',
-      protocol: 'Bluetooth (legacy gamepad) or USB',
-      pairButton: 'hold both the PS button and the Share button together until the lightbar blinks',
-      note: 'DualSense uses Bluetooth with a proprietary "Wireless Controller" profile. Use the same pairing method every time; Windows sometimes lists two discovered devices — pair the one without "LE" in the name.',
-      deep: 'The DualSense is the pickiest of the five to pair on PC because Windows can show it as both a Bluetooth device and a separate Low Energy (LE) endpoint — pairing the LE entry gives you a connection that works for battery reporting but may never expose gamepad input. When that happens, forget both entries, re-pair the non-LE device, and then check that the controller\'s lightbar settles to a steady color rather than pulsing, which indicates the legacy-gamepad profile is active. On Steam, the DualSense also triggers Steam Input by default, which can mask raw gamepad input from other apps; if your tester shows no input but Steam is open, close Steam or disable the PlayStation configuration support for that device.',
-    },
-    {
-      slug: 'ps4-dualshock-4',
-      name: 'PS4 DualShock 4',
-      source: { name: 'PlayStation Official', url: 'https://www.playstation.com/accessories/dualshock-4-wireless-controller/' },
-      sensor: 'Potentiometer sticks',
-      protocol: 'Bluetooth (HID) or USB',
-      pairButton: 'hold the Share button and the PS button together until the lightbar blinks',
-      note: 'DualShock 4 speaks a fairly generic HID profile, so it pairs well on PC, macOS and Steam Deck with the built-in PlayStation button layout.',
-      deep: 'The DualShock 4\'s generic HID profile is why it works almost everywhere without extra software, but the trade-off is inconsistent button ordering: Windows, macOS and Steam can each interpret the DS4\'s HID report differently, so the face buttons you press may be swapped between platforms until a mapping layer normalizes them. The DS4 also famously refuses to hold a Bluetooth pairing to more than one device at a time, so if you regularly switch between PC and console, re-pairing each time is normal rather than a fault. Because the controller is older, check the lightbar during pairing: a dim or absent lightbar after the blink sequence usually means the battery is critically low and the pad will drop the link mid-session.',
-    },
-    {
-      slug: 'xbox-wireless',
-      name: 'Xbox Wireless Controller',
-      source: { name: 'Xbox Official', url: 'https://www.xbox.com/en-US/accessories/controllers' },
-      sensor: 'Potentiometer sticks',
-      protocol: 'Xbox Wireless, Bluetooth or USB',
-      pairButton: 'press the small Pair button on the top edge until the Xbox logo blinks',
-      note: 'On Windows the Xbox Wireless Controller runs as XInput with native button mapping; on Steam Deck it relies on Steam Input; on macOS it can be used wired or via Bluetooth with some button remapping.',
-      deep: 'The Xbox Wireless Controller is the only pad in the set with a first-party wireless standard of its own (Xbox Wireless), which on Windows gives you the cleanest possible input path when paired through the Xbox Wireless Adapter rather than plain Bluetooth — the adapter reports as XInput with full rumble and no third-party layer. Over Bluetooth it still maps natively on Windows, but you lose the higher-bandwidth features. On macOS there is no XInput, so the pad exposes a generic HID profile and the button layout can feel off until a game or launcher applies an Xbox mapping. When pairing, the Xbox logo blinks fast during discovery and settles to solid once connected; if it keeps blinking after selection, remove the stale entry in Bluetooth settings and retry.',
-    },
-    {
-      slug: 'switch-pro',
-      name: 'Nintendo Switch Pro Controller',
-      source: { name: 'Nintendo Support', url: 'https://support.nintendo.com' },
-      sensor: 'Potentiometer sticks',
-      protocol: 'Bluetooth (HID) or USB',
-      pairButton: 'press and hold the Sync button on the top edge of the pad',
-      note: 'The Pro Controller reports as a generic Bluetooth HID. Button labels are Nintendo-style (A/B and X/Y swapped) on PC and macOS, so a mapping layer such as Steam Input is recommended for native labels.',
-      deep: 'The Switch Pro Controller\'s strongest quirk is its gyro: the pad reports a six-axis IMU over HID, and on PC that motion data either shows up as a secondary device or requires Steam Input to remap — without a layer, most games never see the gyro at all, so expect motion aiming to be absent until you configure it. The Pro Controller also has a long-standing battery-reporting bug on PC where the OS shows the wrong charge percentage; treat the pad\'s own battery LED as the source of truth. Because button labels are Nintendo-oriented, A/B and X/Y are physically swapped relative to Xbox muscle memory, so verify the layout in a tester before a ranked session rather than trusting the on-screen prompts.',
-    },
+    { slug: 'ps5-dualsense', name: 'PS5 DualSense', protocol: 'Bluetooth or USB-C', tester: { url: '/test/controller/ps5', label: 'Open the PS5 DualSense tester' } },
+    { slug: 'ps4-dualshock-4', name: 'PS4 DualShock 4', protocol: 'Bluetooth or micro-USB', tester: { url: '/test/controller/buttons', label: 'Open the button tester' } },
+    { slug: 'xbox-wireless', name: 'Xbox Wireless Controller', protocol: 'Xbox Wireless, Bluetooth or USB', tester: { url: '/test/controller/xbox', label: 'Open the Xbox controller tester' } },
+    { slug: 'switch-pro', name: 'Nintendo Switch Pro Controller', protocol: 'Bluetooth or USB-C', tester: { url: '/test/controller/switch-pro', label: 'Open the Switch Pro tester' } },
   ];
 
   const platforms = [
-    {
-      slug: 'pc',
-      name: 'PC (Windows)',
-      steps: [
-        'Press and hold the controller\'s pair button until its LED starts blinking.',
-        'Open Windows Settings → Bluetooth & devices → Add device → Bluetooth, and select the controller from the list.',
-        'On first connect, the OS may install generic HID drivers; game-launcher input layers (Steam Input, Windows Game Bar) usually pick it up automatically.',
-      ],
-      tip: 'Verify the connection: open a browser gamepad tester and confirm the controller reports buttons and sticks. If the trigger only registers on the "wrong" axis, use the tester to confirm which input the game will see.',
-    },
-    {
-      slug: 'mac',
-      name: 'macOS',
-      steps: [
-        'Press and hold the controller\'s pairing button until the LED flashes.',
-        'Open System Settings → Bluetooth and select the controller to pair.',
-        'For Nintendo-layout buttons on non-Nintendo pads, verify button roles in the game or with a tester before ranked play.',
-      ],
-      tip: 'macOS treats most pads as generic HID gamepads. If the stick reads non-zero at rest on our Stick Drift Detector, that is sensor drift — not a macOS quirk.',
-    },
-    {
-      slug: 'steam-deck',
-      name: 'Steam Deck',
-      steps: [
-        'Put the controller in pairing mode and open SteamOS Settings → Bluetooth → Pair device.',
-        'Steam Input assigns a profile automatically for known pads; Nintendo pads may need "PlayStation/Nintendo-style layout" enabled.',
-        'Verify with a browser tester in Deck mode; then adjust deadzones in Steam Input if drift surfaces.',
-      ],
-      tip: 'Steam Deck remaps aggressively: the "controller id" your browser sees may differ from the pad\'s own listing. Use it to verify the actual button mapping, not just the connection.',
-    },
+    { slug: 'pc', name: 'PC (Windows)' },
+    { slug: 'mac', name: 'macOS' },
+    { slug: 'steam-deck', name: 'Steam Deck' },
   ];
+
+  // Official support pages (each opened and checked before citing).
+  const SRC = {
+    sonyDualSense: { name: 'PlayStation Support: How to use DualSense wireless controllers with PC, Mac and mobile devices', url: 'https://www.playstation.com/en-us/support/hardware/pair-dualsense-controller-bluetooth/' },
+    sonyDS4: { name: 'PlayStation Support: How to use DUALSHOCK 4 wireless controllers with PC, Mac, Android, and iOS', url: 'https://www.playstation.com/en-us/support/hardware/ps4-pair-dualshock-4-wireless-with-pc-or-mac/' },
+    xboxPc: { name: 'Xbox Support: How do I connect my Xbox controller to PC?', url: 'https://support.xbox.com/en-US/help/hardware-network/controller/connect-xbox-wireless-controller-to-pc' },
+    xboxUpdate: { name: 'Xbox Support: Update your Xbox Wireless Controller', url: 'https://support.xbox.com/en-US/help/hardware-network/controller/update-xbox-wireless-controller' },
+    appleGeneral: { name: 'Apple Support: Connect a wireless game controller to your Apple device', url: 'https://support.apple.com/en-us/111099' },
+    applePlayStation: { name: 'Apple Support: Connect a PlayStation wireless game controller to your Apple device', url: 'https://support.apple.com/en-us/111100' },
+    appleXbox: { name: 'Apple Support: Connect an Xbox wireless game controller to your Apple device', url: 'https://support.apple.com/en-us/111101' },
+    steamDeck: { name: 'Steam Support: Steam Deck Basic Use & Troubleshooting Guide (Bluetooth and Input sections)', url: 'https://help.steampowered.com/en/faqs/view/69E3-14AF-9764-4C28' },
+    nintendoPair: { name: 'Nintendo Support: How to Pair the Nintendo Switch Pro Controller', url: 'https://en-americas-support.nintendo.com/app/answers/detail/a_id/22417' },
+    nintendoSync: { name: 'Nintendo Support: Unable to Pair or Sync Nintendo Switch Pro Controller', url: 'https://nintendo.com/au/support/articles/unable-to-pair-or-sync-nintendo-switch-pro-controller' },
+  };
+
+  const guides = {
+    'ps5-dualsense/pc': {
+      summary: 'Pair the DualSense with Windows 10 (64-bit) or Windows 11 by holding Create + PS until the light bar blinks, or plug in a USB-C data cable. Use the cable if you want haptic feedback in PC games.',
+      intro: "Sony supports the DualSense on Windows 10 (64-bit) and Windows 11. Windows pairs it as a plain Bluetooth device and does not turn it into an Xbox-style (XInput) controller, so what a game sees depends on whether the game supports PlayStation controllers itself or runs through Steam Input.",
+      steps: [
+        'If the player indicator under the touchpad is lit, hold the PS button until it turns off, and unplug any USB cable.',
+        'Hold the Create button (the small button left of the touchpad), then press and hold the PS button until the light bar blinks.',
+        'On Windows 11, open Settings → Bluetooth & devices → Add device → Bluetooth. On Windows 10, open Settings → Devices → Bluetooth & other devices → Add Bluetooth or other device → Bluetooth.',
+        'Select "Wireless Controller". The light bar blinks, then the player indicator lights up when pairing is done.',
+        'For Steam games, open Steam → Settings → Controller and make sure Steam Input is enabled for PlayStation controllers, so games that only read Xbox input still get the pad.',
+      ],
+      screenshots: ['Windows 11 "Add a device" list showing "Wireless Controller" (DualSense)', 'DualSense light bar blinking after holding Create + PS'],
+      wired: 'Over a USB-C cable that carries data, the DualSense needs no pairing. Sony lists haptic feedback on PC as USB-only and dependent on game support, and the headset jack also needs the wired connection. The built-in microphone and speaker work only on Windows, and only in games that support them.',
+      problems: [
+        { issue: 'Windows shows it as connected, but the game ignores it', fix: 'The game most likely expects an Xbox (XInput) controller. Launch it through Steam with Steam Input enabled for PlayStation controllers, or check the game\'s own controller settings for DualSense support.' },
+        { issue: 'No vibration or adaptive trigger effects', fix: 'Switch to a USB cable. Sony lists PC haptic feedback as wired-only, and adaptive triggers only work in games that program them.' },
+        { issue: 'The controller jumps back to your PS5', fix: 'Each time you move the DualSense to a new device you have to pair it again. Sony\'s page also explains storing up to four pairings and switching between them by holding an action button (Triangle, Circle, Cross or Square) with the PS button.' },
+        { issue: 'Buttons move the mouse or type keys in a browser', fix: 'Steam, when open, can apply its desktop controller layout to the pad. Quit Steam before testing raw input in a browser tester.' },
+      ],
+      faqs: [
+        { question: 'Do I need DS4Windows to use a DualSense on PC?', answer: 'No. Windows pairs the DualSense without extra software, games with PlayStation support read it directly, and Steam Input translates it for games that only understand Xbox controllers. Third-party tools are optional and are not supported by Sony.' },
+        { question: 'Does the DualSense microphone work on PC?', answer: 'Sony says the built-in microphone and speaker work on Windows PCs only, and only in games that support them. On a Mac they are not supported.' },
+      ],
+      sources: [SRC.sonyDualSense],
+    },
+    'ps5-dualsense/mac': {
+      summary: 'macOS Big Sur 11.3 or later pairs the DualSense over Bluetooth (hold Create + PS) or automatically when you plug it in with a USB-C data cable.',
+      intro: 'Sony lists macOS Big Sur 11.3 as the minimum for the DualSense, and Apple handles it through its Game Controller framework, so Mac games built on that framework show PlayStation button prompts. Several DualSense features are not available on a Mac at all, so check the wired notes below before you buy a game for its haptics.',
+      steps: [
+        'Check your version under Apple menu → About This Mac. Anything older than macOS 11.3 won\'t recognize the DualSense as a game controller.',
+        'If the controller is on, hold the PS button until the light turns off, and unplug any USB cable.',
+        'Hold the Create button, then press and hold the PS button until the light bar flashes.',
+        'Open Apple menu → System Settings → Bluetooth and click Connect next to "DualSense Wireless Controller".',
+        'If it pairs but doesn\'t connect, press and release the PS button. Apple suggests this fix in its PlayStation controller guide.',
+        'On macOS Ventura 13 or later you can remap buttons in System Settings → Game Controllers.',
+      ],
+      screenshots: ['macOS System Settings → Bluetooth showing "DualSense Wireless Controller"', 'macOS System Settings → Game Controllers panel with the DualSense selected'],
+      wired: 'Apple says the DualSense pairs automatically when you plug it in with a cable that supports data and charging. Sony lists haptic feedback and the built-in microphone and speaker as not supported on Mac, and the headset jack works only over the cable.',
+      problems: [
+        { issue: 'The DualSense doesn\'t appear in the Bluetooth list', fix: 'It left pairing mode, or a USB cable is still attached. Unplug the cable, turn the pad off with the PS button, and repeat Create + PS.' },
+        { issue: 'It worked yesterday, but not after playing on the PS5', fix: 'Pairing to the console took over the connection. Pair it to the Mac again, or save the Mac in a separate slot by holding an action button with PS for more than five seconds, as Sony\'s multi-device instructions describe. Sony notes you can\'t switch to the Mac from the computer side while the pad is connected to a PS5.' },
+        { issue: 'macOS says the controller needs an update', fix: 'Apple refers you to Sony for firmware. If you own a PS5, connecting the pad to the console by USB is the simplest way to take the update.' },
+        { issue: 'One button does the wrong thing in one game', fix: 'Open System Settings → Game Controllers and look for a remap you set earlier. Remaps can apply to all apps or to a single app.' },
+      ],
+      faqs: [
+        { question: 'Which macOS version supports the PS5 controller?', answer: 'Sony lists macOS Big Sur 11.3 or later. Button customization in System Settings → Game Controllers needs macOS Ventura 13 or later.' },
+        { question: 'Does DualSense haptic feedback work on a Mac?', answer: 'No. Sony lists haptic feedback, the built-in microphone and the speaker as not supported on Mac. Adaptive triggers depend on the game supporting them.' },
+      ],
+      sources: [SRC.sonyDualSense, SRC.applePlayStation, SRC.appleGeneral],
+    },
+    'ps5-dualsense/steam-deck': {
+      summary: 'On Steam Deck, open Settings → Bluetooth, hold Create + PS on the DualSense until the light bar blinks, and select it. Steam Input handles the layout, gyro and touchpad.',
+      intro: 'SteamOS runs the DualSense through Steam Input, the same layer that runs the Deck\'s built-in controls. Layouts, gyro and touchpad mapping are set in Steam, not in each game, so a game without PlayStation support still works once the pad is paired.',
+      steps: [
+        'Press the Steam button, open Settings → Bluetooth, and make sure Bluetooth is turned on.',
+        'Turn the DualSense off (hold PS until the light goes out) and unplug any cable.',
+        'Hold Create, then press and hold PS until the light bar blinks.',
+        'Select the controller in the Bluetooth list with the touchscreen, or highlight it and press the Menu button for pairing options, as Valve\'s guide describes.',
+        'With a game running, press the Steam button → Controller Settings to edit the DualSense layout, including gyro and touchpad.',
+        'Open Steam → Settings → Controller → Test Controller Inputs to check every button, stick and trigger. Exit with a long press of B.',
+      ],
+      screenshots: ['Steam Deck Settings → Bluetooth showing the DualSense in the device list', 'Steam Deck Test Controller Inputs screen with the DualSense connected'],
+      wired: 'A USB-C to USB-C cable that carries data works without pairing. The Deck powers the controller over that cable, which drains the Deck\'s battery faster, so use a powered dock for long sessions.',
+      problems: [
+        { issue: 'The DualSense isn\'t in the Bluetooth list', fix: 'Turn on the "Show all devices" toggle in Settings → Bluetooth, which is Valve\'s fix for missing devices, then put the pad back in pairing mode.' },
+        { issue: 'It won\'t reconnect after a session on the PS5', fix: 'The console took over the pairing. Pair it on the Deck again, or store the Deck in its own slot (hold an action button with PS for more than five seconds) per Sony\'s multi-device steps.' },
+        { issue: 'Inputs lag or stutter', fix: 'Valve recommends disconnecting and reconnecting first, then forgetting and re-pairing the device if the lag continues.' },
+        { issue: 'The game shows Xbox button prompts', fix: 'Prompts come from the game. Look for a "button prompts" or "controller type" option in its settings; Steam Input still maps Cross to A either way.' },
+      ],
+      faqs: [
+        { question: 'Does the DualSense gyro work on Steam Deck?', answer: 'Yes, through Steam Input. Add a gyro action in the controller layout and Steam can map it to the right stick or mouse movement, even in games without gyro support.' },
+        { question: 'Can the DualSense stay paired to both my PS5 and my Steam Deck?', answer: 'Sony\'s page describes storing up to four pairings and switching by holding an action button with PS. If your pad doesn\'t do this, pair it again each time you switch.' },
+      ],
+      sources: [SRC.steamDeck, SRC.sonyDualSense],
+    },
+    'ps4-dualshock-4/pc': {
+      summary: 'Hold Share + PS until the light bar flashes, then add "Wireless Controller" in Windows Bluetooth settings. A micro-USB data cable or Sony\'s DUALSHOCK 4 USB wireless adaptor also works.',
+      intro: 'The DualShock 4 charges and connects through micro-USB, not USB-C. Sony lists two ways to connect it to Windows besides Bluetooth: a micro-USB cable or the DUALSHOCK 4 USB wireless adaptor. Windows exposes it as a DirectInput device rather than an Xbox (XInput) controller, so many PC games rely on Steam Input to use it.',
+      steps: [
+        'Hold the PS button until the player indicator turns off, and disconnect any USB cable.',
+        'Press and hold the Share button, then press and hold the PS button until the light bar flashes.',
+        'On Windows 11, open Settings → Bluetooth & devices → Add device → Bluetooth. On Windows 10, open Settings → Devices → Bluetooth & other devices → Add Bluetooth or other device → Bluetooth.',
+        'Select "Wireless Controller". The light bar blinks, then the player indicator lights.',
+        'In Steam, open Settings → Controller and enable Steam Input for PlayStation controllers if you play Steam games that only support Xbox pads.',
+      ],
+      screenshots: ['Windows Bluetooth device list showing "Wireless Controller" (DualShock 4)', 'Back of the DualShock 4 showing the reset hole near L2'],
+      wired: 'A micro-USB cable that carries data connects the DS4 without pairing. Many cheap micro-USB cables are charge-only and won\'t work for input. Sony\'s DUALSHOCK 4 USB wireless adaptor is the other supported wireless option on Windows.',
+      problems: [
+        { issue: 'Windows sees it but buttons are mixed up in a game', fix: 'DirectInput button order differs from game to game. Use the game\'s PlayStation layout if it has one, or run it through Steam Input so the layout is normalized.' },
+        { issue: 'The controller won\'t go back to the PS4 or PS5', fix: 'Sony\'s fix: connect it to the console with a USB cable, press the PS button, then unplug it and use it wirelessly.' },
+        { issue: 'The light bar flashes but pairing never finishes', fix: 'Charge the pad first, since a nearly empty battery often drops the link. If it still fails, press the reset button inside the small hole on the back near L2 with a pin for a few seconds, then pair again.' },
+        { issue: 'Touchpad, rumble or motion don\'t work over Bluetooth', fix: 'Sony lists the touchpad, light bar color changes, rumble and motion sensor as unsupported over Bluetooth on non-Sony devices. Steam Input has its own DS4 support, so these can still work in Steam games; check in the game or a tester.' },
+      ],
+      faqs: [
+        { question: 'Can I use a PS4 controller on PC without Steam?', answer: 'Yes, in games that support PlayStation controllers directly. Games that only read Xbox (XInput) controllers won\'t see it unless a translation layer such as Steam Input is running.' },
+        { question: 'Why won\'t my DualShock 4 connect to my console after using it on PC?', answer: 'Pairing with the PC replaced the console pairing. Plug it into the console with a USB cable and press PS to pair it back, as Sony describes.' },
+      ],
+      sources: [SRC.sonyDS4],
+    },
+    'ps4-dualshock-4/mac': {
+      summary: 'macOS Catalina or later pairs the DualShock 4 over Bluetooth (hold Share + PS) or automatically when connected with a micro-USB data cable.',
+      intro: 'Sony lists macOS Catalina as the minimum for the DualShock 4 on a Mac. From Catalina on, the pad works through Apple\'s Game Controller framework; on earlier macOS versions only apps with their own controller drivers, such as Steam, can use it.',
+      steps: [
+        'Hold the PS button until the player indicator turns off, and disconnect any USB cable.',
+        'Press and hold Share, then press and hold PS until the light bar flashes.',
+        'Open Apple menu → System Settings → Bluetooth (System Preferences → Bluetooth on macOS Monterey and earlier).',
+        'Click Connect next to "DUALSHOCK 4 Wireless Controller".',
+        'If it pairs but doesn\'t connect, press and release the PS button, as Apple\'s guide suggests.',
+        'On macOS Ventura 13 or later, remap buttons in System Settings → Game Controllers.',
+      ],
+      screenshots: ['macOS Bluetooth list showing "DUALSHOCK 4 Wireless Controller"'],
+      wired: 'Apple says the DualShock 4 pairs automatically when you plug it in with a cable that supports data and charging. With a charge-only micro-USB cable it will charge but not connect.',
+      problems: [
+        { issue: 'Paired, but a game shows no controller', fix: 'The game doesn\'t use Apple\'s Game Controller framework. Check the game\'s settings, or run it through Steam for Mac, which has its own PlayStation controller support.' },
+        { issue: 'It stops connecting after a PS4 session', fix: 'The DS4 has to be paired again whenever you change devices. Repeat Share + PS and reconnect from Bluetooth settings.' },
+        { issue: 'The Mac runs macOS Mojave or earlier', fix: 'Those versions predate Sony\'s listed minimum (Catalina). Update macOS, or use the controller only in apps that bring their own drivers.' },
+        { issue: 'The light bar is dim and the link drops', fix: 'Charge the controller over USB before pairing. A worn battery can also cause drops; if it only stays connected on the cable, the battery is the likely cause.' },
+      ],
+      faqs: [
+        { question: 'Does a PS4 controller work on a Mac?', answer: 'Yes, on macOS Catalina or later, over Bluetooth or a micro-USB data cable. Games that use Apple\'s Game Controller framework see it without extra software.' },
+        { question: 'Can I change the DualShock 4 button layout on a Mac?', answer: 'Yes, on macOS Ventura 13 or later: Apple menu → System Settings → Game Controllers, then click the controller\'s name.' },
+      ],
+      sources: [SRC.sonyDS4, SRC.applePlayStation, SRC.appleGeneral],
+    },
+    'ps4-dualshock-4/steam-deck': {
+      summary: 'Hold Share + PS until the light bar flashes, then select the controller in Steam Deck Settings → Bluetooth. A micro-USB to USB-C data cable works without pairing.',
+      intro: 'Steam Input supported the DualShock 4 long before the Steam Deck shipped, so on SteamOS the pad gets a full PlayStation layout, and its touchpad and motion sensor can be mapped from Steam\'s controller settings rather than inside each game.',
+      steps: [
+        'Press the Steam button, open Settings → Bluetooth, and turn Bluetooth on.',
+        'Turn the DS4 off and unplug any cable, then hold Share and press and hold PS until the light bar flashes.',
+        'Select the controller in the list, or highlight it and press the Menu button for pairing options.',
+        'Expect to repeat this whenever you move the pad between the Deck and a PlayStation, since Sony says it must be paired again each time you change devices.',
+        'Run Steam → Settings → Controller → Test Controller Inputs to check the sticks, triggers and touchpad.',
+      ],
+      screenshots: ['Steam Deck Bluetooth screen with "Wireless Controller" (DualShock 4) listed'],
+      wired: 'Use a micro-USB to USB-C cable that carries data, or a micro-USB cable through a USB-C dock. Wired skips Bluetooth pairing entirely and keeps the DS4 charged.',
+      problems: [
+        { issue: 'The DS4 isn\'t listed', fix: 'Turn on "Show all devices" in Settings → Bluetooth, then put the controller back into Share + PS pairing mode.' },
+        { issue: 'Inputs lag', fix: 'Valve\'s order of fixes: disconnect and reconnect, then forget the device and pair it again.' },
+        { issue: 'Stuck flashing after use on a PS4', fix: 'Press the reset button in the hole on the back near L2 with a pin, then pair again on the Deck.' },
+        { issue: 'Light bar color or rumble differs between games', fix: 'Those features depend on the game and on Steam Input. Check them in Test Controller Inputs before assuming the controller is faulty.' },
+      ],
+      faqs: [
+        { question: 'Do PS4 controllers work on Steam Deck?', answer: 'Yes. Pair it from Settings → Bluetooth after holding Share + PS, or connect it with a micro-USB to USB-C data cable. Steam Input handles the layout.' },
+        { question: 'Does the DualShock 4 touchpad work on Steam Deck?', answer: 'Yes, through Steam Input. You can map the touchpad as a mouse, a set of extra buttons or a scroll area in the controller layout.' },
+      ],
+      sources: [SRC.steamDeck, SRC.sonyDS4],
+    },
+    'xbox-wireless/pc': {
+      summary: 'Windows supports the Xbox Wireless Controller natively over USB, Xbox Wireless (adapter or built-in) and Bluetooth. Hold the Pair button on the top edge for three seconds to start pairing.',
+      intro: 'This is the only controller in this set that Windows treats as a native Xbox (XInput) controller, so games read it without Steam or extra drivers. Microsoft documents three ways to connect it, and they don\'t support the same features.',
+      steps: [
+        'Check whether your controller has Bluetooth. On Bluetooth models the plastic around the Xbox button is part of the controller\'s face; on older models it belongs to the top edge with the bumpers. Older models need USB or the Xbox Wireless Adapter.',
+        'Turn the controller on with the Xbox button, then press and hold the Pair button on the top edge for three seconds until the Xbox button flashes rapidly.',
+        'Bluetooth: on Windows 11 open Settings → Bluetooth & devices → Add device → Bluetooth (on Windows 10: Settings → Devices → Bluetooth & other devices → Add Bluetooth or other device → Bluetooth), then choose "Xbox Wireless Controller". Microsoft requires the Windows 10 Anniversary Update or later.',
+        'Xbox Wireless Adapter: plug in the adapter and hold its Pair button until its light flashes, then hold the controller\'s Pair button. The Xbox button stays lit once connected.',
+        'Built-in Xbox Wireless (some PCs): Add device → Everything else → "Xbox Wireless Controller".',
+        'Update the controller with the Xbox Accessories app from the Microsoft Store.',
+      ],
+      screenshots: ['Windows 11 "Add a device" dialog showing the Bluetooth and Everything else options', 'Xbox Accessories app showing a controller firmware update'],
+      wired: 'Use a micro-USB cable for Xbox One controllers and USB-C for Series X|S controllers, and make sure it carries data. If Windows loses the controller after waking from sleep, Microsoft says to press the Xbox button or unplug and replug it.',
+      problems: [
+        { issue: 'No rumble while connected over Bluetooth', fix: 'Microsoft states that vibration doesn\'t work in PC games over Bluetooth. Use a USB cable or the Xbox Wireless Adapter if you want rumble.' },
+        { issue: 'Headset or chatpad stops working', fix: 'Microsoft says attachments such as headsets, chatpads and the Xbox Stereo Adapter don\'t work over Bluetooth. Switch to USB or the adapter.' },
+        { issue: 'The controller no longer connects to the Xbox console', fix: 'Pairing with the PC replaced the console link. Re-sync it to the console with the wireless sync button or a USB cable.' },
+        { issue: 'Several controllers keep dropping on Bluetooth', fix: 'Microsoft recommends one controller at a time over Bluetooth. The adapter supports up to eight controllers.' },
+      ],
+      faqs: [
+        { question: 'Do I need the Xbox Wireless Adapter for PC?', answer: 'Only if your controller or PC lacks Bluetooth, or you want rumble and headset audio wirelessly. Bluetooth works for basic play on Windows 10 Anniversary Update or later.' },
+        { question: 'How do I switch an Xbox controller between my console and PC?', answer: 'On the controller that ships with Xbox Series X|S, double-press the Pair button to switch to the last Xbox Wireless connection, and press and hold Pair to go back to the Bluetooth device you were using.' },
+      ],
+      sources: [SRC.xboxPc, SRC.xboxUpdate],
+    },
+    'xbox-wireless/mac': {
+      summary: 'Pair an Xbox controller with a Mac over Bluetooth: turn it on, hold the Pair button until the Xbox button flashes fast, then connect it in System Settings → Bluetooth. The Xbox Wireless Adapter is a Windows accessory.',
+      intro: 'Apple supports the Xbox Wireless Controller with Bluetooth (Model 1708), the Xbox Series X and Series S controllers, the Elite Series 2 and the Adaptive Controller. The original Xbox One controller without Bluetooth is not on that list, and Microsoft documents the Xbox Wireless Adapter for Windows PCs only, so on a Mac, Bluetooth is the supported route.',
+      steps: [
+        'Make sure your controller has Bluetooth: the plastic around the Xbox button should be part of the controller\'s face, not the top edge.',
+        'Turn the controller on with the Xbox button.',
+        'Press and hold the Pair button on the top edge for a few seconds until the Xbox button flashes rapidly.',
+        'Open Apple menu → System Settings → Bluetooth and click Connect next to "Xbox Wireless Controller".',
+        'On macOS Ventura 13 or later, adjust buttons in System Settings → Game Controllers.',
+        'If macOS says the controller needs an update, update it on an Xbox console or on a Windows PC with the Xbox Accessories app. Apple\'s guide points to Microsoft for this.',
+      ],
+      screenshots: ['macOS System Settings → Bluetooth showing "Xbox Wireless Controller"', 'Side-by-side of Bluetooth and non-Bluetooth Xbox controller faceplates'],
+      wired: 'Apple\'s Xbox guide covers Bluetooth only, so don\'t count on a USB cable for input on a Mac. The cable will still charge a controller with a rechargeable pack.',
+      problems: [
+        { issue: 'The controller never shows up', fix: 'Check that it is a Bluetooth model (Model 1708 or a Series X|S controller). Older Xbox One controllers without Bluetooth can\'t pair with a Mac.' },
+        { issue: 'It pairs, then disconnects or lags', fix: 'Update the controller firmware on an Xbox console or Windows PC, then remove it from the Mac\'s Bluetooth list and pair again.' },
+        { issue: 'It keeps connecting to the Xbox console', fix: 'A Series X|S controller switches back to its last Xbox Wireless connection when you double-press Pair. Hold Pair instead to return to the Mac.' },
+        { issue: 'The Xbox Wireless Adapter does nothing on a Mac', fix: 'Microsoft only documents the adapter for Windows. Unplug it and pair the controller over Bluetooth.' },
+      ],
+      faqs: [
+        { question: 'Does the Xbox Wireless Adapter work on macOS?', answer: 'Microsoft documents the Xbox Wireless Adapter for Windows PCs only, and Apple\'s guide covers Bluetooth pairing, not the adapter. Third-party drivers exist but neither company supports them. Pair the controller over Bluetooth instead.' },
+        { question: 'Which Xbox controllers work with a Mac?', answer: 'Apple lists the Xbox Wireless Controller with Bluetooth (Model 1708), the Series X and Series S controllers, the Elite Wireless Controller Series 2 and the Adaptive Controller.' },
+      ],
+      sources: [SRC.appleXbox, SRC.appleGeneral, SRC.xboxUpdate],
+    },
+    'xbox-wireless/steam-deck': {
+      summary: 'Update the controller\'s firmware first, then hold its Pair button and select "Xbox Wireless Controller" in Steam Deck Settings → Bluetooth.',
+      intro: 'Valve\'s own Steam Deck guide says many Xbox controllers need a firmware update before they work as expected with the Deck, and it points to Microsoft\'s "Update on PC" instructions. Doing that first heads off the most common pairing problem: a controller that pairs and then keeps disconnecting.',
+      steps: [
+        'Update the controller: connect it by USB to a Windows PC and use the Xbox Accessories app, or update it on an Xbox console.',
+        'On the Deck, press the Steam button, open Settings → Bluetooth, and turn Bluetooth on.',
+        'Turn the controller on with the Xbox button, then hold the Pair button on the top edge for three seconds until the Xbox button flashes rapidly.',
+        'Select "Xbox Wireless Controller" with the touchscreen, or highlight it and press the Menu button for pairing options.',
+        'Open Steam → Settings → Controller → Test Controller Inputs and work through the tests.',
+      ],
+      screenshots: ['Steam Deck Bluetooth screen with "Xbox Wireless Controller" and the "Show all devices" toggle', 'Xbox Accessories app on Windows showing "Update required"'],
+      wired: 'A USB-C cable (Series X|S controllers) or a micro-USB to USB-C cable (Xbox One controllers) works without pairing. Microsoft documents the Xbox Wireless Adapter for Windows, so on SteamOS use Bluetooth or a cable.',
+      problems: [
+        { issue: 'It pairs, then disconnects every few seconds', fix: 'Update the controller firmware, as Valve recommends, then forget it on the Deck and pair again.' },
+        { issue: 'The controller isn\'t in the list', fix: 'Turn on "Show all devices" in Settings → Bluetooth and put the controller back into pairing mode.' },
+        { issue: 'Input lag', fix: 'Disconnect and reconnect first. If that doesn\'t help, forget the device and pair it again.' },
+        { issue: 'Pressing the Xbox button turns on your Xbox console', fix: 'The controller is reconnecting to its last Xbox Wireless link. Hold the Pair button to put it back into Bluetooth pairing mode for the Deck.' },
+      ],
+      faqs: [
+        { question: 'Why does my Xbox controller keep disconnecting from my Steam Deck?', answer: 'Valve says many Xbox controllers need a firmware update before they work as expected with the Deck. Update it on a Windows PC with the Xbox Accessories app or on an Xbox console, then pair again.' },
+        { question: 'Can I update an Xbox controller from the Steam Deck?', answer: 'Valve\'s guide sends you to Microsoft\'s instructions, which update the controller on an Xbox console, over USB, or on a Windows PC with the Xbox Accessories app.' },
+      ],
+      sources: [SRC.steamDeck, SRC.xboxUpdate, SRC.xboxPc],
+    },
+    'switch-pro/pc': {
+      summary: 'Hold the SYNC button on the top edge until the player LEDs run back and forth, then add "Pro Controller" from Windows Bluetooth settings. Steam Input makes it work in most PC games.',
+      intro: 'Nintendo doesn\'t publish PC instructions for the Pro Controller; its support pages cover pairing with a Switch. Windows still pairs it as a standard Bluetooth device, but it isn\'t an Xbox (XInput) controller, so games that only support Xbox pads won\'t see it unless Steam Input or the game itself translates it.',
+      steps: [
+        'Unplug the USB-C cable from the controller.',
+        'Press and hold the SYNC button (the small button on the top edge, next to the USB-C port) until the player LEDs start running back and forth.',
+        'On Windows 11 open Settings → Bluetooth & devices → Add device → Bluetooth. On Windows 10 open Settings → Devices → Bluetooth & other devices → Add Bluetooth or other device → Bluetooth.',
+        'Select "Pro Controller". When the LEDs stop running and one stays lit, it is connected.',
+        'In Steam, open Settings → Controller and enable Steam Input for Switch controllers. The same page has a Nintendo button layout setting that decides whether A/B and X/Y follow the printed labels or the Xbox positions.',
+      ],
+      screenshots: ['Windows "Add a device" list showing "Pro Controller"', 'Steam Settings → Controller page with the Switch controller options'],
+      wired: 'Over a USB-C data cable, Steam reads the Pro Controller without Bluetooth pairing. Outside Steam, most Windows games still won\'t read it on a cable, because the issue is the controller type, not the connection.',
+      problems: [
+        { issue: 'Windows lists it, but the game doesn\'t respond', fix: 'Run the game through Steam with Steam Input on. For a game bought elsewhere, add it to Steam with "Add a Non-Steam Game" so Steam Input applies.' },
+        { issue: 'The LEDs keep running and it never connects', fix: 'Nintendo\'s reset: press SYNC once, then press any other button to power the controller back on. Remove the old "Pro Controller" entry in Windows and pair again.' },
+        { issue: 'A and B (or X and Y) are swapped', fix: 'Change the Nintendo button layout setting in Steam → Settings → Controller, or the button prompt option in the game.' },
+        { issue: 'It won\'t pair with the Switch any more', fix: 'Re-pair it on the Switch: HOME Menu → Controllers → Change Grip/Order, then hold SYNC for at least one second. Connecting it to the docked Switch with the USB cable also pairs it.' },
+      ],
+      faqs: [
+        { question: 'How do I add a Switch Pro Controller to PC?', answer: 'Hold SYNC on the top edge until the player LEDs run, then go to Settings → Bluetooth & devices → Add device → Bluetooth and select "Pro Controller". For games, turn on Steam Input for Switch controllers in Steam → Settings → Controller.' },
+        { question: 'Does the Switch Pro Controller work on Windows without Steam?', answer: 'Windows pairs it, but only games with their own Switch Pro support can read it. Everything else needs a translation layer such as Steam Input, which also works for non-Steam games added to your Steam library.' },
+      ],
+      sources: [SRC.nintendoPair, SRC.nintendoSync],
+    },
+    'switch-pro/mac': {
+      summary: 'On macOS Ventura 13 or later, hold the Pro Controller\'s SYNC button until the player LEDs run, then connect "Pro Controller" in System Settings → Bluetooth.',
+      intro: 'Native Switch Pro Controller support arrived on the Mac with macOS Ventura 13, the same release that added the Game Controllers settings pane Apple describes. On Monterey and earlier the Mac can pair it as a Bluetooth device, but only apps with their own controller drivers, such as Steam, can use it.',
+      steps: [
+        'Check your version under Apple menu → About This Mac. You need macOS Ventura 13 or later for the Game Controller framework to use the Pro Controller.',
+        'Unplug the USB-C cable, then press and hold SYNC on the top edge until the player LEDs run back and forth.',
+        'Open Apple menu → System Settings → Bluetooth and click Connect next to "Pro Controller".',
+        'Open System Settings → Game Controllers and click the controller to remap buttons, for example to swap A/B for games that show Xbox prompts.',
+        'Open a tester and press every button to confirm the mapping the game will see.',
+      ],
+      screenshots: ['macOS Bluetooth list showing "Pro Controller"', 'macOS System Settings → Game Controllers panel for the Pro Controller'],
+      wired: 'Apple\'s controller guide covers Bluetooth pairing. On a Mac, treat the USB-C cable as a charger and use Bluetooth for input.',
+      problems: [
+        { issue: 'The Mac runs Monterey or earlier', fix: 'Update to macOS Ventura 13 or later, or play through Steam for Mac, which has its own Switch Pro support.' },
+        { issue: 'Button prompts don\'t match what you press', fix: 'Remap in System Settings → Game Controllers, either for all apps or just the one game.' },
+        { issue: 'The LEDs keep running', fix: 'Press SYNC once, press any other button to power it back on, remove "Pro Controller" from the Mac\'s Bluetooth list, and pair again.' },
+        { issue: 'You need it on the Switch again', fix: 'On the Switch, go to Controllers → Change Grip/Order and hold SYNC for at least one second, or plug it into the docked Switch with the USB cable.' },
+      ],
+      faqs: [
+        { question: 'Does the Switch Pro Controller work on a Mac?', answer: 'Yes, natively on macOS Ventura 13 or later over Bluetooth. Earlier versions can pair it, but only apps with their own drivers, such as Steam, can use it.' },
+        { question: 'How do I remap the Pro Controller on a Mac?', answer: 'Apple menu → System Settings → Game Controllers, then click the controller\'s name. Apple lists macOS Ventura 13 or later for this.' },
+      ],
+      sources: [SRC.appleGeneral, SRC.nintendoPair, SRC.nintendoSync],
+    },
+    'switch-pro/steam-deck': {
+      summary: 'In Steam Deck Settings → Bluetooth, hold the Pro Controller\'s SYNC button until the player LEDs run, then select "Pro Controller". Steam Input handles the button layout and gyro.',
+      intro: 'The Pro Controller is a common choice for docked Steam Deck play. SteamOS pairs it like any Bluetooth device, and Steam Input supports it, including its gyro, so you set it up from the same controller screens as the Deck\'s built-in controls.',
+      steps: [
+        'Press the Steam button, open Settings → Bluetooth, and turn Bluetooth on.',
+        'Unplug the USB-C cable from the controller, then press and hold SYNC on the top edge until the player LEDs run back and forth.',
+        'Select "Pro Controller" with the touchscreen, or highlight it and press the Menu button for pairing options.',
+        'Open Steam → Settings → Controller and choose the Nintendo button layout setting you prefer, so A/B and X/Y behave the way your games expect.',
+        'With a game running, press the Steam button → Controller Settings to edit the layout, including gyro aiming.',
+        'Run Steam → Settings → Controller → Test Controller Inputs to confirm every input.',
+      ],
+      screenshots: ['Steam Deck Bluetooth list showing "Pro Controller"', 'Steam Deck controller settings showing the Nintendo button layout option'],
+      wired: 'A USB-C to USB-C data cable connects it without pairing. When the Deck is docked, plugging the Pro Controller into a spare dock port is the simplest wired setup.',
+      problems: [
+        { issue: '"Pro Controller" isn\'t in the list', fix: 'Turn on "Show all devices" in Settings → Bluetooth, then hold SYNC again.' },
+        { issue: 'Connected, but the LEDs keep running', fix: 'Press SYNC once, press any other button to wake it, forget "Pro Controller" on the Deck, and pair again.' },
+        { issue: 'A and B are swapped in a game', fix: 'Flip the Nintendo button layout setting in Steam → Settings → Controller, or change the game\'s prompt setting.' },
+        { issue: 'It works on the Deck but not on the Switch afterwards', fix: 'Re-pair on the Switch through Controllers → Change Grip/Order, or connect it to the docked Switch by USB. Expect to pair again on the Deck after moving it back.' },
+        { issue: 'Input lag', fix: 'Valve suggests disconnecting and reconnecting, then forgetting and re-pairing the controller if the lag stays.' },
+      ],
+      faqs: [
+        { question: 'Does the Switch Pro Controller work with the Steam Deck?', answer: 'Yes. Pair it from Settings → Bluetooth after holding SYNC, or connect it with a USB-C data cable. Steam Input handles its layout.' },
+        { question: 'Does the Pro Controller gyro work on Steam Deck?', answer: 'Yes, through Steam Input. Add a gyro action in the controller layout to use motion aiming, even in games that don\'t support gyro.' },
+      ],
+      sources: [SRC.steamDeck, SRC.nintendoPair, SRC.nintendoSync],
+    },
+  };
+
   const routes = [];
   for (const controller of controllers) {
     for (const platform of platforms) {
-      routes.push({ params: { controller: controller.slug, platform: platform.slug }, props: { controller, platform } });
+      const guide = guides[`${controller.slug}/${platform.slug}` as keyof typeof guides];
+      const otherPlatforms = platforms.filter((p) => p.slug !== platform.slug);
+      routes.push({ params: { controller: controller.slug, platform: platform.slug }, props: { controller, platform, guide, otherPlatforms } });
     }
   }
   return routes;
 }
 
-const { controller, platform } = Astro.props;
+const { controller, platform, guide, otherPlatforms } = Astro.props;
+
+const datePublished = '2026-08-02';
+const dateModified = '2026-11-01';
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
   { name: 'Connect & Pair', url: '/connect' },
-  { name: controller.name },
-  { name: platform.name },
-];
-
-const faqs = [
-  {
-    question: `How do I connect the ${controller.name} to ${platform.name}?`,
-    answer: `Put the ${controller.name} in pairing mode (hold the pairing button until the LED flashes), then pair it from ${platform.name}'s Bluetooth settings. For a stable wired connection, connect the controller by USB instead.`,
-  },
-  {
-    question: `Why isn't my ${controller.name} being detected by ${platform.name}?`,
-    answer: `Most detection failures are one of: Bluetooth batteries draining, a stale pairing entry, or the pad connected to another device. Remove the old pairing, re-pair, and confirm with a browser tester before blaming the controller.`,
-  },
-  {
-    question: `Does the ${controller.name} work with a drifting stick on ${platform.name}?`,
-    answer: `It connects the same way — drift is a sensor issue reported by the gamepad, not a platform issue. Run our Stick Drift Detector after pairing to confirm the measurement.`,
-  },
+  { name: `${controller.name} on ${platform.name}` },
 ];
 
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'TechArticle',
   headline: `How to connect the ${controller.name} to ${platform.name}`,
-  description: `Step-by-step pairing for the ${controller.name} with ${platform.name}, including a verification test.`,
+  description: guide.summary,
   articleSection: 'Controller Connection & Pairing',
+  datePublished,
+  dateModified,
   author: {
-    '@type': 'Organization',
-    name: 'ControllerTesting Hardware Lab',
-    url: 'https://controllertesting.com'
+    '@type': 'Person',
+    name: 'Divy Yadav',
+    url: 'https://controllertesting.com/about'
   },
   publisher: {
     '@type': 'Organization',
@@ -139,13 +381,14 @@ const articleSchema = {
       '@type': 'ImageObject',
       url: 'https://controllertesting.com/favicon.svg'
     }
-  }
+  },
+  citation: guide.sources.map((s) => ({ '@type': 'WebPage', name: s.name, url: s.url })),
 };
 ---
 
 <BaseLayout
   title={`Connect ${controller.name} to ${platform.name} | CT`}
-  description={`How to connect and pair the ${controller.name} with ${platform.name}: Bluetooth pairing, USB setup, first-run mapping, and verification with our free tester.`}
+  description={guide.summary}
   breadcrumbs={breadcrumbs}
   schema={articleSchema}
 
@@ -159,56 +402,85 @@ const articleSchema = {
       <header class="connect-hero">
         <span class="badge-tag mb-3">Connect &amp; Pair · {controller.protocol}</span>
         <h1 class="text-h1 mb-2">Connect {controller.name} to {platform.name}</h1>
-        <p class="connect-subtitle">
-          To start pairing, {controller.pairButton}. {controller.protocol} pairing in a few steps.
-        </p>
+        <p class="connect-subtitle">{guide.summary}</p>
         <AuthorByline
-          datePublished="2026-08-02"
-          dateModified="2026-08-10"
-          readingTime="4 min read"
+          name="Divy Yadav"
+          role="Operator, ControllerTesting.com"
+          datePublished={datePublished}
+          dateModified={dateModified}
         />
       </header>
 
       <div class="connect-body card-base">
-        <h2 class="section-title">Step-by-step</h2>
-        <p class="connect-text">Put the {controller.name} into pairing mode by {controller.pairButton}, then follow the platform steps below.</p>
-        <p class="connect-text">{controller.note}</p>
-        <p class="connect-text">{controller.deep}</p>
-        {platform.steps.map((step, i) => (
+        <p class="connect-text">{guide.intro}</p>
+
+        <h2 class="section-title">Pairing steps</h2>
+        {guide.steps.map((step, i) => (
           <div class="connect-step">
             <span class="connect-num">{i + 1}</span>
             <p class="connect-text">{step}</p>
           </div>
         ))}
+        {guide.screenshots.map((shot) => (
+          <Fragment set:html={`<!-- SCREENSHOT: ${shot} -->`} />
+        ))}
 
-        {platform.tip && (
-          <div class="connect-tip">
-            <strong class="connect-tip-label">Verify your connection:</strong>
-            <p class="connect-text">{platform.tip}</p>
-          </div>
-        )}
+        <h2 class="section-title">Wired connection</h2>
+        <p class="connect-text">{guide.wired}</p>
+
+        <h2 class="section-title">Common problems and fixes</h2>
+        <dl class="connect-problems">
+          {guide.problems.map((p) => (
+            <div class="connect-problem">
+              <dt class="connect-problem-issue">{p.issue}</dt>
+              <dd class="connect-text">{p.fix}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <div class="connect-tip">
+          <strong class="connect-tip-label">Verify your connection:</strong>
+          <p class="connect-text">
+            Pairing only proves the link. Move each stick, press every button and squeeze both triggers in a tester.
+            An input that doesn't register points to mapping or hardware, not pairing.
+          </p>
+        </div>
 
         <div class="connect-cta">
           <a href="/test/controller/drift" class="btn-primary">Test after pairing</a>
+          <a href={controller.tester.url} class="btn-secondary">{controller.tester.label}</a>
           <a href="/test/controller/polling-rate" class="btn-secondary">Check polling rate</a>
         </div>
 
-        {controller.source && (
-          <p class="connect-text">
-            Official reference: <a href={controller.source.url} rel="noopener" target="_blank" class="connect-source-link">{controller.source.name} ↗</a>
-          </p>
-        )}
+        <h2 class="section-title">Official sources</h2>
+        <ul class="connect-sources">
+          {guide.sources.map((s) => (
+            <li>
+              <a href={s.url} rel="noopener" target="_blank" class="connect-source-link">{s.name} ↗</a>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div class="connect-faq">
         <h2 class="section-title">Quick answers</h2>
-        {faqs.map((f) => (
+        {guide.faqs.map((f) => (
           <div class="faq-item">
             <h3 class="faq-q">{f.question}</h3>
             <p class="connect-text">{f.answer}</p>
           </div>
         ))}
       </div>
+
+      <nav class="connect-related" aria-label="Other guides for this controller">
+        <h2 class="section-title">{controller.name} on other platforms</h2>
+        <ul class="connect-related-list">
+          {otherPlatforms.map((p) => (
+            <li><a href={`/connect/${controller.slug}/${p.slug}`} class="connect-source-link">Connect {controller.name} to {p.name}</a></li>
+          ))}
+          <li><a href="/connect" class="connect-source-link">All pairing guides</a></li>
+        </ul>
+      </nav>
     </div>
   </main>
 
@@ -220,14 +492,21 @@ const articleSchema = {
   .connect-hero { margin-bottom: 2.5rem; max-width: 760px; }
   .connect-subtitle { font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.6; }
   .connect-body { padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 1.5rem; }
+  .connect-body .section-title { margin-top: 0.75rem; }
   .connect-step { display: flex; gap: 1rem; align-items: flex-start; }
   .connect-num { flex: 0 0 auto; width: 28px; height: 28px; border-radius: 999px; background: color-mix(in srgb, var(--color-accent) 12%, transparent); color: var(--color-accent); font-family: var(--font-mono); font-weight: 700; font-size: 0.875rem; display: inline-flex; align-items: center; justify-content: center; }
   .connect-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.7; margin: 0; }
+  .connect-problems { display: flex; flex-direction: column; gap: 1rem; margin: 0; }
+  .connect-problem { display: flex; flex-direction: column; gap: 0.25rem; }
+  .connect-problem-issue { font-weight: 700; color: var(--color-text-primary); }
+  .connect-problem dd { margin: 0; }
   .connect-source-link { color: var(--color-accent); font-weight: 600; text-decoration: underline; }
+  .connect-sources, .connect-related-list { display: flex; flex-direction: column; gap: 0.5rem; margin: 0; padding-left: 1.25rem; list-style: disc; color: var(--color-text-secondary); }
   .connect-tip { background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1rem 1.25rem; display: flex; flex-direction: column; gap: 0.375rem; }
   .connect-tip-label { color: var(--color-text-primary); }
   .connect-cta { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }
-  .connect-faq { display: flex; flex-direction: column; gap: 1.25rem; }
+  .connect-faq { display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 2rem; }
+  .connect-related { display: flex; flex-direction: column; gap: 0.75rem; }
   .faq-item { display: flex; flex-direction: column; gap: 0.375rem; border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 1.25rem; }
   .faq-item:last-child { border-bottom: none; padding-bottom: 0; }
   .faq-q { font-size: 1rem; font-weight: 700; color: var(--color-text-primary); }

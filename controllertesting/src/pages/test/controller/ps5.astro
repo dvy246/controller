@@ -39,7 +39,7 @@ const faqs = [
   },
   {
     question: 'How do I calibrate replacement Hall-effect sticks on DualSense?',
-    answer: 'After soldering Hall-effect joystick modules into a DualSense motherboard, use our WebHID Zero-Point Calibrator (/test/controller/ps-calibration) to write persistent center offsets directly into the controller’s onboard EEPROM firmware without external hardware boards.',
+    answer: 'After soldering Hall-effect joystick modules into a DualSense motherboard, measure the new resting offset with our calibration check (/test/controller/ps-calibration). New modules rarely rest at the stored center, so recalibrate with the open-source dualshock-tools utility, then re-test to confirm the offset dropped.',
   }
 ];
 ---
@@ -93,7 +93,7 @@ const faqs = [
 
     <h2>Calibrating Hall-Effect Joystick Upgrades</h2>
     <p>
-      If you have upgraded your DualSense with electromagnetic Hall-effect joysticks (such as GuliKit or K-Silver modules), visit our <a href="/test/controller/ps-calibration" class="font-semibold text-accent">PS Controller WebHID Calibrator</a>. This browser tool uses low-level WebHID commands to write zero-point calibration offsets directly into the DualSense onboard memory.
+      If you have upgraded your DualSense with electromagnetic Hall-effect joysticks (such as GuliKit or K-Silver modules), visit our <a href="/test/controller/ps-calibration" class="font-semibold text-accent">PS controller calibration check</a>. It measures each stick's resting offset and outer range so you can see whether the new modules need recalibrating, and confirm the result afterwards.
     </p>
   </Fragment>
 

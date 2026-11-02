@@ -1,0 +1,43 @@
+---
+/**
+ * HubIntro.astro — answer-first intro for hub pages that are otherwise card grids.
+ * Paragraphs go in the default slot; optional FAQs render as visible Q&A
+ * (not collapsed) so the answers are readable without interaction.
+ */
+
+export interface Props {
+  title: string;
+  faqs?: Array<{ question: string; answer: string }>;
+}
+
+const { title, faqs = [] } = Astro.props;
+---
+
+<section class="hub-intro card-base">
+  <h2 class="hub-intro-title">{title}</h2>
+  <div class="hub-intro-body">
+    <slot />
+  </div>
+  {faqs.length > 0 && (
+    <dl class="hub-intro-faq">
+      {faqs.map((faq) => (
+        <div class="hub-intro-faq-item">
+          <dt>{faq.question}</dt>
+          <dd>{faq.answer}</dd>
+        </div>
+      ))}
+    </dl>
+  )}
+</section>
+
+<style>
+  .hub-intro { padding: 1.75rem 2rem; margin-bottom: 2rem; display: flex; flex-direction: column; gap: 1rem; }
+  .hub-intro-title { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
+  .hub-intro-body { display: flex; flex-direction: column; gap: 0.75rem; color: var(--color-text-secondary); line-height: 1.7; max-width: 75ch; }
+  .hub-intro-body :global(a) { color: var(--color-accent); text-decoration: underline; }
+  .hub-intro-body :global(ul) { padding-left: 1.25rem; list-style: disc; display: flex; flex-direction: column; gap: 0.375rem; }
+  .hub-intro-faq { display: grid; gap: 1rem; border-top: 1px solid var(--color-border-subtle); padding-top: 1rem; }
+  .hub-intro-faq-item dt { font-weight: 600; color: var(--color-text-primary); margin-bottom: 0.25rem; }
+  .hub-intro-faq-item dd { color: var(--color-text-secondary); line-height: 1.6; }
+  @media (max-width: 640px) { .hub-intro { padding: 1.25rem; } }
+</style>

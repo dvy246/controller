@@ -170,7 +170,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
               </div>
               <div class="dropdown-column">
                 <span class="dropdown-category">{t('nav.advDiagnostics')}</span>
-                <a role="menuitem" class="dropdown-item" href={l('/calibrate/dualsense/hall-effect')}>
+                <a role="menuitem" class="dropdown-item" href={l('/test/controller/ps-calibration')}>
                   <div class="dropdown-item-icon" style="background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.3);" aria-hidden="true">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 11V3" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"/><circle cx="4" cy="12" r="2.5" fill="#38BDF8"/><circle cx="12" cy="10" r="2.5" fill="#818CF8"/><circle cx="20" cy="14" r="2.5" fill="#C084FC"/></svg>
                   </div>
@@ -182,7 +182,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                     <span class="dropdown-item-desc">{t('nav.calibratorDesc')}</span>
                   </div>
                 </a>
-                <a role="menuitem" class="dropdown-item" href={l('/deadzone-calculator/apex-legends/ps5')}>
+                <a role="menuitem" class="dropdown-item" href={l('/settings')}>
                   <div class="dropdown-item-icon" style="background: rgba(239, 68, 68, 0.12); border-color: rgba(239, 68, 68, 0.3);" aria-hidden="true">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#EF4444" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="#F59E0B" fill-opacity="0.3" stroke="#F59E0B" stroke-width="1.5"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke="#EF4444" stroke-width="1.5"/></svg>
                   </div>
@@ -191,7 +191,7 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
                     <span class="dropdown-item-desc">{t('nav.deadzoneSandboxDesc')}</span>
                   </div>
                 </a>
-                <a role="menuitem" class="dropdown-item" href={l('/overclock-validator/ps5/usb-c')}>
+                <a role="menuitem" class="dropdown-item" href={l('/test/controller/polling-rate')}>
                   <div class="dropdown-item-icon" style="background: rgba(250, 204, 21, 0.12); border-color: rgba(250, 204, 21, 0.3);" aria-hidden="true">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FACC15" stroke-width="2"/><polyline points="12 6 12 12 16 14" stroke="#00F2FE" stroke-width="2.5" stroke-linecap="round"/></svg>
                   </div>
@@ -581,8 +581,8 @@ const gameAccents: Record<string, { bg: string; border: string; color: string }>
             <li><a href={l('/test/controller/quick-health')} class="mobile-nav-link mobile-nav-link-em"><span>{t('nav.quickHealth')}</span><span class="nav-badge badge-speed">60s</span></a></li>
             <li><a href={l('/test/controller/full-diagnostic')} class="mobile-nav-link mobile-nav-link-em"><span>{t('nav.fullDiag')}</span><span class="nav-badge badge-pro">PRO</span></a></li>
             <li><a href={l('/test/controller/passport')} class="mobile-nav-link"><span>{t('nav.passport')}</span></a></li>
-            <li><a href={l('/calibrate/dualsense/hall-effect')} class="mobile-nav-link"><span>{t('nav.calibrator')}</span></a></li>
-            <li><a href={l('/deadzone-calculator/apex-legends/ps5')} class="mobile-nav-link"><span>{t('nav.deadzoneSandbox')}</span></a></li>
+            <li><a href={l('/test/controller/ps-calibration')} class="mobile-nav-link"><span>{t('nav.calibrator')}</span></a></li>
+            <li><a href={l('/settings')} class="mobile-nav-link"><span>{t('nav.deadzoneSandbox')}</span></a></li>
             <li><a href={l('/tools')} class="mobile-nav-link"><span>{t('nav.viewAllTools')}</span></a></li>
           </ul>
         </div>

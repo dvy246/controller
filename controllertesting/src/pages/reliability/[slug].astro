@@ -72,8 +72,6 @@ const schemaData = {
       <div class="mt-8">
         <AuthorByline
           datePublished="2026-08-02"
-          dateModified="2026-08-10"
-          readingTime="4 min read"
         />
       </div>
       <div class="mt-8">
@@ -102,14 +100,14 @@ const schemaData = {
     </div>
 
     <section class="percentile-section card-base mb-12 p-6 sm:p-10">
-      <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-6">Drift Magnitude Percentiles</h2>
-      <div class="table-container" aria-label="Drift magnitude percentile thresholds for {modelData.name}">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-6">Drift Tiers (Modeled Cutoffs)</h2>
+      <div class="table-container" aria-label="Modeled drift tier cutoffs for {modelData.name}">
         <table class="data-table">
           <thead>
             <tr>
               <th scope="col">Tier</th>
               <th scope="col">Drift Threshold (%)</th>
-              <th scope="col">Percentile Standing</th>
+              <th scope="col">What It Means</th>
               <th scope="col">Recommended Action</th>
             </tr>
           </thead>
@@ -117,25 +115,25 @@ const schemaData = {
             <tr>
               <td class="font-semibold text-pass">Excellent</td>
               <td class="mono">≤ {modelData.percentileThresholds.excellent}%</td>
-              <td>Top 10% cleanest sensors</td>
+              <td>Essentially no resting drift</td>
               <td>No action needed (0% deadzone)</td>
             </tr>
             <tr>
               <td class="font-semibold text-accent">Good</td>
               <td class="mono">≤ {modelData.percentileThresholds.good}%</td>
-              <td>Top 30% normal wear</td>
+              <td>Normal early wear</td>
               <td>Default game deadzone (2-3%)</td>
             </tr>
             <tr>
               <td class="font-semibold text-warning">Average</td>
               <td class="mono">≤ {modelData.percentileThresholds.average}%</td>
-              <td>50th percentile baseline</td>
+              <td>Around the modeled typical unit</td>
               <td>Set 5% deadzone in settings</td>
             </tr>
             <tr>
               <td class="font-semibold text-fail">Poor / Degraded</td>
               <td class="mono">> {modelData.percentileThresholds.average}%</td>
-              <td>Bottom 20% high drift</td>
+              <td>Worse than the modeled typical unit</td>
               <td>Clean potentiometers or replace module</td>
             </tr>
           </tbody>

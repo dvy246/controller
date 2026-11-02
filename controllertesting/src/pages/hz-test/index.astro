@@ -5,6 +5,7 @@
  * Hub index for the Phantom Hz & Ghosting Engine routes.
  */
 
+import HubIntro from '../../components/global/HubIntro.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
@@ -66,6 +67,11 @@ const icons: Record<string, string> = {
           Test your monitor's refresh rate, motion blur persistence, and frame pacing. Pick the benchmark that matches your display's rated Hz.
         </p>
       </header>
+      <HubIntro title="Is your monitor really running at its refresh rate?" faqs={[{"question": "How do I check my monitor is running at 144Hz?", "answer": "On Windows, open Settings → Display → Advanced display and look at the refresh rate; on macOS, System Settings → Displays. Then open the 144Hz test: the frame counter should report about 144 frames per second."}, {"question": "Why does the 240Hz test look the same as 60Hz?", "answer": "Usually the display is set to 60Hz, the cable cannot carry 240Hz at your resolution, or the browser window is on a second, slower monitor. Fix the setting or cable and reload the page."}]}>
+        <p>Each test moves objects across the screen at your display's frame rate so you can see motion clarity and spot dropped or uneven frames. The browser draws at whatever refresh rate the display is currently set to, so a 144Hz monitor running at 60Hz will look like 60Hz here too.</p>
+        <p>If a test looks choppier than expected, check the refresh rate in your system display settings first, then the cable: older HDMI cables and some adapters cap the rate.</p>
+      </HubIntro>
+
 
       <div class="grid-tools">
         {hzTests.map((test) => (

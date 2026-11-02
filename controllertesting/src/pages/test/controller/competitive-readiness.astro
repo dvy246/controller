@@ -17,31 +17,31 @@ const breadcrumbs = [
 const faqs = [
   {
     question: 'What is the Controller Competitive Readiness Benchmark?',
-    answer: 'The Competitive Readiness Benchmark audits four core hardware sub-systems against professional esports tournament standards: Resting Stick Drift (< 2.0%), Circularity Error (< 8.5%), Polling Rate Frequency (>= 500Hz), and Trigger Actuation Linearity (100% saturation).',
+    answer: 'The Competitive Readiness Benchmark checks resting stick drift (under 2.0%), circularity error (under 8.5%) and whether both triggers reach full travel, using live input from your controller. The thresholds are this site\'s own benchmarks for low-deadzone play, not league rules.',
   },
   {
     question: 'Why is low stick drift critical for rotational aim assist in FPS games?',
-    answer: 'In Apex Legends, Call of Duty: Warzone, and Fortnite, rotational aim assist engages automatically when player velocity crosses zero. Unwanted stick drift breaks rotational aim assist bubbles and forces high deadzones (7%+), adding artificial input delay.',
+    answer: 'In Apex Legends, Call of Duty: Warzone, and Fortnite, rotational aim assist engages automatically when player velocity crosses zero. A drifting stick forces you to raise the deadzone, which swallows small aim corrections.',
   },
   {
-    question: 'What hardware specs are required for Pro Certified esports tier?',
-    answer: 'To achieve Pro Certified status: Resting Drift must remain under 2.0% on both sticks, circularity error must not exceed 8.5%, USB polling rate must sustain 500Hz to 1000Hz with < 1.5ms interval jitter, and all face buttons must exhibit zero switch bounce.',
+    question: 'What does the Competitive Ready result require?',
+    answer: 'Competitive Ready means resting drift under 2.0% on both sticks, average circularity error under 8.5%, and both triggers reaching full travel during the 10-second test. These thresholds are ControllerTesting.com benchmarks for low-deadzone play; ALGS, CDL and other leagues do not publish controller hardware specs.',
   },
   {
     question: 'Should competitive controller players overclock to 1000Hz?',
-    answer: 'Yes. Overclocking PlayStation DualSense or DualShock 4 controllers to 1000Hz over USB reduces transport latency to 1.0ms, allowing input updates to synchronize cleanly with 240Hz and 360Hz esports monitor refresh cycles.',
+    answer: 'It can help on PC. A wired DualSense or DualShock 4 can be polled faster with community USB tools, shortening the gap between reports from about 4ms to 1ms. The gain is small next to game and display latency, and it does not apply on consoles.',
   },
   {
     question: 'Are Hall-effect controllers legal in official esports tournaments?',
-    answer: 'Yes. Electromagnetic Hall-effect controllers (such as Flydigi Vader 4 Pro, GuliKit KK3 Max, and modded DualSense pads) are 100% tournament legal across ALGS, CDL, and FNCS events, provided rapid-fire macros are disabled.',
+    answer: 'Hall-effect controllers are widely used in competitive play, but legality is set per event: check the current rulebook for your league or tournament, and disable turbo or macro functions, which are commonly banned.',
   }
 ];
 ---
 
 <ToolLayout
-  title="Competitive Controller Test — Free Online Esports Readiness Benchmark | ControllerTesting.com"
-  description="Benchmark your controller for ALGS, CDL, and esports tournament readiness. Audit stick drift, circularity, 1000Hz polling rate, and triggers online free."
-  keywords="competitive controller test, esports controller benchmark, algs controller settings check, cdl tournament controller test, pro controller readiness, gamepad tournament legal test"
+  title="Competitive Controller Readiness Test | CT"
+  description="Check whether your controller is clean enough for low-deadzone competitive play: live stick drift, circularity and trigger travel, with clear pass thresholds."
+  keywords="competitive controller test, controller readiness check, stick drift competitive, low deadzone controller test"
   toolName="Competitive Controller Readiness Test"
   category="Flagship Diagnostic"
   categoryUrl="/test/controller"
@@ -56,22 +56,22 @@ const faqs = [
   {/* ── Results Slot ── */}
   <Fragment slot="results">
     <div class="results-summary">
-      <h2 class="section-title">Esports Tournament Hardware Standard Gates</h2>
+      <h2 class="section-title">Readiness thresholds</h2>
       <p class="results-text">
-        Real-time telemetry evaluation against professional competitive gaming benchmarks:
+        Live measurements compared against this site's competitive benchmarks (these are our thresholds, not official league rules):
       </p>
       <div class="results-legend-grid">
         <div class="legend-card legend-pass">
-          <strong class="legend-title">Pro Certified (Esports Ready)</strong>
-          <p class="legend-text">Drift &lt; 2.0% | Circularity &lt; 8.5% | Polling &ge; 500Hz. Supports 0–3% in-game deadzones and maximum rotational aim assist lock.</p>
+          <strong class="legend-title">Competitive Ready</strong>
+          <p class="legend-text">Drift &lt; 2.0% | Circularity &lt; 8.5% | Triggers reach full range. Clean enough for 0–3% in-game deadzones.</p>
         </div>
         <div class="legend-card legend-warning">
-          <strong class="legend-title">Ranked Competitive (Minor Tuning Needed)</strong>
-          <p class="legend-text">Drift 2.1%–5.0% | Circularity 8.6%–12.5% | Polling 250Hz. Minor potentiometer wear; requires 5% in-game deadzones.</p>
+          <strong class="legend-title">Playable (Tuning Needed)</strong>
+          <p class="legend-text">Drift 2.1%–5.0% | Circularity 8.6%–12.5%. Minor stick wear; expect to run a deadzone of about 5%.</p>
         </div>
         <div class="legend-card legend-fail">
-          <strong class="legend-title">Casual / Non-Tournament (Hardware Deficit)</strong>
-          <p class="legend-text">Drift &gt; 5.0% or Polling &lt; 250Hz. Unfit for high-stakes competition; noticeable micro-aim lag and dropped inputs.</p>
+          <strong class="legend-title">Needs Repair</strong>
+          <p class="legend-text">Drift &gt; 5.0%. The deadzone needed to hide it will noticeably blunt fine aim; clean or replace the stick.</p>
         </div>
       </div>
     </div>
@@ -81,8 +81,8 @@ const faqs = [
   <Fragment slot="export">
     <div class="export-banner">
       <div>
-        <h3 class="export-title">Generate verified tournament certification card</h3>
-        <p class="export-desc">Export an official 0–100 Controller Health Score evidence sheet to prove tournament hardware compliance.</p>
+        <h3 class="export-title">Save your results as a report</h3>
+        <p class="export-desc">Create a 0–100 Controller Health Score report you can keep or share. It is a self-test, not a tournament certification.</p>
       </div>
       <div class="export-buttons">
         <a href="/test/controller/health-score" class="btn-primary">Generate Health Report</a>
@@ -109,26 +109,32 @@ const faqs = [
 
   {/* ── SEO Content Slot ── */}
   <Fragment slot="content">
-    <h2>Esports Tournament Hardware Requirements & Telemetry Gates</h2>
+    <h2>What "competitive ready" means here</h2>
     <p>
-      In modern competitive shooter esports (including the <em>Apex Legends Global Series (ALGS)</em>, <em>Call of Duty League (CDL)</em>, <em>Fortnite Champion Series (FNCS)</em>, and <em>Rocket League Championship Series (RLCS)</em>), controller hardware differences separate top-tier performance from hardware-induced execution errors.
+      Competitive leagues such as ALGS or the Call of Duty League publish rules about controller features (turbo,
+      macros, approved hardware), not drift or circularity limits. This test answers a narrower question: is your
+      stick clean enough to run a very low in-game deadzone without the crosshair wandering?
     </p>
 
-    <h3>The 4 Pillars of Tournament Controller Readiness</h3>
+    <h3>The three checks</h3>
     <ol>
       <li>
-        <strong>Resting Stick Drift (&lt; 2.0% Threshold):</strong> Allows players to configure raw Linear or Dynamic response curves with 0% to 3% inner deadzones, ensuring instantaneous micro-tracking without phantom crosshair wandering.
+        <strong>Resting stick drift (under 2.0%):</strong> low enough that a 0–3% in-game deadzone hides it, so small
+        aim corrections still register.
       </li>
       <li>
-        <strong>Outer Circularity Error (&lt; 8.5%):</strong> Guarantees uniform 360-degree look sensitivity so diagonal flick shots reach targets with identical muscle memory speed.
+        <strong>Circularity error (under 8.5%):</strong> the stick reaches roughly the same speed in every direction,
+        so diagonal flicks behave like straight ones.
       </li>
       <li>
-        <strong>Polling Rate & Frame Pacing (&ge; 500Hz / 1000Hz):</strong> Sustains sub-2.0ms input report intervals over USB to eliminate frame-time input stutter on 240Hz/360Hz displays.
-      </li>
-      <li>
-        <strong>Trigger Saturation & Digital Stops:</strong> Verifies that mouse-click hair triggers or trigger stops achieve full 100% (1.0000) actuation depth on every pull.
+        <strong>Trigger travel:</strong> both triggers reach full 1.0 during the test; a trigger that stops short can
+        miss shots in games that need a full pull.
       </li>
     </ol>
+    <p>
+      If a check fails, the <a href="/test/controller/drift" class="content-link">Stick Drift test</a> and the
+      <a href="/fix/stick-drift" class="content-link">repair guides</a> show what to do next.
+    </p>
   </Fragment>
 </ToolLayout>
 
@@ -138,6 +144,7 @@ const faqs = [
   .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
   .export-title { font-size: 1.125rem; font-weight: 700; margin-bottom: 0.25rem; }
   .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
+  .content-link { color: var(--color-accent); text-decoration: underline; }
   .prose { line-height: 1.7; color: var(--color-text-secondary); }
   .prose h2, .prose h3 { color: var(--color-text-primary); margin-top: 1.5rem; margin-bottom: 0.75rem; }
   .prose p { margin-bottom: 1rem; }

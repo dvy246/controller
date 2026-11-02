@@ -4,6 +4,7 @@
  * Zero competitor coverage (verified: controllertest.io has no profile pages).
  */
 
+import HubIntro from '../../components/global/HubIntro.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
@@ -44,6 +45,10 @@ const breadcrumbs = [{ name: 'Home', url: '/' }, { name: 'Controller Profiles' }
           Reliability claims only appear where our baseline dataset has the model — no invented numbers.
         </p>
       </header>
+      <HubIntro title="Controller reference notes">
+        <p>Short reference notes for popular controllers: which stick sensor each uses (potentiometer or Hall effect), its typical weak points, and which tests to run on it. For full step-by-step repair instructions, use the <a href="/fix/stick-drift">stick drift guides</a>; for hand-size fit, see the <a href="/fit">fit guide</a>.</p>
+      </HubIntro>
+
 
       <div class="profile-grid">
         {controllers.map((c) => (

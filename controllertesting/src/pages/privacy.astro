@@ -14,7 +14,7 @@ const breadcrumbs = [
 ];
 
 const sections = [
-  { id: 'zero-data', title: '1. Zero Server-Side Data Collection' },
+  { id: 'zero-data', title: '1. What We Collect' },
   { id: 'client-processing', title: '2. Client-Side API Signal Processing' },
   { id: 'local-storage', title: '3. Browser Local Storage Usage' },
   { id: 'advertising', title: '4. Advertising & Third-Party Cookies' },
@@ -26,7 +26,7 @@ const sections = [
 
 <BaseLayout
   title="Privacy Policy — ControllerTesting.com"
-  description="ControllerTesting.com privacy policy. 100% client-side Gamepad API processing with zero data collection or tracking."
+  description="ControllerTesting.com privacy policy: controller input is processed in your browser and never uploaded. Google Analytics runs only with cookie consent; tool telemetry is opt-in."
   breadcrumbs={breadcrumbs}
   localized={false}
 >
@@ -81,10 +81,10 @@ const sections = [
             <section id="zero-data" class="scroll-mt-32">
               <h2 class="text-lg font-bold text-text-primary mb-3 flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                1. Zero Server-Side Data Collection
+                1. What We Collect
               </h2>
               <p>
-                ControllerTesting.com does not collect, record, transmit, or monetize any gamepad button presses, analog stick displacement vectors, serial identifiers, or mouse trajectory inputs. All calculation algorithms execute strictly inside your local browser JavaScript engine thread.
+                Raw controller and mouse input (button presses, stick positions, mouse movement) is processed in your browser and is never uploaded. We collect two things: (1) if you accept cookies, Google Analytics records anonymous page-view and usage statistics; (2) if you opt in to community telemetry inside a tool, we receive a test summary (controller model, drift and circularity values, and optionally polling rate) with no account, name or device serial attached.
               </p>
             </section>
 
@@ -137,7 +137,7 @@ const sections = [
                 5. Third-Party Services & Analytics
               </h2>
               <p>
-                We minimize external dependencies. We do not set non-essential tracking cookies. Standard server logs (such as HTTP request IP addresses) may be handled temporarily by CDN infrastructure strictly for DDoS mitigation and website security.
+                We use Google Analytics 4 to understand which pages and tools are used. It runs in Consent Mode: analytics cookies are set only after you click Accept in the cookie banner, and you can withdraw consent by clearing site data. Standard server logs (such as HTTP request IP addresses) may be handled temporarily by CDN infrastructure strictly for DDoS mitigation and website security.
               </p>
             </section>
 
@@ -163,7 +163,7 @@ const sections = [
                 7. Updates & Policy Modifications
               </h2>
               <p>
-                Any future enhancements to our diagnostic tools will strictly adhere to our core privacy commitment: zero hardware tracking, 100% client-side computation, and total user data sovereignty.
+                If we change what we collect, we will update this page and its date before the change takes effect. Raw controller input will continue to be processed only in your browser.
               </p>
             </section>
 

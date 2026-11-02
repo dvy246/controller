@@ -3,6 +3,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
 import Breadcrumbs from '@components/global/Breadcrumbs.astro';
+import compData from '@data/compatibilityData.json';
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
@@ -10,7 +11,7 @@ const breadcrumbs = [
 ];
 
 const title = "Compatibility Matrix | ControllerTesting";
-const description = "Check if your controller is supported on your OS and browser. Real-world empirical data on Gamepad API support for PS5, Xbox, and Switch controllers.";
+const description = "Check if your controller is supported on your OS and browser. Compiled notes on Gamepad API support for PS5, Xbox, and Switch controllers.";
 
 const schema = {
   "@context": "https://schema.org",
@@ -97,13 +98,38 @@ const schema = {
             </tr>
           </thead>
           <tbody id="matrix-body">
-            <!-- Rendered by JS -->
+            {compData.matrix.map((item) => (
+              <tr data-os={item.os} data-browser={item.browser} data-connection={item.connection}>
+                <td class="font-semibold text-primary">{item.controllerName}</td>
+                <td>
+                  <div class="flex items-center gap-2 text-small text-secondary">
+                    <span>{item.os}</span>
+                    <span class="text-tertiary">&bull;</span>
+                    <span>{item.browser}</span>
+                    <span class="text-tertiary">&bull;</span>
+                    <span class="uppercase tracking-wider text-micro">{item.connection.replace('_', ' ')}</span>
+                  </div>
+                </td>
+                <td>
+                  {item.status === 'full'
+                    ? <span class="badge-tag pass">Fully Supported</span>
+                    : item.status === 'partial'
+                      ? <span class="badge-tag warning">Partial Support</span>
+                      : <span class="badge-tag fail">Unsupported</span>}
+                </td>
+                <td class="text-small text-secondary">
+                  H: <span class={item.haptics === 'full' ? 'text-pass' : 'text-tertiary'}>{item.haptics}</span><br />
+                  G: <span class={item.gyro === 'full' ? 'text-pass' : 'text-tertiary'}>{item.gyro}</span>
+                </td>
+                <td class="text-small text-secondary max-w-[280px]">{item.notes}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
         
-        <div id="no-results" class="no-results sr-only" aria-live="polite">
-          <p class="text-secondary text-center py-12">No data available for this exact combination.</p>
-        </div>
+        <p id="no-results" class="no-results text-secondary text-center py-12" aria-live="polite" hidden>
+          We have no notes for that exact combination yet.
+        </p>
       </div>
 
     </div>
@@ -113,89 +139,33 @@ const schema = {
 </BaseLayout>
 
 <script>
-  import compData from '@data/compatibilityData.json';
+  // Rows are rendered at build time; the filters only show or hide them.
+  const filterOS = document.getElementById('filter-os') as HTMLSelectElement | null;
+  const filterBrowser = document.getElementById('filter-browser') as HTMLSelectElement | null;
+  const filterConnection = document.getElementById('filter-connection') as HTMLSelectElement | null;
+  const noResults = document.getElementById('no-results');
+  const rows = Array.from(document.querySelectorAll<HTMLTableRowElement>('#matrix-body tr'));
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const filterOS = document.getElementById('filter-os') as HTMLSelectElement;
-    const filterBrowser = document.getElementById('filter-browser') as HTMLSelectElement;
-    const filterConnection = document.getElementById('filter-connection') as HTMLSelectElement;
-    const btnReset = document.getElementById('btn-reset');
-    const tbody = document.getElementById('matrix-body') as HTMLElement;
-    const noResults = document.getElementById('no-results') as HTMLElement;
-
-    if (!tbody || !noResults || !filterOS || !filterBrowser || !filterConnection) return;
-
-    function renderMatrix() {
-      const os = filterOS.value;
-      const browser = filterBrowser.value;
-      const connection = filterConnection.value;
-
-      const filtered = compData.matrix.filter((item) => {
-        if (os !== 'all' && item.os !== os) return false;
-        // Basic matching logic; in reality browsers report as generic engines
-        if (browser !== 'all' && !item.browser.includes(browser)) return false;
-        if (connection !== 'all' && item.connection !== connection) return false;
-        return true;
-      });
-
-      tbody.innerHTML = '';
-
-      if (filtered.length === 0) {
-        noResults.classList.remove('sr-only');
-        return;
-      }
-      
-      noResults.classList.add('sr-only');
-
-      filtered.forEach(item => {
-        const tr = document.createElement('tr');
-        
-        // Status Badge
-        let statusBadge = '';
-        if (item.status === 'full') statusBadge = `<span class="badge-tag pass">Fully Supported</span>`;
-        else if (item.status === 'partial') statusBadge = `<span class="badge-tag warning">Partial Support</span>`;
-        else statusBadge = `<span class="badge-tag fail">Unsupported</span>`;
-
-        // Icons for connection
-        const connIcon = item.connection === 'usb' 
-          ? `<svg width="24" height="24" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.31"></path><path d="M14 9.3V1.99"></path><path d="M8.5 2h7"></path><path d="M14 9.3a4 4 0 1 1-4 0"></path><path d="M9 22v-4"></path><path d="M15 22v-4"></path><path d="M12 18v-4"></path></svg>`
-          : `<svg width="24" height="24" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 7 10 10-5 5V2l5 5L7 17"></path></svg>`;
-
-        tr.innerHTML = `
-          <td class="font-semibold text-primary">${item.controllerName}</td>
-          <td>
-            <div class="flex items-center gap-2 text-small text-secondary">
-              <span>${item.os}</span>
-              <span class="text-tertiary">&bull;</span>
-              <span>${item.browser}</span>
-              <span class="text-tertiary">&bull;</span>
-              <span class="flex items-center gap-1 uppercase tracking-wider text-micro">${connIcon} ${item.connection}</span>
-            </div>
-          </td>
-          <td>${statusBadge}</td>
-          <td class="text-small text-secondary">
-            H: <span class="${item.haptics === 'full' ? 'text-pass' : 'text-tertiary'}">${item.haptics}</span><br>
-            G: <span class="${item.gyro === 'full' ? 'text-pass' : 'text-tertiary'}">${item.gyro}</span>
-          </td>
-          <td class="text-small text-secondary max-w-[280px]">${item.notes}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    [filterOS, filterBrowser, filterConnection].forEach(el => {
-      el.addEventListener('change', renderMatrix);
+  function applyFilters() {
+    if (!filterOS || !filterBrowser || !filterConnection || !noResults) return;
+    const os = filterOS.value, browser = filterBrowser.value, connection = filterConnection.value;
+    let shown = 0;
+    rows.forEach((tr) => {
+      const match = (os === 'all' || tr.dataset.os === os)
+        && (browser === 'all' || (tr.dataset.browser ?? '').includes(browser))
+        && (connection === 'all' || tr.dataset.connection === connection);
+      tr.hidden = !match;
+      if (match) shown++;
     });
+    noResults.hidden = shown > 0;
+  }
 
-    btnReset?.addEventListener('click', () => {
-      filterOS.value = 'all';
-      filterBrowser.value = 'all';
-      filterConnection.value = 'all';
-      renderMatrix();
-    });
-
-    // Initial render
-    renderMatrix();
+  [filterOS, filterBrowser, filterConnection].forEach((el) => el?.addEventListener('change', applyFilters));
+  document.getElementById('btn-reset')?.addEventListener('click', () => {
+    if (filterOS) filterOS.value = 'all';
+    if (filterBrowser) filterBrowser.value = 'all';
+    if (filterConnection) filterConnection.value = 'all';
+    applyFilters();
   });
 </script>
 

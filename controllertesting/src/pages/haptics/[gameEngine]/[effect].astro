@@ -46,7 +46,10 @@ export function getStaticPaths() {
   const paths = [];
   for (const engine of engines) {
     for (const effect of effects) {
-      paths.push({ params: { gameEngine: engine, effect }, props: { en: engineNotes[engine], ef: effectNotes[effect] } });
+      paths.push({ params: { gameEngine: engine, effect }, props: {
+        en: Object.fromEntries(Object.entries(engineNotes[engine]).map(([k, v]) => [k, typeof v === 'string' ? v.replaceAll('{effect}', effect) : v])) as (typeof engineNotes)[string],
+        ef: effectNotes[effect],
+      } });
     }
   }
   return paths;
@@ -79,6 +82,7 @@ const faqs = [
 ---
 
 <ToolLayout
+  noindex
   title={title}
   description={description}
   toolName={toolName}

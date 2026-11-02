@@ -29,13 +29,13 @@ const faqs = [
     answer: "Most modern remap kits (like eXtremeRate RISE4) are 100% solderless for remapping standard face buttons (X, O, Triangle, Square, D-pad, Bumpers, Triggers). Soldering is only optional if you want to remap the L3/R3 thumbstick click or touchpad click."
   },
   {
-    question: "How does the WebHID auto-detector work?",
-    answer: "When connected via USB in a supported browser (Chrome, Edge, Opera), our WebHID detector queries the controller's hardware descriptor and firmware registers to automatically identify the internal motherboard generation without requiring controller disassembly."
+    question: "Can the WebHID reader identify my board revision?",
+    answer: "No. In Chrome, Edge or Opera the WebHID reader shows your controller's USB product name and product ID, which confirms the model (for example DualSense vs DualSense Edge). The internal board revision is not reported over USB, so you confirm it from the markings on the PCB using the identification guide."
   }
 ];
 
 const title = "Controller Mod & Repair Builder | Motherboard Compatibility Matrix";
-const description = "Select your controller and instantly find guaranteed compatible Hall Effect sticks, back paddles, and clicky triggers. Auto-detect motherboard revisions via WebHID.";
+const description = "Select your controller and instantly find Hall Effect sticks, back paddles, and clicky triggers listed for your motherboard revision, with a guide to identifying the board.";
 
 const schema = [
   {
@@ -70,7 +70,7 @@ const schema = [
       <div class="badge-tag mb-3">Hardware Compatibility Engine</div>
       <h1 class="page-title text-gradient">Controller Mod &amp; Repair Builder</h1>
       <p class="page-subtitle">
-        The PCPartPicker for gamepads. Eliminate guesswork, avoid torn ribbon cables, and find guaranteed compatible Hall Effect joysticks, back paddles, and clicky triggers for your exact controller revision.
+        The PCPartPicker for gamepads. Eliminate guesswork, avoid torn ribbon cables, and find Hall Effect joysticks, back paddles, and clicky triggers for your exact controller revision.
       </p>
     </header>
 
@@ -82,7 +82,7 @@ const schema = [
           Select Your Controller Platform
         </h2>
         <span class="text-xs font-mono text-[var(--color-text-tertiary)] uppercase tracking-wider">
-          Verified Compatibility
+          Compatibility Notes
         </span>
       </div>
 
@@ -104,7 +104,7 @@ const schema = [
                       {controller.motherboards.length} Board Revisions
                     </span>
                     <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-[var(--color-surface-2)] text-[var(--color-text-secondary)] border border-[var(--color-border-subtle)]">
-                      {controllerMods.length} Verified Upgrades
+                      {controllerMods.length} Listed Upgrades
                     </span>
                   </div>
 
@@ -175,9 +175,9 @@ const schema = [
           <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400 font-bold mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h3 class="text-base font-bold text-white mb-2">100% Guaranteed Fit</h3>
+          <h3 class="text-base font-bold text-white mb-2">Check Before You Buy</h3>
           <p class="text-xs text-[var(--color-text-secondary)] leading-relaxed">
-            Our matrix cross-checks every single component against verified FCC IDs, board revisions, and physical latch designs to ensure your upgrade works on the first try.
+            Board revisions differ in ribbon connectors and stick footprints. Open the shell and match the board marking before ordering parts, and confirm fit with the seller's own compatibility list.
           </p>
         </div>
       </div>

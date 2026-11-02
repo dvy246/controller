@@ -4,6 +4,7 @@
  * SEO Title: Controller Warranty Checker — Check DualSense, Xbox & Switch Warranty Policies
  */
 
+import HubIntro from '../components/global/HubIntro.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
@@ -26,9 +27,10 @@ const schema = {
   description: 'Step-by-step guide to check warranty coverage and file a claim with PlayStation, Xbox, or Nintendo.',
   articleSection: 'Warranty & RMA',
   author: {
-    '@type': 'Organization',
-    name: 'ControllerTesting Hardware Lab',
-    url: 'https://controllertesting.com'
+    '@type': 'Person',
+    '@id': 'https://controllertesting.com/about#divy-yadav',
+    name: 'Divy Yadav',
+    url: 'https://controllertesting.com/about'
   },
   publisher: {
     '@type': 'Organization',
@@ -61,6 +63,10 @@ const schema = {
           Check if your controller is still covered under manufacturer warranty for stick drift or broken switches, and export official diagnostic proof.
         </p>
       </header>
+      <HubIntro title="Before you open the controller">
+        <p>Check warranty first: opening the shell or replacing parts usually voids it, and stick drift is commonly handled as a defect. Have your purchase date and proof of purchase ready, and record the drift with the <a href="/test/controller/drift">Stick Drift test</a> so you can describe the fault precisely. Coverage length and process differ by manufacturer and country, so confirm the current terms on the manufacturer's support site.</p>
+      </HubIntro>
+
 
       <div class="warranty-grid">
         {warrantyPolicies.map((pol) => (

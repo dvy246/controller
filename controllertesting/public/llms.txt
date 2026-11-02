@@ -2,7 +2,7 @@
 
 > Free browser-based controller and gamepad diagnostic suite. Test stick drift, buttons, triggers, vibration, polling rate, deadzone, and more — no download required.
 
-ControllerTesting.com is an independent hardware diagnostic platform built on the Web Gamepad API, WebHID API, Web MIDI API, and Web Audio API. All processing is 100% client-side; no game controller input data leaves your device.
+ControllerTesting.com is an independent hardware diagnostic platform built on the Web Gamepad API, WebHID API, Web MIDI API, and Web Audio API. Tests run client-side; raw controller input is not uploaded. Optional, consent-gated telemetry sends anonymous test summaries, and Google Analytics runs only after cookie consent.
 
 ## Core Diagnostic Tools (39 total)
 
@@ -57,7 +57,7 @@ All reliability figures are explicitly labeled as **modeled reference baselines*
 ## Key Facts
 - 39 free browser-based diagnostic tools
 - 0 downloads or accounts required
-- 100% client-side: no controller input data leaves your device
+- Client-side tests: raw controller input is not uploaded (optional anonymous telemetry is opt-in)
 - Supports: PS5 DualSense, PS4 DualShock, Xbox Series, Switch Pro, Joy-Con, Fight Stick, Flight HOTAS, MIDI keyboards, PC mice
 - 1 locale at launch: English (en). Additional language support planned for future releases.
 

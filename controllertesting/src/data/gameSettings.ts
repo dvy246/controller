@@ -1,17 +1,11 @@
----
 /**
- * /settings/[game]/[controller] — Game-Specific Controller & Deadzone Settings
- * Per-game data: deadzone scales and community-standard starting points differ
- * by game (Fortnite uses a 0-50 slider, Rocket League 0-1 floats, etc.).
- * All values are labeled as starting points, not absolute truths — test first.
+ * gameSettings.ts — per-game controller settings data for /settings/[game].
+ * Merged from the retired /settings/[game]/[controller] and
+ * /deadzone-calculator/[game]/[controller] grids (301'd to /settings/[game]).
+ * All values are community starting points, not measured results.
  */
 
-import ToolLayout from '@layouts/ToolLayout.astro';
-import AuthorByline from '@components/global/AuthorByline.astro';
-import SettingsOptimizer from '@components/tools/controller/SettingsOptimizer.astro';
-
-export function getStaticPaths() {
-  const games = [
+const settingsGames = [
     {
       slug: 'fortnite',
       name: 'Fortnite',
@@ -144,16 +138,7 @@ export function getStaticPaths() {
     },
   ];
 
-  const controllers = [
-    { slug: 'ps5-dualsense', name: 'PS5 DualSense' },
-    { slug: 'xbox-wireless', name: 'Xbox Wireless Controller' },
-    { slug: 'switch-pro', name: 'Nintendo Switch Pro Controller' },
-  ];
-
-  // Per-controller context, rendered into every page so variants are distinct
-  // beyond the name swap. Facts are public hardware/platform knowledge; no
-  // measured figures are invented.
-  const controllerNotes = {
+const settingsControllerNotes = {
     'ps5-dualsense': {
       sticks: 'Potentiometer sticks. The DualSense exposes no system-level deadzone slider on PS5 — the only deadzone control lives in each game\'s own options menu.',
       connection: 'On PS5, wireless and USB report identical stick values; on PC, the pad shows as a generic gamepad unless you run Steam Input or DualSense feature drivers, so tune {game.name}\'s slider on the platform where you actually play.',
@@ -177,181 +162,84 @@ export function getStaticPaths() {
     },
   } as Record<string, { sticks: string; connection: string; drift: string; faq: string; deep: string }>;
 
-  return games.flatMap((game) =>
-    controllers.map((controller) => ({
-      params: { game: game.slug, controller: controller.slug },
-      props: { game, controller, note: controllerNotes[controller.slug] },
-    }))
-  );
-}
+const deadzoneGames = [
+    {
+      slug: 'fortnite', name: 'Fortnite', shape: 'radial' as const,
+      scale: '0–50 slider', range: '10% – 15%',
+      note: 'Fortnite defaults both stick deadzones to 15% (on its 0–50 scale). Most competitive players lower toward 10% or below on clean sticks; if your red indicator drifts, raise just enough to hide it.',
+      deep: 'Fortnite applies a radial deadzone to a 0–50 scale, which means each step is coarse relative to Apex or Valorant. Because building relies on tiny stick flicks, a deadzone set too high is felt as "sticky" stair-step movement between builds; a deadzone set too low registers phantom edits when your thumb settles. Fortnite\'s input also includes a separate legacy "exponential" vs "linear" response curve, which changes how the same deadzone feels across the stick\'s range — tune the curve first, then the deadzone.',
+      editorial: 'Fortnite\'s piece-by-piece building system is the real reason its deadzone discussion exists at all: pro builders and the "zero deadzone" movement grew out of Fortnite because building requires the stick to return to an exact neutral after every flick. Between build pieces your stick taps neutral hundreds of times a match, so any deadzone big enough to hide drift also rounds off those taps into slower, mushier builds. Test in Creative, not Battle Royale — a protected creative island gives you the same stick readings without a live storm timer pressuring the result.',
+    },
+    {
+      slug: 'apex-legends', name: 'Apex Legends', shape: 'axial' as const,
+      scale: '0–100 slider', range: '3% – 5%',
+      note: 'Apex has one of the tightest competitive deadzone scales in the industry — many pros run 0–4% on clean sticks. Long-range micro-aim makes even 2–3% drift visible in-game, so test before you tune.',
+      deep: 'Apex applies an axial deadzone on a 0–100 scale and layers it under its response-curve and per-ADS-sensitivity settings. The axial shape matters: it clips each axis independently, so a small center offset can rotate your aim during a tracking fight even when the stick is returned to rest. Apex also lets you set deadzone and "outer threshold" separately — keep the outer threshold near 100 so you do not trade corner reach for a cleaner center.',
+      editorial: 'Apex\'s axial deadzone is the direct result of the game\'s origins in the Titanfall movement lineage, where precise air-strafe control demanded independent axis handling. In practice that means testing the left and right sticks separately in Apex rather than expecting a single symmetric result — a fight stick that is fine on the right can still have a worn left axis from slide-jump spam. Use the firing range (not an arena match) to measure: the dummies give you a stationary crosshair reference for center drift that a live fight will never show.',
+    },
+    {
+      slug: 'warzone', name: 'Warzone', shape: 'radial' as const,
+      scale: '0–100 slider', range: '5% – 10%',
+      note: 'Warzone exposes separate minimum and maximum stick deadzones. The community standard starts around 5%, raised only to cover visible drift; keep the maximum low so outer-edge turning stays responsive.',
+      deep: 'Warzone exposes separate minimum and maximum stick deadzones — the minimum hides center drift while the maximum lets you tune the outer edge. Since Warzone uses a radial shape on a 0–100 scale, the minimum behaves like a true circle: any stick deflection inside it is ignored entirely. Because the game is heavy on aim-down-sights tracking, an aggressive minimum that is one or two units above your noise floor is the common competitive target, and the maximum is best left just under 100 to preserve corner speed.',
+      editorial: 'Warzone\'s loadout meta changed how the community thinks about deadzone because of the slide-cancel and drop-shot mechanics baked into its movement system — both require the left stick to hit and release full deflection repeatedly, which wears the center faster than pure aiming. The practical result is that Warzone players often end up with a slightly higher minimum than they would run in a pure aim trainer. Load into a private match with no AI, set the slider just above your measured noise, and verify with a full sprint-slide-cancel cycle before you trust the number in an actual lobby.',
+    },
+    {
+      slug: 'rocket-league', name: 'Rocket League', shape: 'radial' as const,
+      scale: '0–1 float', range: '0.05 – 0.10',
+      note: 'Rocket League uses 0–1 float deadzones plus a separate dodge deadzone (~0.50). The stick deadzone standard is 0.05–0.10, and the square-vs-circle shape toggle changes how diagonal input is read.',
+      deep: 'Rocket League is the only game in this set that tunes on a 0–1 float scale and pairs the stick deadzone with a separate dodge deadzone around 0.50. The "controller deadzone" here affects all analog input, while the dodge deadzone governs when a flick registers a flip — so a tight stick deadzone does not make dodging twitchier by itself. Rocket League also offers square and circle input shapes: square reads the full corner for maximum diagonal power (used for ceiling shots), while circle is more predictable for aerials. Match the shape to your play style before finalizing the deadzone value.',
+      editorial: 'Rocket League is the outlier in this set because the stick input is not about aiming at all — it is about commanding a car, and the game\'s famous "square vs circle" shape toggle only makes sense once you understand that: square reads the full corner so your car turns harder diagonally, while circle keeps diagonal magnitude consistent for air roll control. Because the deadzone is a 0–1 float, even a 0.03 difference changes your aerial response audibly. Warm up in free play and hit the same wall-to-air dribble a few times per setting; the deadzone that feels clean in the air is the one that wins.',
+    },
+    {
+      slug: 'valorant', name: 'Valorant', shape: 'radial' as const,
+      scale: '0–100 slider', range: '8% – 15%',
+      note: 'Valorant\'s controller support exposes a stick deadzone on a 0–100 scale; the community starting point is ~10%, raised only if your stick drifts. Tactical shooters punish a drifting stick hardest — a center offset moves your crosshair off a held angle.',
+      deep: 'Valorant\'s controller support is still evolving, and its radial deadzone on a 0–100 scale sits toward the higher end of the spectrum, with community values typically starting around 10%. Because a tactical shooter is about holding angles, even a small at-rest offset drags your crosshair off a pixel when you release the stick — the worst case in this set. Valorant also separates aim-assist strength and pre-aim assist from the deadzone, so a clean stick can run a lower deadzone without losing the game\'s assist behavior.',
+      editorial: 'Valorant\'s controller support arrived late and is still shaped by the mouse-and-keyboard DNA of the PC game, which is why the deadzone debate on it is louder than on any shooter in this set: controller players are fighting for every pixel the mouse never has to give up. Because the game rewards holding precise angles, a center drift that would be a nuisance in Apex becomes a whiffed operator shot in Valorant. Set your deadzone in the range with a bot, hold a long angle, and confirm the crosshair does not creep; the tightest number that passes that check is the competitive one.',
+    },
+  ];
 
-const { game, controller, note } = Astro.props;
+export const CONTROLLERS = [
+  { slug: 'ps5-dualsense', name: 'PS5 DualSense' },
+  { slug: 'xbox-wireless', name: 'Xbox Wireless Controller' },
+  { slug: 'switch-pro', name: 'Nintendo Switch Pro Controller' },
+] as const;
 
-const breadcrumbs = [
-  { name: 'Settings', url: '/settings' },
-  { name: game.name },
-  { name: controller.name },
-];
+// Controllers covered per game: only platforms where the game actually ships
+// (CS2, Valorant, Halo Infinite and Warzone have no Switch release).
+const GAME_CONTROLLERS: Record<string, string[]> = {
+  'fortnite': ['ps5-dualsense', 'xbox-wireless', 'switch-pro'],
+  'apex-legends': ['ps5-dualsense', 'xbox-wireless', 'switch-pro'],
+  'warzone': ['ps5-dualsense', 'xbox-wireless'],
+  'rocket-league': ['ps5-dualsense', 'xbox-wireless', 'switch-pro'],
+  'street-fighter-6': ['ps5-dualsense', 'xbox-wireless', 'switch-pro'],
+  'valorant': ['ps5-dualsense', 'xbox-wireless'],
+  'counter-strike-2': ['ps5-dualsense', 'xbox-wireless'],
+  'overwatch-2': ['ps5-dualsense', 'xbox-wireless', 'switch-pro'],
+  'halo-infinite': ['ps5-dualsense', 'xbox-wireless'],
+  'elden-ring': ['ps5-dualsense', 'xbox-wireless'],
+};
 
-const faqs = [
-  {
-    question: `What is the best stick deadzone for ${game.name} on the ${controller.name}?`,
-    answer: `For ${game.name}, the deadzone scale is a ${game.deadzoneScale} and the community-standard starting point is ${game.deadzoneRange}. ${game.deadzoneNote} Every stick is different — measure yours with our Stick Drift Detector before tuning.`,
-  },
-  {
-    question: `How do I test my ${controller.name} for stick drift before playing ${game.name}?`,
-    answer: `Connect your ${controller.name} via USB or Bluetooth, open our free Stick Drift Detector, and check the at-rest offset on both sticks. If drift is above the ${game.deadzoneRange} starting point, raise your deadzone in ${game.name} — or clean/repair the stick first (see our repair guides).`,
-  },
-  {
-    question: `Which stick response curve should I use in ${game.name}?`,
-    answer: game.responseCurve === 'N/A'
-      ? `${game.name} does not expose a stick response curve setting. ${game.curveNote}`
-      : `${game.responseCurve} is the common competitive choice in ${game.name}. ${game.curveNote}`,
-  },
-  {
-    question: `Any ${controller.name} specifics to know before tuning ${game.name}?`,
-    answer: `Yes — ${note.faq}`,
-  },
-];
----
+export type ControllerNote = { slug: string; name: string; sticks: string; connection: string };
 
-<ToolLayout
-  title={`${game.name} Settings for ${controller.name.replace('Nintendo Switch Pro Controller', 'Switch Pro').replace('Xbox Wireless Controller', 'Xbox')} | CT`}
-  description={`Optimal deadzone & sensitivity for ${game.name} on ${controller.name}. Measure your stick drift before tuning your ${game.deadzoneScale}.`}
-  toolName={`${game.name} Controller Settings`}
-  category="Game Settings"
-  categoryUrl="/settings"
-  breadcrumbs={breadcrumbs}
-  faqs={faqs}
->
-  <Fragment slot="tool">
-    <div class="settings-byline">
-      <AuthorByline
-        datePublished="2026-08-02"
-        dateModified="2026-08-10"
-        readingTime="3 min read"
-      />
-    </div>
-    <div class="settings-card card-base">
-      <div class="settings-header">
-        <span class="badge-accent">COMMUNITY-STANDARD STARTING POINTS</span>
-        <h2 class="settings-title">{game.name} Settings on {controller.name}</h2>
-      </div>
+export const GAMES = settingsGames.map((game) => {
+  const dz = deadzoneGames.find((g) => g.slug === game.slug);
+  const controllers: ControllerNote[] = (GAME_CONTROLLERS[game.slug] ?? []).map((slug) => {
+    const c = CONTROLLERS.find((x) => x.slug === slug)!;
+    const note = settingsControllerNotes[slug];
+    return {
+      slug,
+      name: c.name,
+      sticks: note.sticks,
+      connection: note.connection.replaceAll('{game.name}', game.name),
+    };
+  });
+  return {
+    ...game,
+    controllers,
+    deadzone: dz ? { shape: dz.shape, note: dz.note, deep: dz.deep, editorial: dz.editorial } : null,
+  };
+});
 
-      <div class="settings-grid">
-        <div class="setting-item">
-          <span class="s-label">Left Stick Deadzone</span>
-          <span class="s-val text-gradient">{game.deadzoneRange}</span>
-        </div>
-        <div class="setting-item">
-          <span class="s-label">Right Stick Deadzone</span>
-          <span class="s-val text-gradient">{game.deadzoneRange}</span>
-        </div>
-        <div class="setting-item">
-          <span class="s-label">Deadzone Scale</span>
-          <span class="s-val mono">{game.deadzoneScale}</span>
-        </div>
-        <div class="setting-item">
-          <span class="s-label">Response Curve</span>
-          <span class="s-val mono">{game.responseCurve}</span>
-        </div>
-        <div class="setting-item">
-          <span class="s-label">Sensitivity</span>
-          <span class="s-val mono">{game.sensNote}</span>
-        </div>
-        <div class="setting-item">
-          <span class="s-label">Triggers</span>
-          <span class="s-val mono">{game.triggerNote}</span>
-        </div>
-      </div>
-
-      <p class="settings-note">
-        <strong>About these numbers:</strong> {game.deadzoneNote} {game.curveNote} These are starting points, not
-        guarantees — your controller\'s drift profile is unique.
-      </p>
-      <p class="settings-note">
-        <strong>{controller.name}:</strong> {note.sticks} {note.connection}
-      </p>
-      <p class="settings-note">{note.deep}</p>
-      {game.editorial && <p class="settings-note settings-editorial">{game.editorial}</p>}
-    </div>
-
-    <SettingsOptimizer
-      gameName={game.name}
-      gameRange={game.deadzoneRange}
-      controllerName={controller.name}
-    />
-  </Fragment>
-
-  <Fragment slot="results">
-    <div class="results-summary">
-      <h2 class="section-title">Test Before You Tune</h2>
-      <p class="results-text">
-        {game.driftRiskNote} Run the 2-minute Stick Drift Detector first — if your {controller.name} shows more drift
-        than the {game.deadzoneRange} starting point, fixing the stick beats raising the deadzone.
-      </p>
-    </div>
-  </Fragment>
-
-  <Fragment slot="export">
-    <div class="export-banner">
-      <div>
-        <h3 class="text-h3">Measure your stick drift now</h3>
-        <p class="export-desc">Get your exact drift % (0.1% precision) before applying {game.name} settings.</p>
-      </div>
-      <div class="export-buttons">
-        <a href="/test/controller/drift" class="btn-primary">Test Stick Drift</a>
-      </div>
-    </div>
-  </Fragment>
-
-  <Fragment slot="related-tools">
-    <a href="/test/controller/deadzone" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Deadzone Visualizer</h3>
-      <p class="tool-desc">Find inner & outer threshold limits.</p>
-    </a>
-    <a href="/test/controller/drift" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Stick Drift Detector</h3>
-      <p class="tool-desc">Test analog stick drift in real-time.</p>
-    </a>
-    <a href="/fix/stick-drift" class="tool-card card-base card-hover">
-      <h3 class="tool-name">Stick Drift Repair Guides</h3>
-      <p class="tool-desc">12 step-by-step controller fixes.</p>
-    </a>
-  </Fragment>
-
-  <Fragment slot="content">
-    <h2>Optimizing {controller.name} Deadzones for {game.name}</h2>
-    <p>
-      {game.name} uses a {game.deadzoneScale} deadzone scale, so the same percentage means different physical stick
-      travel than other games. Set the deadzone just high enough to cover your stick's at-rest noise: too low and you
-      get {game.driftRiskNote.toLowerCase()} too high and your aim feels spongy.
-    </p>
-    <p>
-      {note.drift}
-    </p>
-    <h2>Connection mode matters</h2>
-    <p>
-      Wireless controllers report at the same deadzone values but can add input latency. For the most precise tuning,
-      connect via USB first, verify your stick, then match the settings wirelessly.
-    </p>
-  </Fragment>
-</ToolLayout>
-
-<style>
-  .settings-byline { margin-bottom: 1rem; }
-  .settings-card { padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
-  .settings-header { display: flex; flex-direction: column; gap: 0.5rem; }
-  .badge-accent { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: var(--color-accent); letter-spacing: 0.08em; }
-  .settings-title { font-size: 1.5rem; font-weight: 800; color: var(--color-text-primary); }
-  .settings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
-  .setting-item { background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.375rem; text-align: center; }
-  .s-label { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; color: var(--color-text-tertiary); letter-spacing: 0.06em; }
-  .s-val { font-size: 1.25rem; font-weight: 700; color: var(--color-text-primary); }
-  .settings-note { font-size: var(--text-small); color: var(--color-text-secondary); line-height: 1.6; background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1rem; }
-  .results-summary { display: flex; flex-direction: column; gap: 0.5rem; }
-  .results-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.6; }
-  .export-banner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
-  .export-desc { font-size: var(--text-small); color: var(--color-text-secondary); }
-  @media (max-width: 768px) { .settings-grid { grid-template-columns: 1fr; } }
-</style>
+export type GameSettings = (typeof GAMES)[number];

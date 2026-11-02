@@ -5,6 +5,7 @@
  * Hub index listing all mouse tools.
  */
 
+import HubIntro from '../../../components/global/HubIntro.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
@@ -70,6 +71,10 @@ function getMouseIcon(href: string) {
           Diagnose mouse polling rate (Hz), click latency, CPS speed, DPI accuracy, and double-clicking switch faults. 100% browser-based.
         </p>
       </header>
+      <HubIntro title="Which mouse test do you need?" faqs={[{"question": "Is CPI the same as DPI?", "answer": "For mice, yes in practice: CPI (counts per inch) is the technically correct term and DPI is the common one. A 400 CPI setting is the same as 400 DPI."}, {"question": "Can a browser measure an 8000Hz mouse?", "answer": "Only partly. Browsers can merge high-rate movement events before a page sees them, so a polling test can read lower than the mouse's real rate. Treat a browser reading as a lower bound and use the manufacturer's software to confirm high rates."}]}>
+        <p>These tests read your mouse through normal browser pointer events, so they work with any mouse and need no driver. Use the <a href="/test/mouse/double-click">Double-Click test</a> if single clicks register twice (a worn switch), the <a href="/test/mouse/polling-rate">Polling Rate test</a> to see how often the browser receives movement updates, and the <a href="/test/mouse/dpi">DPI Analyzer</a> to check the real sensitivity against what your software claims.</p>
+      </HubIntro>
+
 
       <div class="grid-tools">
         {mouseTools.map((tool) => (

@@ -15,7 +15,9 @@ export interface Props {
   items: BreadcrumbItem[];
 }
 
-const { items } = Astro.props;
+const { items: rawItems } = Astro.props;
+// The Home crumb is always rendered below; drop a duplicate passed in by the page.
+const items = rawItems.filter((item, index) => !(index === 0 && (item.url === '/' || item.name === 'Home')));
 ---
 
 

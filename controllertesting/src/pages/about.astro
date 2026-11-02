@@ -1,7 +1,6 @@
 ---
 /**
- * /about — About Us & Testing Methodology
- * SEO Title: About ControllerTesting.com — Free Gamepad & Mouse Diagnostic Platform
+ * /about — who runs ControllerTesting.com, how the tools work, and their limits.
  */
 
 import BaseLayout from '@layouts/BaseLayout.astro';
@@ -13,117 +12,98 @@ const breadcrumbs = [
   { name: 'About Us' },
 ];
 
-const coreValues = [
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  url: 'https://controllertesting.com/about',
+  mainEntity: {
+    '@type': 'Person',
+    '@id': 'https://controllertesting.com/about#divy-yadav',
+    name: 'Divy Yadav',
+    url: 'https://controllertesting.com/about',
+    worksFor: { '@id': 'https://controllertesting.com/#organization' },
+  },
+};
+
+const sections = [
   {
-    title: '100% Client-Side Processing',
-    desc: 'All hardware signals, analog coordinates, and button press telemetry are computed live inside your browser using standard HTML5 APIs. Zero data ever leaves your device.',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="2"/><path d="M9 12l2 2 4-4" stroke="#34D399" stroke-width="2" stroke-linecap="round"/></svg>`,
-    badge: 'Privacy Guarantee',
-    badgeColor: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400',
+    title: 'How the tools work',
+    body: [
+      'Every test reads your controller through the browser\'s standard Gamepad API (and Web MIDI or Web Audio where a tool needs them). Stick positions, button presses and trigger values are processed in your browser; nothing is installed and no account is needed.',
+      'The browser decides how often it hands input to a web page, so timing figures such as polling rate are "browser-observed": they can read lower than what the controller sends over USB. Each tool page has a "How this test works & its limits" section, and the methodology page explains the math.',
+    ],
   },
   {
-    title: 'Sub-Millisecond Precision',
-    desc: 'Engineered with 60Hz/120Hz canvas render loops and 0.1% axis sampling threshold for professional esports players, speedrunners, and hardware repair technicians.',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#3B82F6" stroke-width="2"/><path d="M12 7v5l3 3" stroke="#60A5FA" stroke-width="2" stroke-linecap="round"/></svg>`,
-    badge: 'Esports Grade',
-    badgeColor: 'border-blue-500/30 bg-blue-500/10 text-blue-400',
+    title: 'What we measure and what we estimate',
+    body: [
+      'Drift, circularity, button and trigger results come from your own controller, live. The reliability pages are different: they show modeled reference estimates, labeled as such, not measurements from a large population of controllers. They will only become measured figures as consenting visitors contribute anonymous drift samples.',
+      'We do not publish invented scores, lab results or testimonials. If a figure on this site cannot be traced to your own test, a cited source or a labeled estimate, treat it as a bug and tell us.',
+    ],
   },
   {
-    title: 'Universal Peripheral Coverage',
-    desc: 'Instant native support for PS5 DualSense, PS4, Xbox Series X/S, Nintendo Switch Pro, Joy-Cons, Fight Sticks, Flight HOTAS, WebMIDI keyboards, and 8KHz gaming mice.',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="6" width="20" height="12" rx="4" fill="#8B5CF6" fill-opacity="0.2" stroke="#8B5CF6" stroke-width="2"/><circle cx="8" cy="12" r="2" fill="#8B5CF6"/><circle cx="16" cy="12" r="2" fill="#EC4899"/></svg>`,
-    badge: '39+ Tools',
-    badgeColor: 'border-purple-500/30 bg-purple-500/10 text-purple-400',
-  },
-  {
-    title: 'Empirical Reliability Database',
-    desc: 'Modeled reference baselines for comparing Hall-Effect vs potentiometer degradation across 12-month wear cycles — every consenting tester adds a real data point to the community curve.',
-    icon: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="#F59E0B" stroke-width="2"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" fill="#F59E0B" fill-opacity="0.2" stroke="#FBBF24" stroke-width="2"/></svg>`,
-    badge: 'Modeled Baselines',
-    badgeColor: 'border-amber-500/30 bg-amber-500/10 text-amber-400',
+    title: 'Privacy and how the site is funded',
+    body: [
+      'Controller input never leaves your browser unless you opt in to anonymous test telemetry. Google Analytics and Google AdSense run only according to your cookie choice; ads are how the site stays free. Details are in the privacy policy.',
+    ],
   },
 ];
 ---
 
 <BaseLayout
   title="About ControllerTesting.com"
-  description="Learn about ControllerTesting.com: a 100% free, private, client-side controller and mouse diagnostic platform for gamers and hardware reviewers."
+  description="Who builds ControllerTesting.com, how its browser-based controller tests work, what they can and cannot measure, and how the site is funded."
   breadcrumbs={breadcrumbs}
+  schema={personSchema}
   localized={false}
 >
   <Header />
 
   <main id="main-content" class="pt-24 pb-20 bg-surface-0 min-h-screen">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6">
-      
-      <!-- Breadcrumbs -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+
       <div class="mb-6">
         <Breadcrumbs items={breadcrumbs} />
       </div>
 
-      <!-- Hero Header Section -->
-      <header class="relative rounded-2xl bg-surface-1 border border-surface-2 p-8 sm:p-12 mb-12 overflow-hidden">
-        <div class="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="relative z-10 max-w-3xl">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono mb-4 uppercase tracking-wider">
-            <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-            Independent Hardware Engineering
-          </div>
-          <h1 class="text-3xl sm:text-5xl font-extrabold text-text-primary tracking-tight mb-4 leading-tight">
-            Empowering Gamers With <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">Zero-Latency</span> Diagnostics
-          </h1>
-          <p class="text-base sm:text-lg text-text-secondary leading-relaxed max-w-2xl">
-            ControllerTesting.com was built to solve a simple problem: diagnosing stick drift, input delay, and button wear should never require installing heavy software, creating user accounts, or paying for basic checkups.
-          </p>
-        </div>
+      <header class="rounded-2xl bg-surface-1 border border-surface-2 p-8 sm:p-12 mb-8">
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-text-primary tracking-tight mb-4 leading-tight">
+          About ControllerTesting.com
+        </h1>
+        <p class="text-base sm:text-lg text-text-secondary leading-relaxed">
+          ControllerTesting.com is a set of free, browser-based tests for game controllers, mice and keyboards. It
+          exists because checking a controller for stick drift or a dead button should not require installing
+          software, creating an account or paying for a basic checkup.
+        </p>
       </header>
 
-      <!-- Value Pillars Bento Grid -->
-      <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-        {coreValues.map((value) => (
-          <div class="group relative rounded-xl bg-surface-1 border border-surface-2 p-6 sm:p-8 hover:border-surface-3 transition-all duration-200 flex flex-col justify-between">
-            <div>
-              <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 rounded-lg bg-surface-2 border border-surface-3 flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <Fragment set:html={value.icon} />
-                </div>
-                <span class={`text-xs font-mono px-2.5 py-1 rounded-full border ${value.badgeColor}`}>
-                  {value.badge}
-                </span>
-              </div>
-              <h2 class="text-xl font-bold text-text-primary mb-2 tracking-tight">
-                {value.title}
-              </h2>
-              <p class="text-sm text-text-secondary leading-relaxed">
-                {value.desc}
-              </p>
-            </div>
-          </div>
-        ))}
+      <section id="divy-yadav" class="rounded-2xl bg-surface-1 border border-surface-2 p-8 sm:p-10 mb-8">
+        <h2 class="text-2xl font-bold text-text-primary mb-4 tracking-tight">Who runs it</h2>
+        <p class="text-text-secondary leading-relaxed">
+          The site is built and maintained by <strong class="text-text-primary">Divy Yadav</strong>, who writes the
+          tools, the guides and the methodology, and answers the contact inbox.
+        </p>
+        <!-- BIO: add 2–3 true first-person sentences: background, which controllers you own and test on, why you built the site. -->
       </section>
 
-      <!-- Detailed Engineering & Mission Block -->
-      <section class="rounded-2xl bg-surface-1 border border-surface-2 p-8 sm:p-12">
-        <h2 class="text-2xl font-bold text-text-primary mb-6 tracking-tight flex items-center gap-3">
-          <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
-          Our Technical Architecture & Philosophy
-        </h2>
-        <div class="space-y-6 text-text-secondary text-sm sm:text-base leading-relaxed border-t border-surface-2 pt-6">
-          <p>
-            Modern controllers rely on complex potentiometer micro-sensors and Hall-Effect magnetic sensors that deteriorate over thousands of gaming hours. Standard operating systems provide basic game controller test panels, but lack precise circularity calculation, drift timeline telemetry, and pressure linearity curve visualization.
-          </p>
-          <p>
-            We developed a lightweight, standard-compliant browser suite utilizing HTML5 Gamepad API polling loops capable of running up to 1000Hz (1ms interval sampling). By computing mathematical range-of-motion maps directly on your GPU/CPU thread, we guarantee instant response times with total privacy.
-          </p>
-          <div class="pt-4 flex flex-wrap gap-4">
-            <a href="/test/controller/full-diagnostic" class="btn-primary text-sm px-5 py-2.5 rounded-lg font-medium inline-flex items-center gap-2">
-              Run Full Diagnostic
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-            <a href="/reliability/dashboard" class="btn-secondary text-sm px-5 py-2.5 rounded-lg font-medium inline-flex items-center gap-2">
-              View Reliability Data
-            </a>
+      {sections.map((section) => (
+        <section class="rounded-2xl bg-surface-1 border border-surface-2 p-8 sm:p-10 mb-8">
+          <h2 class="text-2xl font-bold text-text-primary mb-4 tracking-tight">{section.title}</h2>
+          <div class="space-y-4 text-text-secondary leading-relaxed">
+            {section.body.map((p) => <p>{p}</p>)}
           </div>
+        </section>
+      ))}
+
+      <section class="rounded-2xl bg-surface-1 border border-surface-2 p-8 sm:p-10">
+        <h2 class="text-2xl font-bold text-text-primary mb-4 tracking-tight">Contact</h2>
+        <p class="text-text-secondary leading-relaxed mb-6">
+          Found a wrong number, a broken test or a controller we handle badly? Reports like that are the most useful
+          thing you can send.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="/contact" class="btn-primary text-sm px-5 py-2.5 rounded-lg font-medium">Contact</a>
+          <a href="/test/methodology" class="btn-secondary text-sm px-5 py-2.5 rounded-lg font-medium">Testing methodology</a>
+          <a href="/privacy" class="btn-secondary text-sm px-5 py-2.5 rounded-lg font-medium">Privacy policy</a>
         </div>
       </section>
 

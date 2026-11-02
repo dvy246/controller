@@ -10,10 +10,29 @@ import Footer from '@components/global/Footer.astro';
 import Breadcrumbs from '@components/global/Breadcrumbs.astro';
 
 const controllers = [
-  { slug: 'ps5-dualsense', name: 'PS5 DualSense', tag: 'Potentiometer sticks' },
-  { slug: 'ps4-dualshock-4', name: 'PS4 DualShock 4', tag: 'Potentiometer sticks' },
-  { slug: 'xbox-wireless', name: 'Xbox Wireless Controller', tag: 'XInput / Bluetooth' },
-  { slug: 'switch-pro', name: 'Nintendo Switch Pro Controller', tag: 'HID / Bluetooth' },
+  { slug: 'ps5-dualsense', name: 'PS5 DualSense', tag: 'Bluetooth / USB-C' },
+  { slug: 'ps4-dualshock-4', name: 'PS4 DualShock 4', tag: 'Bluetooth / micro-USB' },
+  { slug: 'xbox-wireless', name: 'Xbox Wireless Controller', tag: 'Xbox Wireless / Bluetooth / USB' },
+  { slug: 'switch-pro', name: 'Nintendo Switch Pro Controller', tag: 'Bluetooth / USB-C' },
+];
+
+// Questions taken from real Search Console queries for these guides.
+const faqs = [
+  {
+    question: 'How do I connect a Switch Pro Controller to Windows?',
+    answer: 'Hold the SYNC button on the top edge until the player LEDs run, then open Settings → Bluetooth & devices → Add device → Bluetooth and select "Pro Controller". Windows pairs it, but most games only read it through Steam Input, so turn on Steam Input for Switch controllers in Steam → Settings → Controller.',
+    link: { url: '/connect/switch-pro/pc', label: 'Switch Pro Controller on PC guide' },
+  },
+  {
+    question: 'Does the Xbox Wireless Adapter work on macOS?',
+    answer: 'Microsoft documents the Xbox Wireless Adapter for Windows PCs only, and Apple\'s instructions cover Bluetooth pairing. On a Mac, pair a Bluetooth-capable Xbox controller (Model 1708 or a Series X|S controller) from System Settings → Bluetooth instead.',
+    link: { url: '/connect/xbox-wireless/mac', label: 'Xbox controller on macOS guide' },
+  },
+  {
+    question: 'Do DualSense adaptive triggers and haptics work on PC?',
+    answer: 'Sony says haptic feedback on PC needs a USB connection and a game that supports it, and adaptive triggers also depend on game support. Over Bluetooth the DualSense still works as a standard controller.',
+    link: { url: '/test/controller/triggers', label: 'Trigger pressure tester' },
+  },
 ];
 
 const platforms = [
@@ -36,13 +55,23 @@ const itemListSchema = {
     }))
   ),
 };
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.question,
+    acceptedAnswer: { '@type': 'Answer', text: f.answer },
+  })),
+};
 ---
 
 <BaseLayout
   title="Connect & Pair | ControllerTesting"
   description="Step-by-step connection and pairing guides for PS5 DualSense, PS4 DualShock 4, Xbox Wireless, and Switch Pro controllers on Windows, macOS, and Steam Deck."
   breadcrumbs={breadcrumbs}
-  schema={itemListSchema}
+  schema={[itemListSchema, faqSchema]}
 
   localized={false}>
   <Header />
@@ -55,9 +84,24 @@ const itemListSchema = {
         <span class="badge-tag">Connect &amp; Pair</span>
         <h1 class="text-h1 mb-2">Connect your controller on any device</h1>
         <p class="hub-subtitle">
-          Which controller, connected to which platform? Pick a pad below, then pick your PC, Mac, or Steam Deck.
-          Every guide ends with a verification test so you know it actually worked.
+          Pick the guide that matches both your controller and the device you're connecting it to, because the
+          pairing method changes with each combination.
         </p>
+        <div class="hub-intro">
+          <p class="hub-text">
+            On Windows, the Xbox Wireless Controller works natively over USB, the Xbox Wireless Adapter or Bluetooth.
+            PlayStation and Nintendo controllers pair over Bluetooth too, but many games only see them through Steam Input.
+            On a Mac, support depends on your macOS version: the DualShock 4 needs Catalina or later, the DualSense needs
+            Big Sur 11.3, and the Switch Pro Controller needs Ventura 13. On Steam Deck, all four pair from
+            Settings → Bluetooth and Steam Input handles the layout, though Valve notes that many Xbox controllers need a
+            firmware update first.
+          </p>
+          <p class="hub-text">
+            Each guide covers the button combination that starts pairing, the wired option, the problems people commonly
+            hit with that pair, and links to the official Sony, Microsoft, Apple, Nintendo or Valve support page it is
+            based on. When you're paired, run a tester to check every input.
+          </p>
+        </div>
       </header>
 
       <div class="hub-grid card-base">
@@ -77,6 +121,17 @@ const itemListSchema = {
           </div>
         ))}
       </div>
+
+      <section class="hub-faq" aria-labelledby="hub-faq-title">
+        <h2 id="hub-faq-title" class="section-title">Common pairing questions</h2>
+        {faqs.map((f) => (
+          <div class="hub-faq-item">
+            <h3 class="hub-faq-q">{f.question}</h3>
+            <p class="hub-text">{f.answer}</p>
+            <a class="hub-link" href={f.link.url}>{f.link.label} →</a>
+          </div>
+        ))}
+      </section>
 
       <div class="hub-cta card-base">
         <div>
@@ -113,6 +168,12 @@ const itemListSchema = {
   .hub-cta { padding: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap; }
   .hub-cta-buttons { display: flex; gap: 0.75rem; flex-wrap: wrap; }
   .section-title { margin-bottom: 0.5rem; }
+  .hub-intro { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+  .hub-text { font-size: 1rem; color: var(--color-text-secondary); line-height: 1.7; margin: 0; }
+  .hub-faq { display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 2.5rem; max-width: 760px; }
+  .hub-faq-item { display: flex; flex-direction: column; gap: 0.375rem; border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 1.25rem; }
+  .hub-faq-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .hub-faq-q { font-size: 1rem; font-weight: 700; color: var(--color-text-primary); }
   @media (max-width: 720px) { .hub-grid { font-size: 0.875rem; } }
   @media (max-width: 640px) { .hub-cta { flex-direction: column; align-items: flex-start; } }
 </style>

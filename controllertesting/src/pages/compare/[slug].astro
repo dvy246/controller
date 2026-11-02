@@ -17,74 +17,74 @@ export function getStaticPaths() {
     {
       slug: 'dualsense-vs-xbox-series',
       title: 'PS5 DualSense vs Xbox Series Wireless Controller',
-      cA: { name: 'PS5 DualSense', rel: 'ps5-dualsense', score: 88, latency: '~3.1 ms', polling: '~1000 Hz wired / ~250 Hz BT', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
-      cB: { name: 'Xbox Series Controller', rel: 'xbox-series-x', score: 84, latency: '~6.8 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Potentiometer', price: '~$59.99 MSRP' },
+      cA: { name: 'PS5 DualSense', rel: 'ps5-dualsense', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
+      cB: { name: 'Xbox Series Controller', rel: 'xbox-series-x', sensor: 'Potentiometer', price: '~$59.99 MSRP' },
       driftAnswer: 'Both the PS5 DualSense and Xbox Series controller use potentiometer thumbstick modules, and both have a well-documented history of stick drift over heavy use. Neither offers user-swappable stick modules on the standard models — replaceable modules are reserved for the DualSense Edge and Xbox Elite Series 2.',
-      sourceNote: 'Figures are approximate. Latency and polling rate vary with connection mode (Bluetooth vs wired vs 2.4GHz dongle), platform, and individual units; values compiled from manufacturer specifications and third-party community measurements, not from our own lab tests.',
+      sourceNote: 'MSRP is the launch list price; street prices vary. Stick sensor types come from manufacturer specifications and public teardowns. We do not publish latency or polling figures here because they change with connection mode, platform and firmware; measure your own controller with the polling rate test.',
     },
     {
       slug: 'dualsense-edge-vs-xbox-elite-2',
       title: 'DualSense Edge vs Xbox Elite Series 2',
-      cA: { name: 'DualSense Edge', rel: 'dualsense-edge', score: 92, latency: '~2.5 ms', polling: '~1000 Hz wired / ~250 Hz BT', sensor: 'Replaceable Potentiometer Modules', price: '~$199.99 MSRP' },
-      cB: { name: 'Xbox Elite Series 2', rel: null, score: 86, latency: '~5.2 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Adjustable Tension Potentiometer', price: '~$179.99 MSRP' },
+      cA: { name: 'DualSense Edge', rel: 'dualsense-edge', sensor: 'Replaceable Potentiometer Modules', price: '~$199.99 MSRP' },
+      cB: { name: 'Xbox Elite Series 2', rel: null, sensor: 'Adjustable Tension Potentiometer', price: '~$179.99 MSRP' },
       driftAnswer: 'Both premium controllers keep potentiometer sticks but address drift differently: the DualSense Edge ships with replaceable stick modules you can swap without opening the shell, while the Xbox Elite Series 2 offers adjustable stick tension to tune resistance. Neither uses Hall-effect magnetic sensors, so stick drift remains a long-term failure mode for both.',
-      sourceNote: 'Figures are approximate. Latency and polling rate vary with connection mode, platform, and individual units; values compiled from manufacturer specifications and third-party community measurements, not from our own lab tests.',
+      sourceNote: 'MSRP is the launch list price; street prices vary. Stick sensor types come from manufacturer specifications and public teardowns. We do not publish latency or polling figures here because they change with connection mode, platform and firmware; measure your own controller with the polling rate test.',
     },
     {
       slug: 'dualsense-vs-dualsense-edge',
       title: 'PS5 DualSense vs DualSense Edge',
-      cA: { name: 'PS5 DualSense', rel: 'ps5-dualsense', score: 88, latency: '~3.1 ms', polling: '~1000 Hz wired / ~250 Hz BT', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
-      cB: { name: 'DualSense Edge', rel: 'dualsense-edge', score: 92, latency: '~2.5 ms', polling: '~1000 Hz wired / ~250 Hz BT', sensor: 'Replaceable Potentiometer Modules', price: '~$199.99 MSRP' },
+      cA: { name: 'PS5 DualSense', rel: 'ps5-dualsense', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
+      cB: { name: 'DualSense Edge', rel: 'dualsense-edge', sensor: 'Replaceable Potentiometer Modules', price: '~$199.99 MSRP' },
       driftAnswer: 'Both use potentiometer sticks, but the Edge is the only one of the two that lets you swap the stick module in seconds (no tools, no soldering) when drift develops — official modules retail around $19.99. The standard DualSense requires cleaning or aftermarket module kits. Neither uses Hall-effect sensors.',
-      sourceNote: 'Figures are approximate. Latency and polling rate vary with connection mode, platform, and individual units; values compiled from manufacturer specifications and third-party community measurements, not from our own lab tests.',
+      sourceNote: 'MSRP is the launch list price; street prices vary. Stick sensor types come from manufacturer specifications and public teardowns. We do not publish latency or polling figures here because they change with connection mode, platform and firmware; measure your own controller with the polling rate test.',
     },
     {
       slug: 'xbox-series-vs-elite-2',
       title: 'Xbox Series Controller vs Xbox Elite Series 2',
-      cA: { name: 'Xbox Series Controller', rel: 'xbox-series-x', score: 84, latency: '~6.8 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Potentiometer', price: '~$59.99 MSRP' },
-      cB: { name: 'Xbox Elite Series 2', rel: null, score: 86, latency: '~5.2 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Adjustable Tension Potentiometer', price: '~$179.99 MSRP' },
+      cA: { name: 'Xbox Series Controller', rel: 'xbox-series-x', sensor: 'Potentiometer', price: '~$59.99 MSRP' },
+      cB: { name: 'Xbox Elite Series 2', rel: null, sensor: 'Adjustable Tension Potentiometer', price: '~$179.99 MSRP' },
       driftAnswer: 'Identical potentiometer stick technology — the Elite 2 adds adjustable stick tension, which can mask early drift but does not prevent it. The Elite 2 ships with swappable stick caps and D-Pad faces, but the stick modules themselves are soldered on both models.',
-      sourceNote: 'Figures are approximate. Latency and polling rate vary with connection mode, platform, and individual units; values compiled from manufacturer specifications and third-party community measurements, not from our own lab tests.',
+      sourceNote: 'MSRP is the launch list price; street prices vary. Stick sensor types come from manufacturer specifications and public teardowns. We do not publish latency or polling figures here because they change with connection mode, platform and firmware; measure your own controller with the polling rate test.',
     },
     {
       slug: 'switch-pro-vs-xbox',
       title: 'Switch Pro Controller vs Xbox Wireless Controller',
-      cA: { name: 'Nintendo Switch Pro Controller', rel: 'switch-pro', score: 87, latency: '~5 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
-      cB: { name: 'Xbox Series Controller', rel: 'xbox-series-x', score: 84, latency: '~6.8 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Potentiometer', price: '~$59.99 MSRP' },
+      cA: { name: 'Nintendo Switch Pro Controller', rel: 'switch-pro', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
+      cB: { name: 'Xbox Series Controller', rel: 'xbox-series-x', sensor: 'Potentiometer', price: '~$59.99 MSRP' },
       driftAnswer: 'Both use potentiometer sticks, but our modeled reference shows the Switch Pro averaging slower drift onset than the Xbox controller (see the reliability reports). Neither offers swappable stick modules; the Pro Controller sticks are drop-in replacements, while Xbox sticks are soldered.',
-      sourceNote: 'Figures are approximate. Latency and polling rate vary with connection mode, platform, and individual units; values compiled from manufacturer specifications and third-party community measurements, not from our own lab tests.',
+      sourceNote: 'MSRP is the launch list price; street prices vary. Stick sensor types come from manufacturer specifications and public teardowns. We do not publish latency or polling figures here because they change with connection mode, platform and firmware; measure your own controller with the polling rate test.',
     },
     {
       slug: 'joy-con-vs-switch-pro',
       title: 'Joy-Con vs Switch Pro Controller',
-      cA: { name: 'Nintendo Switch Joy-Con (pair)', rel: null, score: 62, latency: '~7 ms', polling: '~250 Hz BT', sensor: 'Potentiometer (ALPS)', price: '~$79.99 MSRP' },
-      cB: { name: 'Nintendo Switch Pro Controller', rel: 'switch-pro', score: 87, latency: '~5 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
+      cA: { name: 'Nintendo Switch Joy-Con (pair)', rel: null, sensor: 'Potentiometer (ALPS)', price: '~$79.99 MSRP' },
+      cB: { name: 'Nintendo Switch Pro Controller', rel: 'switch-pro', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
       driftAnswer: 'Joy-Con sticks are the most drift-prone of the pair — tiny ALPS modules with a documented high failure rate. The Pro Controller uses larger, sturdier sticks. Both are potentiometer-based; the Pro Controller is the more durable of the two in our reference model.',
-      sourceNote: 'Figures are approximate. Latency and polling rate vary with connection mode, platform, and individual units; values compiled from manufacturer specifications and third-party community measurements, not from our own lab tests.',
+      sourceNote: 'MSRP is the launch list price; street prices vary. Stick sensor types come from manufacturer specifications and public teardowns. We do not publish latency or polling figures here because they change with connection mode, platform and firmware; measure your own controller with the polling rate test.',
     },
     {
       slug: 'ps4-vs-ps5',
       title: 'PS4 DualShock 4 vs PS5 DualSense',
-      cA: { name: 'PS4 DualShock 4', rel: null, score: 78, latency: '~6 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Potentiometer (ALPS)', price: '~$59.99 MSRP' },
-      cB: { name: 'PS5 DualSense', rel: 'ps5-dualsense', score: 88, latency: '~3.1 ms', polling: '~1000 Hz wired / ~250 Hz BT', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
+      cA: { name: 'PS4 DualShock 4', rel: null, sensor: 'Potentiometer (ALPS)', price: '~$59.99 MSRP' },
+      cB: { name: 'PS5 DualSense', rel: 'ps5-dualsense', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
       driftAnswer: 'Both use ALPS potentiometer sticks with a documented drift history. The DualSense reports higher at-rest precision in our modeled reference, and both are equally dependent on cleaning or module swaps for long-term drift control.',
-      sourceNote: 'Figures are approximate. Latency and polling rate vary with connection mode, platform, and individual units; values compiled from manufacturer specifications and third-party community measurements, not from our own lab tests.',
+      sourceNote: 'MSRP is the launch list price; street prices vary. Stick sensor types come from manufacturer specifications and public teardowns. We do not publish latency or polling figures here because they change with connection mode, platform and firmware; measure your own controller with the polling rate test.',
     },
     {
       slug: 'xbox-one-vs-series',
       title: 'Xbox One vs Xbox Series X/S Controller',
-      cA: { name: 'Xbox One Controller', rel: null, score: 80, latency: '~7.5 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Potentiometer', price: '~$49.99 MSRP' },
-      cB: { name: 'Xbox Series X/S Controller', rel: 'xbox-series-x', score: 84, latency: '~6.8 ms', polling: '~250 Hz BT / ~1000 Hz wired', sensor: 'Potentiometer', price: '~$59.99 MSRP' },
+      cA: { name: 'Xbox One Controller', rel: null, sensor: 'Potentiometer', price: '~$49.99 MSRP' },
+      cB: { name: 'Xbox Series X/S Controller', rel: 'xbox-series-x', sensor: 'Potentiometer', price: '~$59.99 MSRP' },
       driftAnswer: 'Generation-to-generation the stick technology is essentially the same potentiometer design — the Series controller improves buttons, grip, and wireless reliability more than it changes drift behavior. Expect comparable long-term drift characteristics.',
-      sourceNote: 'Figures are approximate. Latency and polling rate vary with connection mode, platform, and individual units; values compiled from manufacturer specifications and third-party community measurements, not from our own lab tests.',
+      sourceNote: 'MSRP is the launch list price; street prices vary. Stick sensor types come from manufacturer specifications and public teardowns. We do not publish latency or polling figures here because they change with connection mode, platform and firmware; measure your own controller with the polling rate test.',
     },
     {
       slug: 'dualsense-vs-scuf',
       title: 'PS5 DualSense vs SCUF (PlayStation Pro Pads)',
-      cA: { name: 'PS5 DualSense', rel: 'ps5-dualsense', score: 88, latency: '~3.1 ms', polling: '~1000 Hz wired / ~250 Hz BT', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
-      cB: { name: 'SCUF Reflex / Pro Pads', rel: null, score: 85, latency: '~3.5 ms', polling: '~1000 Hz wired / ~250 Hz BT', sensor: 'Potentiometer', price: '~$200+ MSRP' },
+      cA: { name: 'PS5 DualSense', rel: 'ps5-dualsense', sensor: 'Potentiometer', price: '~$69.99 MSRP' },
+      cB: { name: 'SCUF Reflex / Pro Pads', rel: null, sensor: 'Potentiometer', price: '~$200+ MSRP' },
       driftAnswer: 'SCUF PlayStation pads pair third-party shells and paddles with Sony-style potentiometer sticks, so drift behavior is comparable to the stock DualSense. The advantage of pro pads is back paddles and remapping — not drift resistance. If drift resistance is your goal, Hall-effect controllers are the actual answer.',
-      sourceNote: 'Figures are approximate. Latency and polling rate vary with connection mode, platform, and individual units; values compiled from manufacturer specifications and third-party community measurements, not from our own lab tests.',
+      sourceNote: 'MSRP is the launch list price; street prices vary. Stick sensor types come from manufacturer specifications and public teardowns. We do not publish latency or polling figures here because they change with connection mode, platform and firmware; measure your own controller with the polling rate test.',
     },
   ];
 
@@ -106,14 +106,8 @@ const productSchemas = [comp.cA, comp.cB].map((c) => ({
   '@context': 'https://schema.org',
   '@type': 'Product',
   name: c.name,
-  description: `${c.name} controller comparison data: ${c.sensor} sticks, approximate ${c.latency} input latency, approximate ${c.polling} polling rate.`,
+  description: `${c.name}: ${c.sensor} sticks, ${c.price}.`,
   brand: { '@type': 'Brand', name: c.name.split(' ')[0] },
-  offers: {
-    '@type': 'Offer',
-    price: String(parseFloat(c.price.replace(/[^0-9.]/g, '')) || 0),
-    priceCurrency: 'USD',
-    availability: 'https://schema.org/InStock',
-  },
 }));
 
 const breadcrumbs = [
@@ -123,10 +117,6 @@ const breadcrumbs = [
 
 const faqs = [
   {
-    question: `Which controller has lower input latency: ${comp.cA.name} or ${comp.cB.name}?`,
-    answer: `${comp.cA.name} features lower input latency at approximately ${comp.cA.latency} (${comp.cA.polling} polling rate) compared to ${comp.cB.name} at ${comp.cB.latency} (${comp.cB.polling} polling rate).`,
-  },
-  {
     question: `Which controller is less prone to analog stick drift?`,
     answer: comp.driftAnswer,
   },
@@ -135,20 +125,20 @@ const faqs = [
 
 <BaseLayout
   title={`${comp.title.replace(/\s\(.*?\)/, '')}${comp.title.length < 35 ? ' — Full Comparison' : ''} | CT`}
-  description={`Head-to-head ${comp.cA.name} vs ${comp.cB.name} comparison. Latency, stick drift durability, polling rate, and health scores.`}
+  description={`Head-to-head ${comp.cA.name} vs ${comp.cB.name} comparison. Stick sensors, drift behavior, price, and how to test either one.`}
   breadcrumbs={breadcrumbs}
   faqs={faqs}
   schema={productSchemas}
 
   localized={false}>
   <Header />
-  <div class="compare-container">
+  <main id="main-content" class="compare-container">
     <div class="hero-card card-base">
       <Breadcrumbs items={breadcrumbs} />
       <span class="section-eyebrow">Hardware Head-to-Head</span>
       <h1 class="text-h1 text-gradient">{comp.title}</h1>
       <p class="hero-desc">
-        Head-to-head comparison of input latency, polling rates, thumbstick sensors, and drift resistance between {comp.cA.name} and {comp.cB.name}.
+        Stick sensors, drift behavior and price compared for {comp.cA.name} and {comp.cB.name}.
       </p>
     </div>
 
@@ -157,11 +147,8 @@ const faqs = [
       {/* Controller A */}
       <div class="comp-card card-base">
         <h2 class="c-name">{comp.cA.name}</h2>
-        <div class="score-pill text-gradient">Health Score: {comp.cA.score}/100</div>
 
         <div class="specs-list">
-          <div class="spec-row"><span>Input Latency:</span> <span class="mono">{comp.cA.latency}</span></div>
-          <div class="spec-row"><span>Polling Rate:</span> <span class="mono">{comp.cA.polling}</span></div>
           <div class="spec-row"><span>Stick Sensor:</span> <span class="mono">{comp.cA.sensor}</span></div>
           <div class="spec-row"><span>MSRP:</span> <span class="mono">{comp.cA.price}</span></div>
         </div>
@@ -172,11 +159,8 @@ const faqs = [
       {/* Controller B */}
       <div class="comp-card card-base">
         <h2 class="c-name">{comp.cB.name}</h2>
-        <div class="score-pill text-gradient">Health Score: {comp.cB.score}/100</div>
 
         <div class="specs-list">
-          <div class="spec-row"><span>Input Latency:</span> <span class="mono">{comp.cB.latency}</span></div>
-          <div class="spec-row"><span>Polling Rate:</span> <span class="mono">{comp.cB.polling}</span></div>
           <div class="spec-row"><span>Stick Sensor:</span> <span class="mono">{comp.cB.sensor}</span></div>
           <div class="spec-row"><span>MSRP:</span> <span class="mono">{comp.cB.price}</span></div>
         </div>
@@ -236,7 +220,7 @@ const faqs = [
         ))}
       </div>
     </div>
-  </div>
+  </main>
   <Footer />
 </BaseLayout>
 
@@ -247,7 +231,6 @@ const faqs = [
   .comparison-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
   .comp-card { padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
   .c-name { font-size: 1.375rem; font-weight: 800; color: var(--color-text-primary); }
-  .score-pill { font-family: var(--font-mono); font-size: 1.25rem; font-weight: 800; }
   .specs-list { display: flex; flex-direction: column; gap: 0.75rem; background: var(--color-surface-1); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-sm); padding: 1.25rem; }
   .spec-row { display: flex; justify-content: space-between; font-size: var(--text-small); color: var(--color-text-secondary); border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 0.5rem; }
   .spec-row span.mono { font-weight: 600; color: var(--color-text-primary); }

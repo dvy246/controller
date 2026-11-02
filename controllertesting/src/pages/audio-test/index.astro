@@ -5,6 +5,7 @@
  * Hub index for the Sonic-Space Spatial Audio Tester routes.
  */
 
+import HubIntro from '../../components/global/HubIntro.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
@@ -54,6 +55,10 @@ const itemListSchema = {
           Verify your gaming headset's spatial accuracy, wireless latency, and bass extension before the next match. All tests run locally through the Web Audio API.
         </p>
       </header>
+      <HubIntro title="Check your headphones and speakers" faqs={[{"question": "Can a browser test 7.1 surround sound?", "answer": "Not as discrete channels. The surround test uses stereo panning, which is ideal for checking headphones and left/right balance. Testing each speaker of a real 7.1 system needs the channel test in your operating system or receiver."}]}>
+        <p>These tests play generated sounds through the Web Audio API. The surround test pans sounds left and right so you can check that each side of a headset works and is not swapped; the bass test sweeps low frequencies to find where your speakers or headphones drop off; the Bluetooth test helps you see the delay a wireless headset adds.</p>
+      </HubIntro>
+
 
       <div class="grid-tools">
         {audioTests.map((tool) => (

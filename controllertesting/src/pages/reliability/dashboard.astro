@@ -205,12 +205,12 @@ function barWidth(value: number, max: number): number {
 
       <!-- Percentile thresholds table -->
       <section class="table-card card-base" aria-labelledby="thresholds-title">
-        <h2 id="thresholds-title" class="chart-title">Drift Magnitude Percentile Thresholds by Model</h2>
+        <h2 id="thresholds-title" class="chart-title">Modeled Drift Tier Cutoffs by Model</h2>
         <p class="chart-desc">
           The tier cutoffs used by the <a href="/test/controller/health-score" class="hub-link">Health Score</a> and
-          drift percentile math. Thresholds are drift % at rest.
+          drift tiers. Thresholds are drift % at rest, from modeled estimates rather than measured populations.
         </p>
-        <div class="table-scroll" aria-label="Drift magnitude percentile thresholds by model">
+        <div class="table-scroll" aria-label="Modeled drift tier cutoffs by model">
           <table class="threshold-table">
             <thead>
               <tr>

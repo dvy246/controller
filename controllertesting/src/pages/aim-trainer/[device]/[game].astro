@@ -93,7 +93,8 @@ const schema = {
 };
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs}
+<BaseLayout
+  noindex title={title} description={description} canonical={canonical} breadcrumbs={breadcrumbs}
   localized={false}>
   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 

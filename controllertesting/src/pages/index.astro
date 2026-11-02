@@ -73,11 +73,11 @@ const faqs = [
   },
   {
     question: 'Is ControllerTesting.com free to use?',
-    answer: 'Yes. All 39 diagnostic tools on ControllerTesting.com are free to use. No account is required, no data leaves your device, and no software needs to be installed — everything runs in your browser using standard Web APIs.',
+    answer: 'Yes. Every diagnostic tool on ControllerTesting.com is free to use. No account is required and nothing needs to be installed. Controller input is processed in your browser and is not uploaded unless you opt in to anonymous test telemetry; the site uses Google Analytics only if you accept cookies.',
   },
   {
     question: 'How do I know if my controller has stick drift?',
-    answer: 'Connect your controller, open the Stick Drift Detector at controllertesting.com/test/controller/drift, and let the sticks rest at center. A reading above 2% on either axis indicates drift. Values under 2% are typically within the clean range. The test shows drift to 0.1% precision in real time.',
+    answer: 'Connect your controller, open the Stick Drift Detector at controllertesting.com/test/controller/drift, and let the sticks rest at center. Up to 2.5% at rest is normal wear that a small in-game deadzone hides; above 8%, the stick usually needs cleaning or replacing. The test shows drift to 0.1% precision in real time.',
   },
   {
     question: 'Does the controller test work on Xbox controllers?',
@@ -144,6 +144,8 @@ function getToolIcon(icon: string) {
       return `<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="g-def-h" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#60A5FA"/></linearGradient></defs><rect x="2" y="6" width="20" height="12" rx="6" fill="url(#g-def-h)" fill-opacity="0.2" stroke="url(#g-def-h)" stroke-width="2"/></svg>`;
   }
 }
+import { GAMES } from '../data/arcadeInterlinks';
+const gameCount = Object.keys(GAMES).length;
 ---
 
 <BaseLayout
@@ -343,7 +345,7 @@ function getToolIcon(icon: string) {
       <div class="container-site">
         <div class="section-header-stack" data-reveal>
           <h2 id="tools-heading" class="section-heading">
-            39 core diagnostic tools. One controller.
+            Every core diagnostic. One controller.
             <br />Every test you need.
           </h2>
         </div>
@@ -357,8 +359,8 @@ function getToolIcon(icon: string) {
               <span class="bento-badge">Flagship</span>
               <h3 class="bento-featured-title">Controller Health Score</h3>
               <p class="bento-featured-desc">
-                The only 0-100 score that measures drift, buttons, triggers, polling rate,
-                and circularity in a single diagnostic. Get your grade: A+ to F.
+                One 0–100 score that combines drift, buttons, triggers, update rate
+                and circularity from a single run. Get your grade: A+ to F.
               </p>
               <span class="bento-link">
                 Get your score
@@ -377,10 +379,11 @@ function getToolIcon(icon: string) {
                     <span class="score-label">GRADE A+</span>
                   </div>
                 </div>
+                <span class="score-example">Example result</span>
                 <div class="gauge-metrics font-mono">
                   <div class="metric-row"><span class="m-lbl">DRIFT:</span><span class="m-val text-pass">0.04% PASSED</span></div>
-                  <div class="metric-row"><span class="m-lbl">POLLING:</span><span class="m-val text-accent">1000 Hz</span></div>
-                  <div class="metric-row"><span class="m-lbl">CIRCULARITY:</span><span class="m-val text-pass">0.08% PERFECT</span></div>
+                  <div class="metric-row"><span class="m-lbl">POLLING:</span><span class="m-val text-accent">250 Hz</span></div>
+                  <div class="metric-row"><span class="m-lbl">CIRCULARITY:</span><span class="m-val text-pass">5.1% GOOD</span></div>
                 </div>
               </div>
             </div>
@@ -492,23 +495,9 @@ function getToolIcon(icon: string) {
               <br />Then play with it.
             </h2>
             <p class="games-desc">
-              5 browser games built around your controller inputs. Earn XP points,
-              level up, build a daily streak. No gaming site has this.
+              {gameCount} browser games built around your controller inputs. Earn XP,
+              level up and keep a daily streak going.
             </p>
-            <div class="games-types">
-              <div class="games-type">
-                <span class="games-type-count">5</span>
-                <span class="games-type-label">Precision games</span>
-              </div>
-              <div class="games-type">
-                <span class="games-type-count">5</span>
-                <span class="games-type-label">Reflex games</span>
-              </div>
-              <div class="games-type">
-                <span class="games-type-count">5</span>
-                <span class="games-type-label">2-Player games</span>
-              </div>
-            </div>
             <a href="/games" class="btn-primary">
               Open Arcade
               <span class="btn-icon-wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
@@ -525,11 +514,6 @@ function getToolIcon(icon: string) {
               <div class="game-preview-screen">
                 <div class="game-target" style="top: 28%; left: 62%"></div>
                 <div class="game-crosshair"></div>
-              </div>
-              <div class="game-preview-stats">
-                <span class="gstat">Avg: <strong>342ms</strong></span>
-                <span class="gstat">Best: <strong>198ms</strong></span>
-                <span class="gstat">Score: <strong>4,200</strong></span>
               </div>
             </div>
 
@@ -553,11 +537,11 @@ function getToolIcon(icon: string) {
                 </span>
                 <span class="reward-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
-                  Achievements unlock
+                  Level up every 200 pts
                 </span>
                 <span class="reward-item">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-                  Leaderboard rank
+                  Daily streak
                 </span>
               </div>
             </div>
@@ -625,7 +609,7 @@ function getToolIcon(icon: string) {
               </li>
               <li class="compare-item good">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-                WebHID calibration that saves PS4/PS5 zero-point offsets
+                PS4/PS5 stick center and range check before and after recalibration
               </li>
               <li class="compare-item good">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
@@ -676,7 +660,7 @@ function getToolIcon(icon: string) {
             Your controller deserves a real diagnosis.
           </h2>
           <p class="cta-desc">
-            Takes 2 minutes. No downloads, no accounts, no data collection.
+            Takes 2 minutes. No downloads, no accounts. Tests run in your browser.
             Everything runs in your browser.
           </p>
           <div class="cta-actions">
@@ -712,7 +696,10 @@ function getToolIcon(icon: string) {
               The Complete Browser-Based Controller Diagnostic Platform
             </h2>
             <p class="text-lg md:text-xl leading-relaxed text-pretty max-w-[75ch]" style="color: var(--color-text-secondary);">
-              Whether you're a competitive esports player looking to eliminate input delay on <strong>controller games</strong>, or a casual gamer verifying a secondhand console to play the <strong>best nintendo switch games</strong>, hardware reliability is critical. From preparing for upcoming <strong>nintendo switch 2 games</strong> on the much-anticipated <strong>nintendo switch 2</strong> console to enjoying classics on a <strong>nintendo switch oled</strong> or <strong>nintendo switch lite</strong>, having a fully functional gamepad is non-negotiable. Our platform provides an instant, installation-free <strong>controller test</strong> directly in your browser. Utilizing the HTML5 Gamepad API, we read raw telemetry from your hardware, allowing you to visualize analog stick accuracy, button actuation, and trigger linearity across all major devices—including the <strong>playstation 5 controller</strong>, the <strong>nintendo switch pro controller</strong>, and the <strong>xbox elite controller series 2</strong>.
+              ControllerTesting.com checks game controllers in the browser. Plug in a PS5, PS4, Xbox, Switch Pro or
+              generic USB pad, press a button, and the Gamepad API shows every stick, trigger and button live. Use it to
+              confirm stick drift before a repair, check a second-hand controller before you pay for it, or tune a
+              game's deadzone to your actual stick instead of a guess.
             </p>
           </div>
         </div>
@@ -722,33 +709,46 @@ function getToolIcon(icon: string) {
           
           {/* Card 1: Span 7 */}
           <div class="md:col-span-7 bg-gradient-to-br from-white/[0.06] to-transparent backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_12px_40px_-12px_rgba(0,0,0,0.5)] transition-all hover:from-white/[0.1] hover:to-white/[0.02] hover:border-white/20 hover:-translate-y-1">
-            <h3 class="text-xl font-semibold mb-4 tracking-tight" style="color: var(--color-text-primary);">Precision Diagnostics: Visualizing Stick Drift and Wear</h3>
+            <h3 class="text-xl font-semibold mb-4 tracking-tight" style="color: var(--color-text-primary);">Is it drift or a setting?</h3>
             <p class="leading-relaxed text-[0.95rem]" style="color: var(--color-text-secondary);">
-              Analog stick degradation is the most common point of hardware failure in modern gamepads. Before you invest in a costly <strong>nintendo switch joy con repair</strong> or buy a new set of <strong>nintendo switch games</strong>, it is crucial to determine if your crosshair movement is caused by a software deadzone configuration or physical potentiometer wear. Our diagnostic suite measures resting axis variance down to a 0.1% margin of error. If you are experiencing unexpected camera movement on your DualSense, running our dedicated test will quickly confirm the presence of <strong>ps5 controller drift</strong>, empowering you to adjust your in-game settings or pursue a warranty claim.
+              Stick wear is the most common controller failure. When the camera creeps on its own, the first question is
+              whether the stick is worn or the game's deadzone is set too low. The Stick Drift test shows each stick's
+              resting offset as a percentage: up to about 2.5% is normal wear that a small deadzone hides, while higher
+              values usually mean the module needs cleaning or replacing. The result also gives you something concrete
+              to attach to a warranty claim.
             </p>
           </div>
           
           {/* Card 2: Span 5 */}
           <div class="md:col-span-5 bg-gradient-to-br from-white/[0.06] to-transparent backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_12px_40px_-12px_rgba(0,0,0,0.5)] transition-all hover:from-white/[0.1] hover:to-white/[0.02] hover:border-white/20 hover:-translate-y-1">
-            <h3 class="text-xl font-semibold mb-4 tracking-tight" style="color: var(--color-text-primary);">Supported Hardware: From Next-Gen to Retro</h3>
+            <h3 class="text-xl font-semibold mb-4 tracking-tight" style="color: var(--color-text-primary);">Which controllers work</h3>
             <p class="leading-relaxed text-[0.95rem]" style="color: var(--color-text-secondary);">
-              Our testing engine is built for maximum compatibility. You can perform a rigorous <strong>xbox controller test</strong> to verify the adjustable tension thumbsticks on an <strong>xbox elite controller</strong> (including the <strong>xbox elite controller series</strong> models), or map the unique inputs of a <strong>switch 2 pro controller</strong>. We extensively support <strong>nintendo</strong> hardware; whether you are testing a standard <strong>nintendo switch joy con</strong> or mapping a legacy <strong>super nintendo controller switch</strong> setup via USB, our interface accurately reflects the <strong>nintendo controller layout</strong>. Even an <strong>old nintendo controller</strong> or an <strong>original nintendo controller</strong> paired with an adapter can be analyzed for input latency and ghosting. If you need to test a <strong>joy con controller</strong>, a <strong>switch controller</strong>, or verify <strong>nintendo switch controller</strong> drift, we have you covered.
+              Any controller your operating system recognises as a gamepad shows up: DualSense, DualShock 4, Xbox
+              Wireless and Elite, Switch Pro, Joy-Cons, 8BitDo and most USB pads. Fight sticks, flight sticks, racing
+              wheels and MIDI keyboards have their own testers. Older or console-only controllers need an adapter that
+              presents them to the computer as a standard USB gamepad.
             </p>
           </div>
           
           {/* Card 3: Span 5 */}
           <div class="md:col-span-5 bg-gradient-to-br from-white/[0.06] to-transparent backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_12px_40px_-12px_rgba(0,0,0,0.5)] transition-all hover:from-white/[0.1] hover:to-white/[0.02] hover:border-white/20 hover:-translate-y-1">
-            <h3 class="text-xl font-semibold mb-4 tracking-tight" style="color: var(--color-text-primary);">Connectivity: Pairing Your Device</h3>
+            <h3 class="text-xl font-semibold mb-4 tracking-tight" style="color: var(--color-text-primary);">Getting connected</h3>
             <p class="leading-relaxed text-[0.95rem]" style="color: var(--color-text-secondary);">
-              A frequent barrier to hardware testing and playing <strong>controller games for pc</strong> is establishing a stable connection. A common question we receive is <strong>how to connect ps5 controller to pc</strong>, <strong>how to connect ps5 controller</strong> generally, or <strong>how to connect ps5 controller to iphone</strong>. For PC, the most reliable method with the lowest latency is a direct USB-C connection. For wireless testing or iOS gaming, simply hold the Create and PS buttons simultaneously until the light bar flashes to initiate Bluetooth pairing. Once connected, your OS will expose the device to the browser, allowing you to instantly play <strong>online controller games</strong> (or <strong>pc controller games</strong>) or run our polling rate diagnostic on your <strong>ps5 controller pro</strong> or standard <strong>ps5 controller</strong>. We also fully support the <strong>xbox controller</strong> and <strong>ps4 controller</strong> for all these features.
+              A USB cable is the simplest and most reliable way to test. For Bluetooth, put the controller in pairing
+              mode (Create + PS on a DualSense, Share + PS on a DualShock 4, the pair button on Xbox and Switch Pro),
+              pair it in your system settings, then press a button on this page. The
+              <a href="/connect" class="text-accent underline">pairing guides</a> cover PC, Mac and Steam Deck step by step.
             </p>
           </div>
           
           {/* Card 4: Span 7 */}
           <div class="md:col-span-7 bg-gradient-to-br from-white/[0.06] to-transparent backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_12px_40px_-12px_rgba(0,0,0,0.5)] transition-all hover:from-white/[0.1] hover:to-white/[0.02] hover:border-white/20 hover:-translate-y-1">
-            <h3 class="text-xl font-semibold mb-4 tracking-tight" style="color: var(--color-text-primary);">Limitations and Browser Implementation</h3>
+            <h3 class="text-xl font-semibold mb-4 tracking-tight" style="color: var(--color-text-primary);">What a browser test can't see</h3>
             <p class="leading-relaxed text-[0.95rem]" style="color: var(--color-text-secondary);">
-              While our <strong>ps4 controller test</strong> and <strong>ps5 controller test</strong> suites are highly accurate, it's important to understand the limitations of the Gamepad API. Browsers normalize inputs differently depending on your operating system. For example, Windows may apply a hardware-level deadzone to Xbox controllers before the data ever reaches the browser. Similarly, testing a <strong>nintendo controller switch</strong> setup, a <strong>joy con 2</strong>, or a <strong>switch joy con</strong> wirelessly via Bluetooth can introduce artificial latency compared to a wired connection. We always recommend using a wired connection on a Chromium browser (like Google Chrome or Microsoft Edge) for the most accurate diagnostic results across all your <strong>nintendo switch</strong> and next-gen gaming hardware.
+              Browsers report controller input at their own pace, and some platforms filter it first: Steam Input, for
+              example, can apply its own deadzone before a game or this page sees the stick. Bluetooth can add a little
+              jitter compared with a cable. For the most consistent readings, test wired in Chrome or Edge; each tool
+              page lists its own limits.
             </p>
           </div>
           
@@ -1619,6 +1619,7 @@ function getToolIcon(icon: string) {
     margin-bottom: 1.75rem;
   }
 
+  .score-example { display: block; font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-tertiary); text-align: center; margin-top: 0.5rem; }
   .games-types {
     display: flex;
     gap: 1.5rem;
